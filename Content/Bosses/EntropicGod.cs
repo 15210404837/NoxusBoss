@@ -691,7 +691,7 @@ namespace NoxusBoss.Content.Bosses
 
         public void DoBehavior_DarkExplosionCharges()
         {
-            int chargeDelay = 33;
+            int chargeDelay = 40;
             int chargeTime = 41;
             int explosionCreationRate = 10;
             int chargeTeleportCount = 3;
@@ -720,7 +720,7 @@ namespace NoxusBoss.Content.Bosses
                 // Teleport near the target when ready.
                 if (wrappedAttackTimer == DefaultTeleportDelay)
                 {
-                    Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 440f, -420f);
+                    Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 480f, -420f);
                     TeleportTo(hoverDestination);
                 }
             }
@@ -895,15 +895,15 @@ namespace NoxusBoss.Content.Bosses
         public void DoBehavior_FireballBarrage()
         {
             int teleportDelay = 15;
-            int chargeDelay = 10;
+            int chargeDelay = 27;
             int chargeTime = 54;
             int chargeTeleportCount = 2;
             int wrappedAttackTimer = (int)AttackTimer % (teleportDelay + chargeDelay + chargeTime);
             int chargeCounter = (int)AttackTimer / (teleportDelay + chargeDelay + chargeTime);
             int fireballShootRate = 7;
             float initialChargeSpeed = 6.7f;
-            float chargeAcceleration = 1.11f;
-            float maxChargeSpeed = 60f;
+            float chargeAcceleration = 1.08f;
+            float maxChargeSpeed = 54f;
             float handSpeedFactor = 1f;
             float fireballShootSpeed = 9f;
 
@@ -940,7 +940,7 @@ namespace NoxusBoss.Content.Bosses
             {
                 if (wrappedAttackTimer == teleportDelay + 1f)
                 {
-                    Vector2 teleportPosition = Target.Center + new Vector2(Target.direction * -800f, teleportBelowTarget.ToDirectionInt() * 390f);
+                    Vector2 teleportPosition = Target.Center + new Vector2(Target.direction * -840f, teleportBelowTarget.ToDirectionInt() * 424f);
                     TeleportTo(teleportPosition);
 
                     SoundEngine.PlaySound(ExplosionTeleportSound with

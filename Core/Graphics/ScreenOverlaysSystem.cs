@@ -4,6 +4,7 @@ using MonoMod.Cil;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Events;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics
@@ -26,7 +27,7 @@ namespace NoxusBoss.Core.Graphics
         {
             ILCursor cursor = new(il);
 
-            if (!cursor.TryGotoNext(MoveType.Before, i => i.MatchCall<Main>("DrawBackgroundBlackFill")))
+            if (!cursor.TryGotoNext(MoveType.Before, i => i.MatchCall<ScreenDarkness>("DrawBack")))
                 return;
 
             cursor.EmitDelegate(() =>

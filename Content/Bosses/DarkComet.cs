@@ -43,7 +43,7 @@ namespace NoxusBoss.Content.Bosses
             }
 
             // Add a mild amount of slithering movement.
-            float slitherOffset = Sin(Time / 5.5f + Projectile.identity) * GetLerpValue(10f, 25f, Time, true) * 6.7f;
+            float slitherOffset = Sin(Time / 6.4f + Projectile.identity) * GetLerpValue(10f, 25f, Time, true) * 6.2f;
             Vector2 perpendicularDirection = Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedBy(PiOver2);
             Projectile.Center += perpendicularDirection * slitherOffset;
 
