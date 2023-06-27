@@ -1299,8 +1299,10 @@ namespace NoxusBoss.Content.Bosses
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(Hands[0].Center, leftCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
-                    NewProjectileBetter(Hands[1].Center, rightCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                    if (!Target.WithinRange(Hands[0].Center, 330f))
+                        NewProjectileBetter(Hands[0].Center, leftCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                    if (!Target.WithinRange(Hands[1].Center, 330f))
+                        NewProjectileBetter(Hands[1].Center, rightCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                 }
             }
 
@@ -2728,6 +2730,7 @@ namespace NoxusBoss.Content.Bosses
             {
                 ModContent.ProjectileType<DarkComet>(),
                 ModContent.ProjectileType<DarkFireball>(),
+                ModContent.ProjectileType<DarkPortal>(),
                 ModContent.ProjectileType<NightmareDeathRay>(),
                 ModContent.ProjectileType<NoxSpike>(),
                 ModContent.ProjectileType<NoxusExplosion>(),

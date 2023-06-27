@@ -578,9 +578,10 @@ namespace NoxusBoss.Content.Bosses
             // Close the HP bar.
             NPC.Calamity().ShouldCloseHPBar = true;
 
-            // Teleport above the player on the first frame.
+            // Teleport above the player and clear projectiles on the first frame.
             if (AttackTimer == 1f)
             {
+                ClearAllProjectiles();
                 TeleportTo(Target.Center - Vector2.UnitY * 360f);
                 SoundEngine.PlaySound(GlitchSound);
                 NoxusSky.SkyIntensityOverride = 1f;
