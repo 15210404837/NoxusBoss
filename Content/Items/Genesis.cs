@@ -1,0 +1,79 @@
+﻿using System.Collections.Generic;
+using CalamityMod.Items;
+using CalamityMod.Items.Materials;
+using CalamityMod.Rarities;
+using CalamityMod.Tiles.Furniture.CraftingStations;
+using NoxusBoss.Content.Bosses;
+using NoxusBoss.Content.NPCs;
+using NoxusBoss.Core;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace NoxusBoss.Content.Items
+{
+    public class Genesis : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Genesis");
+            Tooltip.SetDefault("Summons The Godless Spawn, Noxus");
+            SacrificeTotal = 1;
+        }
+
+        public override void SetDefaults()
+        {
+            Item.width = 24;
+            Item.height = 34;
+            Item.useAnimation = 40;
+            Item.useTime = 40;
+            Item.autoReuse = true;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.UseSound = null;
+            Item.value = 0;
+            Item.rare = ModContent.RarityType<Violet>();
+        }
+
+        public override bool CanUseItem(Player player) =>
+            !NPC.AnyNPCs(ModContent.NPCType<NoxusEgg>()) && !NPC.AnyNPCs(ModContent.NPCType<EntropicGod>()) && !NPC.AnyNPCs(ModContent.NPCType<NoxusEggCutscene>());
+
+        public override bool? UseItem(Player player)
+        {
+            if (player.whoAmI == Main.myPlayer)
+            {
+                int noxusID = player.altFunctionUse == 2 || !WorldSaveSystem.HasDefeatedEgg ? ModContent.NPCType<NoxusEgg>() : ModContent.NPCType<EntropicGod>();
+
+                // If the player is not in multiplayer, spawn Noxus.
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NPC.SpawnOnPlayer(player.whoAmI, noxusID);
+
+                // If the player is in multiplayer, request a boss spawn.
+                else
+                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: noxusID);
+            }
+
+            return true;
+        }
+
+        public override bool AltFunctionUse(Player player) => WorldSaveSystem.HasDefeatedEgg;
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var toolip = tooltips.Find(l => l.Text.Contains("Summons"));
+            if (WorldSaveSystem.HasDefeatedEgg)
+                toolip.Text = "Left click to summon the The Entropic God, right click to summon the Godless Spawn";
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(1).
+                AddTile<DraedonsForge>().
+                AddIngredient(ItemID.StoneBlock, 50).
+                AddIngredient(ModContent.ItemType<ShadowspecBar>(), 10).
+                AddIngredient(ModContent.ItemType<Rock>()).
+                Register();
+        }
+    }
+}

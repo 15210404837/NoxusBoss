@@ -1,0 +1,7 @@
+displayName = Calamity Noxus Boss
+author = Dominic Karma
+version = 1.0.3
+modReferences = CalamityMod
+hideCode=false
+hideResources=false
+includeSource = true

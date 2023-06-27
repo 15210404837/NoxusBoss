@@ -1,0 +1,6 @@
+A random side project done as a means of enjoyment alongside bigger things. Implements a Noxus boss fight based on one of the Calamity Mod's old ideas.
+Don't expect other such projects. If I make more it'll be because I want to.
+
+This mod has not been extensively tested in multiplayer. It has been programmed with it in mind but may still cause oddities.
+
+Credits to Blockaroz and Vaikyia for boss spritework, Moonburn for custom sounds, and CDMusic for music.
