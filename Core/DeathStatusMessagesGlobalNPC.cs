@@ -22,8 +22,8 @@ namespace NoxusBoss.Core
                 BroadcastText(NoxusEggCutsceneSystem.PostWoFDefeatText, NoxusTextColor);
 
             // Create some indicator text when SCal or Draedon (whichever is defeated last) is defeated as a hint to fight Noxus.
-            bool draedonDefeatedLast = (npc.type == ModContent.NPCType<ThanatosHead>() || npc.type == ModContent.NPCType<AresBody>() || npc.type == ModContent.NPCType<Apollo>()) && DownedBossSystem.downedCalamitas;
-            bool calDefeatedLast = npc.type == ModContent.NPCType<SupremeCalamitas>() && DownedBossSystem.downedExoMechs;
+            bool draedonDefeatedLast = (npc.type == ModContent.NPCType<ThanatosHead>() || npc.type == ModContent.NPCType<AresBody>() || npc.type == ModContent.NPCType<Apollo>()) && DownedBossSystem.downedCalamitas && !DownedBossSystem.downedExoMechs;
+            bool calDefeatedLast = npc.type == ModContent.NPCType<SupremeCalamitas>() && DownedBossSystem.downedExoMechs && !DownedBossSystem.downedCalamitas;
             if (calDefeatedLast || draedonDefeatedLast)
             {
                 // Apply a secondary check to ensure that when an Exo Mech is killed it is the last exo mech.
