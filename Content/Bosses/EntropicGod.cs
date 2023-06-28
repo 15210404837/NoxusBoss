@@ -590,6 +590,9 @@ namespace NoxusBoss.Content.Bosses
             // Make the charge afterimage interpolant dissipate.
             ChargeAfterimageInterpolant = Clamp(ChargeAfterimageInterpolant * 0.98f - 0.02f, 0f, 1f);
 
+            // Make the laser telegraph opacity dissipate. This is useful for cases where Noxus changes phases in the middle of the telegraph being prepared.
+            LaserTelegraphOpacity = Clamp(LaserTelegraphOpacity - 0.01f, 0f, 1f);
+
             switch (CurrentAttack)
             {
                 case EntropicGodAttackType.DarkExplosionCharges:
@@ -2929,7 +2932,7 @@ namespace NoxusBoss.Content.Bosses
                 Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/NoxusEye").Value;
                 float eyePulse = Main.GlobalTimeWrappedHourly * 1.3f % 1f;
                 Vector2 baseEyeScale = headScaleFactor * TeleportVisualsAdjustedScale * BigEyeOpacity * 0.15f;
-                Vector2 eyePosition = drawPosition + HeadOffset + new Vector2(-4f, -12f).RotatedBy(HeadRotation) * baseEyeScale;
+                Vector2 eyePosition = drawPosition + HeadOffset + new Vector2(19f, -12f).RotatedBy(HeadRotation) * baseEyeScale;
                 Main.EntitySpriteDraw(eyeTexture, eyePosition, null, Color.BlueViolet.MultiplyRGBA(color) * BigEyeOpacity, rotation, eyeTexture.Size() * 0.5f, baseEyeScale, 0, 0);
                 Main.EntitySpriteDraw(eyeTexture, eyePosition, null, Color.MidnightBlue.MultiplyRGBA(color) * BigEyeOpacity * (1f - eyePulse), rotation, eyeTexture.Size() * 0.5f, baseEyeScale * (eyePulse * 0.39f + 1f), 0, 0);
 

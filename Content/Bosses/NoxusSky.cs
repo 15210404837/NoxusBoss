@@ -141,7 +141,7 @@ namespace NoxusBoss.Content.Bosses
             // Randomly create flashes.
             int flashCreationChance = 90;
             int noxusIndex = NPC.FindFirstNPC(ModContent.NPCType<EntropicGod>());
-            float flashIntensity = 35f;
+            float flashIntensity = NoxusBossConfig.Instance.VisualOverlayIntensity * 71f;
             if (noxusIndex != -1)
             {
                 NPC noxus = Main.npc[noxusIndex];
@@ -151,7 +151,7 @@ namespace NoxusBoss.Content.Bosses
 
             if (FlashIntensity <= 2f && fogIntensity < 1f && Main.rand.NextBool(flashCreationChance))
             {
-                FlashIntensity = Clamp(flashIntensity * (1f - fogIntensity) * NoxusBossConfig.Instance.VisualOverlayIntensity * 2f, 0f, 1f);
+                FlashIntensity = flashIntensity * (1f - fogIntensity);
                 FlashNoiseOffset = Main.rand.NextVector2Square(0f, 1f);
                 FlashPosition = Main.rand.NextVector2Square(0.2f, 0.8f);
                 if (Main.instance.IsActive)
