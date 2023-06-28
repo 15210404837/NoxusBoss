@@ -3,4 +3,4 @@ Don't expect other such projects. If I make more it'll be because I want to.
 
 This mod has not been extensively tested in multiplayer. It has been programmed with it in mind but may still cause oddities.
 
-Credits to Blockaroz and Vaikyia for boss spritework, Moonburn for custom sounds, and CDMusic for music.
+Credits to Blockaroz and Vaikyia for boss spritework, Moonburn for custom sounds, and CDMusic for the reversed Boss Rush music.
