@@ -4,7 +4,7 @@ using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class GroundStompShock : ModProjectile, IDrawsOverTiles
     {

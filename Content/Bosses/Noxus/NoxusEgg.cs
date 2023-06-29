@@ -14,9 +14,9 @@ using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static NoxusBoss.Content.Bosses.EntropicGod;
+using static NoxusBoss.Content.Bosses.Noxus.EntropicGod;
 
-namespace NoxusBoss.Content.Bosses
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     [AutoloadBossHead]
     public class NoxusEgg : ModNPC

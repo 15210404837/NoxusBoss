@@ -20,7 +20,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     // My pride and joy of Terraria.
 

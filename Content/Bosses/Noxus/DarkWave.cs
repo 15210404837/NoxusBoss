@@ -7,7 +7,7 @@ using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class DarkWave : ModProjectile
     {

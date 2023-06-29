@@ -2,7 +2,7 @@
 using CalamityMod.Items;
 using CalamityMod.Rarities;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses;
+using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.NPCs;
 using Terraria;
 using Terraria.ID;

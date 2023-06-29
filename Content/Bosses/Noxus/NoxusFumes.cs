@@ -4,7 +4,7 @@ using NoxusBoss.Content.Particles;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NoxusFumes : ModBuff
     {

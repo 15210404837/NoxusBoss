@@ -2,7 +2,7 @@
 using Terraria;
 using Terraria.Graphics.Shaders;
 
-namespace NoxusBoss.Content.Bosses
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NoxusScreenShaderData : ScreenShaderData
     {

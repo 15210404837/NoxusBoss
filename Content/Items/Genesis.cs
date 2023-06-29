@@ -3,7 +3,7 @@ using CalamityMod.Items;
 using CalamityMod.Items.Materials;
 using CalamityMod.Rarities;
 using CalamityMod.Tiles.Furniture.CraftingStations;
-using NoxusBoss.Content.Bosses;
+using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.NPCs;
 using NoxusBoss.Core;
 using Terraria;

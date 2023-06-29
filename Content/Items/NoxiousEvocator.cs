@@ -1,6 +1,6 @@
 ﻿using CalamityMod.Items;
 using CalamityMod.Rarities;
-using NoxusBoss.Content.Bosses;
+using NoxusBoss.Content.Bosses.Noxus;
 using Terraria;
 using Terraria.ModLoader;
 
