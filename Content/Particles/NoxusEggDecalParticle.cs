@@ -47,7 +47,7 @@ namespace NoxusBoss.Content.Particles
             backgroundShader.Shader.Parameters["contrastInterpolant"].SetValue(contrastInterpolant);
             backgroundShader.Apply();
 
-            Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/NoxusEgg").Value;
+            Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEgg").Value;
             Main.spriteBatch.Draw(texture, Position - Main.screenPosition, null, c, Rotation, texture.Size() * 0.5f, Scale, 0, 0f);
             spriteBatch.ExitShaderRegion();
         }

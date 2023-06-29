@@ -46,7 +46,7 @@ namespace NoxusBoss.Content.NPCs
 
         public ref float BurnIntensity => ref NPC.localAI[0];
 
-        public override string Texture => "NoxusBoss/Content/Bosses/NoxusEgg";
+        public override string Texture => "NoxusBoss/Content/Bosses/Noxus/NoxusEgg";
 
         #endregion Fields and Properties
 

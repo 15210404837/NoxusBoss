@@ -2787,7 +2787,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             // Initialize hands if necessary.
-            Texture2D handTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/EntropicGodHand").Value;
+            Texture2D handTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/EntropicGodHand").Value;
             InitializeHandsIfNecessary();
 
             // Draw the back and use preset hand offests if in the bestiary.
@@ -2883,7 +2883,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
                 float horizontalRibOffset = Pow(Sin(horizontalRibOffsetTime + i), 3f) * 6f;
 
                 Vector2 ribDrawOffset = new Vector2(horizontalRibOffset + 36f, i * 38f + 55f).RotatedBy(rotation) * NPC.scale;
-                Texture2D ribsTexture = ModContent.Request<Texture2D>($"NoxusBoss/Content/Bosses/EntropicGodRibs{i}").Value;
+                Texture2D ribsTexture = ModContent.Request<Texture2D>($"NoxusBoss/Content/Bosses/Noxus/EntropicGodRibs{i}").Value;
                 Main.EntitySpriteDraw(ribsTexture, drawPosition + ribDrawOffset, null, color, rotation, ribsTexture.Size() * 0.5f, TeleportVisualsAdjustedScale, SpriteEffects.FlipHorizontally, 0);
 
                 ribDrawOffset = new Vector2(-horizontalRibOffset - 36f, i * 38f + 55f).RotatedBy(rotation) * NPC.scale;
@@ -2894,7 +2894,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         public void DrawBack(Vector2 drawPosition, Color color, float rotation)
         {
             drawPosition += Vector2.UnitY.RotatedBy(rotation) * NPC.scale * 6f;
-            Texture2D backTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/EntropicGodBack").Value;
+            Texture2D backTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/EntropicGodBack").Value;
             Main.EntitySpriteDraw(backTexture, drawPosition, null, color, rotation, backTexture.Size() * 0.5f, TeleportVisualsAdjustedScale, 0, 0);
         }
 
@@ -2905,7 +2905,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             headScaleFactor.Y += Cos(Main.GlobalTimeWrappedHourly * -12f) * HeadSquishiness - HeadRotation * 0.25f;
 
             // Draw the head.
-            Texture2D headTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/EntropicGodHead").Value;
+            Texture2D headTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/EntropicGodHead").Value;
             Main.EntitySpriteDraw(headTexture, drawPosition + HeadOffset, null, color, rotation, headTexture.Size() * 0.5f, headScaleFactor * TeleportVisualsAdjustedScale, 0, 0);
 
             // Draw an eye gleam over the head, if said gleam is in effect.
@@ -2929,7 +2929,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             {
                 Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
 
-                Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/NoxusEye").Value;
+                Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEye").Value;
                 float eyePulse = Main.GlobalTimeWrappedHourly * 1.3f % 1f;
                 Vector2 baseEyeScale = headScaleFactor * TeleportVisualsAdjustedScale * BigEyeOpacity * 0.15f;
                 Vector2 eyePosition = drawPosition + HeadOffset + new Vector2(19f, -12f).RotatedBy(HeadRotation) * baseEyeScale;
@@ -2944,7 +2944,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         {
             Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
 
-            Texture2D telegraphBorderTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/LaserTelegraphBorder").Value;
+            Texture2D telegraphBorderTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/LaserTelegraphBorder").Value;
             Vector2 telegraphBorderDrawPosition = new(NPC.Center.X - Main.screenPosition.X, Main.screenHeight * 0.5f);
             Vector2 scale = new Vector2(Main.screenWidth, Main.screenHeight) / telegraphBorderTexture.Size();
             Vector2 origin = new(0f, 0.5f);

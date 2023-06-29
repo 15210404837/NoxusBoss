@@ -60,7 +60,7 @@ namespace NoxusBoss.Core.Graphics
                 return;
 
             // Calculate draw values for Noxus.
-            Texture2D noxusEggTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/NoxusEgg").Value;
+            Texture2D noxusEggTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEgg").Value;
             Color noxusDrawColor = Color.Lerp(Color.Black * 0.035f, new(64, 64, 64), Pow(EclipseDarknessInterpolant, 0.54f));
 
             Vector2 noxusDrawPosition = new Vector2(CelestialOrbitDetails.NoxusHorizontalOffset, CelestialOrbitDetails.NoxusVerticalOffset) + sceneArea.SceneLocalScreenPositionOffset;
