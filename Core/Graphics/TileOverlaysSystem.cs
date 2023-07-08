@@ -33,6 +33,9 @@ namespace NoxusBoss.Core.Graphics
 
         private void PrepareOverlayTarget(GameTime obj)
         {
+            if (OverlayableTarget is null)
+                return;
+
             var gd = Main.instance.GraphicsDevice;
 
             gd.SetRenderTarget(OverlayableTarget.Target);

@@ -1,13 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Graphics.Shaders;
 
-namespace NoxusBoss.Content.Bosses.Noxus
+namespace NoxusBoss.Core.Graphics
 {
-    public class NoxusScreenShaderData : ScreenShaderData
+    public class GenericScreenShaderData : ScreenShaderData
     {
-        public NoxusScreenShaderData(string passName)
+        public GenericScreenShaderData(string passName)
             : base(passName)
+        {
+        }
+
+        public GenericScreenShaderData(Ref<Effect> shader, string passName)
+            : base(shader, passName)
         {
         }
 

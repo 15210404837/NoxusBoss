@@ -56,7 +56,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
+            Main.spriteBatch.SetBlendState(BlendState.Additive);
 
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;

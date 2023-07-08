@@ -1,6 +1,7 @@
 ﻿using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Items;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -10,7 +11,13 @@ namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NoxusSprayerGas : ModProjectile
     {
-        public ref float Time => ref Projectile.ai[0];
+        public bool PlayerHasMadeIncalculableMistake
+        {
+            get => Projectile.ai[0] == 1f;
+            set => Projectile.ai[0] = value.ToInt();
+        }
+
+        public ref float Time => ref Projectile.ai[1];
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
@@ -43,6 +50,18 @@ namespace NoxusBoss.Content.Bosses.Noxus
             };
             GeneralParticleHandler.SpawnParticle(particle);
 
+            // Get rid of the player if the spray was reflected by Xeroc and it touches the player.
+            if (PlayerHasMadeIncalculableMistake && Projectile.Hitbox.Intersects(Main.player[Projectile.owner].Hitbox) && Main.netMode == NetmodeID.SinglePlayer && Time >= 20f)
+            {
+                Player player = Main.player[Projectile.owner];
+                for (int j = 0; j < 20; j++)
+                {
+                    float gasSize = player.width * Main.rand.NextFloat(0.1f, 0.8f);
+                    NoxusGasMetaball.CreateParticle(player.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);
+                }
+                NoxusSprayPlayerDeletionSystem.PlayerWasDeleted = true;
+            }
+
             DeleteEverything();
 
             Time++;
@@ -55,6 +74,18 @@ namespace NoxusBoss.Content.Bosses.Noxus
                 NPC n = Main.npc[i];
                 if (!n.active || !n.Hitbox.Intersects(Projectile.Hitbox) || NoxusSprayer.NPCsToNotDelete.Contains(n.type))
                     continue;
+
+                // Reflect the spray if the player has misused it by daring to try and delete Xeroc.
+                if (NoxusSprayer.NPCsThatReflectSpray.Contains(n.type))
+                {
+                    if (!PlayerHasMadeIncalculableMistake && n.Opacity >= 0.02f)
+                    {
+                        PlayerHasMadeIncalculableMistake = true;
+                        Projectile.velocity *= -0.6f;
+                        Projectile.netUpdate = true;
+                    }
+                    continue;
+                }
 
                 n.active = false;
 

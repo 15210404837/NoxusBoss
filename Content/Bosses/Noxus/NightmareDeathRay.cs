@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Primitives;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -176,7 +176,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
+            Main.spriteBatch.SetBlendState(BlendState.Additive);
             DrawFrontGlow();
             DrawBloomFlare();
             DrawLaser();

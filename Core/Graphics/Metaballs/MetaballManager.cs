@@ -101,10 +101,10 @@ namespace NoxusBoss.Core.Graphics
             {
                 for (int i = 0; i < metaball.LayerTargets.Count; i++)
                 {
-                    gd.Textures[1] = metaball.Layers[i].Value;
-                    metaballShader.Shader.Parameters["layerSize"].SetValue(metaball.Layers[i].Value.Size());
+                    gd.Textures[1] = metaball.Layers[i];
+                    metaballShader.Shader.Parameters["layerSize"].SetValue(metaball.Layers[i].Size());
                     metaballShader.Shader.Parameters["screenSize"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-                    metaballShader.Shader.Parameters["layerOffset"].SetValue(Main.screenPosition / new Vector2(Main.screenWidth, Main.screenHeight));
+                    metaballShader.Shader.Parameters["layerOffset"].SetValue(metaball.FixedInPlace ? Vector2.Zero : Main.screenPosition / new Vector2(Main.screenWidth, Main.screenHeight));
                     metaballShader.Shader.Parameters["edgeColor"].SetValue(metaball.EdgeColor.ToVector4());
                     metaballShader.Shader.Parameters["singleFrameScreenOffset"].SetValue((Main.screenLastPosition - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight));
                     metaballShader.Apply();

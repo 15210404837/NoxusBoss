@@ -30,7 +30,7 @@ namespace NoxusBoss.Content.Particles
         public override void Update()
         {
             Opacity = GetLerpValue(0f, 4f, Lifetime - Time, true);
-            Scale += 0.5f;
+            Scale += 0.9f;
         }
 
         public override void CustomDraw(SpriteBatch spriteBatch)

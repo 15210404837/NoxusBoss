@@ -63,5 +63,15 @@ namespace NoxusBoss.Common.Utilities
                     yield return Main.projectile[i];
             }
         }
+
+        public static bool AnyProjectiles(int projectileID)
+        {
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                if (Main.projectile[i].active && Main.projectile[i].type == projectileID)
+                    return true;
+            }
+            return false;
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 
 namespace NoxusBoss.Core.Graphics
@@ -10,7 +9,7 @@ namespace NoxusBoss.Core.Graphics
     {
         internal List<ManagedRenderTarget> LayerTargets = new();
 
-        public abstract List<Asset<Texture2D>> Layers
+        public abstract List<Texture2D> Layers
         {
             get;
         }
@@ -24,6 +23,14 @@ namespace NoxusBoss.Core.Graphics
         {
             get;
         }
+
+        public virtual bool FixedInPlace => false;
+
+        public virtual void Update() { }
+
+        public virtual bool PrepareSpriteBatch(SpriteBatch spriteBatch) => false;
+
+        public abstract void DrawInstances();
 
         public Metaball()
         {
@@ -39,11 +46,5 @@ namespace NoxusBoss.Core.Graphics
             for (int i = 0; i < LayerTargets.Count; i++)
                 LayerTargets[i]?.Dispose();
         }
-
-        public virtual void Update() { }
-
-        public virtual bool PrepareSpriteBatch(SpriteBatch spriteBatch) => false;
-
-        public abstract void DrawInstances();
     }
 }

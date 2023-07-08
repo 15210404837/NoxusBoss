@@ -6,7 +6,7 @@ using System.Linq;
 using Terraria;
 using Terraria.Graphics.Shaders;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.Primitives
 {
     public class PrimitiveTrailCopy
     {

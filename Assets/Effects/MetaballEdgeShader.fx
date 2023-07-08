@@ -47,23 +47,23 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     {
         float left = tex2D(uImage0, convertFromScreenCoords(convertToScreenCoords(coords) + float2(-2, 0))).a;
         if (left <= 0)
-            return edgeColor;
+            return edgeColor * sampleColor;
         
         float right = tex2D(uImage0, convertFromScreenCoords(convertToScreenCoords(coords) + float2(2, 0))).a;
         if (right <= 0)
-            return edgeColor;
+            return edgeColor * sampleColor;
         
         float top = tex2D(uImage0, convertFromScreenCoords(convertToScreenCoords(coords) + float2(0, -2))).a;
         if (top <= 0)
-            return edgeColor;
+            return edgeColor * sampleColor;
         
         float bottom = tex2D(uImage0, convertFromScreenCoords(convertToScreenCoords(coords) + float2(0, 2))).a;
         if (bottom <= 0)
-            return edgeColor;
+            return edgeColor * sampleColor;
     }
     
     float4 layerColor = tex2D(uImage1, (coords + layerOffset + singleFrameScreenOffset) * screenSize / layerSize);
-    return layerColor * tex2D(uImage0, coords);
+    return layerColor * tex2D(uImage0, coords) * sampleColor;
 }
 technique Technique1
 {

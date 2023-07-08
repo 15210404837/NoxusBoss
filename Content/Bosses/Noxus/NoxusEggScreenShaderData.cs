@@ -79,10 +79,8 @@ namespace NoxusBoss.Content.Bosses.Noxus
             }
 
             for (int i = 0; i < distortionCenters.Length; i++)
-            {
-                Vector2 baseUV = (distortionCenters[i] - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight);
-                distortionCenters[i] = Vector2.Transform(baseUV - Vector2.One * 0.5f, Main.GameViewMatrix.TransformationMatrix with { M41 = 0f, M42 = 0f }) + Vector2.One * 0.5f;
-            }
+                distortionCenters[i] = WorldSpaceToScreenUV(distortionCenters[i]);
+
             Shader.Parameters["distortionCenters"].SetValue(distortionCenters);
 
             float darknessFactor = (0.25f + (1f - ((NoxusSky)SkyManager.Instance["NoxusBoss:NoxusSky"]).GetCloudAlpha()) * 0.3f) * DistortionIntensity;

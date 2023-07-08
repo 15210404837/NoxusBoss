@@ -10,6 +10,8 @@ namespace NoxusBoss.Content.Particles
     {
         public float Opacity = 1f;
 
+        public float ScaleExpandRate;
+
         public override bool SetLifetime => true;
 
         public override bool UseCustomDraw => true;
@@ -18,19 +20,20 @@ namespace NoxusBoss.Content.Particles
 
         public override string Texture => "NoxusBoss/Content/Particles/MagicBurst";
 
-        public MagicBurstParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, float scale)
+        public MagicBurstParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, float scale, float scaleExpandRate = 0.24f)
         {
             Position = position;
             Velocity = velocity;
             Color = color;
             Scale = scale;
             Lifetime = lifetime;
+            ScaleExpandRate = scaleExpandRate;
         }
 
         public override void Update()
         {
             Opacity = GetLerpValue(0f, 4f, Lifetime - Time, true);
-            Scale += 0.24f;
+            ScaleExpandRate += 0.24f;
         }
 
         public override void CustomDraw(SpriteBatch spriteBatch)

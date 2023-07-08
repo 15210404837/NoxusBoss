@@ -28,9 +28,9 @@ namespace NoxusBoss.Core.Graphics
 
         public override Color EdgeColor => Color.MediumPurple;
 
-        public override List<Asset<Texture2D>> Layers => new()
+        public override List<Texture2D> Layers => new()
         {
-            ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/Metaballs/PitchBlackLayer")
+            ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/Metaballs/PitchBlackLayer").Value
         };
 
         public static void CreateParticle(Vector2 spawnPosition, Vector2 velocity, float size)

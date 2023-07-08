@@ -36,7 +36,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
             spriteBatch.EnterShaderRegion();
             sky.DrawFog();
-            Utilities.SetBlendState(spriteBatch, BlendState.Additive);
+            spriteBatch.SetBlendState(BlendState.Additive);
 
             // Draw twinkles on top of the fog.
             List<Particle> particles = (List<Particle>)particlesField.GetValue(null);

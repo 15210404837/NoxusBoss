@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Humanizer.On;
 
 namespace NoxusBoss.Core.Graphics
 {
@@ -51,6 +54,14 @@ namespace NoxusBoss.Core.Graphics
                 Velocity = (DrawPosition - ShatterFocalPoint).RotatedByRandom(0.23f) * Main.rand.NextFloat(0.04f, 0.06f) + Main.rand.NextVector2CircularEdge(1.2f, 1.2f);
                 RotationalAxis = new(Main.rand.NextFloatDirection() * 0.06f, Main.rand.NextFloatDirection() * 0.06f, Main.rand.NextFloatDirection() * 0.03f);
             }
+        }
+
+        private static LineSegment[] manualSliceLines;
+
+        public static int SliceUpdatesPerFrame
+        {
+            get;
+            set;
         }
 
         public static bool ShouldCreateSnapshot
@@ -149,7 +160,8 @@ namespace NoxusBoss.Core.Graphics
                 shardVertices.Add(new(drawPositionB, shardColor, shard.ScreenCoord2));
                 shardVertices.Add(new(drawPositionC, shardColor, shard.ScreenCoord3));
 
-                shard.Update();
+                for (int i = 0; i < SliceUpdatesPerFrame; i++)
+                    shard.Update();
             }
 
             if (shardVertices.Any())
@@ -171,14 +183,17 @@ namespace NoxusBoss.Core.Graphics
             }
 
             // Make the shards become more transparent as time goes on, until eventually they disappear.
-            ShardOpacity *= 0.95f;
-            if (ShardOpacity <= 0.0045f)
-                screenTriangles.Clear();
+            for (int i = 0; i < SliceUpdatesPerFrame; i++)
+            {
+                ShardOpacity *= 0.95f;
+                if (ShardOpacity <= 0.0045f)
+                    screenTriangles.Clear();
+            }
 
             Main.spriteBatch.End();
         }
 
-        public static void CreateShatterEffect(Vector2 shatterScreenPosition)
+        public static void CreateShatterEffect(Vector2 shatterScreenPosition, int sliceUpdatesPerFrame = 1)
         {
             if (!NoxusBossConfig.Instance.ScreenShatterEffects)
             {
@@ -189,6 +204,22 @@ namespace NoxusBoss.Core.Graphics
             ShatterFocalPoint = shatterScreenPosition;
             ShouldCreateSnapshot = true;
             ShardOpacity = 1f;
+            SliceUpdatesPerFrame = sliceUpdatesPerFrame;
+            manualSliceLines = Array.Empty<LineSegment>();
+        }
+
+        public static void CreateShatterEffect(LineSegment[] sliceLines, int sliceUpdatesPerFrame = 1)
+        {
+            if (!NoxusBossConfig.Instance.ScreenShatterEffects)
+            {
+                Main.LocalPlayer.Calamity().GeneralScreenShakePower += 11f;
+                return;
+            }
+
+            ShouldCreateSnapshot = true;
+            ShardOpacity = 1f;
+            SliceUpdatesPerFrame = sliceUpdatesPerFrame;
+            manualSliceLines = sliceLines;
         }
 
         public static void CreateSnapshotIfNecessary(RenderTarget2D screenContents)
@@ -213,29 +244,144 @@ namespace NoxusBoss.Core.Graphics
 
             // Generate radial slice angles. These are randomly offset slightly, and form the basis of the shatter effect.
             // The slice is relative to the focal point.
-            int radialSliceCount = Main.rand.Next(8, 12);
             List<float> radialSliceAngles = new();
             Rectangle screenRectangle = new(0, 0, ContentsBeforeShattering.Width, ContentsBeforeShattering.Height);
-            for (int i = 0; i < radialSliceCount; i++)
+            if (manualSliceLines is null || manualSliceLines.Length <= 2)
             {
-                float sliceAngle = TwoPi * i / radialSliceCount + Main.rand.NextFloatDirection() * 0.00146f;
-                radialSliceAngles.Add(sliceAngle);
+                int radialSliceCount = Main.rand.Next(8, 12);
+                for (int i = 0; i < radialSliceCount; i++)
+                {
+                    float sliceAngle = TwoPi * i / radialSliceCount + Main.rand.NextFloatDirection() * 0.00146f;
+                    radialSliceAngles.Add(sliceAngle);
+                }
+
+                for (int i = 0; i < radialSliceAngles.Count; i++)
+                {
+                    Vector2 a = ShatterFocalPoint / screenRectangle.Size();
+                    Vector2 b = a + radialSliceAngles[i].ToRotationVector2() * 0.7f;
+                    Vector2 c = a + radialSliceAngles[(i + 1) % radialSliceAngles.Count].ToRotationVector2() * 0.7f;
+
+                    screenTriangles.Add(new(a, b, c, (a + b + c) / 3f * screenRectangle.Size()));
+                }
+
+                // Subdivide the triangles until a lot of triangles exist.
+                while (screenTriangles.Count <= 350)
+                    SubdivideRadialTriangle(Main.rand.Next(screenTriangles), Main.rand.NextFloat(0.15f, 0.44f), Main.rand.NextFloat(0.15f, 0.44f), screenTriangles);
             }
-            for (int i = 0; i < radialSliceCount; i++)
+            else
             {
-                Vector2 a = ShatterFocalPoint / screenRectangle.Size();
-                Vector2 b = a + radialSliceAngles[i].ToRotationVector2() * 0.7f;
-                Vector2 c = a + radialSliceAngles[(i + 1) % radialSliceCount].ToRotationVector2() * 0.7f;
+                List<Vector2> intersectionPoints = new();
 
-                screenTriangles.Add(new(a, b, c, (a + b + c) / 3f * screenRectangle.Size()));
+                // Calculate the averge center of all lines.
+                ShatterFocalPoint = Vector2.Zero;
+                for (int i = 0; i < manualSliceLines.Length; i++)
+                    ShatterFocalPoint += (manualSliceLines[i].Start + manualSliceLines[i].End) / manualSliceLines.Length * 0.5f;
+                ShatterFocalPoint -= Main.screenPosition;
+
+                Rectangle lineArea = CenteredRectangle(ShatterFocalPoint, screenRectangle.Size());
+
+                // Calculate line intersection points relative to the rectangle.
+                for (int i = 0; i < manualSliceLines.Length; i++)
+                {
+                    var line = manualSliceLines[i];
+                    var lineInverted = new LineSegment(line.End, line.Start);
+
+                    // Calculate collision points for the line.
+                    if (IntersectsLine(line, lineArea, out float x, out float y))
+                        intersectionPoints.Add(new(x, y));
+                    intersectionPoints.Add((line.End + line.Start) * 0.5f - Main.screenPosition);
+                    if (IntersectsLine(lineInverted, lineArea, out float x2, out float y2))
+                        intersectionPoints.Add(new(x2, y2));
+                }
+
+                // Manually add corners to the intersection points.
+                intersectionPoints.Add(lineArea.TopLeft());
+                intersectionPoints.Add(lineArea.TopRight());
+                intersectionPoints.Add(lineArea.BottomRight());
+                intersectionPoints.Add(lineArea.BottomLeft());
+
+                // This is probably borked but ICBA.
+                var triangles = EarClippingTriangulation.GenerateMesh(intersectionPoints);
+                foreach (var triangle in triangles)
+                {
+                    Vector2 a = triangle.Vertex1 / lineArea.Size();
+                    Vector2 b = triangle.Vertex2 / lineArea.Size();
+                    Vector2 c = triangle.Vertex3 / lineArea.Size();
+                    screenTriangles.Add(new(a, b, c, (a + b + c) / 3f * screenRectangle.Size()));
+                }
             }
-
-            // Subdivide the triangles until a lot of triangles exist.
-            while (screenTriangles.Count <= 350)
-                SubdivideRadialTriangle(Main.rand.Next(screenTriangles), Main.rand.NextFloat(0.15f, 0.44f), Main.rand.NextFloat(0.15f, 0.44f), screenTriangles);
 
             ScreenEffectSystem.SetFlashEffect(ShatterFocalPoint + Main.screenPosition, 2f, 32);
             SoundEngine.PlaySound(ShatterSound);
+        }
+
+        public static bool IntersectsLine(LineSegment line, Rectangle rect, out float intersectionX, out float intersectionY)
+        {
+            float x1 = line.Start.X - Main.screenPosition.X;
+            float y1 = line.Start.Y - Main.screenPosition.Y;
+            float x2 = line.End.X - Main.screenPosition.X;
+            float y2 = line.End.Y - Main.screenPosition.Y;
+            float xMin = Math.Min(x1, x2);
+            float xMax = Math.Max(x1, x2);
+            float yMin = Math.Min(y1, y2);
+            float yMax = Math.Max(y1, y2);
+
+            // Check if the line is completely outside the AABB.
+            if (xMax < rect.Left || xMin > rect.Right || yMax < rect.Top || yMin > rect.Bottom)
+            {
+                intersectionX = 0;
+                intersectionY = 0;
+                return false;
+            }
+
+            // Check if the line is vertical, to avoid division by zero.
+            if (x1 == x2)
+            {
+                intersectionX = x1;
+                intersectionY = Math.Clamp(y1, rect.Top, rect.Bottom);
+                return true;
+            }
+
+            // Calculate the slope of the line.
+            float slope = (y2 - y1) / (x2 - x1);
+
+            // Calculate the y-coordinate at the left/right boundaries of the AABB.
+            float yLeft = slope * (rect.Left - x1) + y1;
+            float yRight = slope * (rect.Right - x1) + y1;
+
+            // Calculate the x-coordinate at the top/bottom boundaries of the AABB.
+            float xTop = (rect.Top - y1) / slope + x1;
+            float xBottom = (rect.Bottom - y1) / slope + x1;
+
+            // Check if the line intersects any of the four AABB boundaries.
+            if ((y1 <= yLeft && yLeft <= y2 || y2 <= yLeft && yLeft <= y1) && rect.Top <= yLeft && yLeft <= rect.Bottom)
+            {
+                intersectionX = rect.Left;
+                intersectionY = yLeft;
+                return true;
+            }
+            else if ((y1 <= yRight && yRight <= y2 || y2 <= yRight && yRight <= y1) && rect.Top <= yRight && yRight <= rect.Bottom)
+            {
+                intersectionX = rect.Right;
+                intersectionY = yRight;
+                return true;
+            }
+            else if ((x1 <= xTop && xTop <= x2 || x2 <= xTop && xTop <= x1) && rect.Left <= xTop && xTop <= rect.Right)
+            {
+                intersectionX = xTop;
+                intersectionY = rect.Top;
+                return true;
+            }
+            else if ((x1 <= xBottom && xBottom <= x2 || x2 <= xBottom && xBottom <= x1) && rect.Left <= xBottom && xBottom <= rect.Right)
+            {
+                intersectionX = xBottom;
+                intersectionY = rect.Bottom;
+                return true;
+            }
+
+            intersectionX = 0;
+            intersectionY = 0;
+            return false;
         }
 
         public static void SubdivideRadialTriangle(ScreenTriangleShard shard, float line1BreakInterpolant, float line2BreakInterpolant, List<ScreenTriangleShard> shards)

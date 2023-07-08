@@ -2506,7 +2506,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             if (AttackTimer >= portalSummonDelay + 30f)
             {
                 NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitY * portalVerticalOffset / 18f, 0.09f);
-                NPC.Opacity = Clamp(NPC.Opacity - 0.07f, 0f, 1f);
+                NPC.Opacity = Clamp(NPC.Opacity - 0.045f, 0f, 1f);
             }
 
             // Disappear.
@@ -2911,7 +2911,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             // Draw an eye gleam over the head, if said gleam is in effect.
             if (EyeGleamInterpolant > 0f)
             {
-                Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
+                Main.spriteBatch.SetBlendState(BlendState.Additive);
 
                 Texture2D eyeTexture = ModContent.Request<Texture2D>("Terraria/Images/Extra_89").Value;
                 float eyePulse = Main.GlobalTimeWrappedHourly * 2.1f % 1f;
@@ -2927,7 +2927,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             // Draw the big eye over the head if necessary.
             if (BigEyeOpacity > 0f)
             {
-                Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
+                Main.spriteBatch.SetBlendState(BlendState.Additive);
 
                 Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEye").Value;
                 float eyePulse = Main.GlobalTimeWrappedHourly * 1.3f % 1f;
@@ -2942,7 +2942,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public void DrawLaserTelegraphZone()
         {
-            Utilities.SetBlendState(Main.spriteBatch, BlendState.Additive);
+            Main.spriteBatch.SetBlendState(BlendState.Additive);
 
             Texture2D telegraphBorderTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/LaserTelegraphBorder").Value;
             Vector2 telegraphBorderDrawPosition = new(NPC.Center.X - Main.screenPosition.X, Main.screenHeight * 0.5f);

@@ -28,6 +28,7 @@ float2 aimDirection;
 float edgeFadeInSharpness;
 float aheadCircleZoomFactor;
 float aheadCircleMoveBackFactor;
+float spaceBrightness;
 
 float InverseLerp(float from, float to, float x)
 {
@@ -58,7 +59,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     
     // Calculate the space color for the inside of the portal.
     float4 spaceColor = tex2D(uImage3, frac(coords + uTime * float2(0.1, 0)));
-    spaceColor.rgb *= 0.5;
+    spaceColor.rgb *= spaceBrightness + 0.5;
     finalColor = lerp(finalColor, spaceColor, InverseLerp(-0.05, 0.04, signedDistanceFromPortalEdge)) * edgeFade;
     
     // Apply forward light ray intensity effects to the portal.

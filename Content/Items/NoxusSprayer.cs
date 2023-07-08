@@ -3,6 +3,7 @@ using CalamityMod.Items;
 using CalamityMod.Rarities;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.NPCs;
 using Terraria;
 using Terraria.ID;
@@ -20,7 +21,12 @@ namespace NoxusBoss.Content.Items
             NPCID.TargetDummy,
             ModContent.NPCType<NoxusEgg>(),
             ModContent.NPCType<NoxusEggCutscene>(),
-            ModContent.NPCType<EntropicGod>(),
+            ModContent.NPCType<EntropicGod>()
+        };
+
+        public static List<int> NPCsThatReflectSpray => new()
+        {
+            ModContent.NPCType<XerocBoss>(),
         };
 
         public override void SetStaticDefaults()

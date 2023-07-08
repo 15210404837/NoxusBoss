@@ -1,9 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityMod;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics;
 using ReLogic.Content;
+using System;
 using System.Reflection;
 using Terraria;
 using Terraria.Chat;
+using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
@@ -39,17 +43,6 @@ namespace NoxusBoss.Common.Utilities
         /// <param name="shader">The shader</param>
         /// <param name="texture">The texture to use</param>
         public static void SetShaderTexture3(this MiscShaderData shader, Asset<Texture2D> texture) => shaderTextureField3.SetValue(shader, texture);
-
-        /// <summary>
-        /// Sets a <see cref="SpriteBatch"/>'s <see cref="BlendState"/> arbitrarily.
-        /// </summary>
-        /// <param name="spriteBatch">The sprite batch.</param>
-        /// <param name="blendState">The blend state to use.</param>
-        public static void SetBlendState(this SpriteBatch spriteBatch, BlendState blendState)
-        {
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, blendState, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-        }
 
         /// <summary>
         /// Reset's a <see cref="SpriteBatch"/>'s <see cref="BlendState"/> based to a typical <see cref="BlendState.AlphaBlend"/>.
@@ -99,6 +92,56 @@ namespace NoxusBoss.Common.Utilities
                 Main.NewText(text, color);
             else if (Main.netMode == NetmodeID.Server)
                 ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(text), color);
+        }
+
+        public static Matrix GetCustomSkyBackgroundMatrix()
+        {
+            Matrix transformationMatrix = Main.BackgroundViewMatrix.TransformationMatrix;
+            transformationMatrix.Translation -= Main.BackgroundViewMatrix.ZoomMatrix.Translation *
+                new Vector3(1f, Main.BackgroundViewMatrix.Effects.HasFlag(SpriteEffects.FlipVertically) ? (-1f) : 1f, 1f);
+            return transformationMatrix;
+        }
+
+        public static void DrawBloomLineTelegraph(Vector2 drawPosition, BloomLineDrawInfo drawInfo, bool resetSpritebatch = true, Vector2? resolution = null)
+        {
+            // Claim texture and shader data in easy to use local variables.
+            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
+            Effect laserScopeEffect = Filters.Scene["CalamityMod:PixelatedSightLine"].GetShader().Shader;
+
+            // Prepare all parameters for the shader in anticipation that they will go the GPU for shader effects.
+            laserScopeEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/CertifiedCrustyNoise").Value);
+            laserScopeEffect.Parameters["noiseOffset"].SetValue(Main.GameUpdateCount * -0.004f);
+            laserScopeEffect.Parameters["mainOpacity"].SetValue(drawInfo.Opacity);
+            laserScopeEffect.Parameters["Resolution"].SetValue(resolution ?? Vector2.One * 425f);
+            laserScopeEffect.Parameters["laserAngle"].SetValue(drawInfo.LineRotation);
+            laserScopeEffect.Parameters["laserWidth"].SetValue(drawInfo.WidthFactor);
+            laserScopeEffect.Parameters["laserLightStrenght"].SetValue(drawInfo.LightStrength);
+            laserScopeEffect.Parameters["color"].SetValue(drawInfo.MainColor.ToVector3());
+            laserScopeEffect.Parameters["darkerColor"].SetValue(drawInfo.DarkerColor.ToVector3());
+            laserScopeEffect.Parameters["bloomSize"].SetValue(drawInfo.BloomIntensity);
+            laserScopeEffect.Parameters["bloomMaxOpacity"].SetValue(drawInfo.BloomOpacity);
+            laserScopeEffect.Parameters["bloomFadeStrenght"].SetValue(3f);
+
+            // Prepare the sprite batch for shader drawing.
+            if (resetSpritebatch)
+                Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
+            laserScopeEffect.CurrentTechnique.Passes[0].Apply();
+
+            // Draw the texture with the shader and flush the results to the GPU, clearing the shader effect for any successive draw calls.
+            Main.spriteBatch.Draw(invisible, drawPosition, null, Color.White, 0f, invisible.Size() * 0.5f, drawInfo.Scale, SpriteEffects.None, 0f);
+            if (resetSpritebatch)
+                Main.spriteBatch.ExitShaderRegion();
+        }
+
+        public static Vector2 WorldSpaceToScreenUV(Vector2 world)
+        {
+            // Calculate the coordinates relative to the raw screen size. This does not yet account for things like zoom.
+            Vector2 baseUV = (world - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight);
+
+            // Once the above normalized coordinates are calculated, apply the game view matrix to the result to ensure that zoom is incorporated into the result.
+            // In order to achieve this it is necessary to firstly anchor the coordinates so that <0, 0> is the origin and not <0.5, 0.5>, and then convert back to
+            // the original anchor point after the transformation is complete.
+            return Vector2.Transform(baseUV - Vector2.One * 0.5f, Main.GameViewMatrix.TransformationMatrix with { M41 = 0f, M42 = 0f }) + Vector2.One * 0.5f;
         }
     }
 }
