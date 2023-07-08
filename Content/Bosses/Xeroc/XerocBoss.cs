@@ -171,17 +171,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             ConjureExplodingStars,
             ShootArcingStarburstsFromEye,
             RealityTearDaggers,
+            LightBeamTransformation,
 
             // Fire attacks.
             StarManagement,
             PortalLaserBarrages,
             StealSun,
+            CircularPortalLaserBarrages,
 
             // General cosmic attacks.
             StarManagement_CrushIntoQuasar,
             StarConvergenceAndRedirecting,
             BrightStarJumpscares,
             SwordConstellation,
+            SwordConstellation2,
 
             // Reality manipulation attacks.
             ScreenSlicesWithTeleport,
@@ -217,6 +220,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         }
 
         public int SwordSlashCounter
+        {
+            get;
+            set;
+        }
+
+        public int SwordSlashDirection
         {
             get;
             set;
@@ -277,6 +286,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         }
 
         public Vector2 PunchDestination
+        {
+            get;
+            set;
+        }
+
+        public Vector2 SwordChargeDestination
         {
             get;
             set;
@@ -379,6 +394,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocHumm") with { Volume = 1.1f, IsLooped = true };
 
+        public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocPortalCast") with { Volume = 1.2f };
+
         public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/QuasarLoopSound") with { Volume = 1.2f, IsLooped = true };
 
         public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
@@ -407,7 +424,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int LightLaserbeamDamage => Main.expertMode ? 720 : 480;
 
+        public static int SwordConstellationDamage => Main.expertMode ? 720 : 480;
+
         public static int QuasarDamage => Main.expertMode ? 775 : 500;
+
+        public static int SuperLaserbeamDamage => Main.expertMode ? 800 : 500;
 
         public const int DefaultTeleportDelay = 8;
 
@@ -493,6 +514,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.RealityTearDaggers:
                     DoBehavior_RealityTearDaggers();
                     break;
+                case XerocAttackType.LightBeamTransformation:
+                    DoBehavior_LightBeamTransformation();
+                    break;
 
                 case XerocAttackType.StarManagement:
                     DoBehavior_StarManagement();
@@ -502,6 +526,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
                 case XerocAttackType.StealSun:
                     DoBehavior_StealSun();
+                    break;
+                case XerocAttackType.CircularPortalLaserBarrages:
+                    DoBehavior_CircularPortalLaserBarrages();
                     break;
 
                 case XerocAttackType.StarManagement_CrushIntoQuasar:
@@ -515,6 +542,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
                 case XerocAttackType.SwordConstellation:
                     DoBehavior_SwordConstellation();
+                    break;
+                case XerocAttackType.SwordConstellation2:
+                    DoBehavior_SwordConstellation2();
                     break;
 
                 case XerocAttackType.ScreenSlicesWithTeleport:

@@ -13,9 +13,10 @@ namespace NoxusBoss.Core.Graphics
 
         public override void Apply()
         {
+            float distortionPower = RadialScreenShoveSystem.DistortionPower * NoxusBossConfig.Instance.VisualOverlayIntensity * 0.08f;
             Shader.Parameters["blurPower"].SetValue(NoxusBossConfig.Instance.VisualOverlayIntensity * 0.5f);
             Shader.Parameters["pulseTimer"].SetValue(Main.GlobalTimeWrappedHourly * 16f);
-            Shader.Parameters["distortionPower"].SetValue(RadialScreenShoveSystem.DistortionPower * NoxusBossConfig.Instance.VisualOverlayIntensity * 0.08f);
+            Shader.Parameters["distortionPower"].SetValue(Main.gamePaused ? 0f : distortionPower);
             Shader.Parameters["distortionCenter"].SetValue(WorldSpaceToScreenUV(RadialScreenShoveSystem.DistortionCenter));
             base.Apply();
         }

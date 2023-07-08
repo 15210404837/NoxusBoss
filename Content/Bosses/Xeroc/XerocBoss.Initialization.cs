@@ -45,8 +45,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static XerocAttackType[] TestCycle => new[]
         {
-            XerocAttackType.PunchesWithScreenSlices,
-            XerocAttackType.SwordConstellation
+            XerocAttackType.LightBeamTransformation,
+            XerocAttackType.SwordConstellation2
         };
 
         #endregion Attack Cycles
@@ -72,7 +72,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetDefaults()
         {
-            NPC.npcSlots = 50f;
+            NPC.npcSlots = 100f;
             NPC.damage = 540;
             NPC.width = 440;
             NPC.height = 700;

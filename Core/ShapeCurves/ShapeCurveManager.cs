@@ -13,8 +13,8 @@ namespace NoxusBoss.Core.ShapeCurves
         public override void OnModLoad()
         {
             // Load all shape points.
-            // In binary they are simply stored as a list of paired, unordered X/Y floats. They are normalized such that their values never exceed a -1 to 1 range, and can thusly
-            // be scaled up easily.
+            // In binary they are simply stored as a list of paired, unordered X/Y floats. They are normalized such that their values never exceed a 0 to 1 range, and can thusly
+            // be scaled up easily via the inbuilt ShapeCurve methods.
             foreach (var path in Mod.GetFileNames().Where(f => f.Contains("Core/ShapeCurves/") && Path.GetExtension(f) == ".vec"))
             {
                 byte[] curveBytes = Mod.GetFileBytes(path);

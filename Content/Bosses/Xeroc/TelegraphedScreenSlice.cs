@@ -93,6 +93,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawAdditive(SpriteBatch spriteBatch)
         {
+            if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.LightBeamTransformation)
+                return;
+
             // Create a telegraph.
             if (Time <= TelegraphTime)
             {

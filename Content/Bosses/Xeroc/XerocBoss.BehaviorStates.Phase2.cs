@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
+using CalamityMod.Events;
 using CalamityMod.Items.Weapons.Melee;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -17,6 +19,83 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
+        public void DoBehavior_LightBeamTransformation()
+        {
+            int redirectTime = 45;
+            int upwardRiseTime = 30;
+            int chaseTime = SuperLightBeam.LaserLifetime;
+            int laserTelegraphTime = 49;
+            float sliceTelegraphLength = 5000f;
+
+            // Redirect above the target.
+            if (AttackTimer <= redirectTime)
+            {
+                Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 600f, -300f);
+                NPC.Opacity = 1f;
+
+                // Add some momentum, shove the screen, and play violent sounds on the first frame.
+                if (AttackTimer == 1f)
+                {
+                    SoundEngine.PlaySound(BossRushEvent.Tier4TransitionSound);
+                    RadialScreenShoveSystem.Start(NPC.Center, 16);
+                    NPC.velocity = (hoverDestination - Target.Center) * 0.075f;
+                    NPC.netUpdate = true;
+                }
+                else
+                    NPC.velocity *= 0.8f;
+
+                UpdateWings(AttackTimer / redirectTime);
+
+                NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.16f);
+            }
+
+            // Fade away as the light beam appears.
+            else if (AttackTimer <= redirectTime + upwardRiseTime)
+            {
+                NPC.Opacity = Clamp(NPC.Opacity - 0.09f, 0f, 1f);
+                NPC.velocity.X *= 0.9f;
+                NPC.velocity = Vector2.Lerp(NPC.velocity, -Vector2.UnitY * 35f, 0.1f);
+
+                // Create the light beam at the end.
+                if (AttackTimer == redirectTime + upwardRiseTime - 1f)
+                {
+                    LocalScreenSplitSystem.Start(NPC.Center, 20, PiOver2 * 0.9999f, 500f);
+                    SoundEngine.PlaySound(ScreamSound with { Volume = 3f });
+                    SoundEngine.PlaySound(SupernovaSound with { Volume = 8f });
+                    ScreenEffectSystem.SetFlashEffect(NPC.Center, 8f, 60);
+
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                        NewProjectileBetter(NPC.Center, Vector2.UnitY, ModContent.ProjectileType<SuperLightBeam>(), SuperLaserbeamDamage, 0f);
+                }
+            }
+
+            // Chase the target.
+            else if (AttackTimer <= redirectTime + upwardRiseTime + chaseTime)
+            {
+                NPC.Opacity = 0f;
+                if (NPC.velocity.Y <= -20f)
+                    NPC.velocity.Y += 4f;
+
+                NPC.position.Y = Target.position.Y;
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 16f, 0.19f);
+
+                if (AttackTimer % 22f == 0f)
+                {
+                    ScreenEffectSystem.SetFlashEffect(NPC.Center, 0.9f, 90);
+                    ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 2f, 18);
+                    SoundEngine.PlaySound(SunFireballShootSound);
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 laserSpawnPosition = Target.Center - Target.velocity.SafeNormalize((TwoPi * AttackTimer / 60f).ToRotationVector2()) * 300f;
+                        Vector2 laserDirection = (Target.Center - laserSpawnPosition).SafeNormalize(Vector2.UnitY);
+                        NewProjectileBetter(laserSpawnPosition, laserDirection, ModContent.ProjectileType<TelegraphedLightLaserbeam>(), LightLaserbeamDamage, 0f, -1, laserTelegraphTime, 26f);
+                    }
+                }
+            }
+            else if (AttackTimer >= redirectTime + upwardRiseTime + chaseTime + 60f)
+                AttackTimer = 0f;
+        }
+
         public void DoBehavior_ScreenSlicesWithTeleport()
         {
             int sliceShootDelay = 40;
@@ -679,9 +758,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int impactFireballCount = 11;
             int slashCount = 5;
             float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
-            float handOffsetDirection = (Target.Center.X > NPC.Center.X).ToDirectionInt();
             float handSpeedFactor = 300f;
             float impactFireballShootSpeed = 30f;
+            float maxHoverSpeed = 19.5f;
+            float hoverAcceleration = 0.135f;
             Vector2 handHoverOffset = NPC.Center;
             ref float swordRotation = ref NPC.ai[2];
             ref float slashOpacity = ref NPC.ai[3];
@@ -694,7 +774,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             CurveSegment swingFast = new(PolyOutEasing, 0.5f, slowStart.EndingHeight, Pi + 0.8f, 3);
             CurveSegment endSwing = new(PolyInEasing, 0.8f, swingFast.EndingHeight, Pi - swingFast.EndingHeight, 5);
 
-            // Summon the sword constellation, along with a single hand to wield it.
+            // Summon the sword constellation, along with a single hand to wield it on the first frame.
+            // Also teleport above the target.
             if (AttackTimer == 1f)
             {
                 TeleportTo(Target.Center - Vector2.UnitY * 300f);
@@ -707,8 +788,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), 350, 0f, -1, 0f, -1f);
-                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), 350, 0f, -1, 0f, 1f);
+                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, -1f);
+                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, 1f);
                     ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
                     ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
                 }
@@ -754,10 +835,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 animationCompletion = 0f;
 
             // Attempt to hover above the target.
-            float hoverSpeed = Remap(AttackTimer, constellationConvergeTime - 100f, constellationConvergeTime, 2f, 17f);
+            float hoverSpeed = Remap(AttackTimer, constellationConvergeTime - 100f, constellationConvergeTime, 2f, maxHoverSpeed);
             Vector2 hoverDestination = Target.Center - Vector2.UnitY * 300f;
             NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.004f);
-            NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * hoverSpeed, 0.13f);
+            NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * hoverSpeed, hoverAcceleration);
 
             // Calculate sword direction values.
             float anticipationAngle = PiecewiseAnimation(animationCompletion, slowStart, swingFast, endSwing) - PiOver2;
@@ -833,6 +914,257 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     // cause the sword to look like it's dragging behind a bit during slashes.
                     sword.Center = Hands[handIndex].Center + (swordRotation * swordSide - PiOver2).ToRotationVector2() * sword.scale * (sword.width * 0.5f + 20f);
                 }
+            }
+        }
+
+        public void DoBehavior_SwordConstellation2()
+        {
+            int constellationConvergeTime = SwordConstellation.ConvergeTime;
+            int animationTime = 63 - SwordSlashCounter * 3;
+            if (SwordSlashCounter <= 0)
+                animationTime += 15;
+            if (animationTime <= 48)
+                animationTime = 48;
+
+            int slashCount = 5;
+            float anticipationAnimationPercentage = 0.5f;
+            float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
+            ref float swordRotation = ref NPC.ai[2];
+            ref float slashOpacity = ref NPC.ai[3];
+
+            // Flap wings.
+            UpdateWings(AttackTimer / 45f % 1f);
+
+            // Easing time!
+            CurveSegment slowStart = new(PolyOutEasing, 0f, Pi, -Pi, 2);
+            CurveSegment swingFast = new(PolyOutEasing, 0.5f, slowStart.EndingHeight, Pi + 0.54f, 5);
+            CurveSegment endSwing = new(PolyInEasing, 0.8f, swingFast.EndingHeight, Pi - swingFast.EndingHeight, 5);
+
+            // Summon the sword constellation, along with a single hand to wield it on the first frame.
+            // Also teleport above the target.
+            if (AttackTimer == 1f)
+            {
+                ZPosition = 1f;
+                TeleportTo(Target.Center - Vector2.UnitY * 300f);
+
+                // Apply visual and sound effects.
+                Target.Calamity().GeneralScreenShakePower = 9f;
+                SoundEngine.PlaySound(ExplosionTeleportSound);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
+                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
+                }
+            }
+
+            if (SwordSlashCounter >= slashCount + 1f)
+            {
+                // Destroy the swords.
+                var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
+                foreach (Projectile sword in swords)
+                {
+                    for (int i = 0; i < 19; i++)
+                    {
+                        int gasLifetime = Main.rand.Next(20, 24);
+                        float scale = 2.3f;
+                        Vector2 gasSpawnPosition = sword.Center + Main.rand.NextVector2Circular(150f, 150f) * NPC.scale;
+                        Vector2 gasVelocity = Main.rand.NextVector2Circular(9f, 9f) - Vector2.UnitY * 7.25f;
+                        Color gasColor = Color.Lerp(Color.IndianRed, Color.Coral, Main.rand.NextFloat(0.6f));
+                        Particle gas = new HeavySmokeParticle(gasSpawnPosition, gasVelocity, gasColor, gasLifetime, scale, 1f, 0f, true);
+                        GeneralParticleHandler.SpawnParticle(gas);
+                    }
+                    sword.Kill();
+                }
+
+                SelectNextAttack();
+                DestroyAllHands();
+                return;
+            }
+
+            // Hover to the top left/right of the target in anticipation of the slash at first.
+            if (wrappedAttackTimer <= animationTime * anticipationAnimationPercentage || AttackTimer <= constellationConvergeTime)
+            {
+                if (wrappedAttackTimer == 2f)
+                {
+                    SwordSlashCounter++;
+                    NPC.netUpdate = true;
+                }
+
+                // Decide the charge destination right before the charge.
+                if (wrappedAttackTimer <= animationTime * anticipationAnimationPercentage - 13f)
+                {
+                    float distanceToTarget = NPC.Distance(Target.Center);
+                    float dashDistance = MathF.Max(distanceToTarget + 300f, 900f);
+                    if (Target.velocity.Length() <= 2f)
+                        dashDistance -= 100f;
+
+                    SwordChargeDestination = NPC.Center + NPC.SafeDirectionTo(Target.Center) * dashDistance;
+
+                    Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 700f, -100f);
+                    Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.14f;
+                    NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.14f);
+
+                    // Decide which side Xeroc is hovering on.
+                    SwordSlashDirection = (Target.Center.X > NPC.Center.X).ToDirectionInt();
+                    PupilScale = Lerp(PupilScale, 0.2f, 0.25f);
+                }
+
+                // Slow down once the destination has been chosen.
+                else
+                    NPC.velocity *= 0.93f;
+
+                // Charge at the target once ready.
+                if (wrappedAttackTimer == (int)(animationTime * anticipationAnimationPercentage) - 1f && AttackTimer >= constellationConvergeTime + 1f)
+                {
+                    NPC.velocity = (SwordChargeDestination - Target.Center) * 0.075f;
+                    NPC.netUpdate = true;
+
+                    SoundEngine.PlaySound(Exoblade.BigSwingSound with
+                    {
+                        Pitch = 0.2f,
+                        PitchVariance = 0f
+                    });
+                    RadialScreenShoveSystem.Start(NPC.Center, 20);
+
+                    // Reset the trail cache for all swords.
+                    var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
+                    foreach (Projectile sword in swords)
+                    {
+                        sword.oldRot = new float[sword.oldRot.Length];
+                        sword.oldPos = new Vector2[sword.oldPos.Length];
+                    }
+                }
+
+                // Look at the charge destination.
+                PupilOffset = Vector2.Lerp(PupilOffset, (SwordChargeDestination - PupilPosition).SafeNormalize(Vector2.UnitY) * 40f, 0.13f);
+
+                slashOpacity = Clamp(slashOpacity - 0.25f, 0f, 1f);
+            }
+
+            // Perform dash behaviors.
+            else
+            {
+                NPC.Center = Vector2.Lerp(NPC.Center, SwordChargeDestination, 0.14f);
+                NPC.velocity *= 0.81f;
+
+                // Look at the target.
+                PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - PupilPosition).SafeNormalize(Vector2.UnitY) * 40f, 0.12f);
+
+                bool doingEndSwing = wrappedAttackTimer >= animationTime * 0.65f;
+                slashOpacity = Clamp(slashOpacity - doingEndSwing.ToDirectionInt() * 0.5f, 0f, 1f);
+            }
+
+            // Calculate sword direction values.
+            float animationCompletion = wrappedAttackTimer / animationTime;
+            float anticipationAngle = PiecewiseAnimation(animationCompletion, slowStart, swingFast, endSwing) - PiOver2;
+            Vector2 handHoverOffset = anticipationAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(SwordSlashDirection * 800f, 450f);
+            swordRotation = handHoverOffset.ToRotation() + SwordSlashDirection * PiOver2;
+            if (SwordSlashDirection == -1)
+                swordRotation += Pi;
+
+            // Move the hands, keeping the sword attached to it.
+            if (Hands.Any())
+            {
+                Hands[0].ShouldOpen = false;
+                Hands[0].ScaleFactor = 2f;
+                DefaultHandDrift(Hands[0], NPC.Center + handHoverOffset, 300f);
+
+                var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
+                foreach (Projectile sword in swords)
+                {
+                    sword.ModProjectile<SwordConstellation>().SwordSide = SwordSlashDirection;
+
+                    // The swordRotation variable is used here instead of the rotation value stored in the sword's AI because this would have a one-frame discrepancy and
+                    // cause the sword to look like it's dragging behind a bit during slashes.
+                    sword.Center = Hands[0].Center + (swordRotation - PiOver2).ToRotationVector2() * sword.scale * (sword.width * 0.5f + 20f);
+                }
+            }
+        }
+
+        public void DoBehavior_CircularPortalLaserBarrages()
+        {
+            int redirectTime = 30;
+            int portalCount = 13;
+            int portalSummonRate = 2;
+            int portalSummonTime = portalCount * portalSummonRate;
+            int attackTransitionDelay = 84;
+            int laserShootTime = 38;
+            int portalExistTime = 40;
+            float handOffsetAngle = TwoPi - 0.8f;
+            float laserAngularVariance = 0.008f;
+
+            // Flap wings.
+            UpdateWings(AttackTimer / 42f % 1f);
+
+            // Look at the player.
+            PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 50f, 0.2f);
+
+            // Redirect above the target.
+            if (AttackTimer <= redirectTime)
+            {
+                Vector2 hoverDestination = Target.Center - Vector2.UnitY * 300f;
+
+                // Add some momentum, shove the screen, and summon two hands on the first frame.
+                if (AttackTimer == 1f)
+                {
+                    RadialScreenShoveSystem.Start(NPC.Center, 16);
+                    NPC.velocity = (hoverDestination - Target.Center) * 0.075f;
+                    NPC.netUpdate = true;
+
+                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, true);
+                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, true);
+                }
+                else
+                    NPC.velocity *= 0.8f;
+
+                NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.16f);
+            }
+
+            // Summon portals.
+            else if (AttackTimer <= redirectTime + portalSummonTime)
+            {
+                float portalSummonCompletion = GetLerpValue(0f, portalSummonTime - 1f, AttackTimer - redirectTime, true);
+                float portalSummonAngle = handOffsetAngle * (1f - portalSummonCompletion);
+
+                // Slow down to a halt.
+                NPC.velocity = Vector2.Zero;
+
+                // Play a portal sound.
+                if (AttackTimer == redirectTime - 1f)
+                    SoundEngine.PlaySound(PortalCastSound, NPC.Center);
+
+                // Summon portals.
+                if (AttackTimer % portalSummonRate == 0f)
+                {
+                    Vector2 portalSummonPosition = NPC.Center + portalSummonAngle.ToRotationVector2() * new Vector2(1650f, 1275f);
+
+                    int remainingChargeTime = portalSummonTime - (int)(AttackTimer - redirectTime);
+                    int fireDelay = remainingChargeTime + 30;
+                    float portalScale = Main.rand.NextFloat(0.57f, 0.67f);
+
+                    Vector2 portalDirection = -NPC.SafeDirectionTo(portalSummonPosition).RotatedByRandom(laserAngularVariance);
+
+                    // Summon the portal and shoot the telegraph for the laser.
+                    NewProjectileBetter(portalSummonPosition + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15);
+                    NewProjectileBetter(portalSummonPosition, portalDirection, ModContent.ProjectileType<TelegraphedLightLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
+                }
+            }
+
+            if (AttackTimer >= redirectTime + portalSummonTime + attackTransitionDelay)
+            {
+                DestroyAllHands();
+                SelectNextAttack();
+            }
+
+            // Update hands.
+            if (Hands.Count >= 2)
+            {
+                Vector2 handOffset = handOffsetAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(500f, 360f);
+                DefaultHandDrift(Hands[0], NPC.Center + handOffset * new Vector2(-1f, 1f), 2f);
+                DefaultHandDrift(Hands[1], NPC.Center + handOffset, 2f);
             }
         }
     }

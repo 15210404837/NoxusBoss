@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,17 +33,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
+        public float ZPosition;
+
         // This stores the swordShape property in a field for performance reasons every frame, since the underlying getter method used there can be straining when done
         // many times per frame, due to looping.
         public ShapeCurve SwordShape;
 
         public PrimitiveTrail SlashDrawer;
 
+        public bool UsePositionCacheForTrail => Projectile.ai[0] == 1f;
+
         public float StarScaleFactor => Remap(Time, 150f, 300f, 1f, 2.6f);
 
         public static int ConvergeTime => 240;
-
-        public ref float ZPosition => ref Projectile.ai[0];
 
         public ref float SwordSide => ref Projectile.ai[1];
 
@@ -56,11 +59,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             DisplayName.SetDefault("Orion's Sword");
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailCacheLength[Type] = 50;
         }
 
         public override void SetDefaults()
         {
+            ProjectileID.Sets.TrailCacheLength[Type] = 50;
             Projectile.width = 850;
             Projectile.height = 850;
             Projectile.penetrate = -1;
@@ -70,6 +74,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.netImportant = true;
             Projectile.timeLeft = 60000;
         }
+
+        public override void SendExtraAI(BinaryWriter writer) => writer.Write(ZPosition);
+
+        public override void ReceiveExtraAI(BinaryReader reader) => ZPosition = reader.ReadSingle();
 
         public override void AI()
         {
@@ -97,7 +105,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.Opacity = GetLerpValue(0f, 30f, Time, true) * Remap(ZPosition, 0.2f, 9f, 3.3f, 0.45f);
 
             // Inherit the sword rotation and slash opacity from Xeroc.
-            Projectile.rotation = XerocBoss.Myself.ai[2] * SwordSide;
+            Projectile.rotation = XerocBoss.Myself.ai[2] * (UsePositionCacheForTrail ? 1f : SwordSide);
             SlashOpacity = XerocBoss.Myself.ai[3];
 
             if (Projectile.FinalExtraUpdate())
@@ -114,9 +122,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             float _ = 0f;
             Vector2 direction = (Projectile.rotation + SwordSide * PiOver2).ToRotationVector2();
-            Vector2 start = Projectile.Center - direction * Projectile.width * Projectile.scale * 0.37f;
-            Vector2 end = Projectile.Center + direction * Projectile.width * Projectile.scale * 0.37f;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.width * Projectile.scale * 0.36f, ref _);
+            Vector2 start = Projectile.Center - direction * Projectile.width * Projectile.scale * 0.45f;
+            Vector2 end = Projectile.Center + direction * Projectile.width * Projectile.scale * 0.45f;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.width * Projectile.scale * (UsePositionCacheForTrail ? 1.2f : 0.8f), ref _);
         }
 
         public float GetStarMovementInterpolant(int index)
@@ -184,6 +192,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawAfterimageTrail()
         {
+            if (SlashOpacity <= 0f)
+                return;
+
             var slashShader = GameShaders.Misc["CalamityMod:ExobladeSlash"];
             SlashDrawer ??= new(SlashWidthFunction, SlashColorFunction, null, slashShader);
 
@@ -219,15 +230,41 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (SwordSide == -1f)
                     slashOffset = Vector2.Reflect(slashOffset, perpendicularDirection);
 
-                slashPoints.Add(Projectile.Center + slashOffset);
+                if (UsePositionCacheForTrail)
+                {
+                    Vector2 directionAtIndex = (Projectile.rotation + PiOver2).ToRotationVector2();
+                    if (Projectile.oldPos[i] == Vector2.Zero)
+                        directionAtIndex = Vector2.Zero;
+
+                    // Correction bullshit.
+                    Vector2 slashPoint = Projectile.oldPos[i];
+                    if (i == 1)
+                        slashPoint -= perpendicularDirection * SwordSide * 400f;
+                    if (i == 0)
+                        slashPoint += perpendicularDirection * SwordSide * 50f;
+
+                    slashPoints.Add(slashPoint);
+
+                    generalOffset = Projectile.Size * 0.5f - Main.screenPosition;
+                }
+                else
+                    slashPoints.Add(Projectile.Center + slashOffset);
+            }
+
+            // Manually use the overriding start/end points if using the oldPos cache, since that can result in weird starting directions for the trail.
+            if (UsePositionCacheForTrail)
+            {
+                SlashDrawer.OverridingStickPointStart = Vector2.Zero;
+                SlashDrawer.OverridingStickPointEnd = Vector2.Zero;
             }
 
             slashShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"));
-            slashShader.UseColor(Color.HotPink);
+            slashShader.UseColor(Color.DeepSkyBlue);
             slashShader.UseSecondaryColor(Color.Transparent);
             slashShader.Shader.Parameters["fireColor"].SetValue(Color.White.ToVector3());
             slashShader.Shader.Parameters["flipped"].SetValue(SwordSide == 1f);
 
+            SlashDrawer.DegreeOfBezierCurveCornerSmoothening = 8;
             for (int i = 0; i < 2; i++)
                 SlashDrawer.Draw(slashPoints, generalOffset, 90);
         }
