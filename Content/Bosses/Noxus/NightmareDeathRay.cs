@@ -1,10 +1,10 @@
-﻿using CalamityMod;
+﻿using System.Collections.Generic;
+using System.IO;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics.Primitives;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;

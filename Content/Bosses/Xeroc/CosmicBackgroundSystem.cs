@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Threading;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
-using System;
-using System.Threading;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;

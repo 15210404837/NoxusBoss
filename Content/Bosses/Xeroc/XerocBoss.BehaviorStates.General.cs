@@ -1,18 +1,18 @@
 ﻿using System.Linq;
-using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.ID;
+using System.Reflection;
+using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
-using CalamityMod;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core;
-using System.Reflection;
+using NoxusBoss.Core.Graphics;
+using Terraria;
 using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
 using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
 

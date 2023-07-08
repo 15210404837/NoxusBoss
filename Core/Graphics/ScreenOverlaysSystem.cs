@@ -1,8 +1,8 @@
-﻿using CalamityMod;
+﻿using System;
+using System.Collections.Generic;
+using CalamityMod;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
-using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ModLoader;

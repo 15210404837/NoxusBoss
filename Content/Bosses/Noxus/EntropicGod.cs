@@ -1,4 +1,7 @@
-﻿using CalamityMod;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using CalamityMod;
 using CalamityMod.Items.Potions;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
@@ -10,9 +13,6 @@ using NoxusBoss.Content.Items;
 using NoxusBoss.Content.Items.Pets;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;

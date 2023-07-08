@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System;
 using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using System.Linq;
 
 namespace NoxusBoss.Core
 {

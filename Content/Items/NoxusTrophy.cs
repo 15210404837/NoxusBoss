@@ -1,7 +1,7 @@
-﻿using Terraria;
-using Terraria.ModLoader;
+﻿using NoxusBoss.Content.Tiles;
+using Terraria;
 using Terraria.ID;
-using NoxusBoss.Content.Tiles;
+using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items
 {

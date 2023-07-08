@@ -1,10 +1,9 @@
-﻿using CalamityMod;
+﻿using System.Reflection;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
 using ReLogic.Content;
-using System;
-using System.Reflection;
 using Terraria;
 using Terraria.Chat;
 using Terraria.Graphics.Effects;

@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using CalamityMod.Items.Potions;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {

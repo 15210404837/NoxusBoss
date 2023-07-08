@@ -1,17 +1,17 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Terraria.ID;
-using CalamityMod.Particles;
-using CalamityMod;
-using NoxusBoss.Core.Graphics;
-using Terraria.Audio;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CalamityMod;
 using CalamityMod.Items.Weapons.Melee;
+using CalamityMod.Particles;
+using Microsoft.Xna.Framework;
+using NoxusBoss.Core.Graphics;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
 using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
-using Terraria.DataStructures;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -215,7 +215,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     // Decide the punch destination right before it happens.
                     if (wrappedHandAttackTimer == handEnergyChargeUpTime - 1f)
                     {
-                        SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce with { Volume = 8f, MaxInstances = 10, Pitch = -0.5f });
+                        SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce with
+                        {
+                            Volume = 8f,
+                            MaxInstances = 10,
+                            Pitch = -0.5f
+                        });
 
                         ScreenEffectSystem.SetBlurEffect(punchingHandCenter, 0.67f, 10);
                         RadialScreenShoveSystem.Start(punchingHandCenter, 20);
@@ -542,7 +547,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                         NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
 
-                    SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce with { Volume = 8f, MaxInstances = 10, Pitch = -0.5f });
+                    SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce with
+                    {
+                        Volume = 8f,
+                        MaxInstances = 10,
+                        Pitch = -0.5f
+                    });
                 }
                 leftHandHoverPosition = NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * handHoverOffset;
                 rightHandHoverPosition = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * handHoverOffset;
@@ -550,7 +560,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Create stars.
                 if (AttackTimer % starCreationRate == 1f && AttackTimer < backgroundDimTime + starCreationRate * starCreationCountPerSide)
                 {
-                    SoundEngine.PlaySound(SoundID.Item100 with { Pitch = 0.2f, Volume = 0.6f, MaxInstances = 8 });
+                    SoundEngine.PlaySound(SoundID.Item100 with
+                    {
+                        Pitch = 0.2f,
+                        Volume = 0.6f,
+                        MaxInstances = 8
+                    });
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         starCreationCounter++;
@@ -768,7 +783,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Play slash sounds.
             if (animationCompletion >= 0.54f && animationCompletion <= 0.55f)
             {
-                SoundEngine.PlaySound(Exoblade.BigSwingSound with { Pitch = 0.2f, PitchVariance = 0f });
+                SoundEngine.PlaySound(Exoblade.BigSwingSound with
+                {
+                    Pitch = 0.2f,
+                    PitchVariance = 0f
+                });
                 Target.Calamity().GeneralScreenShakePower = 8.5f;
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 1f, 30);
             }

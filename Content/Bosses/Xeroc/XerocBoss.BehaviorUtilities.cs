@@ -1,13 +1,13 @@
 ﻿using System;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.Audio;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Particles;
-using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {

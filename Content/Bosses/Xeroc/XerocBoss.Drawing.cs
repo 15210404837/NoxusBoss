@@ -1,15 +1,15 @@
-﻿using System.Linq;
-using System;
+﻿using System;
+using System.Linq;
 using CalamityMod;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
 using ReLogic.Graphics;
 using Terraria;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
 using Terraria.GameContent;
-using Terraria.UI.Chat;
 using Terraria.Graphics.Shaders;
+using Terraria.ModLoader;
+using Terraria.UI.Chat;
 using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc

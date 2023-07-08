@@ -1,8 +1,6 @@
 ﻿using CalamityMod;
-using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.Graphics.Shaders;
