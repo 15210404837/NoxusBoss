@@ -14,6 +14,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SendExtraAI(BinaryWriter writer)
         {
+            writer.Write(CurrentPhase);
             writer.Write(PhaseCycleIndex);
             writer.Write(SwordSlashCounter);
             writer.Write(SwordSlashDirection);
@@ -24,6 +25,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             writer.WriteVector2(CensorPosition);
             writer.WriteVector2(PunchDestination);
             writer.WriteVector2(SwordChargeDestination);
+            writer.WriteVector2(HandFireDestination);
 
             // Write lists.
             writer.Write(Hands.Count);
@@ -37,6 +39,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void ReceiveExtraAI(BinaryReader reader)
         {
+            CurrentPhase = reader.ReadInt32();
             PhaseCycleIndex = reader.ReadInt32();
             SwordSlashCounter = reader.ReadInt32();
             SwordSlashDirection = reader.ReadInt32();
@@ -47,6 +50,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             GeneralHoverOffset = reader.ReadVector2();
             CensorPosition = reader.ReadVector2();
             PunchDestination = reader.ReadVector2();
+            HandFireDestination = reader.ReadVector2();
 
             // Read lists.
             Hands.Clear();

@@ -19,7 +19,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int SliceTime => 10;
 
-        public int ShotProjectileTelegraphTime => (int)(TelegraphTime * 2f - 14f);
+        public int ShotProjectileTelegraphTime => (int)Clamp(TelegraphTime * 2f - 14f, 10f, 60f);
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 

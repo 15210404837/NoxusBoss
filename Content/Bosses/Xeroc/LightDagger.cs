@@ -35,7 +35,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
-            Projectile.timeLeft = 90;
+            Projectile.timeLeft = 120;
             Projectile.Opacity = 0f;
             Projectile.hide = true;
         }

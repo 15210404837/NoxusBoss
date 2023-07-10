@@ -21,7 +21,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public ref float LaserLengthFactor => ref Projectile.ai[1];
 
-        public static int LaserLifetime => 300;
+        public static int LaserLifetime => 360;
 
         public static float MaxLaserLength => 5000f;
 
@@ -77,6 +77,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
+            // Give a generous time window before the laser starts doing damage, in case players are unfortunate enough to be standing right below Xeroc when
+            // it appears.
+            if (Time <= 40f)
+                return false;
+
             float _ = 0f;
             Vector2 start = Projectile.Center;
             Vector2 end = Projectile.Center + Projectile.velocity * LaserLengthFactor * MaxLaserLength;

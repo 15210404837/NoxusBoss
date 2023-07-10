@@ -45,7 +45,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public float StarScaleFactor => Remap(Time, 150f, 300f, 1f, 2.6f);
 
-        public static int ConvergeTime => 240;
+        public static int ConvergeTime => 120;
 
         public ref float SwordSide => ref Projectile.ai[1];
 
@@ -64,7 +64,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 50;
             Projectile.width = 850;
             Projectile.height = 850;
             Projectile.penetrate = -1;
@@ -111,7 +110,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Projectile.FinalExtraUpdate())
                 Time++;
 
-            // Store the word shape.
+            // Store the sword shape.
             SwordShape = swordShape;
         }
 
@@ -129,8 +128,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public float GetStarMovementInterpolant(int index)
         {
-            int starPrepareStartTime = (int)(index * 0.54f) + 30;
-            return Pow(GetLerpValue(starPrepareStartTime, starPrepareStartTime + 90f, Time, true), 0.65f);
+            int starPrepareStartTime = (int)(index * ConvergeTime / 540f) + 10;
+            return Pow(GetLerpValue(starPrepareStartTime, starPrepareStartTime + 50f, Time, true), 0.65f);
         }
 
         public Vector2 GetStarPosition(int index)

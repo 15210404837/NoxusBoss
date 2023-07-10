@@ -114,6 +114,9 @@ namespace NoxusBoss.Core.Graphics
 
         public static void DrawGalaxies(float backgroundIntensity)
         {
+            if (backgroundIntensity > 1f)
+                backgroundIntensity = 1f;
+
             var galaxyShader = GameShaders.Misc[$"NoxusBoss:GalaxyShader"];
             var gd = Main.instance.GraphicsDevice;
             Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/MoltenNoise").Value;

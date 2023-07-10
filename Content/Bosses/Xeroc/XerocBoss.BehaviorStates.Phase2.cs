@@ -19,83 +19,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
-        public void DoBehavior_LightBeamTransformation()
-        {
-            int redirectTime = 45;
-            int upwardRiseTime = 30;
-            int chaseTime = SuperLightBeam.LaserLifetime;
-            int laserTelegraphTime = 49;
-            float sliceTelegraphLength = 5000f;
-
-            // Redirect above the target.
-            if (AttackTimer <= redirectTime)
-            {
-                Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 600f, -300f);
-                NPC.Opacity = 1f;
-
-                // Add some momentum, shove the screen, and play violent sounds on the first frame.
-                if (AttackTimer == 1f)
-                {
-                    SoundEngine.PlaySound(BossRushEvent.Tier4TransitionSound);
-                    RadialScreenShoveSystem.Start(NPC.Center, 16);
-                    NPC.velocity = (hoverDestination - Target.Center) * 0.075f;
-                    NPC.netUpdate = true;
-                }
-                else
-                    NPC.velocity *= 0.8f;
-
-                UpdateWings(AttackTimer / redirectTime);
-
-                NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.16f);
-            }
-
-            // Fade away as the light beam appears.
-            else if (AttackTimer <= redirectTime + upwardRiseTime)
-            {
-                NPC.Opacity = Clamp(NPC.Opacity - 0.09f, 0f, 1f);
-                NPC.velocity.X *= 0.9f;
-                NPC.velocity = Vector2.Lerp(NPC.velocity, -Vector2.UnitY * 35f, 0.1f);
-
-                // Create the light beam at the end.
-                if (AttackTimer == redirectTime + upwardRiseTime - 1f)
-                {
-                    LocalScreenSplitSystem.Start(NPC.Center, 20, PiOver2 * 0.9999f, 500f);
-                    SoundEngine.PlaySound(ScreamSound with { Volume = 3f });
-                    SoundEngine.PlaySound(SupernovaSound with { Volume = 8f });
-                    ScreenEffectSystem.SetFlashEffect(NPC.Center, 8f, 60);
-
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center, Vector2.UnitY, ModContent.ProjectileType<SuperLightBeam>(), SuperLaserbeamDamage, 0f);
-                }
-            }
-
-            // Chase the target.
-            else if (AttackTimer <= redirectTime + upwardRiseTime + chaseTime)
-            {
-                NPC.Opacity = 0f;
-                if (NPC.velocity.Y <= -20f)
-                    NPC.velocity.Y += 4f;
-
-                NPC.position.Y = Target.position.Y;
-                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 16f, 0.19f);
-
-                if (AttackTimer % 22f == 0f)
-                {
-                    ScreenEffectSystem.SetFlashEffect(NPC.Center, 0.9f, 90);
-                    ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 2f, 18);
-                    SoundEngine.PlaySound(SunFireballShootSound);
-                    if (Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        Vector2 laserSpawnPosition = Target.Center - Target.velocity.SafeNormalize((TwoPi * AttackTimer / 60f).ToRotationVector2()) * 300f;
-                        Vector2 laserDirection = (Target.Center - laserSpawnPosition).SafeNormalize(Vector2.UnitY);
-                        NewProjectileBetter(laserSpawnPosition, laserDirection, ModContent.ProjectileType<TelegraphedLightLaserbeam>(), LightLaserbeamDamage, 0f, -1, laserTelegraphTime, 26f);
-                    }
-                }
-            }
-            else if (AttackTimer >= redirectTime + upwardRiseTime + chaseTime + 60f)
-                AttackTimer = 0f;
-        }
-
         public void DoBehavior_ScreenSlicesWithTeleport()
         {
             int sliceShootDelay = 40;
@@ -599,7 +522,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
 
-            // Get rid of the seam.
+            // Get rid of the seam if it's still there but hidden.
             SeamScale = 0f;
 
             // Make the background dim and have Xeroc go into the background at first.
@@ -864,11 +787,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Play slash sounds.
             if (animationCompletion >= 0.54f && animationCompletion <= 0.55f)
             {
-                SoundEngine.PlaySound(Exoblade.BigSwingSound with
-                {
-                    Pitch = 0.2f,
-                    PitchVariance = 0f
-                });
+                SoundEngine.PlaySound(SwordSlashSound);
                 Target.Calamity().GeneralScreenShakePower = 8.5f;
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 1f, 30);
             }
@@ -1022,11 +941,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NPC.velocity = (SwordChargeDestination - Target.Center) * 0.075f;
                     NPC.netUpdate = true;
 
-                    SoundEngine.PlaySound(Exoblade.BigSwingSound with
-                    {
-                        Pitch = 0.2f,
-                        PitchVariance = 0f
-                    });
+                    SoundEngine.PlaySound(SwordSlashSound);
                     RadialScreenShoveSystem.Start(NPC.Center, 20);
 
                     // Reset the trail cache for all swords.

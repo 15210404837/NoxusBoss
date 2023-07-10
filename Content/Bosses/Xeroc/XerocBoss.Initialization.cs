@@ -85,13 +85,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.lifeMax = 13765256;
 
             if (Main.expertMode)
-            {
                 NPC.damage = 600;
-
-                // Fuck arbitrary Expert boosts.
-                NPC.lifeMax /= 2;
-                NPC.damage /= 2;
-            }
 
             double HPBoost = CalamityConfig.Instance.BossHealthBoost * 0.01;
             NPC.lifeMax += (int)(NPC.lifeMax * HPBoost);
@@ -111,6 +105,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPC.Calamity().ShouldCloseHPBar = true;
 
             Wings = new XerocWing[WingCount];
+        }
+
+        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        {
+            NPC.lifeMax = (int)(NPC.lifeMax * bossLifeScale / (Main.masterMode ? 3f : 2f));
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

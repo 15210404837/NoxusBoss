@@ -189,6 +189,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Reality manipulation attacks.
             ScreenSlicesWithTeleport,
             PunchesWithScreenSlices,
+            HandScreenShatter,
+            TimeManipulation,
 
             // TODO -- Find out something for phase transition attacks.
 
@@ -297,6 +299,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public Vector2 HandFireDestination
+        {
+            get;
+            set;
+        }
+
         public XerocWing[] Wings
         {
             get;
@@ -390,6 +398,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocExplosion") with { Volume = 1.3f };
 
+        public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFastHandMovement") with { Volume = 1.25f };
+
         public static readonly SoundStyle FingerSnapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFingerSnap") with { Volume = 1.4f };
 
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocHumm") with { Volume = 1.1f, IsLooped = true };
@@ -401,6 +411,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
 
         public static readonly SoundStyle SliceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSliceTelegraph") with { Volume = 1.05f, MaxInstances = 20 };
+
+        public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };
 
         public static readonly SoundStyle SunFireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/SunFireballShootSound") with { Volume = 1.05f, MaxInstances = 5 };
 
@@ -552,6 +564,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
                 case XerocAttackType.PunchesWithScreenSlices:
                     DoBehavior_PunchesWithScreenSlices();
+                    break;
+                case XerocAttackType.HandScreenShatter:
+                    DoBehavior_HandScreenShatter();
+                    break;
+                case XerocAttackType.TimeManipulation:
+                    DoBehavior_TimeManipulation();
                     break;
 
                 case XerocAttackType.DeathAnimation:

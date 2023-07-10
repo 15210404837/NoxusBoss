@@ -75,7 +75,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Time <= slowdownTime)
                 Projectile.velocity *= 0.84f;
             else if (Time <= slowdownTime + redirectTime)
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * 10f, 0.037f);
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * 10f, 0.035f);
             else if (Time <= slowdownTime + redirectTime + fastHomeTime)
             {
                 float maxBaseSpeed = Lerp(23.75f, 32f, Projectile.identity / 8f % 1f);

@@ -125,12 +125,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             float timeFade = GetLerpValue(LaserShootTime - 1f, LaserShootTime - 8f, Time - TelegraphTime, true);
             float startFade = GetLerpValue(0f, 0.065f, completionRatio, true);
-            return Color.IndianRed * Projectile.Opacity * timeFade * startFade * 0.4f;
+            return Color.IndianRed * Projectile.Opacity * timeFade * startFade * 0.75f;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (Time <= TelegraphTime)
+            if (Time <= TelegraphTime || Time >= TelegraphTime + LaserShootTime - 7f)
                 return false;
 
             float _ = 0f;
