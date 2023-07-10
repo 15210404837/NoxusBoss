@@ -41,6 +41,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public PrimitiveTrail SlashDrawer;
 
+        public int SwordSideFactor = 1;
+
         public bool UsePositionCacheForTrail => Projectile.ai[0] == 1f;
 
         public float StarScaleFactor => Remap(Time, 150f, 300f, 1f, 2.6f);
@@ -105,6 +107,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Inherit the sword rotation and slash opacity from Xeroc.
             Projectile.rotation = XerocBoss.Myself.ai[2] * (UsePositionCacheForTrail ? 1f : SwordSide);
+            if (SwordSideFactor == -1f)
+                Projectile.rotation = Vector2.Reflect(Projectile.rotation.ToRotationVector2(), Vector2.UnitX).ToRotation() * SwordSide;
+
             SlashOpacity = XerocBoss.Myself.ai[3];
 
             if (Projectile.FinalExtraUpdate())

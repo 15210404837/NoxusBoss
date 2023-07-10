@@ -38,7 +38,7 @@ namespace NoxusBoss.Core
                 else
                 {
                     var pathWriter = File.CreateText(XerocDefeatConfirmationFilePath);
-                    pathWriter.WriteLine("The contents of this file don't matter, just that the file exists. Delete it if you want Xeroc to not be marked is defeated.");
+                    pathWriter.WriteLine("The contents of this file don't matter, just that the file exists. Delete it if you want Xeroc to not be marked as defeated.");
                     pathWriter.Close();
                 }
             }

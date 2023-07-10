@@ -192,8 +192,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             HandScreenShatter,
             TimeManipulation,
 
-            // TODO -- Find out something for phase transition attacks.
+            // Phase transitions.
+            EnterPhase2,
+            EnterPhase3,
 
+            // Death animation.
             DeathAnimation
         }
 
@@ -245,7 +248,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
-        public float UniversalUpdateTimer
+        public float FightLength
         {
             get;
             set;
@@ -396,6 +399,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             private set => myself = value;
         }
 
+        public static readonly SoundStyle ClockStrikeSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocClockStrike") with { Volume = 1.35f };
+
+        public static readonly SoundStyle ClockTickSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocClockTick") with { Volume = 1.1f, IsLooped = true };
+
         public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocExplosion") with { Volume = 1.3f };
 
         public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFastHandMovement") with { Volume = 1.25f };
@@ -442,7 +449,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int SuperLaserbeamDamage => Main.expertMode ? 800 : 500;
 
+        public static int IdealFightDuration => SecondsToFrames(270f);
+
+        public static float MaxTimedDRDamageReduction => 0.35f;
+
         public const int DefaultTeleportDelay = 8;
+
+        public const float Phase2LifeRatio = 0.65f;
+
+        public const float Phase3LifeRatio = 0.3f;
 
         public const float DefaultDR = 0.25f;
 
@@ -505,6 +520,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Set the global NPC instance.
             Myself = NPC;
 
+            // Perform behaviors.
             switch (CurrentAttack)
             {
                 case XerocAttackType.Awaken:
@@ -516,7 +532,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.RoarAnimation:
                     DoBehavior_RoarAnimation();
                     break;
-
                 case XerocAttackType.ConjureExplodingStars:
                     DoBehavior_ConjureExplodingStars();
                     break;
@@ -529,7 +544,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.LightBeamTransformation:
                     DoBehavior_LightBeamTransformation();
                     break;
-
                 case XerocAttackType.StarManagement:
                     DoBehavior_StarManagement();
                     break;
@@ -542,7 +556,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.CircularPortalLaserBarrages:
                     DoBehavior_CircularPortalLaserBarrages();
                     break;
-
                 case XerocAttackType.StarManagement_CrushIntoQuasar:
                     DoBehavior_StarManagement_CrushIntoQuasar();
                     break;
@@ -558,7 +571,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.SwordConstellation2:
                     DoBehavior_SwordConstellation2();
                     break;
-
                 case XerocAttackType.ScreenSlicesWithTeleport:
                     DoBehavior_ScreenSlicesWithTeleport();
                     break;
@@ -571,7 +583,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.TimeManipulation:
                     DoBehavior_TimeManipulation();
                     break;
-
+                case XerocAttackType.EnterPhase2:
+                    DoBehavior_EnterPhase2();
+                    break;
+                case XerocAttackType.EnterPhase3:
+                    DoBehavior_EnterPhase3();
+                    break;
                 case XerocAttackType.DeathAnimation:
                     DoBehavior_DeathAnimation();
                     break;
@@ -598,7 +615,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Increment timers.
             AttackTimer++;
-            UniversalUpdateTimer++;
+            FightLength++;
 
             // Perform Z position visual effects.
             PerformZPositionEffects();
@@ -606,9 +623,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update the idle sound.
             UpdateIdleSound();
 
-            // Make it night time.
-            Main.dayTime = false;
-            Main.time = Lerp((float)Main.time, 16000f, 0.14f);
+            // Handle phase transitions.
+            HandlePhaseTransitions();
+
+            // Make it night time. This does not apply if time is being manipulated by the clock.
+            if (!AnyProjectiles(ModContent.ProjectileType<ClockConstellation>()))
+            {
+                Main.dayTime = false;
+                Main.time = Lerp((float)Main.time, 16000f, 0.14f);
+            }
 
             // Update hands.
             foreach (XerocHand hand in Hands)

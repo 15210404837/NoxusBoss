@@ -6,6 +6,8 @@ namespace NoxusBoss.Core.Graphics
     {
         public float LayeringPriority => 0f;
 
+        public bool DrawAdditiveShader => false;
+
         public void Draw(SpriteBatch spriteBatch);
     }
 }

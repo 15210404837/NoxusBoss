@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -19,10 +20,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // The DrawBehind section of code causes Xeroc to layer being things like trees to better sell the illusion.
             NPC.scale = 1f / (ZPosition + 1f);
             if (Math.Abs(ZPosition) >= 2.03f)
-            {
-                NPC.dontTakeDamage = true;
                 NPC.ShowNameOnHover = false;
-            }
 
             if (ZPosition <= -0.96f)
                 NPC.scale = 0f;
@@ -77,6 +75,31 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             idleSound.Volume = NPC.Opacity * backgroundSoundFade * 0.32f;
             idleSound.Position = NPC.Center;
+        }
+
+        public void HandlePhaseTransitions()
+        {
+            // Enter phase 2.
+            if (LifeRatio <= Phase2LifeRatio && CurrentPhase == 0)
+            {
+                ClearAllProjectiles();
+                SelectNextAttack();
+                CurrentAttack = XerocAttackType.EnterPhase2;
+                PhaseCycleIndex = 0;
+                CurrentPhase++;
+                NPC.netUpdate = true;
+            }
+
+            // Enter phase 3.
+            if (LifeRatio <= Phase2LifeRatio && CurrentPhase == 1)
+            {
+                ClearAllProjectiles();
+                SelectNextAttack();
+                CurrentAttack = XerocAttackType.EnterPhase3;
+                PhaseCycleIndex = 0;
+                CurrentPhase++;
+                NPC.netUpdate = true;
+            }
         }
 
         public void ConjureHandsAtPosition(Vector2 position, Vector2 velocity, bool hasSigil)
@@ -209,7 +232,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
                 default:
                     NPC.Opacity = 1f;
-                    XerocAttackType[] phaseCycle = TestCycle;
+                    XerocAttackType[] phaseCycle = Phase1Cycle;
+                    if (CurrentPhase == 1)
+                        phaseCycle = Phase2Cycle;
+                    if (CurrentPhase == 2)
+                        phaseCycle = Phase3Cycle;
+
                     CurrentAttack = phaseCycle[PhaseCycleIndex % phaseCycle.Length];
                     PhaseCycleIndex++;
                     break;
@@ -242,6 +270,44 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             SoundEngine.PlaySound(EntropicGod.TwinkleSound);
             return twinkle;
+        }
+
+        public void ClearAllProjectiles()
+        {
+            List<int> projectilesToDelete = new()
+            {
+                ModContent.ProjectileType<ArcingStarburst>(),
+                ModContent.ProjectileType<BackgroundStar>(),
+                ModContent.ProjectileType<ClockConstellation>(),
+                ModContent.ProjectileType<ControlledStar>(),
+                ModContent.ProjectileType<ConvergingSupernovaEnergy>(),
+                ModContent.ProjectileType<ExplodingStar>(),
+                ModContent.ProjectileType<LightDagger>(),
+                ModContent.ProjectileType<LightPortal>(),
+                ModContent.ProjectileType<Quasar>(),
+                ModContent.ProjectileType<Starburst>(),
+                ModContent.ProjectileType<StarPatterenedStarburst>(),
+                ModContent.ProjectileType<SunFireball>(),
+                ModContent.ProjectileType<SuperLightBeam>(),
+                ModContent.ProjectileType<SwordConstellation>(),
+                ModContent.ProjectileType<TelegraphedLightLaserbeam>(),
+                ModContent.ProjectileType<TelegraphedScreenSlice>(),
+                ModContent.ProjectileType<TelegraphedScreenSlice2>(),
+                ModContent.ProjectileType<TelegraphedStarLaserbeam>()
+            };
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile p = Main.projectile[i];
+                if (p.active && projectilesToDelete.Contains(p.type))
+                {
+                    if (p.type == ModContent.ProjectileType<ClockConstellation>())
+                        p.Kill();
+                    else
+                        p.active = false;
+                }
+            }
+
+            DestroyAllHands();
         }
     }
 }

@@ -10,8 +10,10 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
-    public class ExplodingStar : ModProjectile
+    public class ExplodingStar : ModProjectile, IDrawsWithShader
     {
+        public bool DrawAdditiveShader => true;
+
         public ref float Temperature => ref Projectile.localAI[0];
 
         public ref float Time => ref Projectile.localAI[1];
@@ -96,10 +98,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
-
             Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise").Value;
             Texture2D noise2 = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise").Value;
@@ -120,14 +120,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             fireballShader.Parameters["opacity"].SetValue(Projectile.Opacity);
             fireballShader.CurrentTechnique.Passes[0].Apply();
 
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.3f, SpriteEffects.None, 0f);
 
             fireballShader.Parameters["mainColor"].SetValue(Color.Wheat.ToVector3() * Projectile.Opacity * 0.6f);
             fireballShader.CurrentTechnique.Passes[0].Apply();
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.08f, SpriteEffects.None, 0f);
-
-            Main.spriteBatch.ExitShaderRegion();
-            return false;
+            spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.08f, SpriteEffects.None, 0f);
         }
     }
 }

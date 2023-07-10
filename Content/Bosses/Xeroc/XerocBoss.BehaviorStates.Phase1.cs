@@ -341,6 +341,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int starburstReleaseRate = 30;
             int starburstCount = 9;
             float starburstStartingSpeed = 3.5f;
+
+            // Make things faster in successive phases.
+            if (CurrentPhase >= 1)
+            {
+                attackDelay -= 10;
+                flareShootCount--;
+                shootTime -= 90;
+            }
+
             ref float flareShootCounter = ref NPC.ai[2];
 
             // Flap wings.
@@ -575,6 +584,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int laserbeamCount = 7;
             int shootTime = 510;
             float hoverFlySpeedInterpolant = 0.1f;
+
+            // Make things faster in successive phases.
+            if (CurrentPhase >= 1)
+            {
+                fireballReleaseRate -= 6;
+                laserbeamCount += 2;
+                shootTime -= 90;
+            }
+
             ref float laserbeamShootTimer = ref NPC.ai[2];
 
             // Flap wings.
@@ -706,6 +724,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float plasmaShootSpeed = 9f;
             float handOrbitOffset = 100f;
             float pressureInterpolant = GetLerpValue(redirectTime, redirectTime + starPressureTime, AttackTimer, true);
+
+            // Make things faster in successive phases.
+            if (CurrentPhase >= 1)
+                plasmaShootRate--;
 
             Projectile star = null;
             Projectile quasar = null;

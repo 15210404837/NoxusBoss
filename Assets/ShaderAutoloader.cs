@@ -44,6 +44,9 @@ namespace NoxusBoss.Assets
 
             Ref<Effect> s4 = new(Mod.Assets.Request<Effect>("Assets/Effects/ScreenSplitShader", AssetRequestMode.ImmediateLoad).Value);
             Filters.Scene["NoxusBoss:LocalScreenSplit"] = new Filter(new LocalScreenSplitShaderData(s4, "AutoloadPass"), EffectPriority.VeryHigh);
+
+            Ref<Effect> s5 = new(Mod.Assets.Request<Effect>("Assets/Effects/XerocClockDeathZoneShader", AssetRequestMode.ImmediateLoad).Value);
+            Filters.Scene["NoxusBoss:XerocClockDeathDeathSky"] = new Filter(new XerocClockDeathDeathScreenShaderData(s5, "AutoloadPass"), EffectPriority.VeryHigh);
         }
     }
 }

@@ -12,8 +12,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         #region Attack Cycles
 
-        // The attack cycles for Xeroc are specifically designed to go in a repeated quick paced -> precise dance that gradually increases in speed across the different cycles.
-        // Please do not change it without careful consideration.
+        // These attack cycles for Xeroc are specifically designed to go in a repeated quick paced -> precise dance that gradually increases in speed across the different cycles.
+        // Please do not change them without careful consideration.
         public static XerocAttackType[] Phase1Cycle => new[]
         {
             // Start off with the arcing attack. It will force the player to move around to evade the starbursts.
@@ -43,9 +43,62 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             XerocAttackType.PortalLaserBarrages
         };
 
+        public static XerocAttackType[] Phase2Cycle => new[]
+        {
+            // Start out with a fast attack in the form of the screen slices.
+            XerocAttackType.ScreenSlicesWithTeleport,
+
+            // Continue the fast pace with the punches + screen slices attack.
+            XerocAttackType.PunchesWithScreenSlices,
+
+            // Slow down the pace with circular portals. Following this the player will be moving in a precise, slow way.
+            XerocAttackType.CircularPortalLaserBarrages,
+
+            // Amp the pace up again with stars from the background. This will demand fast movement and zoning of the player.
+            XerocAttackType.BrightStarJumpscares,
+
+            // Get the player up close and personal with Xeroc with the true-melee sword attack.
+            XerocAttackType.SwordConstellation2,
+
+            // Return to something a bit slower again with the converging stars. This has a fast end point, however, which should naturally transition to the other attacks.
+            XerocAttackType.StarConvergenceAndRedirecting,
+
+            // Make the player use their speed from the end of the previous attack with the other sword attack.
+            XerocAttackType.SwordConstellation,
+            
+            // Use the zoning background stars attack again the continue applying fast pressure onto the player.
+            XerocAttackType.BrightStarJumpscares,
+
+            // Follow with a precise attack in the form of the star lasers. This naturally follows with the chasing quasar, which amps up the pacing again.
+            // This is a phase 1 attack, but is faster in the second phase.
+            XerocAttackType.StarManagement,
+            XerocAttackType.StarManagement_CrushIntoQuasar,
+
+            // Return to the fast paced cycle with the true melee sword constellation attack again.
+            XerocAttackType.SwordConstellation2,
+
+            // Steal the sun for a slower paced attack, as the cycle repeats.
+            XerocAttackType.StealSun,
+        };
+
+        // With the exception of the clock attack this cycle should keep the player constantly on the move.
+        public static XerocAttackType[] Phase3Cycle => new[]
+        {
+            // Start with the true melle sword attack. This one uses two swords and is a bit faster than the original from the second phase.
+            XerocAttackType.SwordConstellation2,
+
+            // The aforementioned slow clock attack.
+            XerocAttackType.TimeManipulation,
+            
+            // A chaotic laser chase sequence to keep the player constantly on their feet.
+            XerocAttackType.LightBeamTransformation,
+
+            // Slice the screen.
+            XerocAttackType.ScreenSlicesWithTeleport,
+        };
+
         public static XerocAttackType[] TestCycle => new[]
         {
-            XerocAttackType.LightBeamTransformation,
             XerocAttackType.SwordConstellation2
         };
 

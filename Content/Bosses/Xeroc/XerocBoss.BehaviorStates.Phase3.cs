@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
@@ -7,6 +8,7 @@ using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -75,6 +77,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.position.Y = Target.position.Y;
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 16f, 0.19f);
 
+                // Periodically release fire beams.
                 if (AttackTimer % 22f == 0f && AttackTimer <= redirectTime + upwardRiseTime + chaseTime - 60f)
                 {
                     ScreenEffectSystem.SetFlashEffect(NPC.Center, 0.9f, 90);
@@ -279,7 +282,89 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_TimeManipulation()
         {
+            int redirectTime = 35;
+            int attackDuration = 1160;
+            var clocks = AllProjectilesByID(ModContent.ProjectileType<ClockConstellation>());
+            ref float attackHasConcluded = ref NPC.ai[2];
 
+            // Flap wings.
+            UpdateWings(AttackTimer / 45f % 1f);
+
+            // Hover near the target at first.
+            if (AttackTimer <= redirectTime)
+            {
+                Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 400f, -250f);
+                NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.29f);
+                NPC.Opacity = 1f;
+
+                // Make the background dark.
+                attackHasConcluded = 0f;
+                HeavenlyBackgroundIntensity = Lerp(1f, 0.18f, AttackTimer / redirectTime);
+                SeamScale = 0f;
+            }
+
+            // Teleport away after redirecting and create a clock constellation on top of the target.
+            if (AttackTimer == redirectTime)
+            {
+                SoundEngine.PlaySound(SupernovaSound);
+                SoundEngine.PlaySound(ScreamSound);
+                SoundEngine.PlaySound(ExplosionTeleportSound);
+                Target.Calamity().GeneralScreenShakePower = 12f;
+
+                ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<ClockConstellation>(), 0, 0f);
+                }
+
+                TeleportTo(Target.Center + Vector2.UnitY * 2000f);
+            }
+
+            // Stay below the target, invisible, after redirecting.
+            if (AttackTimer >= redirectTime && attackHasConcluded == 0f)
+            {
+                NPC.Opacity = 0f;
+                NPC.Center = Target.Center + Vector2.UnitY * 2000f;
+
+                // Burn the target if they try to leave the clock.
+                if (clocks.Any() && !Target.WithinRange(clocks.First().Center, 1200f))
+                    Target.Hurt(PlayerDeathReason.ByNPC(NPC.whoAmI), Main.rand.Next(900, 950), 0);
+            }
+
+            if (AttackTimer >= attackDuration && attackHasConcluded == 0f)
+            {
+                foreach (var clock in clocks)
+                {
+                    clock.Kill();
+                    TeleportTo(clock.Center);
+                }
+
+                SoundEngine.PlaySound(SupernovaSound);
+                SoundEngine.PlaySound(ScreamSound);
+                SoundEngine.PlaySound(ExplosionTeleportSound);
+                Target.Calamity().GeneralScreenShakePower = 12f;
+
+                ScreenEffectSystem.SetFlashEffect(NPC.Center, 5f, 90);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    attackHasConcluded = 1f;
+                    NPC.Opacity = 1f;
+                    NPC.netUpdate = true;
+
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                }
+            }
+
+            // Make the background return.
+            if (attackHasConcluded == 1f)
+            {
+                HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity + 0.05f, 0f, 1f);
+                if (HeavenlyBackgroundIntensity >= 1f)
+                    SelectNextAttack();
+            }
         }
     }
 }

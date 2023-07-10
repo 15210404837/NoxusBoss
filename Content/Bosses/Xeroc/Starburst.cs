@@ -17,6 +17,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             private set;
         }
 
+        public bool Big => Projectile.ai[1] == 2f;
+
         public ref float Time => ref Projectile.ai[0];
 
         public bool Redirect => Projectile.ai[1] == 1f;
@@ -43,8 +45,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public override void AI()
         {
             // Accelerate over time.
-            if (Projectile.velocity.Length() <= 33f)
-                Projectile.velocity *= 1.04f;
+            if (Projectile.velocity.Length() <= 33f && !ClockConstellation.TimeIsStopped)
+                Projectile.velocity *= Big ? 1.031f : 1.04f;
+
+            // Keep the projectile in stasis if time is stopped.
+            if (ClockConstellation.TimeIsStopped)
+                Projectile.timeLeft++;
 
             // Release short-lived orange-red sparks.
             if (Main.rand.NextBool(12))
@@ -63,6 +69,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Animate frames.
             Projectile.frameCounter++;
             Projectile.frame = Projectile.frameCounter / 4 % Main.projFrames[Type];
+
+            if (Projectile.localAI[0] == 0f && Big)
+            {
+                Projectile.Size *= 1.8f;
+                Projectile.scale *= 1.8f;
+                Projectile.localAI[0] = 1f;
+            }
 
             // Sharply redirect towards the closest player if this projectile is instructed to do so.
             if (Redirect && Time >= 65f)
@@ -108,8 +121,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + projectile.identity;
-            Color bloomFlareColor1 = Color.Yellow with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
-            Color bloomFlareColor2 = Color.Red with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
+
+            Color baseColor1 = ClockConstellation.TimeIsStopped ? Color.Turquoise : Color.Yellow;
+            Color baseColor2 = ClockConstellation.TimeIsStopped ? Color.Cyan : Color.Red;
+            Color bloomFlareColor1 = baseColor1 with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
+            Color bloomFlareColor2 = baseColor2 with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
+
             Vector2 bloomFlareDrawPosition = projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.08f, 0, 0f);
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
@@ -124,7 +141,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             DrawStarburstBloomFlare(Projectile);
 
             // Draw afterimages that trail closely behind the star core.
-            int afterimageCount = 5;
+            int afterimageCount = Big ? 2 : 5;
             for (int i = 0; i < afterimageCount; ++i)
             {
                 float afterimageRotation = Projectile.oldRot[i];
@@ -146,11 +163,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void Draw()
         {
+            if (Big)
+                return;
+
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
 
             // Draw a flame trail.
             GameShaders.Misc["CalamityMod:ImpFlameTrail"].SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"));
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 30);
+            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 10);
         }
+
+        public override bool ShouldUpdatePosition() => !ClockConstellation.TimeIsStopped;
     }
 }

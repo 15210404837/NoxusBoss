@@ -1,6 +1,7 @@
 ﻿using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using Terraria;
 using Terraria.ID;

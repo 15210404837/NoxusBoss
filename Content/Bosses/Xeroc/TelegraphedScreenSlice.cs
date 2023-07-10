@@ -1,4 +1,5 @@
 ﻿using CalamityMod;
+using CalamityMod.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
@@ -54,14 +55,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Split the screen and create daggers if the telegraph is over.
             if (Time == TelegraphTime - 1f)
             {
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 4f;
-                LocalScreenSplitSystem.Start(Projectile.Center + Projectile.velocity * LineLength * 0.5f, SliceTime * 2 + 3, Projectile.rotation, Projectile.width * 0.5f);
+                bool clockExists = AnyProjectiles(ModContent.ProjectileType<ClockConstellation>());
+                Main.LocalPlayer.Calamity().GeneralScreenShakePower += 2f;
+                LocalScreenSplitSystem.Start(Projectile.Center + Projectile.velocity * LineLength * 0.5f, SliceTime * 2 + 3, Projectile.rotation, Projectile.width * (clockExists ? 1f : 0.5f));
+
+                if (clockExists)
+                    RadialScreenShoveSystem.Start(Projectile.Center + Projectile.velocity * LineLength * 0.5f, 60);
 
                 // Release the daggers.
-                SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
+                if (clockExists)
+                    SoundEngine.PlaySound(CommonCalamitySounds.LargeWeaponFireSound with { Volume = 2.75f });
+                else
+                    SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    for (float d = 0f; d < LineLength; d += 200f)
+                    float daggerSpacing = clockExists ? 175f : 200f;
+                    for (float d = 0f; d < LineLength; d += daggerSpacing)
                     {
                         float hueInterpolant = d / LineLength * 2f % 1f;
                         Vector2 daggerStartingVelocity = Projectile.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(PiOver2) * 16f;

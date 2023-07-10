@@ -688,6 +688,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             if (CurrentPhase >= 1)
                 ChargeAfterimageInterpolant = 1f;
 
+            // Increment timers.
             AttackTimer++;
             FightLength++;
         }

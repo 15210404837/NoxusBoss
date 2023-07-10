@@ -70,13 +70,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 return;
             }
 
-            // Start the loop sound on the first frame.
-            if (Projectile.localAI[0] == 0f || !SoundEngine.TryGetActiveSound(LoopSound, out _))
-            {
-                LoopSound = SoundEngine.PlaySound(XerocBoss.QuasarLoopSound, Projectile.Center);
-                Projectile.localAI[0] = 1f;
-            }
-
             // Grow over time.
             Projectile.scale = CalamityUtils.ExpInEasing(GetLerpValue(0f, 35f, Time, true), 0) * 10f;
 
@@ -109,15 +102,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 p.Update(Projectile.Center);
             }
 
+            // Dissipate at the end.
+            Projectile.Opacity = GetLerpValue(8f, 60f, Projectile.timeLeft, true);
+
+            // Start the loop sound on the first frame.
+            if (Projectile.localAI[0] == 0f || !SoundEngine.TryGetActiveSound(LoopSound, out _))
+            {
+                LoopSound = SoundEngine.PlaySound(XerocBoss.QuasarLoopSound, Projectile.Center);
+                Projectile.localAI[0] = 1f;
+            }
+
             // Update the loop sound.
             if (SoundEngine.TryGetActiveSound(LoopSound, out ActiveSound s))
             {
                 s.Position = Projectile.Center;
                 s.Volume = Projectile.Opacity;
             }
-
-            // Dissipate at the end.
-            Projectile.Opacity = GetLerpValue(8f, 60f, Projectile.timeLeft, true);
 
             Time++;
         }

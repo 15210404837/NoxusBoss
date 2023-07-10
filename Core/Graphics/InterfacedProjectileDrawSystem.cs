@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CalamityMod;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -41,7 +42,11 @@ namespace NoxusBoss.Core.Graphics
                 return p.active && p.ModProjectile is IDrawsWithShader drawer;
             }).Select(p => p.ModProjectile as IDrawsWithShader).OrderBy(i => i.LayeringPriority).ToList();
 
-            foreach (var drawer in orderedDrawers)
+            foreach (var drawer in orderedDrawers.Where(d => !d.DrawAdditiveShader))
+                drawer.Draw(Main.spriteBatch);
+
+            Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
+            foreach (var drawer in orderedDrawers.Where(d => d.DrawAdditiveShader))
                 drawer.Draw(Main.spriteBatch);
         }
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
-using CalamityMod.Events;
-using CalamityMod.Items.Weapons.Melee;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core.Graphics;
@@ -24,8 +22,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int sliceShootDelay = 40;
             int sliceReleaseRate = 7;
             int sliceReleaseCount = 9;
-            int sliceReleaseTime = sliceReleaseRate * sliceReleaseCount + 25;
             float sliceLength = 3200f;
+
+            // Make the attack faster in successive phases.
+            if (CurrentPhase >= 2)
+            {
+                sliceShootDelay -= 7;
+                sliceReleaseRate--;
+                sliceReleaseCount--;
+            }
+
+            int sliceReleaseTime = sliceReleaseRate * sliceReleaseCount + 25;
             ref float sliceCounter = ref NPC.ai[2];
 
             // Flap wings.
@@ -840,16 +847,24 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             int constellationConvergeTime = SwordConstellation.ConvergeTime;
             int animationTime = 63 - SwordSlashCounter * 3;
-            if (SwordSlashCounter <= 0)
-                animationTime += 15;
-            if (animationTime <= 48)
-                animationTime = 48;
-
             int slashCount = 5;
             float anticipationAnimationPercentage = 0.5f;
+
+            // Make the attack faster in successive phases.
+            if (CurrentPhase >= 2)
+            {
+                animationTime -= 3;
+                slashCount++;
+            }
+
             float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
             ref float swordRotation = ref NPC.ai[2];
             ref float slashOpacity = ref NPC.ai[3];
+
+            if (SwordSlashCounter <= 0)
+                animationTime += 15;
+            if (animationTime <= 47)
+                animationTime = 47;
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);

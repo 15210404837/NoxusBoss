@@ -251,6 +251,34 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SelectNextAttack();
         }
 
+        public void DoBehavior_EnterPhase2()
+        {
+            // TODO -- Implement this.
+            if (AttackTimer == 1f)
+            {
+                TeleportTo(Target.Center - Vector2.UnitY * 350f);
+                Target.Calamity().GeneralScreenShakePower = 12f;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+
+                SelectNextAttack();
+            }
+        }
+
+        public void DoBehavior_EnterPhase3()
+        {
+            // TODO -- Implement this.
+            if (AttackTimer == 1f)
+            {
+                TeleportTo(Target.Center - Vector2.UnitY * 350f);
+                Target.Calamity().GeneralScreenShakePower = 12f;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+
+                SelectNextAttack();
+            }
+        }
+
         public void DoBehavior_DeathAnimation()
         {
             int handCount = 222;
