@@ -28,9 +28,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Now that the player has spent a bunch of time doing weaving and tight, precise movements, get them back into the fast moving action again with the arcing starbursts.
             XerocAttackType.ShootArcingStarburstsFromEye,
 
-            // And again, account for the leftover momentum with a "slower" attack in the form of the attack where Xeroc uses the sun to conjure fireballs and solar flares.
-            // The wind-up time will be sufficient to prevent cheap hits.
-            XerocAttackType.StealSun,
+            // And again, account for the leftover momentum with a "slower" attack in the form of a laserbeam attack.
+            XerocAttackType.PortalLaserBarrages,
 
             // And again, follow up with a precise attack in the form of the star lasers. This naturally follows with the chasing quasar, which amps up the pacing again.
             XerocAttackType.StarManagement,
@@ -77,8 +76,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Return to the fast paced cycle with the true melee sword constellation attack again.
             XerocAttackType.SwordConstellation2,
 
-            // Steal the sun for a slower paced attack, as the cycle repeats.
-            XerocAttackType.StealSun,
+            // Use the star convergence again, as the cycle repeats.
+            XerocAttackType.StarConvergenceAndRedirecting,
         };
 
         // With the exception of the clock attack this cycle should keep the player constantly on the move.
@@ -99,7 +98,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static XerocAttackType[] TestCycle => new[]
         {
-            XerocAttackType.SwordConstellation2
+            XerocAttackType.StarManagement,
+            XerocAttackType.StarManagement_CrushIntoQuasar,
         };
 
         #endregion Attack Cycles
@@ -135,7 +135,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // That is all. Goodbye.
             // No, I will not entertain Master Mode or the difficulty seeds.
             if (CalamityWorld.death)
-                NPC.lifeMax = 13765256;
+                NPC.lifeMax = 13767256;
 
             if (Main.expertMode)
                 NPC.damage = 600;

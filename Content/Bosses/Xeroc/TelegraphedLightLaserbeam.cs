@@ -34,7 +34,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public ref float LaserLengthFactor => ref Projectile.localAI[1];
 
-        public static float MaxLaserLength => 5000f;
+        public static float MaxLaserLength => 8000f;
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 

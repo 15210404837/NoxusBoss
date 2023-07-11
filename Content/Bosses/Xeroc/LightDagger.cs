@@ -93,7 +93,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DrawTelegraph()
         {
             Vector2 start = Projectile.Center;
-            Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.UnitY) * 3500f;
+            Vector2 end = start + Projectile.velocity.SafeNormalize(Vector2.UnitY) * 2100f;
             Main.spriteBatch.DrawBloomLine(start, end, GeneralColor * Sqrt(1f - DaggerAppearInterpolant), Projectile.Opacity * 40f);
         }
 

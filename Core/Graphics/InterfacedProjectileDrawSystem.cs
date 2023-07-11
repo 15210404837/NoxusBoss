@@ -22,12 +22,17 @@ namespace NoxusBoss.Core.Graphics
         {
             orig(self);
 
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            // Use screen culling for optimization reasons.
+            RasterizerState screenCull = Main.Rasterizer;
+            screenCull.ScissorTestEnable = true;
+            Main.instance.GraphicsDevice.ScissorRectangle = new(-50, -50, Main.screenWidth + 50, Main.screenHeight + 50);
+
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, screenCull, null, Main.GameViewMatrix.TransformationMatrix);
 
             DrawShaderProjectiles();
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, screenCull, null, Main.GameViewMatrix.TransformationMatrix);
 
             DrawAdditiveProjectiles();
 

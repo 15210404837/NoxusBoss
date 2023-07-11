@@ -176,7 +176,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Fire attacks.
             StarManagement,
             PortalLaserBarrages,
-            StealSun,
+            StealSun, // This attack is scrapped due to being jank.
             CircularPortalLaserBarrages,
 
             // General cosmic attacks.

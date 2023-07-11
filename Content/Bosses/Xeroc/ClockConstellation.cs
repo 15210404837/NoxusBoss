@@ -202,9 +202,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Release starbursts in an even spread. This is made to roughly sync up with the clock ticks.
-            int starburstReleaseRate = 24;
-            int starburstCount = 7;
-            float starburstShootSpeed = 0.8f;
+            int starburstReleaseRate = 18;
+            int starburstCount = 9;
+            float starburstShootSpeed = 2.2f;
             if (Main.netMode != NetmodeID.MultiplayerClient && handAppearInterpolant >= 0.75f && Time % starburstReleaseRate == 9f && !TimeIsStopped && TollCounter < 2)
             {
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower = 5f;

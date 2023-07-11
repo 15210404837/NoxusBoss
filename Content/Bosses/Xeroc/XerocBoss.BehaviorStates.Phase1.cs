@@ -437,12 +437,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { Pitch = -0.4f, MaxInstances = 5 }, star.Center);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
+                    int starburstID = ModContent.ProjectileType<Starburst>();
                     int starburstCounter = (int)Round(AttackTimer / starburstReleaseRate);
                     float shootOffsetAngle = starburstCounter % 2 == 0 ? Pi / starburstCount : 0f;
+                    if (!NPC.WithinRange(Target.Center, 1450f))
+                    {
+                        if (Main.rand.NextBool())
+                            starburstID = ModContent.ProjectileType<ArcingStarburst>();
+                        starburstStartingSpeed *= 5.6f;
+                    }
+
                     for (int i = 0; i < starburstCount; i++)
                     {
                         Vector2 starburstVelocity = star.SafeDirectionTo(Target.Center).RotatedBy(TwoPi * i / starburstCount + shootOffsetAngle) * starburstStartingSpeed;
-                        NewProjectileBetter(star.Center + starburstVelocity * 8f, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                        NewProjectileBetter(star.Center + starburstVelocity * 8f, starburstVelocity, starburstID, StarburstDamage, 0f);
                     }
                 }
             }
@@ -640,9 +648,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Release an idle stream of slithering solar fireballs, and occasionally create bright flashes that release fire lasers.
             else if (AttackTimer <= sunDescentTime + sunGrowTime + shootTime)
             {
+                // Slow down before firing.
+                laserbeamShootTimer++;
+                hoverFlySpeedInterpolant *= GetLerpValue(laserbeamShootDelay - 1f, laserbeamShootDelay * 0.6f, laserbeamShootTimer, true);
+
                 // Make the sun stay above Xeroc.
                 Vector2 idealSunPosition = new(NPC.Center.X - Main.screenPosition.X, ManualSunDrawPosition.Y);
-                ManualSunDrawPosition = Vector2.Lerp(ManualSunDrawPosition, idealSunPosition, 0.075f);
+                ManualSunDrawPosition = Vector2.Lerp(ManualSunDrawPosition, idealSunPosition, 1f);
 
                 // Periodically release the bursts of fireballs.
                 // TODO -- This is probably not going to work in multiplayer.
@@ -662,12 +674,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 // Periodically release the telegraphed lasers.
-                laserbeamShootTimer++;
-                hoverFlySpeedInterpolant *= GetLerpValue(laserbeamShootDelay - 1f, laserbeamShootDelay * 0.6f, laserbeamShootTimer, true);
                 if (AnyProjectiles(ModContent.ProjectileType<TelegraphedStarLaserbeam>()))
                 {
                     hoverFlySpeedInterpolant = 0f;
                     laserbeamShootTimer = 0f;
+                    NPC.velocity = Vector2.Zero;
                 }
                 if (Main.netMode != NetmodeID.MultiplayerClient && laserbeamShootTimer >= laserbeamShootDelay)
                 {

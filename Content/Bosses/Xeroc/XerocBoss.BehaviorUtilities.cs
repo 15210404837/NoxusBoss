@@ -87,6 +87,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 ClearAllProjectiles();
                 SelectNextAttack();
+                XerocSky.ManualSunDrawPosition = Vector2.UnitY * -3000f;
                 CurrentAttack = XerocAttackType.EnterPhase2;
                 PhaseCycleIndex = 0;
                 CurrentPhase++;
@@ -99,6 +100,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ClearAllProjectiles();
                 SelectNextAttack();
                 CurrentAttack = XerocAttackType.EnterPhase3;
+                XerocSky.ManualSunDrawPosition = Vector2.UnitY * -3000f;
                 PhaseCycleIndex = 0;
                 CurrentPhase++;
                 NPC.netUpdate = true;

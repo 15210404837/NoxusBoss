@@ -30,6 +30,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int seamAppearTime = 5;
             int seamGrowTime = 120;
 
+            // NO. You do NOT get adrenaline for sitting around and doing nothing.
+            Target.Calamity().adrenaline = 0f;
+
             if (WorldSaveSystem.HasMetXeroc)
             {
                 starRecedeDelay = 8;
@@ -110,6 +113,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int ripOpenTime = 18;
             int backgroundAppearDelay = 240;
             int backgroundAppearTime = 180;
+
+            // NO. You do NOT get adrenaline for sitting around and doing nothing.
+            Target.Calamity().adrenaline = 0f;
 
             if (WorldSaveSystem.HasMetXeroc)
             {

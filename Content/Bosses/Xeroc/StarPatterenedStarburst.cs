@@ -45,7 +45,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             DisplayName.SetDefault("Starburst");
             Main.projFrames[Type] = 6;
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 13;
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;
         }
 
         public override void SetDefaults()
@@ -173,7 +173,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Starburst.DrawStarburstBloomFlare(Projectile, 1.6f);
 
             // Draw afterimages that trail closely behind the star core.
-            int afterimageCount = 4;
+            int afterimageCount = 3;
             for (int i = 0; i < afterimageCount; ++i)
             {
                 float afterimageRotation = Projectile.oldRot[i];
@@ -199,7 +199,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Draw a flame trail.
             GameShaders.Misc["CalamityMod:ImpFlameTrail"].SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"));
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 13);
+            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 7);
         }
 
         public override bool ShouldUpdatePosition() => Time >= DelayUntilFreeMovement;

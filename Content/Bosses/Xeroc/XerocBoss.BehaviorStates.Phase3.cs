@@ -329,7 +329,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.Center = Target.Center + Vector2.UnitY * 2000f;
 
                 // Burn the target if they try to leave the clock.
-                if (clocks.Any() && !Target.WithinRange(clocks.First().Center, 1200f))
+                if (clocks.Any() && !Target.WithinRange(clocks.First().Center, 1040f))
                     Target.Hurt(PlayerDeathReason.ByNPC(NPC.whoAmI), Main.rand.Next(900, 950), 0);
             }
 

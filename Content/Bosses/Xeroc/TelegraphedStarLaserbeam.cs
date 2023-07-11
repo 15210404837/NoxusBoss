@@ -141,7 +141,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             float timeFadeOpacity = GetLerpValue(TelegraphTime - 1f, TelegraphTime - 7f, Time, true) * GetLerpValue(0f, TelegraphTime - 15f, Time, true);
             float endFadeOpacity = GetLerpValue(0f, 0.15f, completionRatio, true) * GetLerpValue(1f, 0.67f, completionRatio, true);
-            return Color.LightGoldenrodYellow * endFadeOpacity * timeFadeOpacity * Projectile.Opacity * 0.13f;
+            return Color.LightGoldenrodYellow * endFadeOpacity * timeFadeOpacity * Projectile.Opacity * 0.26f;
         }
 
         public float LaserWidthFunction(float completionRatio) => Projectile.Opacity * Projectile.width;

@@ -20,8 +20,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_ScreenSlicesWithTeleport()
         {
             int sliceShootDelay = 40;
-            int sliceReleaseRate = 5;
-            int sliceReleaseCount = 10;
+            int sliceReleaseRate = 4;
+            int sliceReleaseCount = 9;
             float sliceLength = 3200f;
 
             // Make the attack faster in successive phases.
@@ -878,9 +878,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             ref float slashOpacity = ref NPC.ai[3];
 
             if (SwordSlashCounter <= 0)
-                animationTime += 31;
-            if (animationTime <= 47)
-                animationTime = 47;
+                animationTime += 39;
+            if (animationTime <= 29)
+                animationTime = 29;
             float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
 
             // Flap wings.

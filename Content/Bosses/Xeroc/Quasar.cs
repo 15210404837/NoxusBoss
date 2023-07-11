@@ -75,12 +75,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Accelerate towards the target.
             Player target = Main.player[XerocBoss.Myself.target];
-            Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.04f;
-            Projectile.velocity += force;
 
-            // Make the black hole go faster if it's moving away from the target.
-            if (Vector2.Dot(Projectile.SafeDirectionTo(target.Center), Projectile.velocity) < 0f)
-                Projectile.velocity += force * 1.3f;
+            if (!Projectile.WithinRange(target.Center, 300f))
+            {
+                Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.09f;
+                Projectile.velocity += force;
+
+                // Make the black hole go faster if it's moving away from the target.
+                if (Vector2.Dot(Projectile.SafeDirectionTo(target.Center), Projectile.velocity) < 0f)
+                    Projectile.velocity += force * 1.3f;
+
+                // Zip towards the target if they're not moving much.
+                if (target.velocity.Length() <= 4f)
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 28f, 0.08f);
+            }
 
             // Enforce a hard limit on the velocity.
             Projectile.velocity = Projectile.velocity.ClampMagnitude(0f, 30f);
@@ -180,6 +188,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Main.spriteBatch.Draw(tex, drawPosition, null, Color.White * particle.Opacity * Projectile.Opacity * 0.9f, rot, origin, scale, SpriteEffects.None, 0f);
             }
         }
+
+        // Prevent cheap hits if the quasar happens to spawn near a player at first.
+        public override bool? CanDamage() => Time >= 48f && Projectile.Opacity >= 0.8f;
 
         public override void Kill(int timeLeft)
         {
