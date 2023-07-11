@@ -227,6 +227,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
             }
 
+            // Bring the music.
+            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Xeroc");
+
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);
 

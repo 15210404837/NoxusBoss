@@ -79,6 +79,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void HandlePhaseTransitions()
         {
+            if (CurrentAttack == XerocAttackType.DeathAnimation)
+                return;
+
             // Enter phase 2.
             if (LifeRatio <= Phase2LifeRatio && CurrentPhase == 0)
             {
@@ -91,7 +94,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Enter phase 3.
-            if (LifeRatio <= Phase2LifeRatio && CurrentPhase == 1)
+            if (LifeRatio <= Phase3LifeRatio && CurrentPhase == 1)
             {
                 ClearAllProjectiles();
                 SelectNextAttack();
@@ -232,6 +235,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
                 default:
                     NPC.Opacity = 1f;
+
                     XerocAttackType[] phaseCycle = Phase1Cycle;
                     if (CurrentPhase == 1)
                         phaseCycle = Phase2Cycle;
@@ -256,7 +260,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void TriggerDeathAnimation()
         {
             SelectNextAttack();
-            DestroyAllHands();
+            ClearAllProjectiles();
             NPC.dontTakeDamage = true;
             CurrentAttack = XerocAttackType.DeathAnimation;
             NPC.netUpdate = true;

@@ -90,6 +90,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 return true;
 
             TriggerDeathAnimation();
+            NPC.life = NPC.lifeMax;
             return false;
         }
 

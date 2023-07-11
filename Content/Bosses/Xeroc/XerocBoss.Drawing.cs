@@ -18,7 +18,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         public override void DrawBehind(int index)
         {
-            bool canDraw = CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || NPC.Opacity >= 0.02f;
+            bool canDraw = CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || CurrentAttack == XerocAttackType.DeathAnimation || NPC.Opacity >= 0.02f;
             if (NPC.hide && canDraw)
             {
                 if ((DrawCongratulatoryText || UniversalBlackOverlayInterpolant >= 0.02f) && ZPosition >= -0.5f)
@@ -117,7 +117,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     handScale *= 2f;
                 }
 
-                Color handColor = Color.Coral * hand.Opacity * NPC.Opacity * ZPositionOpacity;
+                Color handColor = Color.Coral * hand.Opacity * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
                 if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken)
                     handColor = Color.White;
 

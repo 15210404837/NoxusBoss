@@ -931,9 +931,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (wrappedAttackTimer <= animationTime * anticipationAnimationPercentage - 13f)
                 {
                     float distanceToTarget = NPC.Distance(Target.Center);
-                    float dashDistance = MathF.Max(distanceToTarget + 300f, 900f);
+                    float dashDistance = MathF.Max(distanceToTarget + 250f, 850f);
                     if (Target.velocity.Length() <= 2f)
-                        dashDistance -= 100f;
+                        dashDistance -= 200f;
 
                     SwordChargeDestination = NPC.Center + NPC.SafeDirectionTo(Target.Center) * dashDistance;
 
