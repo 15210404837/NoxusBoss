@@ -63,8 +63,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Return to something a bit slower again with the converging stars. This has a fast end point, however, which should naturally transition to the other attacks.
             XerocAttackType.StarConvergenceAndRedirecting,
 
-            // Make the player use their speed from the end of the previous attack with the other sword attack.
-            XerocAttackType.SwordConstellation,
+            // Make the player use their speed from the end of the previous attack with the punches.
+            XerocAttackType.PunchesWithScreenSlices,
             
             // Use the zoning background stars attack again the continue applying fast pressure onto the player.
             XerocAttackType.BrightStarJumpscares,

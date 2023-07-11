@@ -874,14 +874,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 slashCount++;
             }
 
-            float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
             ref float swordRotation = ref NPC.ai[2];
             ref float slashOpacity = ref NPC.ai[3];
 
             if (SwordSlashCounter <= 0)
-                animationTime += 15;
+                animationTime += 31;
             if (animationTime <= 47)
                 animationTime = 47;
+            float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);

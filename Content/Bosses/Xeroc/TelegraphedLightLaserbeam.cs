@@ -115,7 +115,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public Color TelegraphColorFunction(float completionRatio)
         {
             float timeFadeOpacity = GetLerpValue(TelegraphTime - 1f, TelegraphTime - 7f, Time, true) * GetLerpValue(0f, TelegraphTime - 20f, Time, true);
-            float endFadeOpacity = GetLerpValue(0f, 0.15f, completionRatio, true) * GetLerpValue(1f, 0.8f, completionRatio, true);
+            float endFadeOpacity = GetLerpValue(0f, 0.15f, completionRatio, true) * GetLerpValue(1f, 0.67f, completionRatio, true);
             return Color.LightCoral * endFadeOpacity * timeFadeOpacity * Projectile.Opacity * 0.3f;
         }
 

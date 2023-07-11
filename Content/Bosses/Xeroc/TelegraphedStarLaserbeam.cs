@@ -140,8 +140,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public Color TelegraphColorFunction(float completionRatio)
         {
             float timeFadeOpacity = GetLerpValue(TelegraphTime - 1f, TelegraphTime - 7f, Time, true) * GetLerpValue(0f, TelegraphTime - 15f, Time, true);
-            float endFadeOpacity = GetLerpValue(0f, 0.15f, completionRatio, true) * GetLerpValue(1f, 0.8f, completionRatio, true);
-            return Color.LightGoldenrodYellow * endFadeOpacity * timeFadeOpacity * Projectile.Opacity * 0.08f;
+            float endFadeOpacity = GetLerpValue(0f, 0.15f, completionRatio, true) * GetLerpValue(1f, 0.67f, completionRatio, true);
+            return Color.LightGoldenrodYellow * endFadeOpacity * timeFadeOpacity * Projectile.Opacity * 0.13f;
         }
 
         public float LaserWidthFunction(float completionRatio) => Projectile.Opacity * Projectile.width;
@@ -180,7 +180,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Projectile.Center + laserDirection * MaxLaserLength * 0.8f,
                     Projectile.Center + laserDirection * MaxLaserLength,
                 };
-                TelegraphDrawer.Draw(telegraphPoints, -Main.screenPosition, 33);
+                TelegraphDrawer.Draw(telegraphPoints, -Main.screenPosition, 47);
                 return;
             }
 

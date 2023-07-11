@@ -183,7 +183,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             StarManagement_CrushIntoQuasar,
             StarConvergenceAndRedirecting,
             BrightStarJumpscares,
-            SwordConstellation,
+            SwordConstellation, // This attack is scrapped due to being jank and outclassed by the second variant.
             SwordConstellation2,
 
             // Reality manipulation attacks.
