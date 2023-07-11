@@ -173,7 +173,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 int handRepositionTime = 30;
                 int handCollideTime = 14;
-                int handCollideStunTime = 37;
+                int handCollideStunTime = 88;
                 int wrappedHandAttackTimer = (int)(AttackTimer - redirectTime - handSummonTime) % (handEnergyChargeUpTime + handArcPunchTime + handRepositionTime + handCollideTime + handCollideStunTime);
                 int screenSliceCount = 6;
                 int sliceTelegraphDelay = 36;
