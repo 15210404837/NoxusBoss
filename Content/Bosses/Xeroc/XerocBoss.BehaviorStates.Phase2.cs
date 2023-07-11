@@ -20,8 +20,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_ScreenSlicesWithTeleport()
         {
             int sliceShootDelay = 40;
-            int sliceReleaseRate = 7;
-            int sliceReleaseCount = 9;
+            int sliceReleaseRate = 5;
+            int sliceReleaseCount = 10;
             float sliceLength = 3200f;
 
             // Make the attack faster in successive phases.
@@ -343,7 +343,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                             for (int i = 0; i < screenSliceCount; i++)
                             {
                                 Vector2 screenSliceDirection = (TwoPi * i / screenSliceCount + angleToTarget).ToRotationVector2();
-                                NewProjectileBetter(impactPoint - screenSliceDirection * 2000f, screenSliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice2>(), 0, 0f, -1, sliceTelegraphDelay, 4000f);
+                                NewProjectileBetter(impactPoint - screenSliceDirection * 2000f, screenSliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, sliceTelegraphDelay, 4000f);
                             }
                             leftHand.TrailOpacity = 0f;
                             rightHand.TrailOpacity = 0f;
@@ -415,6 +415,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float spinRadius = 220f;
             float handMoveSpeedFactor = 3.7f;
             ref float spinDirection = ref NPC.ai[2];
+            ref float starOffset = ref NPC.ai[3];
 
             // Keep the right hand pointed in the direction away from the target, as though it's conjuring energy into the star.
             // The left hand is kept to the bottom left.
@@ -468,7 +469,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         SoundEngine.PlaySound(SunFireballShootSound);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
                         NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay);
+
+                        int star = NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio + Pi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 7);
+                        if (Main.projectile.IndexInRange(star))
+                        {
+                            Main.projectile[star].ModProjectile<StarPatterenedStarburst>().RadiusOffset = 400f;
+                            Main.projectile[star].ModProjectile<StarPatterenedStarburst>().ConvergenceAngleOffset = Pi / 5f;
+                        }
+
+                        star = NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio + TwoPi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 14);
+                        if (Main.projectile.IndexInRange(star))
+                        {
+                            Main.projectile[star].ModProjectile<StarPatterenedStarburst>().RadiusOffset = 900f;
+                            Main.projectile[star].ModProjectile<StarPatterenedStarburst>().ConvergenceAngleOffset = TwoPi / 5f;
+                        }
+                    }
                 }
             }
 

@@ -581,7 +581,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int fireballReleaseRate = 30;
             int laserbeamShootDelay = (int)Remap(AttackTimer - sunDescentTime - sunGrowTime, 90f, 360f, 150f, 36f);
             int laserbeamTelegraphTime = 40;
-            int laserbeamCount = 7;
+            int laserbeamCount = 8;
             int shootTime = 510;
             float hoverFlySpeedInterpolant = 0.1f;
 
@@ -655,8 +655,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     float fireballShootSpeed = 50f;
                     for (int i = 0; i < 3; i++)
                     {
-                        Vector2 fireballShootVelocity = (Target.Center - sunPositionWorld).SafeNormalize(Vector2.UnitY).RotatedBy(Lerp(-0.05f, 0.05f, i / 2f)) * fireballShootSpeed + Main.rand.NextVector2Circular(1f, 1f);
-                        Vector2 fireballSpawnPosition = sunPositionWorld + fireballShootVelocity.SafeNormalize(Vector2.UnitY) * ManualSunScale * 4f;
+                        Vector2 fireballShootVelocity = (Target.Center - sunPositionWorld).SafeNormalize(Vector2.UnitY).RotatedBy(Lerp(-0.14f, 0.14f, i / 2f)) * fireballShootSpeed + Main.rand.NextVector2Circular(1f, 1f);
+                        Vector2 fireballSpawnPosition = sunPositionWorld + fireballShootVelocity.SafeNormalize(Vector2.UnitY) * ManualSunScale * 4.75f;
                         NewProjectileBetter(fireballSpawnPosition, fireballShootVelocity, ModContent.ProjectileType<SunFireball>(), FireballDamage, 0f);
                     }
                 }
@@ -703,7 +703,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Calculate the background hover position.
             float hoverHorizontalWaveSine = Sin(TwoPi * AttackTimer / 96f);
             float hoverVerticalWaveSine = Sin(TwoPi * AttackTimer / 120f);
-            Vector2 hoverDestination = Target.Center + new Vector2(Target.velocity.X * -10f, ZPosition * 30f - 100f);
+            Vector2 hoverDestination = Target.Center + new Vector2(Target.velocity.X * -4f, ZPosition * 30f - 100f);
             hoverDestination.X += hoverHorizontalWaveSine * ZPosition * 10f;
             hoverDestination.Y -= hoverVerticalWaveSine * ZPosition * 8f;
 
@@ -719,7 +719,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int supernovaDelay = 30;
             int pressureArmsCount = 9;
             int plasmaShootDelay = 60;
-            int plasmaShootRate = 4;
+            int plasmaShootRate = 3;
             int plasmaShootTime = Supernova.Lifetime - 90;
             float plasmaShootSpeed = 9f;
             float handOrbitOffset = 100f;
@@ -827,7 +827,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     Vector2 plasmaSpawnPosition = quasar.Center + Main.rand.NextVector2Unit() * (quasar.Distance(Target.Center) + Main.rand.NextFloat(250f, 700f));
                     Vector2 plasmaVelocity = (quasar.Center - plasmaSpawnPosition).SafeNormalize(Vector2.UnitY) * plasmaShootSpeed;
-                    while (Target.WithinRange(plasmaSpawnPosition, 750f))
+                    while (Target.WithinRange(plasmaSpawnPosition, 880f))
                         plasmaSpawnPosition -= plasmaVelocity;
 
                     NewProjectileBetter(plasmaSpawnPosition, plasmaVelocity, ModContent.ProjectileType<ConvergingSupernovaEnergy>(), SupernovaEnergyDamage, 0f);

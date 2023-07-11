@@ -83,7 +83,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Vector2 targetPosition = Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center;
                 if (Projectile.velocity == Vector2.Zero)
                 {
-                    Projectile.velocity = (targetPosition - Projectile.Center) * 0.011f;
+                    Projectile.velocity = (targetPosition - Projectile.Center) * 0.007f;
                     Projectile.netUpdate = true;
                 }
 

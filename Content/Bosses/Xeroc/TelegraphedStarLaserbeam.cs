@@ -82,21 +82,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 LaserLengthFactor = Lerp(LaserLengthFactor, 1f, 0.08f);
 
             // This is calculated as necessary to ensure that a turn of exactly MaxSpinAngularVelocity * TelegraphTime is achieved
-            // during the telegraph. This will use a turning factor based on the Convert01To010 function, or sin(pi * x)
+            // during the telegraph. This will use a turning factor based on the Convert01To010 function, or sin(pi * x)^p
             // In order to determine this, it is useful to frame the problem in terms of a series of discrete steps, because
             // the entire process is a series of discrete angular updates across a discrete number of frames.
 
-            // In this case, N is the number of discrete steps being performed. For the sake of example, it will be assumed to be 6.
+            // In this case, N is the number of discrete steps being performed. For the sake of example, it will be assumed to be 6. p will be assumed to be 4.
 
-            // Frame zero would be an angular offset of sin(pi * 0 / 6), or 0.
-            // Frame one would be sin(pi * 1 / 6), or about 0.5.
-            // Frame two would be sin(pi * 2 / 6), or about 0.866.
-            // Frame three would be sin(pi * 3 / 6), or about 1.
-            // Frame four would be sin(pi * 4 / 6), or about 0.866.
-            // Frame five would be sin(pi * 5 / 6), or about 0.5.
-            // And frame six would be sin(pi * 6 / 6), or 0 again.
+            // Frame zero would be an angular offset of sin(pi * 0 / 6)^4, or 0.
+            // Frame one would be sin(pi * 1 / 6)^4, or about 0.0625.
+            // Frame two would be sin(pi * 2 / 6)^4, or about 0.5625.
+            // Frame three would be sin(pi * 3 / 6)^4, or about 1.
+            // Frame four would be sin(pi * 4 / 6)^4, or about 0.5625.
+            // Frame five would be sin(pi * 5 / 6)^4, or about 0.0625.
+            // And frame six would be sin(pi * 6 / 6)^4, or 0 again.
 
-            // Adding this together results in a total offset of about 3.732. This is obviously quite a bit of turning for just five frames.
+            // Adding this together results in a total offset of about 1.249. This is obviously quite a bit of turning for just five frames.
             // Naturally, it would make sense to "normalize" the offsets by dividing each step by 6, resulting in a total of around 0.622 instead.
             // Now, ideally this value would be 1, because if that were the case that'd mean simple multiplication would allow specification of how much
             // angular change happens across the entire process.
@@ -105,12 +105,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // This is exactly what the purpose of a definite integral is, interestingly! In order to figure out what that 0.622 approaches as N approaches infinity, we can do some
             // calculus to find the exact value, like so:
 
-            // ∫(0, 1) sin(x * pi) =
-            // 1 / pi * ∫(0, pi) sin(x) =
-            // 2 / pi, or approximately 0.63662
-            // In order to make the entire process add up neatly to MaxSpinAngularVelocity * TelegraphTime, a correction factor of pi/2 will be necessary.
+            // ∫(0, 1) sin(x * pi)^p =
+            // 1 / pi * ∫(0, pi) sin(x)^p =
+            // 0.375 for p = 4
+            // In order to make the entire process add up neatly to MaxSpinAngularVelocity * TelegraphTime, a correction factor of 1 / 0.375 will be necessary.
             float spinInterpolant = GetLerpValue(0f, TelegraphTime, Time, true);
-            float angularVelocity = CalamityUtils.Convert01To010(spinInterpolant) * PiOver2 * MaxSpinAngularVelocity;
+            float angularVelocity = Pow(CalamityUtils.Convert01To010(spinInterpolant), 4f) * MaxSpinAngularVelocity / 0.375f;
             Projectile.velocity = Projectile.velocity.RotatedBy(angularVelocity);
             Projectile.rotation = Projectile.velocity.ToRotation();
 
@@ -156,7 +156,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float _ = 0f;
             Vector2 start = Projectile.Center;
             Vector2 end = start + Projectile.velocity * LaserLengthFactor * MaxLaserLength;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.Opacity * Projectile.width * 0.9f, ref _);
         }
 
         public void Draw()

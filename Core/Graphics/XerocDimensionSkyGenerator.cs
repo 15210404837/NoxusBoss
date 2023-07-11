@@ -41,7 +41,7 @@ namespace NoxusBoss.Core.Graphics
             if (DeificTouch.UsingEffect)
             {
                 for (int i = 0; i < 3; i++)
-                    XerocDimensionMetaball.CreateParticle(Main.MouseWorld, Main.rand.NextVector2Circular(4f, 4f), 50f);
+                    XerocDimensionMetaball.CreateParticle(Main.MouseWorld, Main.rand.NextVector2Circular(4f, 4f), 32f);
             }
         }
 

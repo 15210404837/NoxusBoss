@@ -86,14 +86,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int starburstCount = 5;
+                int starburstID = ModContent.ProjectileType<ArcingStarburst>();
                 if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarConvergenceAndRedirecting)
-                    starburstCount = 13;
+                {
+                    starburstCount = 7;
+                    starburstID = ModContent.ProjectileType<Starburst>();
+                }
 
                 Vector2 directionToTarget = Projectile.SafeDirectionTo(Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center);
                 for (int i = 0; i < starburstCount; i++)
                 {
                     Vector2 starburstVelocity = directionToTarget.RotatedBy(TwoPi * i / starburstCount) * 22f + Main.rand.NextVector2Circular(4f, 4f);
-                    NewProjectileBetter(Projectile.Center, starburstVelocity, ModContent.ProjectileType<ArcingStarburst>(), XerocBoss.StarburstDamage, 0f, -1, 0f, StarburstShootSpeedFactor);
+                    NewProjectileBetter(Projectile.Center, starburstVelocity, starburstID, XerocBoss.StarburstDamage, 0f, -1);
                 }
             }
         }

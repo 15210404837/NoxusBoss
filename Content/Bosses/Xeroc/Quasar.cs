@@ -75,12 +75,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Accelerate towards the target.
             Player target = Main.player[XerocBoss.Myself.target];
-            Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.03f;
+            Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.04f;
             Projectile.velocity += force;
 
-            // Make the black hole slow down if it's moving away from the target.
+            // Make the black hole go faster if it's moving away from the target.
             if (Vector2.Dot(Projectile.SafeDirectionTo(target.Center), Projectile.velocity) < 0f)
-                Projectile.velocity *= 0.95f;
+                Projectile.velocity += force * 1.3f;
+
+            // Enforce a hard limit on the velocity.
+            Projectile.velocity = Projectile.velocity.ClampMagnitude(0f, 30f);
 
             // Create suck energy particles.
             Vector2 energySpawnPosition = Projectile.Center + Main.rand.NextVector2Unit() * Projectile.width * Main.rand.NextFloat(0.6f, 1.3f);

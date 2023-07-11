@@ -1,4 +1,5 @@
-﻿using CalamityMod;
+﻿using System.IO;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
@@ -22,6 +23,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             get;
             set;
         }
+
+        public float RadiusOffset;
+
+        public float ConvergenceAngleOffset;
 
         public ref float Time => ref Projectile.ai[0];
 
@@ -52,8 +57,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.MaxUpdates = 2;
-            Projectile.timeLeft = Projectile.MaxUpdates * 150;
+            Projectile.timeLeft = Projectile.MaxUpdates * 210;
         }
+
+        public override void SendExtraAI(BinaryWriter writer) => writer.Write(RadiusOffset);
+
+        public override void ReceiveExtraAI(BinaryReader reader) => RadiusOffset = reader.ReadSingle();
 
         public override void AI()
         {
@@ -79,7 +88,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float hoverSnapInterpolant = GetLerpValue(11f, 0f, Time - DelayUntilFreeMovement, true);
             if (hoverSnapInterpolant > 0f)
             {
-                float radius = Pow(GetLerpValue(0f, 12f, Time, true), 2.3f) * 700f + 50f;
+                float radius = Pow(GetLerpValue(0f, 12f, Time, true), 2.3f) * (RadiusOffset + 700f) + 50f;
                 float angle = Projectile.velocity.ToRotation();
                 if (angle < 0f)
                     angle += TwoPi;
@@ -93,7 +102,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 float snapAngle = Round(angle / angleSnapOffset) * angleSnapOffset;
 
                 Vector2 closestPlayerCenter = Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center;
-                Vector2 hoverOffset = Vector2.Lerp(StarPolarEquation(StarPointCount, angle) * radius, (snapAngle + Pi / StarPointCount).ToRotationVector2() * radius * 1.1f, stickInPerfectCircleInterpolant);
+                Vector2 hoverOffset = Vector2.Lerp(StarPolarEquation(StarPointCount, angle) * radius, (snapAngle + Pi / StarPointCount + ConvergenceAngleOffset).ToRotationVector2() * radius * 1.1f, stickInPerfectCircleInterpolant);
                 Vector2 hoverDestination = closestPlayerCenter + hoverOffset;
                 if (stickInPerfectCircleInterpolant >= 0.9f)
                 {
