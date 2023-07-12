@@ -12,7 +12,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         public float DaggerAppearInterpolant => GetLerpValue(TelegraphTime - 16f, TelegraphTime - 3f, Time, true);
 
-        public Color GeneralColor => Color.Lerp(Color.IndianRed, Color.White, HueInterpolant) * Projectile.Opacity;
+        public Color GeneralColor => Color.Lerp(LocalScreenSplitSystem.UseCosmicEffect ? Color.Wheat : Color.IndianRed, Color.White, HueInterpolant) * Projectile.Opacity;
 
         public ref float Time => ref Projectile.localAI[0];
 
@@ -74,8 +74,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Draw bloom underneath the dagger. This is strongest when the blade itself has not yet fully faded in.
             float bloomOpacity = Lerp(1f, 0.6f, DaggerAppearInterpolant) * Projectile.Opacity;
-            Color mainColor = Color.Lerp(Color.IndianRed, Color.LightCoral, Sin(TwoPi * HueInterpolant + Main.GlobalTimeWrappedHourly * 2f) * 0.5f + 0.5f) * bloomOpacity;
-            Color secondaryColor = Color.Lerp(Color.IndianRed, Color.LightCoral, Sin(TwoPi * (1f - HueInterpolant) + Main.GlobalTimeWrappedHourly * 2f) * 0.5f + 0.5f) * bloomOpacity;
+
+            Color c1 = Color.IndianRed;
+            Color c2 = Color.LightCoral;
+            if (LocalScreenSplitSystem.UseCosmicEffect)
+            {
+                c1 = Color.DeepSkyBlue;
+                c2 = Color.White;
+            }
+
+            Color mainColor = Color.Lerp(c1, c2, Sin(TwoPi * HueInterpolant + Main.GlobalTimeWrappedHourly * 2f) * 0.5f + 0.5f) * bloomOpacity;
+            Color secondaryColor = Color.Lerp(c1, c2, Sin(TwoPi * (1f - HueInterpolant) + Main.GlobalTimeWrappedHourly * 2f) * 0.5f + 0.5f) * bloomOpacity;
+
             Main.EntitySpriteDraw(bloom, Projectile.oldPos[1] + Projectile.Size * 0.5f - Main.screenPosition, null, mainColor, 0f, bloom.Size() * 0.5f, Projectile.scale * 1.32f, 0, 0);
             Main.EntitySpriteDraw(bloom, Projectile.oldPos[2] + Projectile.Size * 0.5f - Main.screenPosition, null, secondaryColor, 0f, bloom.Size() * 0.5f, Projectile.scale * 0.34f, 0, 0);
 
@@ -85,7 +95,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 float daggerScale = Lerp(1f, 0.48f, i / 29f) * Projectile.scale;
                 Vector2 daggerDrawOffset = Projectile.velocity.SafeNormalize(Vector2.UnitY) * DaggerAppearInterpolant * i * daggerScale * -daggerOffsetFactor;
-                Color daggerDrawColor = Color.Coral * DaggerAppearInterpolant * Pow(1f - i / 10f, 1.6f) * Projectile.Opacity;
+                Color daggerDrawColor = c2 * DaggerAppearInterpolant * Pow(1f - i / 10f, 1.6f) * Projectile.Opacity;
                 Main.EntitySpriteDraw(texture, Projectile.Center + daggerDrawOffset - Main.screenPosition, null, daggerDrawColor, Projectile.rotation, texture.Size() * 0.5f, daggerScale, 0, 0);
             }
         }

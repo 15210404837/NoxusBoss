@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
-    public class SuperLightBeam : ModProjectile, IDrawPixelatedPrims
+    public class SuperCosmicBeam : ModProjectile, IDrawPixelatedPrims
     {
         public PrimitiveTrail LaserDrawer
         {
@@ -21,7 +21,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public ref float LaserLengthFactor => ref Projectile.ai[1];
 
-        public static int LaserLifetime => 360;
+        public static int LaserLifetime => 540;
 
         public static float MaxLaserLength => 5000f;
 
@@ -29,14 +29,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Light Deathray");
+            DisplayName.SetDefault("Cosmic Deathray");
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 880;
-            Projectile.height = 880;
+            Projectile.width = 800;
+            Projectile.height = 800;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -53,10 +53,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.Kill();
                 return;
             }
-            Projectile.Center = XerocBoss.Myself.Center - Projectile.velocity * MaxLaserLength * LaserLengthFactor * 0.5f;
 
-            // Define the laser's rotation.
-            Projectile.rotation = Projectile.velocity.ToRotation();
+            // Define the laser's direction.
+            Projectile.rotation = XerocBoss.Myself.ai[2];
+            Projectile.velocity = Projectile.rotation.ToRotationVector2();
+            Projectile.Center = XerocBoss.Myself.Center + Projectile.velocity * 300f;
 
             // Fade in.
             LaserLengthFactor = Clamp(LaserLengthFactor + 0.15f, 0f, 1f);
@@ -73,13 +74,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public float LaserWidthFunction(float completionRatio) => Projectile.scale * Projectile.width;
 
-        public Color LaserColorFunction(float completionRatio) => Color.Coral * Projectile.Opacity * 0.24f;
+        public Color LaserColorFunction(float completionRatio) => new Color(53, 18, 100) * GetLerpValue(0f, 0.12f, completionRatio, true) * Projectile.Opacity;
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            // Give a generous time window before the laser starts doing damage, in case players are unfortunate enough to be standing right below Xeroc when
-            // it appears.
-            if (Time <= 40f)
+            // Give a short time window before the laser starts doing damage, to prevent cheap hits.
+            if (Time <= 22f)
                 return false;
 
             float _ = 0f;
@@ -93,26 +93,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void Draw()
         {
             // Initialize the laser drawer.
-            var laserShader = GameShaders.Misc[$"{Mod.Name}:XerocStarLaserShader"];
+            var gd = Main.instance.GraphicsDevice;
+            var laserShader = GameShaders.Misc[$"{Mod.Name}:XerocCosmicLaserShader"];
             LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, laserShader);
 
-            // Draw a backglow for the laser.
-            Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
-            Vector2 center = Projectile.Center + Projectile.velocity * LaserLengthFactor * MaxLaserLength * 0.5f;
-            DrawBloomLineTelegraph(center - Main.screenPosition, new()
-            {
-                LineRotation = -Projectile.rotation,
-                Opacity = Sqrt(Projectile.Opacity),
-                WidthFactor = 0.001f,
-                LightStrength = 0.5f,
-                MainColor = Color.LightCoral,
-                DarkerColor = Color.Red,
-                BloomIntensity = Projectile.Opacity * 0.8f + 0.35f,
-                BloomOpacity = Projectile.Opacity,
-                Scale = Vector2.One * LaserLengthFactor * MaxLaserLength * Projectile.Opacity * 5f
-            }, true);
-
             // Draw the laser after the telegraph is no longer necessary.
+            Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
             Vector2[] laserPoints = new Vector2[]
             {
                 Projectile.Center,
@@ -122,7 +108,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
             laserShader.Shader.Parameters["uStretchReverseFactor"].SetValue(0.15f);
-            laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"));
+            laserShader.Shader.Parameters["scrollSpeedFactor"].SetValue(0.8f);
+            laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"));
+            laserShader.SetShaderTexture2(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
+            gd.Textures[3] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise").Value;
+
             LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
         }
 

@@ -172,6 +172,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             ShootArcingStarburstsFromEye,
             RealityTearDaggers,
             LightBeamTransformation,
+            LightMagicCircle,
 
             // Fire attacks.
             StarManagement,
@@ -403,6 +404,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle ClockTickSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocClockTick") with { Volume = 1.1f, IsLooped = true };
 
+        public static readonly SoundStyle CosmicLaserSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocCosmicLaser") with { Volume = 0.8f };
+
         public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocExplosion") with { Volume = 1.3f };
 
         public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFastHandMovement") with { Volume = 1.25f };
@@ -447,7 +450,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int QuasarDamage => Main.expertMode ? 775 : 500;
 
-        public static int SuperLaserbeamDamage => Main.expertMode ? 800 : 500;
+        public static int SuperLaserbeamDamage => Main.expertMode ? 900 : 560;
 
         public static int IdealFightDuration => SecondsToFrames(270f);
 
@@ -544,6 +547,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.LightBeamTransformation:
                     DoBehavior_LightBeamTransformation();
                     break;
+                case XerocAttackType.LightMagicCircle:
+                    DoBehavior_LightMagicCircle();
+                    break;
                 case XerocAttackType.StarManagement:
                     DoBehavior_StarManagement();
                     break;
@@ -630,7 +636,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (!AnyProjectiles(ModContent.ProjectileType<ClockConstellation>()))
             {
                 Main.dayTime = false;
-                Main.time = Lerp((float)Main.time, 16000f, 0.14f);
+                Main.time = Lerp((float)Main.time, 16200f, 0.14f);
             }
 
             // Update hands.

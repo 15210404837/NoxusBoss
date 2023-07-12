@@ -1012,6 +1012,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (SwordSlashDirection == -1)
                 swordRotation += Pi;
 
+            // Cast a cone telegraph past the player.
+            if (animationCompletion >= 0.11f)
+            {
+                float telegraphOpacity = GetLerpValue(0.11f, 0.26f, animationCompletion, true) * GetLerpValue(0.54f, 0.51f, animationCompletion, true) * 0.6f;
+                PupilTelegraphOpacity = telegraphOpacity;
+                PupilTelegraphArc = ToRadians(138f);
+            }
+
             // Move the hands, keeping the sword attached to it.
             if (Hands.Any())
             {

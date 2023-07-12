@@ -163,6 +163,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return false;
         }
 
+        public override void Kill(int timeLeft) => TrailDrawer?.BaseEffect?.Dispose();
+
         public void Draw()
         {
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);

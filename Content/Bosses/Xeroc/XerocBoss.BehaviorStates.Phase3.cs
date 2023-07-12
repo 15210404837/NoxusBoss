@@ -95,6 +95,86 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SelectNextAttack();
         }
 
+        public void DoBehavior_LightMagicCircle()
+        {
+            int attackDelay = BookConstellation.ConvergeTime + 150;
+            int shootTime = SuperCosmicBeam.LaserLifetime;
+            int realityTearReleaseRate = 75;
+            ref float laserDirection = ref NPC.ai[2];
+
+            Vector2 laserStart = NPC.Center + laserDirection.ToRotationVector2() * 300f;
+
+            // Flap wings.
+            UpdateWings(AttackTimer / 54f % 1f);
+
+            // Teleport above the player and cast the book on the first frame.
+            if (AttackTimer == 1f)
+            {
+                TeleportTo(Target.Center + new Vector2(-480f, -250f));
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NewProjectileBetter(NPC.Center, Vector2.UnitX, ModContent.ProjectileType<BookConstellation>(), 0, 0f);
+            }
+
+            // Make the sky more pale.
+            if (AttackTimer <= 75f)
+                DifferentStarsInterpolant = GetLerpValue(0f, 60f, AttackTimer, true);
+            HeavenlyBackgroundIntensity = Lerp(1f, 0.5f, DifferentStarsInterpolant);
+
+            // Look at the target.
+            PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - PupilPosition).SafeNormalize(Vector2.UnitY) * 40f, 0.12f);
+            PupilScale = Lerp(PupilScale, 0.425f, 0.15f);
+
+            // Periodically fire reality tears at the starting point of the laser.
+            if (AttackTimer >= attackDelay && AttackTimer <= attackDelay + shootTime - 60f && AttackTimer % realityTearReleaseRate == 0f)
+            {
+                SoundEngine.PlaySound(SliceSound, PupilPosition);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        float sliceAngle = Pi * i / 3f + laserDirection + PiOver2;
+                        Vector2 sliceDirection = sliceAngle.ToRotationVector2();
+                        NewProjectileBetter(laserStart - sliceDirection * 2000f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, 30f, 4000f);
+                    }
+
+                    if (Target.WithinRange(NPC.Center, 250f))
+                        NewProjectileBetter(PupilPosition, (Target.Center - PupilPosition).SafeNormalize(Vector2.UnitY) * 5f, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                }
+            }
+
+            // Periodically create screen pulse effects.
+            if (AttackTimer >= attackDelay && AttackTimer % 30f == 0f)
+            {
+                ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1f, 20);
+                RadialScreenShoveSystem.Start(Vector2.Lerp(laserStart, Target.Center, 0.9f), 20);
+            }
+
+            // Create the super laser.
+            if (AttackTimer == attackDelay)
+            {
+                SoundEngine.PlaySound(CosmicLaserSound);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
+            }
+
+            // Very slowly fly towards the target.
+            if (NPC.WithinRange(Target.Center, 40f))
+                NPC.velocity *= 0.92f;
+            else
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 2f, 0.15f);
+
+            // Spin the laser towards the target.
+            float idealLaserDirection = NPC.AngleTo(Target.Center);
+            laserDirection = laserDirection.AngleLerp(idealLaserDirection, 0.0167f);
+
+            if (AttackTimer >= attackDelay + shootTime)
+            {
+                DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.05f, 0f, 1f);
+                if (AttackTimer >= attackDelay + shootTime + 45f)
+                    SelectNextAttack();
+            }
+        }
+
         public void DoBehavior_HandScreenShatter()
         {
             int backgroundDimTime = 30;

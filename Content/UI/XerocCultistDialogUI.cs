@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Assets.Fonts;
 using NoxusBoss.Core;
 using ReLogic.Content;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -31,7 +33,7 @@ namespace NoxusBoss.Content.UI
             private set;
         }
 
-        public UIText DialogResponseUI
+        public UIFancyText DialogResponseUI
         {
             get;
             private set;
@@ -47,29 +49,30 @@ namespace NoxusBoss.Content.UI
         {
             get
             {
-                if (!XerocCultistDialogRegistry.HasTalkedToCultist())
+                if (!XerocCultistDialogRegistry.HasTalkedToCultist)
                     return "...";
 
-                return string.Join('\n', WordwrapString(FullDialog.Response, DialogInquiryUI.font, (int)((BackgroundUI.Width.Pixels - 60f) / DialogScale / BackgroundScale * 0.98f), 50, out _)).TrimEnd('\n'); ;
+                string[] wrappedLines = WordwrapString(FullDialog.Response, DialogInquiryUI.font, (int)((BackgroundUI.Width.Pixels - 60f) / DialogScale / BackgroundScale * 0.98f), 50, out _);
+                return string.Join('\n', wrappedLines).TrimEnd('\n');
             }
         }
 
-        public static float BackgroundScale => 1.4f;
+        public static float BackgroundScale => 1f;
 
-        public static float DialogScale => 0.75f;
+        public static float DialogScale => 0.335f;
+
+        public static readonly SoundStyle CultistSpeakSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Cultists/XerocCultistSpeak", 4) with { Volume = 0.8f, MaxInstances = 4 };
 
         public override void OnInitialize()
         {
             Asset<Texture2D> backgroundTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/UI/CultistDialogBackground", AssetRequestMode.ImmediateLoad);
 
             // Create the background element.
-            BackgroundUI = new(backgroundTexture, Color.White);
-
-            BackgroundUI.Width.Set(BackgroundScale * 644f, 0f);
-            BackgroundUI.Height.Set(BackgroundScale * 132f, 0f);
-
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Vector2 backgroundPosition = screenArea * 0.5f - Vector2.UnitY * 300f - backgroundTexture.Value.Size();
+            BackgroundUI = new(backgroundTexture, Color.White);
+            BackgroundUI.Width.Set(BackgroundScale * 740f, 0f);
+            BackgroundUI.Height.Set(BackgroundScale * 142f, 0f);
             BackgroundUI.Top.Set(backgroundPosition.Y, 0f);
             BackgroundUI.Left.Set(backgroundPosition.X, 0f);
             BackgroundUI.OnClick += SpeedUpDialog;
@@ -90,13 +93,14 @@ namespace NoxusBoss.Content.UI
             BackgroundUI.Append(DialogInquiryUI);
 
             // Create the dialog response element.
-            DialogResponseUI = new(string.Empty, DialogScale);
-            DialogResponseUI.Top.Set(30f, 0f);
+            DialogResponseUI = new(string.Empty, FontRegistry.Instance.CultistFont, FontRegistry.Instance.CultistFontItalics, Color.LightCoral, DialogScale);
+            DialogResponseUI.Top.Set(22f, 0f);
             DialogResponseUI.Left.Set(30f, 0f);
             CurrentlySpokenDialog = string.Empty;
             BackgroundUI.Append(DialogResponseUI);
 
-            FullDialog ??= XerocCultistDialogRegistry.InitialQuestion;
+            // Default the dialog option to the first option that can be displayed.
+            FullDialog = XerocCultistDialogRegistry.FirstEncounterDialog.FirstOrDefault(d => d.CanBeDisplayed) ?? XerocCultistDialogRegistry.InitialQuestion;
         }
 
         private void SelectDialog(UIMouseEvent evt, UIElement listeningElement)
@@ -140,7 +144,7 @@ namespace NoxusBoss.Content.UI
                 DialogResponseUI.SetText(CurrentlySpokenDialog);
 
                 // Register the dialog as read once it has been fully completed.
-                if (CurrentlySpokenDialog.Length >= FullDialogWrapped.Length && XerocCultistDialogRegistry.HasTalkedToCultist())
+                if (CurrentlySpokenDialog.Length >= FullDialogWrapped.Length && XerocCultistDialogRegistry.HasTalkedToCultist)
                     XerocCultistDialogRegistry.RegisterAsSeenDialog(FullDialog);
             }
         }
@@ -150,7 +154,25 @@ namespace NoxusBoss.Content.UI
             // Add the next character to the spoken dialog.
             string wrappedDialog = FullDialogWrapped;
             if (CurrentlySpokenDialog != wrappedDialog && CurrentlySpokenDialog.Length < wrappedDialog.Length)
-                CurrentlySpokenDialog += wrappedDialog[CurrentlySpokenDialog.Length];
+            {
+                char nextCharacter = wrappedDialog[CurrentlySpokenDialog.Length];
+
+                // Play speaking sounds if the next character is not silence.
+                bool isEndOfSentence = nextCharacter == '.' || nextCharacter == '?' || nextCharacter == '!';
+                if (!string.IsNullOrEmpty(nextCharacter.ToString()) && !isEndOfSentence && CurrentlySpokenDialog.Length % 8 == 2)
+                    SoundEngine.PlaySound(CultistSpeakSound with { Pitch = -0.12f, Volume = 0.3f });
+
+                CurrentlySpokenDialog += nextCharacter;
+
+                if (nextCharacter == '[')
+                {
+                    while (nextCharacter != ']')
+                    {
+                        nextCharacter = wrappedDialog[CurrentlySpokenDialog.Length];
+                        CurrentlySpokenDialog += nextCharacter;
+                    }
+                }
+            }
         }
     }
 }

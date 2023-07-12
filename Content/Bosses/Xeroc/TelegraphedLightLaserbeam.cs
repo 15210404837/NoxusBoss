@@ -139,6 +139,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
+        public override void Kill(int timeLeft)
+        {
+            TelegraphDrawer?.BaseEffect?.Dispose();
+            LaserDrawer?.BaseEffect?.Dispose();
+        }
+
         public void Draw()
         {
             // Initialize primitive drawers.

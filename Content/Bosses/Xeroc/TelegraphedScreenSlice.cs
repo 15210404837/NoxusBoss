@@ -70,7 +70,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    float daggerSpacing = clockExists ? 175f : 200f;
+                    float daggerSpacing = clockExists ? 160f : 200f;
                     for (float d = 0f; d < LineLength; d += daggerSpacing)
                     {
                         float hueInterpolant = d / LineLength * 2f % 1f;

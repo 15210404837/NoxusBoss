@@ -204,7 +204,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Release starbursts in an even spread. This is made to roughly sync up with the clock ticks.
             int starburstReleaseRate = 18;
             int starburstCount = 9;
-            float starburstShootSpeed = 2.2f;
+            float starburstShootSpeed = 2.05f;
             if (Main.netMode != NetmodeID.MultiplayerClient && handAppearInterpolant >= 0.75f && Time % starburstReleaseRate == 9f && !TimeIsStopped && TollCounter < 2)
             {
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower = 5f;
@@ -213,12 +213,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 float shootOffsetAngle = Main.rand.NextBool() ? Pi / starburstCount : 0f;
                 for (int i = 0; i < starburstCount; i++)
                 {
-                    Vector2 starburstVelocity = (TwoPi * i / starburstCount + shootOffsetAngle).ToRotationVector2() * starburstShootSpeed;
+                    Vector2 starburstVelocity = (TwoPi * i / starburstCount + shootOffsetAngle + Projectile.AngleTo(target.Center)).ToRotationVector2() * starburstShootSpeed;
                     NewProjectileBetter(Projectile.Center, starburstVelocity, ModContent.ProjectileType<Starburst>(), XerocBoss.StarburstDamage, 0f, -1, 0f, 2f);
                 }
             }
 
-            // Adjust the time.
+            // Adjust the time. This process can technically make Main.time negative but that doesn't seem to cause any significant problems, and works fine with the watch UI.
             int hour = (int)((HourHandRotation + PiOver2 + 0.01f).Modulo(TwoPi) / TwoPi * 12f);
             int minute = (int)((MinuteHandRotation + PiOver2).Modulo(TwoPi) / TwoPi * 60f);
             int totalMinutes = hour * 60 + minute;

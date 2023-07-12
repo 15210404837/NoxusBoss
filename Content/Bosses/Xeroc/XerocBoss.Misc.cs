@@ -54,7 +54,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             HandFireDestination = reader.ReadVector2();
 
             // Read lists.
-            Hands.Clear();
+            if (Hands.Any())
+            {
+                if (Main.netMode != NetmodeID.Server)
+                {
+                    for (int i = 0; i < Hands.Count; i++)
+                        Hands[i].HandTrailDrawer?.BaseEffect?.Dispose();
+                }
+                Hands.Clear();
+            }
             StarSpawnOffsets.Clear();
 
             int handCount = reader.ReadInt32();

@@ -164,6 +164,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         } = 1f;
 
+        public static float DifferentStarsInterpolant
+        {
+            get;
+            set;
+        }
+
         public static Vector2 ManualSunDrawPosition
         {
             get;
@@ -216,6 +222,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
                 ManualSunOpacity = Clamp(ManualSunOpacity - 0.04f, 0f, 1f);
                 ManualSunScale = Clamp(ManualSunScale * 0.92f - 0.3f, 0f, 50f);
+                DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.1f, 0f, 1f);
             }
 
             // Make the eye disappear from the background if Xeroc is already visible in the foreground.

@@ -273,6 +273,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SlashDrawer.Draw(slashPoints, generalOffset, 90);
         }
 
+        public override void Kill(int timeLeft) => SlashDrawer?.BaseEffect?.Dispose();
+
         public override bool PreDraw(ref Color lightColor)
         {
             ulong starSeed = (ulong)Projectile.identity * 674uL + 25uL;

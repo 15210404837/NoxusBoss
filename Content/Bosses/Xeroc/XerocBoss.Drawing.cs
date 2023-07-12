@@ -7,6 +7,7 @@ using NoxusBoss.Core.Graphics;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
@@ -223,20 +224,40 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draw a telegraph over the pupil if it's activated.
             if (PupilTelegraphOpacity >= 0.01f)
             {
-                Effect telegraphShader = Terraria.Graphics.Effects.Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
+                string shader = CurrentAttack == XerocAttackType.SwordConstellation2 ? "NoxusBoss:SpreadTelegraphInverted" : "CalamityMod:SpreadTelegraph";
+
+                Effect telegraphShader = Filters.Scene[shader].GetShader().Shader;
                 telegraphShader.Parameters["centerOpacity"].SetValue(1.7f);
                 telegraphShader.Parameters["mainOpacity"].SetValue(Sqrt(PupilTelegraphOpacity));
                 telegraphShader.Parameters["halfSpreadAngle"].SetValue(PupilTelegraphArc * Sqrt(PupilTelegraphOpacity) * 0.5f);
                 telegraphShader.Parameters["edgeColor"].SetValue(Color.Red.ToVector3());
                 telegraphShader.Parameters["centerColor"].SetValue(Color.Coral.ToVector3());
                 telegraphShader.Parameters["edgeBlendLenght"].SetValue(0.07f);
-                telegraphShader.Parameters["edgeBlendStrength"].SetValue(8f);
+                telegraphShader.Parameters["edgeBlendStrength"].SetValue(16f);
+                telegraphShader.Parameters["spreadOutPower"]?.SetValue(2.32f);
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, telegraphShader, Main.GameViewMatrix.TransformationMatrix);
 
                 Texture2D texture = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
                 Main.EntitySpriteDraw(texture, PupilPosition - screenPos, null, Color.White, PupilOffset.ToRotation(), texture.Size() * 0.5f, 5000f, 0, 0);
+
+                if (CurrentAttack == XerocAttackType.SwordConstellation2)
+                {
+                    telegraphShader = Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
+                    telegraphShader.Parameters["centerOpacity"].SetValue(1f);
+                    telegraphShader.Parameters["mainOpacity"].SetValue(Sqrt(PupilTelegraphOpacity));
+                    telegraphShader.Parameters["halfSpreadAngle"].SetValue(PupilTelegraphArc * Sqrt(PupilTelegraphOpacity) * 0.5f);
+                    telegraphShader.Parameters["edgeColor"].SetValue(Color.Transparent.ToVector3());
+                    telegraphShader.Parameters["centerColor"].SetValue(Color.SpringGreen.ToVector3());
+                    telegraphShader.Parameters["edgeBlendLenght"].SetValue(0.011f);
+                    telegraphShader.Parameters["edgeBlendStrength"].SetValue(3f);
+
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, telegraphShader, Main.GameViewMatrix.TransformationMatrix);
+
+                    Main.EntitySpriteDraw(texture, PupilPosition - screenPos, null, Color.White, PupilOffset.ToRotation(), texture.Size() * 0.5f, 2000f, 0, 0);
+                }
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);

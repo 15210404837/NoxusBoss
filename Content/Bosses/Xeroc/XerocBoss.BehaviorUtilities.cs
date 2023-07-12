@@ -151,6 +151,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = 0; i < Hands.Count; i++)
                 CreateHandVanishVisuals(Hands[i]);
 
+            if (Main.netMode != NetmodeID.Server)
+            {
+                for (int i = 0; i < Hands.Count; i++)
+                    Hands[i].HandTrailDrawer?.BaseEffect?.Dispose();
+            }
             Hands.Clear();
             NPC.netUpdate = true;
         }

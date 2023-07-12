@@ -16,14 +16,14 @@ namespace NoxusBoss.Content.UI
         public static readonly Dialog EncountersDialog = new("Encounters? What kind of encounters?", "Ah, such mysteries are the fabric that enshroud our reality, don't you agree? We ponder the enigmatic forces that shape our world, " +
             "the interconnectedness of all things, and the whispers of hidden knowledge that elude most.", () => SeenDialog(IntroductorySpiel));
 
-        public static readonly Dialog CuriosityDialog1 = new("I suppose there *are* some things that we don't fully understand.", "Perhaps, but there is always more to discover and to learn! The pursuit of knowledge is an unending " +
+        public static readonly Dialog CuriosityDialog1 = new("I suppose there ARE some things that we don't fully understand.", "Perhaps, but there is [c/FF2655:**always**] more to discover and to learn! The pursuit of knowledge is an unending " +
             "journey, for there are always realms just beyond our current comprehension.", () => SeenDialog(EncountersDialog));
 
         public static readonly Dialog CuriosityDialog2 = new("Sounds like you're quite the curious bunch.", "Curiosity is the seed from which wisdom blossoms. We are humbled by the vastness of the natural world, the cosmos beyond, " +
             "and the boundless depths of our souls. We encourage introspection and exploration, for only through such endeavors can we truly grow.", () => SeenDialog(EncountersDialog));
 
         public static readonly Dialog AbstractDialog = new("That all sounds rather abstract. Is there anything more... tangible you focus on?", "Ah, the tangible and the abstract intertwine in fascinating ways, don't they? While our pursuits " +
-            "may seem lofty, we do not ignore the physical realm. We study ancient texts and decipher forgotten symbols. Yet... through it all, one name stands tall at the center of all of creation: Xeroc. Xeroc is our focus.",
+            "may seem lofty, we do not ignore the physical realm. We study ancient texts and decipher forgotten symbols. Yet... through it all, one name stands tall at the center of all of creation- [c/FFFFFF:Xeroc]. Xeroc is our focus.",
             () => SeenDialog(CuriosityDialog1, CuriosityDialog2));
 
         public static readonly Dialog WorshipDialog = new("So, your Order worships this deity?", "Indeed, we hold Xeroc in the highest regard and strive to connect with its divine essence. " +
@@ -70,6 +70,8 @@ namespace NoxusBoss.Content.UI
             LeavingDialog,
         };
 
+        public static bool HasTalkedToCultist => Main.LocalPlayer.GetModPlayer<DialogPlayer>().HasTalkedToCultist;
+
         public static void RegisterAsSeenDialog(Dialog dialog)
         {
             var player = Main.LocalPlayer.GetModPlayer<DialogPlayer>();
@@ -77,17 +79,22 @@ namespace NoxusBoss.Content.UI
                 player.SeenCultistDialogIDs.Add(dialog.ID);
         }
 
+        // This method exists for debugging purposes exclusively.
         public static void ResetEverything()
         {
             Main.LocalPlayer.GetModPlayer<DialogPlayer>().HasTalkedToCultist = false;
             Main.LocalPlayer.GetModPlayer<DialogPlayer>().SeenCultistDialogIDs.Clear();
         }
 
-        public static bool HasTalkedToCultist() => Main.LocalPlayer.GetModPlayer<DialogPlayer>().HasTalkedToCultist;
-
         // Simple shorthand method for use when setting up dialog conditions.
         public static bool SeenDialog(params Dialog[] dialog) => SeenDialog(dialog.Select(d => d.ID).ToArray());
 
-        public static bool SeenDialog(params ulong[] ids) => !ids.Except(Main.LocalPlayer.GetModPlayer<DialogPlayer>().SeenCultistDialogIDs).Any();
+        public static bool SeenDialog(params ulong[] ids)
+        {
+            if (Main.gameMenu)
+                return false;
+
+            return !ids.Except(Main.LocalPlayer.GetModPlayer<DialogPlayer>().SeenCultistDialogIDs).Any();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -72,6 +73,12 @@ namespace NoxusBoss.Core.Graphics
             }
         }
 
+        public static bool UseCosmicEffect
+        {
+            get;
+            set;
+        }
+
         public const int MaxSplitCount = 10;
 
         public override void PostUpdateProjectiles()
@@ -89,6 +96,8 @@ namespace NoxusBoss.Core.Graphics
 
                 SplitWidths[i] = CalamityUtils.Convert01To010(SplitCompletionRatios[i]) * MaxSplitWidths[i];
             }
+
+            UseCosmicEffect = AnyProjectiles(ModContent.ProjectileType<SuperCosmicBeam>());
         }
 
         public static void Start(Vector2 splitCenter, int splitTime, float splitAngle, float splitWidth)

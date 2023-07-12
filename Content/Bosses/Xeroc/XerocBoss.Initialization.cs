@@ -94,12 +94,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Slice the screen.
             XerocAttackType.ScreenSlicesWithTeleport,
+            
+            // Perform the cosmic laserbeam attack.
+            XerocAttackType.LightMagicCircle,
         };
 
         public static XerocAttackType[] TestCycle => new[]
         {
-            XerocAttackType.StarManagement,
-            XerocAttackType.StarManagement_CrushIntoQuasar,
+            XerocAttackType.SwordConstellation2,
         };
 
         #endregion Attack Cycles

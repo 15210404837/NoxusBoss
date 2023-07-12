@@ -29,6 +29,7 @@ namespace NoxusBoss.Assets
                 GameShaders.Misc[$"{Mod.Name}:{shaderName}"] = new MiscShaderData(shader, "AutoloadPass");
             }
 
+            // This is kind of hideous but I'm not sure how to best handle these screen shaders. Perhaps some marker in the file name?
             Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/Effects/LocalizedDistortionShader", AssetRequestMode.ImmediateLoad).Value);
             Filters.Scene["NoxusBoss:NoxusEggSky"] = new Filter(new NoxusEggScreenShaderData(s, "AutoloadPass"), EffectPriority.VeryHigh);
 
@@ -47,6 +48,11 @@ namespace NoxusBoss.Assets
 
             Ref<Effect> s5 = new(Mod.Assets.Request<Effect>("Assets/Effects/XerocClockDeathZoneShader", AssetRequestMode.ImmediateLoad).Value);
             Filters.Scene["NoxusBoss:XerocClockDeathDeathSky"] = new Filter(new XerocClockDeathDeathScreenShaderData(s5, "AutoloadPass"), EffectPriority.VeryHigh);
+
+            Ref<Effect> s6 = new(Mod.Assets.Request<Effect>("Assets/Effects/SpreadTelegraphInvertedShader", AssetRequestMode.ImmediateLoad).Value);
+            ScreenShaderData telegraphShader = new(s6, "AutoloadPass");
+            Filters.Scene["NoxusBoss:SpreadTelegraphInverted"] = new Filter(telegraphShader, EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:SpreadTelegraphInverted"].Load();
         }
     }
 }

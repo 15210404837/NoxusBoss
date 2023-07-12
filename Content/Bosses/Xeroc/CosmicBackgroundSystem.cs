@@ -8,6 +8,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -112,8 +113,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             backgroundShader.Shader.Parameters["zoom"].SetValue(0.11f);
             backgroundShader.Shader.Parameters["brightness"].SetValue(intensity);
             backgroundShader.Shader.Parameters["scrollSpeedFactor"].SetValue(0.0015f);
-            backgroundShader.Shader.Parameters["frontStarColor"].SetValue(Color.Coral.ToVector3() * 0.5f);
-            backgroundShader.Shader.Parameters["backStarColor"].SetValue(Color.Yellow.ToVector3() * 0.4f);
+            backgroundShader.Shader.Parameters["frontStarColor"].SetValue(Color.Lerp(Color.Coral, Color.White, DifferentStarsInterpolant).ToVector3() * 0.5f);
+            backgroundShader.Shader.Parameters["backStarColor"].SetValue(Color.Lerp(Color.Yellow, Color.Pink, DifferentStarsInterpolant).ToVector3() * 0.4f);
             backgroundShader.Apply();
 
             Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Vector2.Zero, null, Color.White * 0.25f, 0f, Vector2.Zero, scale, 0, 0f);
