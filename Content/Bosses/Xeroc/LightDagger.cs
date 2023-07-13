@@ -107,6 +107,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.spriteBatch.DrawBloomLine(start, end, GeneralColor * Sqrt(1f - DaggerAppearInterpolant), Projectile.Opacity * 40f);
         }
 
+        public override bool? CanDamage() => Time >= TelegraphTime;
+
         public override bool ShouldUpdatePosition() => Time >= TelegraphTime;
     }
 }

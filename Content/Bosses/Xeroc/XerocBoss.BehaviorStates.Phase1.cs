@@ -28,7 +28,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int starBlastDelay = 12;
             int attackTransitionDelay = 95;
             int explosionCount = 2;
-            float starOffsetRadius = 600f;
+            float starOffsetRadius = 480f;
             ref float explosionCounter = ref NPC.ai[2];
 
             // Redirect above the player.

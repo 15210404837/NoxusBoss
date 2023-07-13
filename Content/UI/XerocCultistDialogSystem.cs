@@ -25,9 +25,7 @@ namespace NoxusBoss.Content.UI
 
         public override void UpdateUI(GameTime gameTime)
         {
-            // Toggle the UI based on whether the cultist is present.
-            if (dialogUserInterface.CurrentState is null && NPC.AnyNPCs(ModContent.NPCType<XerocCultist>()))
-                ShowUI();
+            // Disable the UI based if the cultist is not present.
             if (dialogUserInterface.CurrentState is not null && !NPC.AnyNPCs(ModContent.NPCType<XerocCultist>()))
                 HideUI();
 

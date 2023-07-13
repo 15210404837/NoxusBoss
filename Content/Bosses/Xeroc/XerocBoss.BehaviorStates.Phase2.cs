@@ -28,7 +28,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (CurrentPhase >= 2)
             {
                 sliceShootDelay -= 7;
-                sliceReleaseRate--;
                 sliceReleaseCount--;
             }
 
@@ -69,7 +68,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int telegraphTime = sliceReleaseTime - (int)(AttackTimer - sliceShootDelay) + (int)sliceCounter * 2;
-                    Vector2 sliceSpawnCenter = Target.Center + Main.rand.NextVector2Circular(600f, 600f) + Target.velocity * 8f;
+                    Vector2 sliceSpawnCenter = Target.Center + Main.rand.NextVector2Unit() * (sliceCounter + 35f + Main.rand.NextFloat(600f)) + Target.velocity * 8f;
                     Vector2 sliceDirection = new Vector2(Main.rand.NextFloat(-10f, 10f), Main.rand.NextFloat(-6f, 6f)).SafeNormalize(Vector2.UnitX);
                     NewProjectileBetter(sliceSpawnCenter - sliceDirection * sliceLength * 0.5f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice2>(), ScreenSliceDamage, 0f, -1, telegraphTime, sliceLength);
                 }

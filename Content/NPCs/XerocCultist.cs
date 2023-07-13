@@ -30,9 +30,7 @@ namespace NoxusBoss.Content.NPCs
 
         public ref float AITimer => ref NPC.ai[1];
 
-        public ref float AngularVelocity => ref NPC.ai[2];
-
-        public ref float BurnIntensity => ref NPC.localAI[0];
+        public ref float CurrentFrame => ref NPC.localAI[0];
 
         #endregion Fields and Properties
 
@@ -40,6 +38,7 @@ namespace NoxusBoss.Content.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("???");
+            Main.npcFrameCount[Type] = 9;
             this.HideFromBestiary();
         }
 
@@ -50,13 +49,12 @@ namespace NoxusBoss.Content.NPCs
             NPC.width = 40;
             NPC.height = 54;
             NPC.defense = 0;
-            NPC.lifeMax = 1000000;
+            NPC.lifeMax = 500;
             NPC.aiStyle = -1;
             AIType = -1;
             NPC.knockBackResist = 0f;
-            NPC.canGhostHeal = false;
-            NPC.noGravity = true;
-            NPC.noTileCollide = true;
+            NPC.noGravity = false;
+            NPC.noTileCollide = false;
             NPC.dontTakeDamage = true;
             NPC.HitSound = null;
             NPC.DeathSound = null;
@@ -72,24 +70,40 @@ namespace NoxusBoss.Content.NPCs
         {
             switch (CurrentState)
             {
-
+                case XerocCultistAIType.Wait:
+                    DoBehavior_Wait();
+                    break;
             }
 
             NPC.timeLeft = 99999;
             NPC.Opacity = 0f;
 
+            // Emit a faint light.
+            Lighting.AddLight(NPC.Center, Color.LightCoral.ToVector3() * 0.55f);
+
             NPC.ShowNameOnHover = NPC.Opacity >= 0.7f;
             AITimer++;
+        }
+
+        public void DoBehavior_Wait()
+        {
+            // Wait in place.
+            NPC.velocity.X *= 0.95f;
+            CurrentFrame = 0f;
         }
 
         #endregion AI
 
         #region Drawing
 
+        public override void FindFrame(int frameHeight) => NPC.frame.Y = (int)(frameHeight * CurrentFrame);
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             return true;
         }
+
+        public override bool CanChat() => CurrentState == XerocCultistAIType.WalkUpToPlayer;
         #endregion Drawing
     }
 }

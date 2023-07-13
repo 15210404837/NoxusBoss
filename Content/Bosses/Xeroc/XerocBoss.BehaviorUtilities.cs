@@ -289,6 +289,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 ModContent.ProjectileType<ArcingStarburst>(),
                 ModContent.ProjectileType<BackgroundStar>(),
+                ModContent.ProjectileType<BookConstellation>(),
                 ModContent.ProjectileType<ClockConstellation>(),
                 ModContent.ProjectileType<ControlledStar>(),
                 ModContent.ProjectileType<ConvergingSupernovaEnergy>(),
@@ -299,6 +300,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ModContent.ProjectileType<Starburst>(),
                 ModContent.ProjectileType<StarPatterenedStarburst>(),
                 ModContent.ProjectileType<SunFireball>(),
+                ModContent.ProjectileType<SuperCosmicBeam>(),
                 ModContent.ProjectileType<SuperLightBeam>(),
                 ModContent.ProjectileType<SwordConstellation>(),
                 ModContent.ProjectileType<TelegraphedLightLaserbeam>(),

@@ -153,8 +153,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer == attackDelay)
             {
                 SoundEngine.PlaySound(CosmicLaserSound);
+                ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 30);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
                     NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                }
             }
 
             // Very slowly fly towards the target.

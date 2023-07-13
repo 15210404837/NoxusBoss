@@ -403,7 +403,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 if (screenShattered == 1f)
+                {
+                    Music = 0;
                     Main.hideUI = true;
+                }
 
                 if (AttackTimer >= blackDelay + riseDelay + riseTime + handCount * handReleaseRate + chargeLineUpTime + screenShatterDelay + crashDelay)
                 {
