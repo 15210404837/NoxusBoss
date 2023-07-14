@@ -73,7 +73,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     float daggerSpacing = clockExists ? 160f : 200f;
                     if (cosmicLaserExists)
-                        daggerSpacing = 240f;
+                        daggerSpacing = 230f;
 
                     for (float d = 0f; d < LineLength; d += daggerSpacing)
                     {
