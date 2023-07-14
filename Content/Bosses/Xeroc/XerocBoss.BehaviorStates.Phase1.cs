@@ -344,9 +344,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int attackDelay = starGrowTime + 40;
             int flareShootCount = 5;
             int shootTime = 450;
-            int starburstReleaseRate = 30;
+            int starburstReleaseRate = 35;
             int starburstCount = 9;
-            float starburstStartingSpeed = 1.3f;
+            float starburstStartingSpeed = 1.05f;
 
             // Make things faster in successive phases.
             if (CurrentPhase >= 1)
@@ -842,7 +842,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 plasmaSpawnPosition = quasar.Center + Main.rand.NextVector2Unit() * (quasar.Distance(Target.Center) + Main.rand.NextFloat(250f, 700f));
+                    Vector2 plasmaSpawnPosition = quasar.Center + (TwoPi * AttackTimer / 30f).ToRotationVector2() * (quasar.Distance(Target.Center) + Main.rand.NextFloat(600f, 700f));
                     Vector2 plasmaVelocity = (quasar.Center - plasmaSpawnPosition).SafeNormalize(Vector2.UnitY) * plasmaShootSpeed;
                     while (Target.WithinRange(plasmaSpawnPosition, 880f))
                         plasmaSpawnPosition -= plasmaVelocity;

@@ -1,4 +1,5 @@
-﻿using CalamityMod;
+﻿using System.Linq;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
@@ -126,6 +127,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             Color baseColor1 = ClockConstellation.TimeIsStopped ? Color.Turquoise : Color.Yellow;
             Color baseColor2 = ClockConstellation.TimeIsStopped ? Color.Cyan : Color.Red;
+
+            // Make starbursts within the eject range of the clock during the time stop red, to indicate that they're going to be shot outward.
+            if (ClockConstellation.TimeIsStopped)
+            {
+                var clocks = AllProjectilesByID(ModContent.ProjectileType<ClockConstellation>());
+                if (clocks.Any() && projectile.WithinRange(clocks.First().Center, ClockConstellation.StarburstEjectDistance))
+                {
+                    baseColor1 = Color.Red;
+                    baseColor2 = Color.Red;
+                }
+            }
+
             Color bloomFlareColor1 = baseColor1 with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
             Color bloomFlareColor2 = baseColor2 with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
 

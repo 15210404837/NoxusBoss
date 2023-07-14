@@ -45,7 +45,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public static XerocAttackType[] Phase2Cycle => new[]
         {
             // Start out with a fast attack in the form of the screen slices.
-            XerocAttackType.ScreenSlicesWithTeleport,
+            XerocAttackType.VergilScreenSlices,
 
             // Continue the fast pace with the punches + screen slices attack.
             XerocAttackType.PunchesWithScreenSlices,
@@ -93,7 +93,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             XerocAttackType.LightBeamTransformation,
 
             // Slice the screen.
-            XerocAttackType.ScreenSlicesWithTeleport,
+            XerocAttackType.VergilScreenSlices,
             
             // Perform the cosmic laserbeam attack.
             XerocAttackType.LightMagicCircle,
@@ -128,7 +128,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public override void SetDefaults()
         {
             NPC.npcSlots = 100f;
-            NPC.damage = 540;
+            NPC.damage = 375;
             NPC.width = 440;
             NPC.height = 700;
             NPC.defense = 150;
@@ -140,7 +140,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.lifeMax = 13767256;
 
             if (Main.expertMode)
-                NPC.damage = 600;
+                NPC.damage = 415;
 
             double HPBoost = CalamityConfig.Instance.BossHealthBoost * 0.01;
             NPC.lifeMax += (int)(NPC.lifeMax * HPBoost);

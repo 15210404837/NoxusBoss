@@ -46,6 +46,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int ConvergeTime => 300;
 
+        public static float StarburstEjectDistance => 560f;
+
         public static bool TimeIsStopped
         {
             get;
@@ -127,7 +129,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                             p.timeLeft = 150;
                             p.ai[0] = 65f;
 
-                            if (p.WithinRange(Projectile.Center, 560f))
+                            if (p.WithinRange(Projectile.Center, StarburstEjectDistance))
                                 p.velocity = p.SafeDirectionTo(target.Center) * 14.5f;
                             p.netUpdate = true;
                         }

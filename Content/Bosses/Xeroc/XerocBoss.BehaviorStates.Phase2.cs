@@ -17,11 +17,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
-        public void DoBehavior_ScreenSlicesWithTeleport()
+        public void DoBehavior_VergilScreenSlices()
         {
             int sliceShootDelay = 40;
             int sliceReleaseRate = 4;
             int sliceReleaseCount = 9;
+            int fireDelay = 10;
             float sliceLength = 3200f;
 
             // Make the attack faster in successive phases.
@@ -67,7 +68,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SoundEngine.PlaySound(SliceSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    int telegraphTime = sliceReleaseTime - (int)(AttackTimer - sliceShootDelay) + (int)sliceCounter * 2;
+                    int telegraphTime = sliceReleaseTime - (int)(AttackTimer - sliceShootDelay) + (int)sliceCounter * 2 + fireDelay;
                     Vector2 sliceSpawnCenter = Target.Center + Main.rand.NextVector2Unit() * (sliceCounter + 35f + Main.rand.NextFloat(600f)) + Target.velocity * 8f;
                     Vector2 sliceDirection = new Vector2(Main.rand.NextFloat(-10f, 10f), Main.rand.NextFloat(-6f, 6f)).SafeNormalize(Vector2.UnitX);
                     NewProjectileBetter(sliceSpawnCenter - sliceDirection * sliceLength * 0.5f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice2>(), ScreenSliceDamage, 0f, -1, telegraphTime, sliceLength);
@@ -77,7 +78,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Slice the screen.
-            if (AttackTimer == sliceShootDelay + sliceReleaseTime)
+            if (AttackTimer == sliceShootDelay + sliceReleaseTime + fireDelay)
             {
                 // Calculate the center of the slices.
                 List<LineSegment> lineSegments = new();
@@ -95,7 +96,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Make the background come back.
-            if (AttackTimer >= sliceShootDelay + sliceReleaseTime)
+            if (AttackTimer >= sliceShootDelay + sliceReleaseTime + fireDelay)
             {
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity + 0.08f, 0f, 1f);
                 RadialScreenShoveSystem.Start(Target.Center - Vector2.UnitY * 400f, 20);
@@ -103,10 +104,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Create some screen burn marks.
-            if (AttackTimer == sliceShootDelay + sliceReleaseTime + 16f)
+            if (AttackTimer == sliceShootDelay + sliceReleaseTime + fireDelay + 16f)
                 LocalScreenSplitBurnAfterimageSystem.TakeSnapshot(180);
 
-            if (AttackTimer >= sliceShootDelay + sliceReleaseTime + 32f)
+            if (AttackTimer >= sliceShootDelay + sliceReleaseTime + fireDelay + 32f)
                 SelectNextAttack();
 
             // Stay invisible.
@@ -255,7 +256,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     // Left unaltered, the rotations result in the effect changing nothing, but when angles are not zero, the effect
                     // angularly approaches the ideal destination over time.
                     float punchAngularVelocity = Pi / handArcPunchTime * 6f;
-                    float starburstShootSpeed = 12f;
                     Vector2 rotationalOffset = (PunchDestination - leftHand.Center).RotatedBy(punchAngularVelocity);
                     idealHandOffsetFromPlayer1 = -Target.Center + PunchDestination + rotationalOffset;
                     leftHand.Rotation = rotationalOffset.ToRotation() - PiOver2;
@@ -277,14 +277,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Color fireColor = Color.Lerp(Color.IndianRed, Color.Yellow, Main.rand.NextFloat(0.75f)) * 0.4f;
                         HeavySmokeParticle fire = new(leftHand.Center + Main.rand.NextVector2Circular(12f, 12f), fireVelocity, fireColor, 12, 0.9f, 1f, 0f, true);
                         GeneralParticleHandler.SpawnParticle(fire);
-                    }
-
-                    // Periodically release starbursts from the punching hand if the target is sufficiently far away.
-                    if (!Target.WithinRange(leftHand.Center, 325f) && AttackTimer % 4f == 0f)
-                    {
-                        SoundEngine.PlaySound(SunFireballShootSound, leftHand.Center);
-                        if (Main.netMode != NetmodeID.MultiplayerClient)
-                            NewProjectileBetter(leftHand.Center, (Target.Center - leftHand.Center).SafeNormalize(Vector2.UnitY) * starburstShootSpeed, ModContent.ProjectileType<ArcingStarburst>(), StarburstDamage, 0f, -1, 0f, arcPunchStarburstSpeedFactor);
                     }
 
                     // Have the other hand go away.
@@ -417,7 +409,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             int starCreationDelay = 21;
             int starCreationTime = 68;
-            int attackTransitionDelay = 274;
+            int attackTransitionDelay = 240;
             float spinRadius = 220f;
             float handMoveSpeedFactor = 3.7f;
             ref float spinDirection = ref NPC.ai[2];

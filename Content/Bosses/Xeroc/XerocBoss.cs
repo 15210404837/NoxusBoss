@@ -188,7 +188,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             SwordConstellation2,
 
             // Reality manipulation attacks.
-            ScreenSlicesWithTeleport,
+            VergilScreenSlices,
             PunchesWithScreenSlices,
             HandScreenShatter,
             TimeManipulation,
@@ -583,8 +583,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.SwordConstellation2:
                     DoBehavior_SwordConstellation2();
                     break;
-                case XerocAttackType.ScreenSlicesWithTeleport:
-                    DoBehavior_ScreenSlicesWithTeleport();
+                case XerocAttackType.VergilScreenSlices:
+                    DoBehavior_VergilScreenSlices();
                     break;
                 case XerocAttackType.PunchesWithScreenSlices:
                     DoBehavior_PunchesWithScreenSlices();
@@ -615,7 +615,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Get rid of all falling stars. Their noises completely ruin the ambience.
-            foreach (Projectile star in AllProjectilesByID(ProjectileID.FallingStar))
+            var fallingStars = AllProjectilesByID(ProjectileID.FallingStar);
+            foreach (Projectile star in fallingStars)
                 star.active = false;
 
             // Make the censor intentionally move in a bit of a "choppy" way, where it tries to stick to the ideal position, but only if it's far

@@ -56,6 +56,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Time == TelegraphTime - 1f)
             {
                 bool clockExists = AnyProjectiles(ModContent.ProjectileType<ClockConstellation>());
+                bool cosmicLaserExists = AnyProjectiles(ModContent.ProjectileType<SuperCosmicBeam>());
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower += 2f;
                 LocalScreenSplitSystem.Start(Projectile.Center + Projectile.velocity * LineLength * 0.5f, SliceTime * 2 + 3, Projectile.rotation, Projectile.width * (clockExists ? 1f : 0.5f));
 
@@ -71,6 +72,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float daggerSpacing = clockExists ? 160f : 200f;
+                    if (cosmicLaserExists)
+                        daggerSpacing = 240f;
+
                     for (float d = 0f; d < LineLength; d += daggerSpacing)
                     {
                         float hueInterpolant = d / LineLength * 2f % 1f;

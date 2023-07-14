@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -51,6 +52,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.hostile = true;
             Projectile.MaxUpdates = 2;
             Projectile.timeLeft = Projectile.MaxUpdates * 360;
+            Projectile.hide = true;
         }
 
         public override void SendExtraAI(BinaryWriter writer) => writer.Write(ApproachingScreen);
@@ -164,6 +166,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         }
 
         public override void Kill(int timeLeft) => TrailDrawer?.BaseEffect?.Dispose();
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overPlayers.Add(index);
+        }
 
         public void Draw()
         {
