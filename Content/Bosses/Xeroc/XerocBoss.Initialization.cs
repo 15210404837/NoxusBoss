@@ -25,11 +25,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // After the daggers have passed, it's a safe bet the player won't have much movement at the start to mess with the attack. As such, the exploding star attack happens next to work with that.
             XerocAttackType.ConjureExplodingStars,
 
+            // Resume the slower pace with a "slower" attack in the form of a laserbeam attack.
+            XerocAttackType.PortalLaserBarrages,
+
             // Now that the player has spent a bunch of time doing weaving and tight, precise movements, get them back into the fast moving action again with the arcing starbursts.
             XerocAttackType.ShootArcingStarburstsFromEye,
-
-            // And again, account for the leftover momentum with a "slower" attack in the form of a laserbeam attack.
-            XerocAttackType.PortalLaserBarrages,
 
             // And again, follow up with a precise attack in the form of the star lasers. This naturally follows with the chasing quasar, which amps up the pacing again.
             XerocAttackType.StarManagement,

@@ -40,7 +40,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.timeLeft = 40;
 
             if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.ConjureExplodingStars)
-                Projectile.timeLeft = 34;
+                Projectile.timeLeft = 30;
         }
 
         public override void AI()

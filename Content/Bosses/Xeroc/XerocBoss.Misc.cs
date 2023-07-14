@@ -140,7 +140,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         // an exception. This will not cause the dumb "lol do 0 damage for 30 seconds" problems that Calamity had in the past.
         public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
         {
-            // Calculate how far ahead Noxus' HP is relative to how long he's existed so far.
+            // Calculate how far ahead Xeroc's HP is relative to how long he's existed so far.
             // This would be one if you somehow got him to death on the first frame of the fight.
             // This naturally tapers off as the fight goes on.
             float fightLengthInterpolant = GetLerpValue(0f, IdealFightDuration, FightLength, true);

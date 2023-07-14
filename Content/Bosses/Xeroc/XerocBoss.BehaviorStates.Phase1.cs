@@ -26,7 +26,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int starCreateRate = 4;
             int starTelegraphTime = starShootCount * starCreateRate;
             int starBlastDelay = 5;
-            int attackTransitionDelay = 95;
+            int attackTransitionDelay = 72;
             int explosionCount = 1;
             float starOffsetRadius = 480f;
             ref float explosionCounter = ref NPC.ai[2];
@@ -219,7 +219,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_RealityTearDaggers()
         {
-            int riseTime = 30;
+            int riseTime = 14;
             int sliceTelegraphTime = 28;
             int screenSliceRate = sliceTelegraphTime + 11;
             int totalHorizontalSlices = 6;
