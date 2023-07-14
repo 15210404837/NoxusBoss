@@ -88,7 +88,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 for (int i = 0; i < 6; i++)
                 {
                     Vector2 lightAimPosition = Projectile.Center + Projectile.velocity.RotatedBy(PiOver2) * Main.rand.NextFloatDirection() * Projectile.scale * 400f + Main.rand.NextVector2Circular(10f, 10f);
-                    Vector2 lightSpawnPosition = Projectile.Center + Projectile.velocity * 75f + Projectile.velocity.RotatedByRandom(1.53f) * Main.rand.NextFloat(750f);
+                    Vector2 lightSpawnPosition = Projectile.Center + Projectile.velocity * 75f + Projectile.velocity.RotatedByRandom(1.53f) * Main.rand.NextFloat(330f, 960f);
                     Vector2 lightVelocity = (lightAimPosition - lightSpawnPosition) * 0.06f;
                     SquishyLightParticle light = new(lightSpawnPosition, lightVelocity, 0.33f, Color.Pink, 19, 0.04f, 3f, 8f);
                     GeneralParticleHandler.SpawnParticle(light);

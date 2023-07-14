@@ -255,6 +255,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public float PunchOffsetAngle
+        {
+            get;
+            set;
+        }
+
         public float ZPosition
         {
             get;

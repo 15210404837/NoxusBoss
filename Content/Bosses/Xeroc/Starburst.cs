@@ -17,11 +17,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             private set;
         }
 
-        public bool Big => Projectile.ai[1] == 2f;
+        public bool Big => Projectile.ai[1] == 2f || BigAndHoming;
+
+        public bool BigAndHoming => Projectile.ai[1] == 3f;
 
         public ref float Time => ref Projectile.ai[0];
 
-        public bool Redirect => Projectile.ai[1] == 1f;
+        public bool Redirect => Projectile.ai[1] == 1f || BigAndHoming;
 
         public override void SetStaticDefaults()
         {

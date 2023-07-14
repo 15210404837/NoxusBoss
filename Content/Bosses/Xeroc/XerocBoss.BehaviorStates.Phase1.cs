@@ -25,9 +25,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int starShootCount = 6;
             int starCreateRate = 4;
             int starTelegraphTime = starShootCount * starCreateRate;
-            int starBlastDelay = 12;
+            int starBlastDelay = 5;
             int attackTransitionDelay = 95;
-            int explosionCount = 2;
+            int explosionCount = 1;
             float starOffsetRadius = 480f;
             ref float explosionCounter = ref NPC.ai[2];
 
@@ -176,13 +176,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Shoot the redirecting starbursts.
             if (postTeleportAttackTimer >= shootDelay && postTeleportAttackTimer <= shootDelay + starburstCount)
             {
-                // Create a light explosion on the first frame.
+                // Create a light explosion and initial spread of starbursts on the first frame.
                 if (postTeleportAttackTimer == shootDelay)
                 {
                     Target.Calamity().GeneralScreenShakePower = 16f;
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                         NewProjectileBetter(PupilPosition, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+
+                    for (int i = 0; i < 21; i++)
+                    {
+                        Vector2 starburstVelocity = PupilOffset.SafeNormalize(Vector2.UnitY).RotatedBy(TwoPi * i / 21f) * starburstShootSpeed * 0.15f;
+                        NewProjectileBetter(PupilPosition, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                    }
 
                     ScreenEffectSystem.SetBlurEffect(EyePosition, 0.6f, 24);
                 }

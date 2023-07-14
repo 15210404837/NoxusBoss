@@ -88,8 +88,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 int starburstCount = 5;
                 int starburstID = ModContent.ProjectileType<ArcingStarburst>();
                 if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarConvergenceAndRedirecting)
-                {
                     starburstCount = 7;
+
+                if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.BrightStarJumpscares)
+                {
+                    starburstCount = 13;
                     starburstID = ModContent.ProjectileType<Starburst>();
                 }
 

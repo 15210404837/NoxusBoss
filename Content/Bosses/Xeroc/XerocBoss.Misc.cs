@@ -20,6 +20,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             writer.Write(SwordSlashCounter);
             writer.Write(SwordSlashDirection);
 
+            writer.Write(PunchOffsetAngle);
             writer.Write(FightLength);
             writer.Write(ZPosition);
             writer.WriteVector2(GeneralHoverOffset);
@@ -47,6 +48,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             SwordChargeDestination = reader.ReadVector2();
 
             FightLength = reader.ReadSingle();
+            PunchOffsetAngle = reader.ReadSingle();
             ZPosition = reader.ReadSingle();
             GeneralHoverOffset = reader.ReadVector2();
             CensorPosition = reader.ReadVector2();

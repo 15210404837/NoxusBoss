@@ -137,6 +137,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.27f);
                 NPC.velocity *= 0.75f;
                 usedHandIndex = -1f;
+
+                // Initialize the punch offset angle.
+                if (AttackTimer == 1f)
+                {
+                    PunchOffsetAngle = Main.rand.NextFloat(TwoPi);
+                    NPC.netUpdate = true;
+                }
             }
 
             // Hover near the target and conjure hands.
@@ -198,7 +205,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     float anticipationReelBackDistance = Pow(GetLerpValue(-15f, -3f, wrappedHandAttackTimer - handEnergyChargeUpTime, true), 1.7f) * 200f;
                     float handHoverOffsetAngle = Sin(Pi * wrappedHandAttackTimer / handEnergyChargeUpTime) * 0.51f;
-                    Vector2 generalHandOffset = Vector2.UnitX.RotatedBy(handHoverOffsetAngle) * 320f;
+                    Vector2 generalHandOffset = Vector2.UnitX.RotatedBy(handHoverOffsetAngle + PunchOffsetAngle) * 320f;
                     Vector2 punchingHandOffset = generalHandOffset + generalHandOffset.SafeNormalize(Vector2.UnitY) * anticipationReelBackDistance - Vector2.UnitY * anticipationReelBackDistance * 0.5f;
 
                     idealHandOffsetFromPlayer1 = punchingHandOffset;
@@ -292,7 +299,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     // Calculate hand offset information.
                     ulong offsetAngleSeed = (ulong)(usedHandIndex + 74f);
-                    float handHoverOffsetAngle = Lerp(-0.72f, 0.72f, RandomFloat(ref offsetAngleSeed));
+                    float handHoverOffsetAngle = Lerp(-0.72f, 0.72f, RandomFloat(ref offsetAngleSeed)) + PunchOffsetAngle;
                     float handHoverOffsetDistance = Lerp(330f, 700f, Pow(GetLerpValue(0f, handRepositionTime, wrappedHandAttackTimer - handEnergyChargeUpTime - handArcPunchTime, true), 2.3f));
                     Vector2 handOffset = Vector2.UnitX.RotatedBy(handHoverOffsetAngle) * handHoverOffsetDistance;
                     idealHandOffsetFromPlayer1 = handOffset;
@@ -410,7 +417,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             int starCreationDelay = 21;
             int starCreationTime = 68;
-            int attackTransitionDelay = 132;
+            int attackTransitionDelay = 274;
             float spinRadius = 220f;
             float handMoveSpeedFactor = 3.7f;
             ref float spinDirection = ref NPC.ai[2];
@@ -894,6 +901,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Also teleport above the target.
             if (AttackTimer == 1f)
             {
+                // Delete leftover starbursts on the first frame.
+                int starburstID = ModContent.ProjectileType<ArcingStarburst>();
+                int starburstID2 = ModContent.ProjectileType<ArcingStarburst>();
+                for (int i = 0; i < Main.maxProjectiles; i++)
+                {
+                    Projectile p = Main.projectile[i];
+                    if ((p.type == starburstID || p.type == starburstID2) && p.active)
+                        p.Kill();
+                }
+
                 ZPosition = 1f;
                 TeleportTo(Target.Center - Vector2.UnitY * 300f);
 

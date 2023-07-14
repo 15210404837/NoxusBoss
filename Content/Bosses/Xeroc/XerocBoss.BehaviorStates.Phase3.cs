@@ -406,14 +406,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 TeleportTo(Target.Center + Vector2.UnitY * 2000f);
             }
 
-            // Stay below the target, invisible, after redirecting.
+            // Stay at the top of the clock after redirecting.
             if (AttackTimer >= redirectTime && attackHasConcluded == 0f)
             {
-                NPC.Opacity = 0f;
-                NPC.Center = Target.Center + Vector2.UnitY * 2000f;
+                NPC.Opacity = 1f;
+
+                if (clocks.Any())
+                    NPC.Center = clocks.First().Center - Vector2.UnitY * (Cos(AttackTimer / 34.5f) * 50f + 900f);
 
                 // Burn the target if they try to leave the clock.
-                if (clocks.Any() && !Target.WithinRange(clocks.First().Center, 1040f))
+                if (clocks.Any() && !Target.WithinRange(clocks.First().Center, 932f) && AttackTimer >= redirectTime + 60f)
                     Target.Hurt(PlayerDeathReason.ByNPC(NPC.whoAmI), Main.rand.Next(900, 950), 0);
             }
 

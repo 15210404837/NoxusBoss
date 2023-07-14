@@ -110,14 +110,32 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Make the time restart delay go down.
             TimeIsStopped = false;
+            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
             if (TimeRestartDelay >= 1)
             {
                 TimeIsStopped = true;
                 TimeRestartDelay--;
+
+                if (TimeRestartDelay <= 0)
+                {
+                    int starburstID = ModContent.ProjectileType<Starburst>();
+                    for (int i = 0; i < Main.maxProjectiles; i++)
+                    {
+                        Projectile p = Main.projectile[i];
+                        if (p.type == starburstID && p.active)
+                        {
+                            p.timeLeft = 150;
+                            p.ai[0] = 65f;
+
+                            if (p.WithinRange(Projectile.Center, 560f))
+                                p.velocity = p.SafeDirectionTo(target.Center) * 14.5f;
+                            p.netUpdate = true;
+                        }
+                    }
+                }
             }
 
             // Approach the nearest player.
-            Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
             if (Projectile.WithinRange(target.Center, 50f) || TimeIsStopped)
                 Projectile.velocity *= 0.9f;
             else
