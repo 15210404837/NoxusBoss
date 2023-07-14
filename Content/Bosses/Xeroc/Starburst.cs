@@ -49,7 +49,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             // Accelerate over time.
             if (Projectile.velocity.Length() <= 33f && !ClockConstellation.TimeIsStopped)
-                Projectile.velocity *= Big ? 1.031f : 1.04f;
+                Projectile.velocity *= Big ? 1.0284f : 1.04f;
 
             // Keep the projectile in stasis if time is stopped.
             if (ClockConstellation.TimeIsStopped)

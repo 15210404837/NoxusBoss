@@ -57,6 +57,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Create the light beam at the end.
                 if (AttackTimer == redirectTime + upwardRiseTime - 1f)
                 {
+                    NPC.Center = Target.Center + new Vector2(-Target.direction * 450f, -100f);
+                    NPC.netUpdate = true;
+
                     LocalScreenSplitSystem.Start(NPC.Center, 20, PiOver2 * 0.9999f, 500f);
                     SoundEngine.PlaySound(ScreamSound with { Volume = 3f });
                     SoundEngine.PlaySound(SupernovaSound with { Volume = 8f });
@@ -137,8 +140,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         NewProjectileBetter(laserStart - sliceDirection * 2000f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, 30f, 4000f);
                     }
 
-                    if (Target.WithinRange(NPC.Center, 250f))
-                        NewProjectileBetter(PupilPosition, (Target.Center - PupilPosition).SafeNormalize(Vector2.UnitY) * 5f, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                    if (Target.WithinRange(NPC.Center, 335f))
+                    {
+                        for (int i = 0; i < 3; i++)
+                            NewProjectileBetter(PupilPosition, (Target.Center - PupilPosition).SafeNormalize(Vector2.UnitY) * 5.6f + Main.rand.NextVector2Circular(0.9f, 0.9f), ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                    }
                 }
             }
 

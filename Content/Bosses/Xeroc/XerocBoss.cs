@@ -6,6 +6,7 @@ using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Events;
+using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -524,6 +525,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 CalamityMod.CalamityMod.StopRain();
                 Sandstorm.StopSandstorm();
+
+                if (Main.netMode != NetmodeID.Server)
+                    Filters.Scene["Graveyard"].Deactivate();
             }
 
             // Set the global NPC instance.

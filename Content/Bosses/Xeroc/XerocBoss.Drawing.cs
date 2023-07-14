@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CalamityMod;
+using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
 using ReLogic.Graphics;
 using Terraria;
@@ -17,13 +21,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
+        private static readonly FieldInfo particlesField = typeof(GeneralParticleHandler).GetField("particles", BindingFlags.NonPublic | BindingFlags.Static);
+
         public override void DrawBehind(int index)
         {
             bool canDraw = CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || CurrentAttack == XerocAttackType.DeathAnimation || NPC.Opacity >= 0.02f;
             if (NPC.hide && canDraw)
             {
                 if ((DrawCongratulatoryText || UniversalBlackOverlayInterpolant >= 0.02f) && ZPosition >= -0.5f)
-                    Main.instance.DrawCacheNPCsOverPlayers.Add(index);
+                    ScreenOverlaysSystem.DrawCacheAfterNoxusFog.Add(index);
                 else if (ZPosition < -0.1f)
                     ScreenOverlaysSystem.DrawCacheAfterNoxusFog.Add(index);
                 else if (ShouldDrawBehindTiles)
@@ -61,12 +67,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             //DrawTeeth(screenPos);
 
             // Draw the eye.
+            Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
             if (UniversalBlackOverlayInterpolant <= 0.99f)
-            {
-                Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
                 DrawEye(screenPos);
-                Main.spriteBatch.ResetBlendState();
+
+            // Draw fire particles manually if they'd be obscured.
+            if (UniversalBlackOverlayInterpolant >= 0.02f)
+            {
+                List<Particle> particles = (List<Particle>)particlesField.GetValue(null);
+                foreach (Particle p in particles)
+                {
+                    if (p is not HeavySmokeParticle t)
+                        continue;
+
+                    t.CustomDraw(spriteBatch);
+                }
             }
+            Main.spriteBatch.ResetBlendState();
 
             return false;
         }
@@ -100,8 +117,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawHands(Vector2 screenPos)
         {
-            // Initialize the trail drawer if necessary.
-
             // TODO -- Add sigil drawing to this.
             Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPalm").Value;
             foreach (XerocHand hand in Hands)
@@ -119,7 +134,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 Color handColor = Color.Coral * hand.Opacity * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
-                if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken)
+                if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || TeleportVisualsAdjustedScale.Length() >= 10f)
                     handColor = Color.White;
 
                 SpriteEffects direction = hand.Center.X < NPC.Center.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
