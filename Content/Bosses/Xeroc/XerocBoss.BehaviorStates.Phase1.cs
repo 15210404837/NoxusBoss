@@ -22,7 +22,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_ConjureExplodingStars()
         {
             int redirectTime = 22;
-            int hoverTime = 26;
+            int hoverTime = 34;
             int starShootCount = 6;
             int starCreateRate = 4;
             int starTelegraphTime = starShootCount * starCreateRate;
@@ -47,7 +47,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             UpdateWings(AttackTimer / 54f % 1f);
 
             // Conjure two hands after the redirect.
-            if (AttackTimer == redirectTime + 20f)
+            if (AttackTimer == redirectTime + 3f)
             {
                 ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 100f, -Vector2.UnitX * 4f, true, -1);
                 ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 100f, Vector2.UnitX * 4f, true, 1);

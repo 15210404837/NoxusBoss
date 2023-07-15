@@ -1,4 +1,6 @@
-﻿using CalamityMod;
+﻿using System.Linq;
+using CalamityMod;
+using CalamityMod.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
@@ -9,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
-    public class ArcingStarburst : ModProjectile, IDrawPixelatedPrims
+    public class ArcingStarburst : ModProjectile, IDrawPixelatedPrims, IAdditiveDrawer
     {
         public PrimitiveTrail TrailDrawer
         {
@@ -21,8 +23,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public ref float MaxSpeedFactor => ref Projectile.ai[1];
 
-        public override string Texture => "NoxusBoss/Content/Bosses/Xeroc/Starburst";
-
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Starburst");
@@ -33,8 +33,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetDefaults()
         {
-            Projectile.width = 26;
-            Projectile.height = 26;
+            Projectile.width = 22;
+            Projectile.height = 22;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -105,13 +105,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Fade in and out based on how long the starburst has existed.
             Projectile.Opacity = GetLerpValue(0f, 24f, Projectile.timeLeft, true) * GetLerpValue(0f, 12f, Time, true);
+            Projectile.rotation = Projectile.velocity.ToRotation() - PiOver2;
 
             Time++;
         }
 
         public float FlameTrailWidthFunction(float completionRatio)
         {
-            return MathHelper.SmoothStep(25f, 5f, completionRatio) * Projectile.Opacity;
+            return MathHelper.SmoothStep(18f, 5f, completionRatio) * Projectile.Opacity;
         }
 
         public Color FlameTrailColorFunction(float completionRatio)
@@ -121,44 +122,40 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Interpolate between a bunch of colors based on the completion ratio.
             Color startingColor = Color.Lerp(Color.White, Color.IndianRed, 0.25f);
-            Color middleColor = Color.Lerp(Color.OrangeRed, Color.Yellow, 0.4f);
-            Color endColor = Color.Lerp(Color.Purple, Color.Black, 0.35f);
+            Color middleColor = Color.Lerp(Color.Yellow, Color.Cyan, Lerp(0.35f, 0.95f, Projectile.identity / 14f % 1f));
+            Color endColor = Color.Lerp(Color.DeepSkyBlue, Color.Black, 0.35f);
             Color color = CalamityUtils.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity;
 
             color.A = (byte)(trailOpacity * 255);
             return color * Projectile.Opacity;
         }
 
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
-
-            // Draw a bloom flare behind the starburst.
-            Starburst.DrawStarburstBloomFlare(Projectile);
-
-            // Draw afterimages that trail closely behind the star core.
-            int afterimageCount = 5;
-            for (int i = 0; i < afterimageCount; ++i)
-            {
-                float afterimageRotation = Projectile.oldRot[i];
-                SpriteEffects directionForImage = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                Vector2 drawPosition = Projectile.oldPos[i] + Projectile.Size * 0.5f - Main.screenPosition;
-
-                // Make afterimages clump near the true position.
-                drawPosition = Vector2.Lerp(drawPosition, Projectile.Center - Main.screenPosition, 0.6f);
-
-                float afterimageScale = Projectile.scale * ((afterimageCount - i) / (float)afterimageCount);
-
-                Color color = Projectile.GetAlpha(lightColor) * ((afterimageCount - i) / (float)afterimageCount);
-                color.A = 0;
-
-                Main.spriteBatch.Draw(texture, drawPosition, frame, color, afterimageRotation, frame.Size() * 0.5f, afterimageScale, directionForImage, 0f);
-            }
-            return false;
-        }
+        public override bool PreDraw(ref Color lightColor) => false;
 
         public override void Kill(int timeLeft) => TrailDrawer?.BaseEffect?.Dispose();
+
+        public void AdditiveDraw(SpriteBatch spriteBatch)
+        {
+            // Draw the bloom flare.
+            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
+            float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
+
+            Color baseColor1 = Color.Turquoise;
+            Color baseColor2 = Color.DeepSkyBlue;
+            Color bloomFlareColor1 = baseColor1 with { A = 0 } * Projectile.Opacity * 0.54f;
+            Color bloomFlareColor2 = baseColor2 with { A = 0 } * Projectile.Opacity * 0.54f;
+
+            Vector2 bloomFlareDrawPosition = Projectile.Center - Main.screenPosition;
+            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, Projectile.scale * 0.08f, 0, 0f);
+            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, Projectile.scale * 0.096f, 0, 0f);
+
+            // Draw the star.
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Color color = Projectile.GetAlpha(Color.White);
+            Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, Projectile.scale * 1f, 0, 0f);
+        }
 
         public void Draw()
         {
