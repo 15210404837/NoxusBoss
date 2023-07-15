@@ -206,7 +206,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Draw the cloth.
-            Vector2 sphereCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 40f) * TeleportVisualsAdjustedScale;
+            Vector2 sphereCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 65f) * TeleportVisualsAdjustedScale;
             cloth.Simulate(TeleportVisualsAdjustedScale.X, new(sphereCenter, 0f), TeleportVisualsAdjustedScale.Length() * 40f);
 
             var mesh = cloth.GenerateMesh();
@@ -357,8 +357,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Texture2D crownTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/SupremeCrown").Value;
 
             Vector2 crownScale = TeleportVisualsAdjustedScale * 0.75f;
-            Vector2 leftCrownDrawPosition = NPC.Center + new Vector2(-110f, -300f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
-            Vector2 rightCrownDrawPosition = NPC.Center + new Vector2(110f, -300f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
+            Vector2 leftCrownDrawPosition = NPC.Center + new Vector2(-120f, -354f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
+            Vector2 rightCrownDrawPosition = NPC.Center + new Vector2(120f, -354f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
 
             Main.spriteBatch.Draw(crownTexture1, leftCrownDrawPosition, null, Color.White * ZPositionOpacity * NPC.Opacity, NPC.rotation, crownTexture1.Size() * 0.5f, crownScale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(crownTexture1, rightCrownDrawPosition, null, Color.White * ZPositionOpacity * NPC.Opacity, NPC.rotation, crownTexture1.Size() * 0.5f, crownScale, SpriteEffects.FlipHorizontally, 0f);
