@@ -123,7 +123,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int handCount = 10;
             int handSummonRate = 4;
             int handSummonTime = handCount * handSummonRate;
-            float maxHandSpinSpeed = ToRadians(2.4f);
+            float maxHandSpinSpeed = ToRadians(0.36f);
             float handMoveSpeedFactor = 2.8f;
             Vector2 handOffsetRadius = new(332f, 396f);
             Vector2 idealHandOffsetFromPlayer1 = Vector2.Zero;
@@ -188,7 +188,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 int screenSliceCount = 6;
                 int sliceTelegraphDelay = 36;
                 bool doArcPunch = true;
-                float arcPunchStarburstSpeedFactor = 0.61f;
 
                 if (!doArcPunch)
                 {
@@ -385,8 +384,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = 0; i < Hands.Count; i++)
             {
                 XerocHand hand = Hands[i];
-                Vector2 handOffset = (TwoPi * i / Hands.Count + handSpinAngularOffset).ToRotationVector2() * handOffsetRadius;
+                Vector2 handOffset = (TwoPi * i / Hands.Count + handSpinAngularOffset).ToRotationVector2() * new Vector2(1.3f, 0.8f) * handOffsetRadius;
                 Vector2 handDestination = NPC.Center + handOffset;
+
+                hand.UseRobe = true;
+                hand.RobeDirection = (handDestination.X >= NPC.Center.X).ToDirectionInt();
 
                 // Instruct the hands to move towards a preset offset from the target if this hand is the one being used.
                 float localHandMoveSpeedFactor = 5f;
@@ -395,12 +397,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     if (idealHandOffsetFromPlayer1 != Vector2.Zero)
                         handDestination = Target.Center + idealHandOffsetFromPlayer1;
                     localHandMoveSpeedFactor = handMoveSpeedFactor;
+                    hand.UseRobe = false;
                 }
                 if ((i + Hands.Count / 2) % Hands.Count == usedHandIndex)
                 {
                     if (idealHandOffsetFromPlayer2 != Vector2.Zero)
                         handDestination = Target.Center + idealHandOffsetFromPlayer2;
                     localHandMoveSpeedFactor = handMoveSpeedFactor;
+                    hand.UseRobe = false;
                 }
 
                 DefaultHandDrift(hand, handDestination, localHandMoveSpeedFactor);
@@ -1127,7 +1131,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update hands.
             if (Hands.Count >= 2)
             {
-                Vector2 handOffset = handOffsetAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(500f, 360f);
+                Vector2 handOffset = handOffsetAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(500f, 160f);
                 DefaultHandDrift(Hands[0], NPC.Center + handOffset * new Vector2(-1f, 1f), 2f);
                 DefaultHandDrift(Hands[1], NPC.Center + handOffset, 2f);
             }

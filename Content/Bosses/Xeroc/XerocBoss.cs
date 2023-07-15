@@ -64,17 +64,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Center = spawnPosition;
                 HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
 
-                if (useRobe)
-                {
-                    float leftStretchTolerance = 0.39f;
-                    float rightStretchTolerance = 0.62f;
-                    if (robeDirection == 1)
-                        Swap(ref leftStretchTolerance, ref rightStretchTolerance);
-
-                    RobeCloth = new(Center, 20, 20, 18f, 7.5f, 10f, 0.54f);
-                    UseRobe = true;
-                    RobeDirection = robeDirection;
-                }
+                UseRobe = useRobe;
+                RobeCloth = new(Center, 20, 20, 18f, 7.5f, 10f, 0.54f);
+                RobeDirection = robeDirection;
             }
 
             public void ClearPositionCache()
