@@ -145,9 +145,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (handIndex % 2 == 0)
                     verticalOffset *= -1f;
 
-                Hands.Add(new()
+                Hands.Add(new(Target.Center - Vector2.UnitX.RotatedBy(-SeamAngle) * verticalOffset, false)
                 {
-                    Center = Target.Center - Vector2.UnitX.RotatedBy(-SeamAngle) * verticalOffset,
                     Velocity = Main.rand.NextVector2CircularEdge(17f, 17f),
                     Opacity = 0f
                 });

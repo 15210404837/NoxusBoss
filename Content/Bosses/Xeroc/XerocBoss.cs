@@ -2,6 +2,7 @@
 using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Core.Graphics;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -25,6 +26,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             public int FrameTimer;
 
+            public int RobeDirection;
+
             public bool ShouldOpen;
 
             public bool UsePalmForm;
@@ -34,6 +37,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             public bool HasSigil;
 
             public bool CanDoDamage;
+
+            public bool UseRobe;
 
             public float Opacity = 1f;
 
@@ -47,14 +52,29 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             public Vector2[] OldCenters = new Vector2[40];
 
+            public Cloth RobeCloth;
+
             public PrimitiveTrail HandTrailDrawer;
 
-            public XerocHand()
+            public XerocHand(Vector2 spawnPosition, bool useRobe, int robeDirection = 0)
             {
                 if (Main.netMode == NetmodeID.Server)
                     return;
 
+                Center = spawnPosition;
                 HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
+
+                if (useRobe)
+                {
+                    float leftStretchTolerance = 0.39f;
+                    float rightStretchTolerance = 0.62f;
+                    if (robeDirection == 1)
+                        Swap(ref leftStretchTolerance, ref rightStretchTolerance);
+
+                    RobeCloth = new(Center, 20, 20, 18f, 7.5f, 10f, 0.54f);
+                    UseRobe = true;
+                    RobeDirection = robeDirection;
+                }
             }
 
             public void ClearPositionCache()
@@ -85,23 +105,29 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             public void WriteTo(BinaryWriter writer)
             {
+                writer.Write(RobeDirection);
+                writer.Write((byte)UseRobe.ToInt());
+                writer.WriteVector2(Center);
+
                 writer.Write((byte)CanDoDamage.ToInt());
                 writer.Write((byte)HasSigil.ToInt());
                 writer.Write(Opacity);
                 writer.Write(Rotation);
-                writer.WriteVector2(Center);
                 writer.WriteVector2(Velocity);
             }
 
             public static XerocHand ReadFrom(BinaryReader reader)
             {
-                return new()
+                int robeDirection = reader.ReadInt32();
+                bool usesRobe = reader.ReadByte() != 0;
+                Vector2 center = reader.ReadVector2();
+
+                return new(center, usesRobe, robeDirection)
                 {
                     CanDoDamage = reader.ReadByte() != 0,
                     HasSigil = reader.ReadByte() != 0,
                     Opacity = reader.ReadSingle(),
                     Rotation = reader.ReadSingle(),
-                    Center = reader.ReadVector2(),
                     Velocity = reader.ReadVector2()
                 };
             }

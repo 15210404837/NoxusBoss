@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
 using CalamityMod.Events;
@@ -37,10 +38,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 float redirectInterpolant = Pow(AttackTimer / redirectTime, 0.66f) * 0.45f;
                 float overshootInPixels = GetLerpValue(0.2f, 0.6f, redirectInterpolant, true) * GetLerpValue(0.96f, 0.75f, redirectInterpolant, true) * 50f;
                 Vector2 overshootOffset = (NPC.position - NPC.oldPosition).SafeNormalize(Vector2.Zero) * overshootInPixels;
-                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 480f + overshootOffset, redirectInterpolant);
+                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f + overshootOffset, redirectInterpolant);
             }
             else
-                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 480f, 0.5f);
+                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f, 0.5f);
 
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);
@@ -48,8 +49,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Conjure two hands after the redirect.
             if (AttackTimer == redirectTime + 20f)
             {
-                ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 100f, -Vector2.UnitX * 4f, true);
-                ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 100f, Vector2.UnitX * 4f, true);
+                ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 100f, -Vector2.UnitX * 4f, true, -1);
+                ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 100f, Vector2.UnitX * 4f, true, 1);
             }
 
             // Update hands.
@@ -186,7 +187,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     for (int i = 0; i < 21; i++)
                     {
-                        Vector2 starburstVelocity = PupilOffset.SafeNormalize(Vector2.UnitY).RotatedBy(TwoPi * i / 21f) * starburstShootSpeed * 0.15f;
+                        Vector2 starburstVelocity = PupilOffset.SafeNormalize(Vector2.UnitY).RotatedBy(TwoPi * i / 21f) * starburstShootSpeed * 0.08f;
                         NewProjectileBetter(PupilPosition, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
                     }
 
@@ -264,7 +265,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 for (int i = 0; i < totalRadialSlices; i++)
                 {
                     Vector2 handOffset = (TwoPi * i / totalRadialSlices).ToRotationVector2() * NPC.scale * 400f;
-                    ConjureHandsAtPosition(NPC.Center + handOffset, sliceDirection * 3f, false);
+                    if (Abs(handOffset.X) <= 0.001f)
+                        handOffset.X = 0f;
+
+                    ConjureHandsAtPosition(NPC.Center + handOffset, sliceDirection * 3f, false, Math.Sign(handOffset.X));
                 }
             }
 
@@ -296,8 +300,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     XerocHand hand = Hands[i];
                     Vector2 handDestination = NPC.Center + handMoveDirection * NPC.scale * 900f;
+                    Vector2 hoverOffset = (TwoPi * i / Hands.Count).ToRotationVector2() * NPC.scale * new Vector2(500f, 350f);
                     if (i != handToMoveIndex)
-                        handDestination = NPC.Center + (TwoPi * i / Hands.Count).ToRotationVector2() * NPC.scale * 400f;
+                    {
+                        if (Abs(hoverOffset.X) <= TeleportVisualsAdjustedScale.X * 400f)
+                            hoverOffset.X = Sign(hoverOffset.X) * TeleportVisualsAdjustedScale.X * 400f;
+
+                        handDestination = NPC.Center + hoverOffset;
+                    }
 
                     hand.Center = Vector2.Lerp(hand.Center, handDestination, wrappedAttackTimer / handWaveTime * 0.3f + 0.02f);
 
@@ -373,8 +383,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     NewProjectileBetter(starSpawnPosition, Vector2.Zero, ModContent.ProjectileType<ControlledStar>(), 0, 0f);
 
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * 300f, Vector2.UnitY * -4f, false);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * 300f, Vector2.UnitY * -4f, false);
+                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * 300f, Vector2.UnitY * -4f, false, -1);
+                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * 300f, Vector2.UnitY * -4f, false, 1);
                 }
                 return;
             }
@@ -844,7 +854,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     Vector2 plasmaSpawnPosition = quasar.Center + (TwoPi * AttackTimer / 30f).ToRotationVector2() * (quasar.Distance(Target.Center) + Main.rand.NextFloat(600f, 700f));
                     Vector2 plasmaVelocity = (quasar.Center - plasmaSpawnPosition).SafeNormalize(Vector2.UnitY) * plasmaShootSpeed;
-                    while (Target.WithinRange(plasmaSpawnPosition, 880f))
+                    while (Target.WithinRange(plasmaSpawnPosition, 1040f))
                         plasmaSpawnPosition -= plasmaVelocity;
 
                     NewProjectileBetter(plasmaSpawnPosition, plasmaVelocity, ModContent.ProjectileType<ConvergingSupernovaEnergy>(), SupernovaEnergyDamage, 0f);

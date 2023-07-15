@@ -107,13 +107,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        public void ConjureHandsAtPosition(Vector2 position, Vector2 velocity, bool hasSigil)
+        public void ConjureHandsAtPosition(Vector2 position, Vector2 velocity, bool hasSigil, int robeDirection = 0)
         {
             SoundEngine.PlaySound(SoundID.Item100 with { MaxInstances = 100, Volume = 0.4f }, position);
 
-            Hands.Add(new()
+            Hands.Add(new(position, robeDirection != 0, robeDirection)
             {
-                Center = position,
                 Velocity = velocity,
                 HasSigil = hasSigil
             });

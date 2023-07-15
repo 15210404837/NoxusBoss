@@ -101,7 +101,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static XerocAttackType[] TestCycle => new[]
         {
-            XerocAttackType.SwordConstellation2,
+            XerocAttackType.RealityTearDaggers,
         };
 
         #endregion Attack Cycles

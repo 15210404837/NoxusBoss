@@ -417,11 +417,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float handMoveSpeedFactor = 3.7f;
             ref float spinDirection = ref NPC.ai[2];
             ref float starOffset = ref NPC.ai[3];
-
-            // Keep the right hand pointed in the direction away from the target, as though it's conjuring energy into the star.
-            // The left hand is kept to the bottom left.
             Vector2 leftHandHoverDestination = NPC.Center + new Vector2(-300f, 118f);
-            Vector2 rightHandHoverDestination = NPC.Center - NPC.SafeDirectionTo(Target.Center).RotatedBy(spinDirection * 0.43f) * 323f;
+            Vector2 rightHandHoverDestination = NPC.Center + new Vector2(300f, 118f);
 
             // Hover above the player at first.
             if (AttackTimer <= starCreationDelay)
@@ -434,8 +431,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Also create two hands.
                 if (AttackTimer == 1f)
                 {
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 270f, Vector2.Zero, false);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 270f, Vector2.Zero, true);
+                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 270f, Vector2.Zero, false, -1);
+                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 270f, Vector2.Zero, true, 1);
 
                     spinDirection = (Target.Center.X > NPC.Center.X).ToDirectionInt();
                     NPC.netUpdate = true;
@@ -471,16 +468,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay);
+                        NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 5);
 
-                        int star = NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio + Pi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 7);
+                        int star = NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio + Pi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 9);
                         if (Main.projectile.IndexInRange(star))
                         {
                             Main.projectile[star].ModProjectile<StarPatterenedStarburst>().RadiusOffset = 400f;
                             Main.projectile[star].ModProjectile<StarPatterenedStarburst>().ConvergenceAngleOffset = Pi / 5f;
                         }
 
-                        star = NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio + TwoPi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 14);
+                        star = NewProjectileBetter(Target.Center, (TwoPi * spinCompletionRatio + TwoPi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 16);
                         if (Main.projectile.IndexInRange(star))
                         {
                             Main.projectile[star].ModProjectile<StarPatterenedStarburst>().RadiusOffset = 900f;
@@ -556,8 +553,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Conjure a two hands on the first frame. It will be used later to bring the stars forward.
                 if (AttackTimer == 1f)
                 {
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 50f, Vector2.Zero, true);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 50f, Vector2.Zero, true);
+                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 50f, Vector2.Zero, true, -1);
+                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 50f, Vector2.Zero, true, 1);
                 }
 
                 HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.5f, 0.09f);
@@ -918,7 +915,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
+                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false, Sign(Target.Center.X - NPC.Center.X));
                 }
             }
 
@@ -951,6 +948,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 if (wrappedAttackTimer == 2f)
                 {
+                    DestroyAllHands();
+                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false, Sign(Target.Center.X - NPC.Center.X));
                     SwordSlashCounter++;
                     NPC.netUpdate = true;
                 }
@@ -1080,8 +1079,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NPC.velocity = (hoverDestination - Target.Center) * 0.075f;
                     NPC.netUpdate = true;
 
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, true);
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, true);
+                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 100f, Vector2.Zero, true, -1);
+                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 100f, Vector2.Zero, true, 1);
                 }
                 else
                     NPC.velocity *= 0.8f;

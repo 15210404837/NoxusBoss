@@ -6,7 +6,6 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
 using ReLogic.Graphics;
 using Terraria;
@@ -15,6 +14,7 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
+using static System.Net.Mime.MediaTypeNames;
 using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
@@ -58,11 +58,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
             Main.spriteBatch.ResetBlendState();
 
-            // Draw the pitch-black censor.
-            DrawProtectiveCensor(screenPos);
-
             // Draw all hands.
             DrawHands(screenPos);
+
+            // Draw the pitch-black censor.
+            DrawProtectiveCensor(screenPos);
 
             //DrawTeeth(screenPos);
 
@@ -118,6 +118,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DrawHands(Vector2 screenPos)
         {
             // TODO -- Add sigil drawing to this.
+            bool canDrawRobeArms = CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.DeathAnimation;
             Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPalm").Value;
             foreach (XerocHand hand in Hands)
             {
@@ -139,6 +140,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 SpriteEffects direction = hand.Center.X < NPC.Center.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
+                // Draw the arm robe.
+                if (canDrawRobeArms && hand.UseRobe)
+                    DrawArmRobe(hand);
+
                 // Draw hand trails if enabled.
                 if (hand.TrailOpacity >= 0.01f)
                 {
@@ -159,6 +164,71 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Main.spriteBatch.Draw(handTexture, drawPosition, frame, handColor, hand.Rotation, frame.Size() * 0.5f, handScale, direction, 0f);
                 Main.spriteBatch.Draw(handTexture, drawPosition, frame, handColor with { A = 0 } * 0.5f, hand.Rotation, frame.Size() * 0.5f, handScale, direction, 0f);
             }
+        }
+
+        public void DrawArmRobe(XerocHand hand)
+        {
+            // Hold robes in place.
+            var cloth = hand.RobeCloth;
+
+            Vector2 robeStart = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * hand.RobeDirection * 120f;
+            Vector2 robeEnd = hand.Center;
+            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, TeleportVisualsAdjustedScale.X * 175f, TeleportVisualsAdjustedScale.X * 120f, hand.RobeDirection == -1) + Vector2.UnitY * TeleportVisualsAdjustedScale * 140f;
+
+            // Hold the end of the robe to the hand.
+            int endX = hand.RobeDirection == -1 ? 0 : (cloth.CellCountX - 1);
+            for (int i = 0; i < cloth.CellCountY - 2; i++)
+            {
+                cloth.SetStickPosition(endX, i, robeEnd + Vector2.UnitY * i * cloth.CellSizeY * 0.35f + Vector2.UnitY * -4f);
+            }
+
+            // Hold the start of the robe to Xeroc.
+            endX = hand.RobeDirection == 1 ? 0 : (cloth.CellCountX - 1);
+            for (int i = 0; i < cloth.CellCountY - 2; i++)
+            {
+                cloth.SetStickPosition(endX, i, robeStart + Vector2.UnitY * i * TeleportVisualsAdjustedScale * cloth.CellSizeY * 2.5f - Vector2.UnitY * TeleportVisualsAdjustedScale * 60f);
+            }
+
+            // Hold the top of the robe in accordance with the IK arms.
+            for (int i = 0; i < cloth.CellCountX; i++)
+            {
+                float armCompletion = i / (float)(cloth.CellCountX - 1f);
+                if (hand.RobeDirection == -1)
+                    armCompletion = 1f - armCompletion;
+
+                Vector2 armHoldPosition;
+                if (armCompletion < 0.5f)
+                    armHoldPosition = Vector2.Lerp(robeStart, robeMidpoint, armCompletion * 2f);
+                else
+                    armHoldPosition = Vector2.Lerp(robeMidpoint, robeEnd, (armCompletion - 0.5f) * 2f);
+
+                cloth.SetStickPosition(i, 0, armHoldPosition);
+            }
+
+            // Draw the cloth.
+            Vector2 sphereCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 40f) * TeleportVisualsAdjustedScale;
+            cloth.Simulate(TeleportVisualsAdjustedScale.X, new(sphereCenter, 0f), TeleportVisualsAdjustedScale.Length() * 40f);
+
+            var mesh = cloth.GenerateMesh();
+            var gd = Main.instance.GraphicsDevice;
+            var clothShader = GameShaders.Misc["NoxusBoss:ClothShader"];
+            Texture2D clothTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void").Value;
+            CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
+
+            // Apply the cloth shader and draw the cloth.
+            Matrix transformation = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
+            clothShader.Shader.Parameters["uLightSource"].SetValue(Vector3.UnitZ);
+            clothShader.Shader.Parameters["brightnessPower"].SetValue(80f);
+            clothShader.Shader.Parameters["pixelationZoom"].SetValue(Vector2.One * 4f / clothTexture.Size());
+            clothShader.Shader.Parameters["uWorldViewProjection"].SetValue(transformation);
+            clothShader.Apply();
+            gd.RasterizerState = RasterizerState.CullNone;
+            gd.Textures[0] = clothTexture;
+            gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, mesh, 0, mesh.Length, cloth.MeshIndexCache, 0, mesh.Length / 2);
+
+            // Turn off the shader.
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.ExitShaderRegion();
         }
 
         public void DrawProtectiveCensor(Vector2 screenPos)
