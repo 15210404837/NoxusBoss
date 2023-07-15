@@ -413,7 +413,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Stay at the top of the clock after redirecting.
-            if (AttackTimer >= redirectTime && attackHasConcluded == 0f)
+            if (AttackTimer >= redirectTime && AttackTimer <= attackDuration - 90f && attackHasConcluded == 0f)
             {
                 NPC.Opacity = 1f;
 

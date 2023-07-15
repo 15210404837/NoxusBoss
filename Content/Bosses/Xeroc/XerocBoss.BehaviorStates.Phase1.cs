@@ -22,7 +22,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_ConjureExplodingStars()
         {
             int redirectTime = 22;
-            int hoverTime = 64;
+            int hoverTime = 26;
             int starShootCount = 6;
             int starCreateRate = 4;
             int starTelegraphTime = starShootCount * starCreateRate;

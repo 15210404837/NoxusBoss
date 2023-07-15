@@ -145,7 +145,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Initialize the punch offset angle.
                 if (AttackTimer == 1f)
                 {
-                    PunchOffsetAngle = Main.rand.NextFloat(TwoPi);
+                    PunchOffsetAngle = Main.rand.NextFloat(-0.81f, 0.81f);
                     NPC.netUpdate = true;
                 }
             }
