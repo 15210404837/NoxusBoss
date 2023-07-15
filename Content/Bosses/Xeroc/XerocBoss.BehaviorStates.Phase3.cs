@@ -57,7 +57,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Create the light beam at the end.
                 if (AttackTimer == redirectTime + upwardRiseTime - 1f)
                 {
-                    NPC.Center = Target.Center + new Vector2(-Target.direction * 450f, -100f);
+                    NPC.Center = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 450f, -100f);
                     NPC.netUpdate = true;
 
                     LocalScreenSplitSystem.Start(NPC.Center, 20, PiOver2 * 0.9999f, 500f);

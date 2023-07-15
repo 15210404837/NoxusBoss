@@ -129,8 +129,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             NPC.npcSlots = 100f;
             NPC.damage = 375;
-            NPC.width = 440;
-            NPC.height = 700;
+            NPC.width = 400;
+            NPC.height = 500;
             NPC.defense = 150;
             NPC.LifeMaxNERB(8000000, 9364000);
 

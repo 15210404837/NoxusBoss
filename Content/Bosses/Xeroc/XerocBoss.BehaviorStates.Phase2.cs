@@ -200,8 +200,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Hover above the target.
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 580f, -360f);
-                Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.12f;
-                NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.13f);
+                Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.06f;
+                NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.06f);
 
                 // Make the first hand wait and reel back in anticipation of the arc punch, while the other one silently waits to the side.
                 if (wrappedHandAttackTimer <= handEnergyChargeUpTime && doArcPunch)

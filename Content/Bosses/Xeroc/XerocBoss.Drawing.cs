@@ -14,7 +14,6 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
-using static System.Net.Mime.MediaTypeNames;
 using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
@@ -39,6 +38,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+        {
+            scale *= TeleportVisualsAdjustedScale.Length() * 0.707f;
+            return null;
+        }
+
         public override void BossHeadSlot(ref int index)
         {
             // Make the head icon disappear if Xeroc is invisible.
@@ -54,17 +59,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = 0; i < Wings.Length; i++)
             {
                 Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - screenPos;
-                DrawWing(bottom + Vector2.UnitY * (i * -192f + 30f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity);
+                DrawWing(bottom + Vector2.UnitY * (i * -180f - 30f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity);
             }
             Main.spriteBatch.ResetBlendState();
 
             // Draw all hands.
-            DrawHands(screenPos);
+            if (UniversalBlackOverlayInterpolant <= 0f)
+                DrawHands(screenPos);
 
             // Draw the pitch-black censor.
             DrawProtectiveCensor(screenPos);
+            if (UniversalBlackOverlayInterpolant > 0f)
+                DrawHands(screenPos);
 
-            //DrawTeeth(screenPos);
+            DrawTeeth(screenPos);
 
             // Draw the eye.
             Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
@@ -172,7 +180,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             var cloth = hand.RobeCloth;
 
             float midpointDistanceFactor = Pow(TeleportVisualsAdjustedScale.Y, 0.5f);
-            Vector2 robeStart = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * hand.RobeDirection * 120f;
+            Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 120f, -160f);
             Vector2 robeEnd = hand.Center;
             Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 175f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 140f;
 
@@ -236,9 +244,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             // TODO -- This is larger than usual for placeholder reasons.
             Texture2D pixel = TextureAssets.MagicPixel.Value;
-            Vector2 censorDrawPosition = EyePosition - screenPos + Vector2.UnitY * NPC.scale * 240f;
-            Vector2 censorScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(300f, 760f) / pixel.Size();
-            Main.spriteBatch.Draw(pixel, censorDrawPosition, null, Color.Black * Pow(NPC.Opacity, 0.4f), 0f, pixel.Size() * 0.5f, censorScale, 0, 0f);
+            Vector2 censorScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(300f, 540f) / pixel.Size();
+            Vector2 censorDrawPosition = EyePosition - screenPos + Vector2.UnitY * censorScale * 350f;
+            Main.spriteBatch.Draw(pixel, censorDrawPosition, null, Color.Black * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant), 0f, pixel.Size() * 0.5f, censorScale, 0, 0f);
 
             // Draaw the universal overlay if necessary.
             Texture2D overlayTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
@@ -264,17 +272,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawTeeth(Vector2 screenPos)
         {
+            // Collect textures.
             Texture2D teethTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Teeth1").Value;
             Texture2D teethTexture2 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Teeth2").Value;
+            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
-            Vector2 teethScale = TeleportVisualsAdjustedScale * 0.2f;
-            Vector2 generalBottomTeethOffset = new Vector2(-20f, -52f).RotatedBy(NPC.rotation) * teethScale;
-            Vector2 teethDrawPositionTop = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 302f - screenPos;
+            // Calculate draw values.
+            Vector2 teethScale = TeleportVisualsAdjustedScale * 0.85f;
+            Vector2 teethDrawPositionTop = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 200f - screenPos;
             Vector2 teethDrawPositionBottom = teethDrawPositionTop;
-            Color teethColor = Color.White * NPC.Opacity * 0.9f;
+            Color teethColor = Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant) * 0.9f;
 
+            // Draw a white teeth behind the teeth so that pitch black isn't revealed behind them.
+            Main.spriteBatch.Draw(backglowTexture, teethDrawPositionTop, null, (Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)) with { A = 0}, 0f, backglowTexture.Size() * 0.5f, new Vector2(0.3f, 0.15f) * TeleportVisualsAdjustedScale, 0, 0f);
+
+            // Draw the teeth.
             Main.spriteBatch.Draw(teethTexture1, teethDrawPositionTop, null, teethColor, 0f, teethTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
-            Main.spriteBatch.Draw(teethTexture2, teethDrawPositionBottom + generalBottomTeethOffset, null, teethColor, 0f, teethTexture2.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
+            Main.spriteBatch.Draw(teethTexture2, teethDrawPositionBottom, null, teethColor, 0f, teethTexture2.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
         }
 
         public void DrawEye(Vector2 screenPos)
@@ -358,8 +372,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Texture2D crownTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/SupremeCrown").Value;
 
             Vector2 crownScale = TeleportVisualsAdjustedScale * 0.75f;
-            Vector2 leftCrownDrawPosition = NPC.Center + new Vector2(-120f, -354f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
-            Vector2 rightCrownDrawPosition = NPC.Center + new Vector2(120f, -354f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
+            Vector2 leftCrownDrawPosition = NPC.Center + new Vector2(-120f, -304f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
+            Vector2 rightCrownDrawPosition = NPC.Center + new Vector2(120f, -304f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
 
             Main.spriteBatch.Draw(crownTexture1, leftCrownDrawPosition, null, Color.White * ZPositionOpacity * NPC.Opacity, NPC.rotation, crownTexture1.Size() * 0.5f, crownScale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(crownTexture1, rightCrownDrawPosition, null, Color.White * ZPositionOpacity * NPC.Opacity, NPC.rotation, crownTexture1.Size() * 0.5f, crownScale, SpriteEffects.FlipHorizontally, 0f);

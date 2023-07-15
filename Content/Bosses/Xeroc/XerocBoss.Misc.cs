@@ -104,12 +104,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return false;
         }
 
-        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
-        {
-            scale *= TeleportVisualsAdjustedScale.Length() * 0.707f;
-            return null;
-        }
-
         public override void BossLoot(ref string name, ref int potionType) => potionType = ModContent.ItemType<OmegaHealingPotion>();
 
         // Ensure that Xeroc' contact damage adheres to the special boss-specific cooldown slot, to prevent things like lava cheese.
