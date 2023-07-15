@@ -569,7 +569,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             else if (AttackTimer <= backgroundDimTime + starCreationTime)
             {
                 // Make the hands suddenly move outward. They return to Xeroc shortly before the stars being being shoved.
-                float handHoverOffset = Remap(AttackTimer - backgroundDimTime, starCreationTime - 12f, starCreationTime - 4f, 940f, defaultHandHoverOffset);
+                float handHoverOffset = Remap(AttackTimer - backgroundDimTime, starCreationTime - 12f, starCreationTime - 4f, 720f, defaultHandHoverOffset);
                 if (AttackTimer == backgroundDimTime + 1f)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)

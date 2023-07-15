@@ -171,9 +171,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Hold robes in place.
             var cloth = hand.RobeCloth;
 
+            float midpointDistanceFactor = Pow(TeleportVisualsAdjustedScale.Y, 0.5f);
             Vector2 robeStart = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * hand.RobeDirection * 120f;
             Vector2 robeEnd = hand.Center;
-            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, TeleportVisualsAdjustedScale.X * 175f, TeleportVisualsAdjustedScale.X * 120f, hand.RobeDirection == -1) + Vector2.UnitY * TeleportVisualsAdjustedScale * 140f;
+            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 175f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 140f;
 
             // Hold the end of the robe to the hand.
             int endX = hand.RobeDirection == -1 ? 0 : (cloth.CellCountX - 1);
@@ -207,19 +208,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Draw the cloth.
             Vector2 sphereCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 65f) * TeleportVisualsAdjustedScale;
-            cloth.Simulate(TeleportVisualsAdjustedScale.X, new(sphereCenter, 0f), TeleportVisualsAdjustedScale.Length() * 40f);
+            cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(sphereCenter, 0f), TeleportVisualsAdjustedScale.Length() * 40f);
 
             var mesh = cloth.GenerateMesh();
             var gd = Main.instance.GraphicsDevice;
             var clothShader = GameShaders.Misc["NoxusBoss:ClothShader"];
-            Texture2D clothTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void").Value;
+            Texture2D clothTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/RobePattern").Value;
             CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
 
             // Apply the cloth shader and draw the cloth.
             Matrix transformation = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
             clothShader.Shader.Parameters["uLightSource"].SetValue(Vector3.UnitZ);
             clothShader.Shader.Parameters["brightnessPower"].SetValue(80f);
-            clothShader.Shader.Parameters["pixelationZoom"].SetValue(Vector2.One * 4f / clothTexture.Size());
+            clothShader.Shader.Parameters["pixelationZoom"].SetValue(Vector2.One * 2f / clothTexture.Size());
             clothShader.Shader.Parameters["uWorldViewProjection"].SetValue(transformation);
             clothShader.Apply();
             gd.RasterizerState = RasterizerState.CullNone;

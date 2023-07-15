@@ -160,7 +160,7 @@ namespace NoxusBoss.Core.Graphics
                 point.Position = newPosition;
             }
 
-            // Apply stick constraints.
+            // Apply stick constraints, to ensure that the sticks don't expand forever.
             for (int i = 0; i < ConstraintIterations; i++)
             {
                 foreach (VerletStick stick in sticks)

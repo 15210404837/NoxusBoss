@@ -40,6 +40,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             public bool UseRobe;
 
+            public ulong UniqueID;
+
             public float Opacity = 1f;
 
             public float ScaleFactor = 1f;
@@ -65,8 +67,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
 
                 UseRobe = useRobe;
-                RobeCloth = new(Center, 20, 20, 18f, 7.5f, 10f, 0.54f);
+                RobeCloth = new(Center, 20, 20, 18f, 7.5f, 10f, 0.56f);
                 RobeDirection = robeDirection;
+                UniqueID = (ulong)Main.rand.Next(1000000);
             }
 
             public void ClearPositionCache()

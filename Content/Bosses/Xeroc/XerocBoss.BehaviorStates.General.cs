@@ -219,6 +219,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_RoarAnimation()
         {
             int screamTime = 210;
+            int handCreationRate = 90000;
+            int handDestructionRateDefault = 31;
+            int handDestructionRateNearEnd = 4;
+            int handDestructionRate = AttackTimer >= screamTime - 60f ? handDestructionRateNearEnd : handDestructionRateDefault;
 
             // Appear on the foreground.
             if (AttackTimer == 1f)
@@ -253,7 +257,33 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
             NPC.Center += Main.rand.NextVector2Circular(12.5f, 12.5f);
 
+            // Become completely opaque.
             NPC.Opacity = 1f;
+
+            // Randomly create and destroy hands.
+            if (AttackTimer <= screamTime - 60f && AttackTimer % handCreationRate == handCreationRate - 1f)
+                ConjureHandsAtPosition(NPC.Center, Main.rand.NextVector2Circular(10f, 10f), false);
+            if (Hands.Any() && AttackTimer % handDestructionRate == 0f)
+            {
+                CreateHandVanishVisuals(Hands.First());
+                Hands.RemoveAt(0);
+                NPC.netUpdate = true;
+            }
+
+            // Update all hands.
+            foreach (var hand in Hands)
+            {
+                ulong handOffsetSeed = hand.UniqueID;
+                int handHoverSide = (RandomNext(ref handOffsetSeed, 2) == 0).ToDirectionInt();
+                float handHoverAmplitude = Lerp(8f, 320f, RandomFloat(ref handOffsetSeed));
+                float handHoverPeriod = TwoPi * Lerp(19.5f, 42f, RandomFloat(ref handOffsetSeed));
+                Vector2 handHoverOffset = new Vector2(Lerp(320f, 480f, RandomFloat(ref handOffsetSeed)) * handHoverSide, Lerp(-208f, 85f, RandomFloat(ref handOffsetSeed))) * TeleportVisualsAdjustedScale;
+                handHoverOffset += handHoverOffset.SafeNormalize(Vector2.UnitY) * Cos(handHoverPeriod * AttackTimer) * handHoverAmplitude;
+
+                DefaultHandDrift(hand, NPC.Center + handHoverOffset, 3f);
+                hand.RobeDirection = handHoverSide;
+                hand.UseRobe = true;
+            }
 
             if (AttackTimer >= screamTime)
                 SelectNextAttack();
