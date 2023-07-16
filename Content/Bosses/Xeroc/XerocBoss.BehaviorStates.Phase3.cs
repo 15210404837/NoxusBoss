@@ -42,7 +42,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 else
                     NPC.velocity *= 0.8f;
 
+                // Update wings and teeth.
                 UpdateWings(AttackTimer / redirectTime);
+                PerformTeethChomp(AttackTimer / redirectTime);
 
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.16f);
             }
@@ -379,6 +381,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
+
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 45f % 1f);
 
             // Hover near the target at first.
             if (AttackTimer <= redirectTime)

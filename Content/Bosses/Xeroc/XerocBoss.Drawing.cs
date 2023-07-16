@@ -180,11 +180,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawArmRobe(XerocHand hand)
         {
-            // Things get scuffed if this check isn't performed.
+            // Things get scuffed if this check isn't performed. Specifically, the ellipsoid doesn't play nice with the motion the attack
+            // performs and causes the cloth to look unnaturally thin.
             if (CurrentAttack == XerocAttackType.PunchesWithScreenSlices && Distance(NPC.Center.X, hand.Center.X) <= 200f)
                 return;
 
-            // Hold robes in place.
+            // Store the robe cloth in a short variable for ease of use.
             var cloth = hand.RobeCloth;
 
             // Calculate internal arm positions.
@@ -206,12 +207,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int startX = hand.RobeDirection == 1 ? 0 : (cloth.CellCountX - 1);
             for (int i = 0; i < cloth.CellCountY - 2; i++)
             {
-                Vector2 swayOffset = Vector2.UnitX * Cos(Main.GlobalTimeWrappedHourly * 5.6f + robeEnd.X * 0.04f - i) * TeleportVisualsAdjustedScale.X * i * 0.5f;
+                Vector2 windSwayOffset = Vector2.UnitX * Cos(Main.GlobalTimeWrappedHourly * 5.6f + robeEnd.X * 0.04f - i) * TeleportVisualsAdjustedScale.X * i * 0.5f;
                 Vector2 verticalStickOffset = Vector2.UnitY * i * Sqrt(TeleportVisualsAdjustedScale.Y) * cloth.CellSizeY * incrementFactor;
                 if (CurrentAttack == XerocAttackType.StarConvergenceAndRedirecting)
-                    swayOffset = Vector2.Zero;
+                    windSwayOffset = Vector2.Zero;
 
-                cloth.SetStickPosition(endX, i, robeEnd + swayOffset + verticalStickOffset - Vector2.UnitY * 4f, true);
+                cloth.SetStickPosition(endX, i, robeEnd + windSwayOffset + verticalStickOffset - Vector2.UnitY * 4f, true);
             }
 
             // Hold the start of the robe to Xeroc.
@@ -233,7 +234,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 cloth.SetStickPosition(i, 0, armHoldPosition, true);
 
-                // Keep the bottom half of the cloth in place at the point of the arm midpoint.
+                // Keep the bottom half of the cloth in place at the point of the arm midpoint. This helps to make the bottom half of the robes seem more like
+                // robes with arms than just a parabolic sag.
                 if (i == cloth.CellCountX / 2)
                     cloth.SetStickPosition(i, cloth.CellCountY - 1, armHoldPosition + Vector2.UnitY * TeleportVisualsAdjustedScale * 130f, true);
             }
@@ -249,11 +251,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
 
             // Apply the cloth shader and draw the cloth.
-            Matrix transformation = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
+            Matrix worldToUV = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
             clothShader.Shader.Parameters["uLightSource"].SetValue(Vector3.UnitZ);
             clothShader.Shader.Parameters["brightnessPower"].SetValue(40f);
             clothShader.Shader.Parameters["pixelationZoom"].SetValue(Vector2.One * 2f / clothTexture.Size());
-            clothShader.Shader.Parameters["uWorldViewProjection"].SetValue(transformation);
+            clothShader.Shader.Parameters["uWorldViewProjection"].SetValue(worldToUV);
             clothShader.Apply();
 
             // Disable backface culling from the rasterizer, as that can prevent some of the cloth from rendering.
@@ -301,22 +303,41 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DrawTeeth(Vector2 screenPos)
         {
             // Collect textures.
-            Texture2D teethTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Teeth1").Value;
-            Texture2D teethTexture2 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Teeth2").Value;
+            Texture2D outlineTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline1").Value;
+            Texture2D outlineTexture2 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline2").Value;
             Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Calculate draw values.
             Vector2 teethScale = TeleportVisualsAdjustedScale * 0.85f;
-            Vector2 teethDrawPositionTop = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 200f - screenPos;
-            Vector2 teethDrawPositionBottom = teethDrawPositionTop;
+            Vector2 outlineDrawPosition = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 200f - screenPos;
             Color teethColor = Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant) * 0.9f;
 
             // Draw a white teeth behind the teeth so that pitch black isn't revealed behind them.
-            Main.spriteBatch.Draw(backglowTexture, teethDrawPositionTop, null, (Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)) with { A = 0 }, 0f, backglowTexture.Size() * 0.5f, new Vector2(0.3f, 0.15f) * TeleportVisualsAdjustedScale, 0, 0f);
+            for (int i = 0; i < 2; i++)
+                Main.spriteBatch.Draw(backglowTexture, outlineDrawPosition, null, (Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)) with { A = 0 }, 0f, backglowTexture.Size() * 0.5f, new Vector2(0.3f, 0.2f) * TeleportVisualsAdjustedScale, 0, 0f);
 
-            // Draw the teeth.
-            Main.spriteBatch.Draw(teethTexture1, teethDrawPositionTop, null, teethColor, 0f, teethTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
-            Main.spriteBatch.Draw(teethTexture2, teethDrawPositionBottom, null, teethColor, 0f, teethTexture2.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
+            // Draw the teeth outlines.
+            Main.spriteBatch.Draw(outlineTexture1, outlineDrawPosition + Vector2.UnitY * TopTeethOffset * teethScale, null, teethColor, 0f, outlineTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
+            Main.spriteBatch.Draw(outlineTexture2, outlineDrawPosition, null, teethColor, 0f, outlineTexture2.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
+
+            // Draw individual teeth.
+            Vector2[] upperTeethOffset = new[]
+            {
+                new Vector2(21f, -12f),
+                new Vector2(32f, -16f),
+                new Vector2(46f, -16f),
+                new Vector2(68f, -16f),
+                new Vector2(95f, -16f),
+                new Vector2(116f, -14f),
+                new Vector2(132f, -13f),
+            };
+            for (int i = 0; i < upperTeethOffset.Length; i++)
+            {
+                float toothRotation = Sin(Main.GlobalTimeWrappedHourly * 6f + i) * 0.09f;
+                Texture2D toothTexture = ModContent.Request<Texture2D>($"NoxusBoss/Content/Bosses/Xeroc/Parts/UpperTooth{i + 1}").Value;
+                Vector2 toothOffset = (upperTeethOffset[i] - Vector2.UnitX * outlineTexture1.Width * 0.5f) * teethScale;
+                Main.spriteBatch.Draw(toothTexture, (outlineDrawPosition + toothOffset + Vector2.UnitY * TopTeethOffset * teethScale).Floor(), null, teethColor, toothRotation, toothTexture.Size() * 0.5f, teethScale, 0, 0f);
+            }
         }
 
         public void DrawEye(Vector2 screenPos)

@@ -296,6 +296,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public float TopTeethOffset
+        {
+            get;
+            set;
+        }
+
         public bool DrawCongratulatoryText
         {
             get;

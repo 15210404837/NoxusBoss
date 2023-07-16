@@ -46,6 +46,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);
 
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 84f % 1f, 0.84f);
+
             // Conjure two hands after the redirect.
             if (AttackTimer == redirectTime + 3f)
             {
@@ -135,6 +138,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
+
+            // Update teeth.
+            TopTeethOffset *= 0.9f;
 
             // Teleport above the target at first.
             if (AttackTimer <= teleportDelay * 2f)
@@ -231,6 +237,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float wrappedAttackTimer = AttackTimer % screenSliceRate;
             ref float sliceCounter = ref NPC.ai[2];
             ref float attackTransitionCounter = ref NPC.ai[3];
+
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 45f % 1f);
 
             // Calculate slice information.
             Vector2 sliceDirection = Vector2.UnitX;
@@ -370,6 +379,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
+
+            PerformTeethChomp(AttackTimer / 45f % 1f);
 
             // Create a suitable star and two hands on the first frame.
             // The star will give the appearance of actually coming from the background.
@@ -519,6 +530,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 42f % 1f);
 
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 45f % 1f);
+
             // Look at the player.
             PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 50f, 0.2f);
 
@@ -621,6 +635,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Flap wings.
             UpdateWings(AttackTimer / 48f % 1f);
+
+            // Update teeth.
+            TopTeethOffset *= 0.9f;
 
             // Move into the background and make the sun come down.
             if (AttackTimer <= sunDescentTime)

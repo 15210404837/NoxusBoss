@@ -242,6 +242,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);
 
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 40f % 1f);
+
             // Jitter in place and scream.
             if (AttackTimer % 10f == 0f && AttackTimer <= screamTime - 75f)
             {

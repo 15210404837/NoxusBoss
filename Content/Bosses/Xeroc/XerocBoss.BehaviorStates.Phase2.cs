@@ -134,6 +134,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 48f % 1f);
 
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 45f % 1f);
+
             // Hover to the top left/right of the target at first.
             if (AttackTimer <= redirectTime)
             {
@@ -427,6 +430,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Vector2 leftHandHoverDestination = NPC.Center + new Vector2(-300f, 118f);
             Vector2 rightHandHoverDestination = NPC.Center + new Vector2(300f, 118f);
 
+            // Flap wings.
+            UpdateWings(AttackTimer / 48f % 1f);
+
+            // Update teeth.
+            PerformTeethChomp(AttackTimer / 45f % 1f);
+
             // Hover above the player at first.
             if (AttackTimer <= starCreationDelay)
             {
@@ -550,6 +559,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
+
+            // Update teeth.
+            TopTeethOffset = Lerp(TopTeethOffset, -15f, 0.1f);
 
             // Get rid of the seam if it's still there but hidden.
             SeamScale = 0f;
@@ -797,6 +809,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             handHoverOffset = anticipationAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(1050f, 450f);
             swordRotation = handHoverOffset.ToRotation() + PiOver2;
 
+            // Update teeth in accordance with the sword animation completion.
+            PerformTeethChomp(animationCompletion, 0.55f);
+
             // Create some impact effects when the stars finish congregating.
             if (AttackTimer == constellationConvergeTime)
             {
@@ -1029,6 +1044,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (SwordSlashDirection == -1)
                 swordRotation += Pi;
 
+            // Update teeth in accordance with the sword animation completion.
+            PerformTeethChomp(animationCompletion, 0.55f);
+
             // Cast a cone telegraph past the player.
             if (animationCompletion >= 0.11f)
             {
@@ -1070,6 +1088,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Flap wings.
             UpdateWings(AttackTimer / 42f % 1f);
+
+            // Update teeth.
+            TopTeethOffset *= 0.9f;
 
             // Look at the player.
             PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 50f, 0.2f);

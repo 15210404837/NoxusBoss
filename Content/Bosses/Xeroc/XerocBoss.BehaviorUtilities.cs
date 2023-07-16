@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -90,6 +91,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 XerocSky.ManualSunDrawPosition = Vector2.UnitY * -3000f;
                 CurrentAttack = XerocAttackType.EnterPhase2;
                 PhaseCycleIndex = 0;
+                TopTeethOffset = 0f;
                 CurrentPhase++;
                 NPC.netUpdate = true;
             }
@@ -102,6 +104,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 CurrentAttack = XerocAttackType.EnterPhase3;
                 XerocSky.ManualSunDrawPosition = Vector2.UnitY * -3000f;
                 PhaseCycleIndex = 0;
+                TopTeethOffset = 0f;
                 CurrentPhase++;
                 NPC.netUpdate = true;
             }
@@ -189,6 +192,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 Wings[i].Update(WingsMotionState, animationCompletion, instanceRatio);
             }
+        }
+
+        public void PerformTeethChomp(float animationCompletion, float chompAnimationDelay = 0.7f, int risePower = 2, int chompPower = 12)
+        {
+            CurveSegment rise = new(EasingType.PolyOut, 0f, 6, -32f, risePower);
+            CurveSegment chomp = new(EasingType.PolyOut, chompAnimationDelay, rise.EndingHeight, 6f - rise.EndingHeight, chompPower);
+            TopTeethOffset = PiecewiseAnimation(animationCompletion, rise, chomp);
         }
 
         public void TeleportTo(Vector2 teleportPosition)
