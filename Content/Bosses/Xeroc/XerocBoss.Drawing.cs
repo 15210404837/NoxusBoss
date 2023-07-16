@@ -241,33 +241,31 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draw the cloth.
             cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(ellipsoidCenter, 0f), ellipsoidRadius);
 
+            // Collect necessary shader and graphics information for the cloth drawing.
             var mesh = cloth.GenerateMesh();
             var gd = Main.instance.GraphicsDevice;
             var clothShader = GameShaders.Misc["NoxusBoss:ClothShader"];
-            Texture2D clothTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/RobePattern").Value;
+            Texture2D clothTexture = XerocRobePatternGenerator.PatternTarget.Target;
             CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
 
             // Apply the cloth shader and draw the cloth.
             Matrix transformation = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
             clothShader.Shader.Parameters["uLightSource"].SetValue(Vector3.UnitZ);
-            clothShader.Shader.Parameters["brightnessPower"].SetValue(180f);
+            clothShader.Shader.Parameters["brightnessPower"].SetValue(40f);
             clothShader.Shader.Parameters["pixelationZoom"].SetValue(Vector2.One * 2f / clothTexture.Size());
             clothShader.Shader.Parameters["uWorldViewProjection"].SetValue(transformation);
             clothShader.Apply();
+
+            // Disable backface culling from the rasterizer, as that can prevent some of the cloth from rendering.
             gd.RasterizerState = RasterizerState.CullNone;
+
+            // Apply the cloth texture.
             gd.Textures[0] = clothTexture;
             gd.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, mesh, 0, mesh.Length, cloth.MeshIndexCache, 0, mesh.Length / 2);
 
-            // Turn off the shader.
+            // Turn off the shader. It has completed its job.
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
             Main.spriteBatch.ExitShaderRegion();
-
-            // Draw black over the robes.
-            Texture2D sleeveDarkness = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WhiteCircle").Value;
-            Vector2 sleeveScale = TeleportVisualsAdjustedScale * new Vector2(0.01f, 0.7f);
-            Vector2 sleeveDarknessDrawPosition = robeEnd - Main.screenPosition + Vector2.UnitY * TeleportVisualsAdjustedScale * 117f;
-            for (int i = 0; i < 12; i++)
-                Main.spriteBatch.Draw(sleeveDarkness, sleeveDarknessDrawPosition, null, Color.Black * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant), 0f, sleeveDarkness.Size() * 0.5f, sleeveScale, 0, 0f);
         }
 
         public void DrawProtectiveCensor(Vector2 screenPos)
