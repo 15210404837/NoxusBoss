@@ -274,7 +274,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawBloom()
         {
-            Color bloomCircleColor = Projectile.GetAlpha(Color.Orange) * 0.4f;
+            Color bloomCircleColor = Projectile.GetAlpha(Color.Orange) * 0.3f;
             Vector2 bloomDrawPosition = Projectile.Center - Main.screenPosition;
 
             // Draw the bloom circle.
@@ -282,7 +282,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Draw bloom flares that go in opposite rotations.
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * -0.4f;
-            Color bloomFlareColor = Projectile.GetAlpha(Color.LightCoral) * 0.75f;
+            Color bloomFlareColor = Projectile.GetAlpha(Color.LightCoral) * 0.64f;
             Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
             Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation * -0.7f, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
         }

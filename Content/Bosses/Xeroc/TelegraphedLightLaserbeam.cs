@@ -104,7 +104,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound with { MaxInstances = 1 }, Main.LocalPlayer.Center);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 12f;
+                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 7.5f;
             }
 
             Time++;

@@ -104,7 +104,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 LineRotation = -Projectile.rotation,
                 Opacity = Sqrt(Projectile.Opacity),
                 WidthFactor = 0.001f,
-                LightStrength = 0.5f,
+                LightStrength = 0.42f,
                 MainColor = Color.LightCoral,
                 DarkerColor = Color.Red,
                 BloomIntensity = Projectile.Opacity * 0.8f + 0.35f,
