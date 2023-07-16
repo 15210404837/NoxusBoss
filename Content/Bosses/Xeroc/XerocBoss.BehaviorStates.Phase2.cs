@@ -384,7 +384,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = 0; i < Hands.Count; i++)
             {
                 XerocHand hand = Hands[i];
-                Vector2 handOffset = (TwoPi * i / Hands.Count + handSpinAngularOffset).ToRotationVector2() * new Vector2(1.3f, 0.8f) * handOffsetRadius;
+                Vector2 handOffset = (TwoPi * i / Hands.Count + handSpinAngularOffset).ToRotationVector2();
+                handOffset.X = Pow(handOffset.X, 3f);
+                handOffset *= new Vector2(1.55f, 0.4f) * handOffsetRadius;
+
                 Vector2 handDestination = NPC.Center + handOffset;
 
                 hand.UseRobe = true;
@@ -448,7 +451,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 int movementDelay = starCreationDelay + starCreationTime - (int)AttackTimer + 17;
                 float spinCompletionRatio = GetLerpValue(0f, starCreationTime, AttackTimer - starCreationDelay, true);
-                float spinOffsetAngle = MathHelper.SmoothStep(0f, TwoPi, GetLerpValue(0f, starCreationTime, AttackTimer - starCreationDelay, true)) * spinDirection;
+                float spinOffsetAngle = MathHelper.SmoothStep(0f, Pi, GetLerpValue(0f, starCreationTime, AttackTimer - starCreationDelay, true)) * spinDirection;
                 float hoverSnapInterpolant = GetLerpValue(0f, 5f, AttackTimer - starCreationDelay, true) * 0.48f;
                 Vector2 spinOffset = -Vector2.UnitY.RotatedBy(spinOffsetAngle) * spinRadius;
                 Vector2 spinDestination = Target.Center + spinOffset;
@@ -459,7 +462,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Make things get brighter.
                 PupilTelegraphArc = 10f;
-                PupilTelegraphOpacity = Clamp(PupilTelegraphOpacity + 0.045f, 0f, 0.5f);
+                PupilTelegraphOpacity = Clamp(PupilTelegraphOpacity + 0.045f, 0f, 0.25f);
 
                 // Look at the star position.
                 PupilOffset = Vector2.Lerp(PupilOffset, spinOffset.SafeNormalize(Vector2.UnitY) * -37.5f, 0.15f);
@@ -507,7 +510,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.Opacity = Clamp(NPC.Opacity - 0.02f, 0f, 1f);
 
                 PupilTelegraphArc = 10f;
-                PupilTelegraphOpacity = Clamp(PupilTelegraphOpacity + 0.045f, 0f, NPC.Opacity * 0.5f + 0.001f);
+                PupilTelegraphOpacity = Clamp(PupilTelegraphOpacity + 0.045f, 0f, NPC.Opacity * 0.25f + 0.001f);
 
                 // Silently hover above the player when completely invisible.
                 if (NPC.Opacity <= 0f)

@@ -34,7 +34,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 else if (ShouldDrawBehindTiles)
                     ScreenOverlaysSystem.DrawCacheBeforeBlack.Add(index);
                 else
-                    Main.instance.DrawCacheNPCProjectiles.Add(index);
+                    Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
             }
         }
 
@@ -142,7 +142,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     handScale *= 2f;
                 }
 
-                Color handColor = Color.Coral * hand.Opacity * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
+                ulong seed = hand.UniqueID;
+                int brightness = (int)Lerp(102f, 186f, PolyInOutEasing(RandomFloat(ref seed), 7));
+
+                Color baseHandColor = new(brightness, brightness, brightness);
+                Color handColor = baseHandColor * hand.Opacity * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
                 if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || TeleportVisualsAdjustedScale.Length() >= 10f)
                     handColor = Color.White;
 
@@ -176,27 +180,43 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawArmRobe(XerocHand hand)
         {
+            // Things get scuffed if this check isn't performed.
+            if (CurrentAttack == XerocAttackType.PunchesWithScreenSlices && Distance(NPC.Center.X, hand.Center.X) <= 200f)
+                return;
+
             // Hold robes in place.
             var cloth = hand.RobeCloth;
 
+            // Calculate internal arm positions.
             float midpointDistanceFactor = Pow(TeleportVisualsAdjustedScale.Y, 0.5f);
-            Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 120f, -160f);
+            float incrementFactor = Remap(TeleportVisualsAdjustedScale.Y, 0.2f, 1f, 1.18f, 1.84f);
+            Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 120f, -140f);
             Vector2 robeEnd = hand.Center;
-            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 175f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 140f;
+            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 118f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
 
-            // Hold the end of the robe to the hand.
+            // Calculate internal positions for the open hand radius.
+            Vector2 ellipsoidCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 150f) * TeleportVisualsAdjustedScale;
+            Vector3 ellipsoidRadius = new(TeleportVisualsAdjustedScale.Length() * 42f);
+            ellipsoidRadius.Y *= 2.6f;
+            if (CurrentAttack == XerocAttackType.StarConvergenceAndRedirecting)
+                ellipsoidRadius.X *= 0.7f;
+
+            // Hold the end of the robe to the hand. This has a mild amount of horizontal wind force.
             int endX = hand.RobeDirection == -1 ? 0 : (cloth.CellCountX - 1);
+            int startX = hand.RobeDirection == 1 ? 0 : (cloth.CellCountX - 1);
             for (int i = 0; i < cloth.CellCountY - 2; i++)
             {
-                cloth.SetStickPosition(endX, i, robeEnd + Vector2.UnitY * i * cloth.CellSizeY * 0.35f + Vector2.UnitY * -4f);
+                Vector2 swayOffset = Vector2.UnitX * Cos(Main.GlobalTimeWrappedHourly * 5.6f + robeEnd.X * 0.04f - i) * TeleportVisualsAdjustedScale.X * i * 0.5f;
+                Vector2 verticalStickOffset = Vector2.UnitY * i * Sqrt(TeleportVisualsAdjustedScale.Y) * cloth.CellSizeY * incrementFactor;
+                if (CurrentAttack == XerocAttackType.StarConvergenceAndRedirecting)
+                    swayOffset = Vector2.Zero;
+
+                cloth.SetStickPosition(endX, i, robeEnd + swayOffset + verticalStickOffset - Vector2.UnitY * 4f, true);
             }
 
             // Hold the start of the robe to Xeroc.
-            endX = hand.RobeDirection == 1 ? 0 : (cloth.CellCountX - 1);
             for (int i = 0; i < cloth.CellCountY - 2; i++)
-            {
-                cloth.SetStickPosition(endX, i, robeStart + Vector2.UnitY * i * TeleportVisualsAdjustedScale * cloth.CellSizeY * 2.5f - Vector2.UnitY * TeleportVisualsAdjustedScale * 60f);
-            }
+                cloth.SetStickPosition(startX, i, robeStart + Vector2.UnitY * i * Sqrt(TeleportVisualsAdjustedScale.Y) * cloth.CellSizeY * 2.3f - Vector2.UnitY * TeleportVisualsAdjustedScale * 60f, true);
 
             // Hold the top of the robe in accordance with the IK arms.
             for (int i = 0; i < cloth.CellCountX; i++)
@@ -211,12 +231,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 else
                     armHoldPosition = Vector2.Lerp(robeMidpoint, robeEnd, (armCompletion - 0.5f) * 2f);
 
-                cloth.SetStickPosition(i, 0, armHoldPosition);
+                cloth.SetStickPosition(i, 0, armHoldPosition, true);
+
+                // Keep the bottom half of the cloth in place at the point of the arm midpoint.
+                if (i == cloth.CellCountX / 2)
+                    cloth.SetStickPosition(i, cloth.CellCountY - 1, armHoldPosition + Vector2.UnitY * TeleportVisualsAdjustedScale * 130f, true);
             }
 
             // Draw the cloth.
-            Vector2 sphereCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 65f) * TeleportVisualsAdjustedScale;
-            cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(sphereCenter, 0f), TeleportVisualsAdjustedScale.Length() * 40f);
+            cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(ellipsoidCenter, 0f), ellipsoidRadius);
 
             var mesh = cloth.GenerateMesh();
             var gd = Main.instance.GraphicsDevice;
@@ -227,7 +250,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Apply the cloth shader and draw the cloth.
             Matrix transformation = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
             clothShader.Shader.Parameters["uLightSource"].SetValue(Vector3.UnitZ);
-            clothShader.Shader.Parameters["brightnessPower"].SetValue(80f);
+            clothShader.Shader.Parameters["brightnessPower"].SetValue(180f);
             clothShader.Shader.Parameters["pixelationZoom"].SetValue(Vector2.One * 2f / clothTexture.Size());
             clothShader.Shader.Parameters["uWorldViewProjection"].SetValue(transformation);
             clothShader.Apply();
@@ -238,6 +261,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Turn off the shader.
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
             Main.spriteBatch.ExitShaderRegion();
+
+            // Draw black over the robes.
+            Texture2D sleeveDarkness = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WhiteCircle").Value;
+            Vector2 sleeveScale = TeleportVisualsAdjustedScale * new Vector2(0.01f, 0.7f);
+            Vector2 sleeveDarknessDrawPosition = robeEnd - Main.screenPosition + Vector2.UnitY * TeleportVisualsAdjustedScale * 117f;
+            for (int i = 0; i < 12; i++)
+                Main.spriteBatch.Draw(sleeveDarkness, sleeveDarknessDrawPosition, null, Color.Black * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant), 0f, sleeveDarkness.Size() * 0.5f, sleeveScale, 0, 0f);
         }
 
         public void DrawProtectiveCensor(Vector2 screenPos)
@@ -284,7 +314,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Color teethColor = Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant) * 0.9f;
 
             // Draw a white teeth behind the teeth so that pitch black isn't revealed behind them.
-            Main.spriteBatch.Draw(backglowTexture, teethDrawPositionTop, null, (Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)) with { A = 0}, 0f, backglowTexture.Size() * 0.5f, new Vector2(0.3f, 0.15f) * TeleportVisualsAdjustedScale, 0, 0f);
+            Main.spriteBatch.Draw(backglowTexture, teethDrawPositionTop, null, (Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)) with { A = 0 }, 0f, backglowTexture.Size() * 0.5f, new Vector2(0.3f, 0.15f) * TeleportVisualsAdjustedScale, 0, 0f);
 
             // Draw the teeth.
             Main.spriteBatch.Draw(teethTexture1, teethDrawPositionTop, null, teethColor, 0f, teethTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);

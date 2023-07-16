@@ -67,7 +67,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
 
                 UseRobe = useRobe;
-                RobeCloth = new(Center, 20, 20, 18f, 7.5f, 10f, 0.56f);
+                RobeCloth = new(Center, 20, 20, 18f, 6f, 10f, 0.56f);
                 RobeDirection = robeDirection;
                 UniqueID = (ulong)Main.rand.Next(1000000);
             }

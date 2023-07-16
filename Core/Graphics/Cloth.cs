@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace NoxusBoss.Core.Graphics
 {
@@ -130,14 +131,22 @@ namespace NoxusBoss.Core.Graphics
             }
         }
 
-        public void SetStickPosition(int x, int y, Vector2 position)
+        public void SetStickPosition(int x, int y, Vector2 position, bool fixInPlace)
         {
-            int index = x + CellCountX * y;
-            points[index].IsFixed = true;
+            int index = IndexFrom2DCoord(x, y);
+
+            if (fixInPlace)
+                points[index].IsFixed = true;
             points[index].Position = new Vector3(position, 0f);
         }
 
-        public void Simulate(float scale, Vector3 spherePosition = default, float sphereRadius = 0f)
+        public void ApplyForce(int x, int y, Vector3 force)
+        {
+            int index = IndexFrom2DCoord(x, y);
+            points[index].Position += force;
+        }
+
+        public void Simulate(float scale, Vector3 ellipsoidPosition = default, Vector3 ellipsoidRadius = default)
         {
             // Apply gravity forces to the cloth.
             Vector3 gravityDirection = Vector3.UnitY * Gravity;
@@ -181,7 +190,7 @@ namespace NoxusBoss.Core.Graphics
             }
 
             // Apply sphere collision if one is considered in the simulation.
-            if (sphereRadius > 0f)
+            if (ellipsoidPosition.Length() > 0.001f)
             {
                 foreach (VerletPoint point in points)
                 {
@@ -195,13 +204,16 @@ namespace NoxusBoss.Core.Graphics
                         point.OldPosition.Z = point.Position.Z;
                     }
 
-                    if (Vector3.Distance(point.Position, spherePosition) <= sphereRadius)
-                    {
-                        Vector3 collisionNormal = Vector3.Normalize(point.Position - spherePosition);
-                        Vector3 collisionPoint = spherePosition + collisionNormal * sphereRadius;
+                    // Check collision with the ellipsoid.
+                    Vector3 relativePos = point.Position - ellipsoidPosition;
+                    relativePos /= ellipsoidRadius;
+                    float ellipsoidSqr = Vector3.Dot(relativePos, relativePos);
 
-                        point.Position = collisionPoint + collisionNormal * (sphereRadius - Vector3.Distance(collisionPoint, spherePosition));
-                        point.OldPosition = point.Position;
+                    // Resolve the collision if it happened.
+                    if (ellipsoidSqr < 1.0f)
+                    {
+                        Vector3 normalizedRelativePosition = Vector3.Normalize(relativePos);
+                        point.Position = ellipsoidPosition + normalizedRelativePosition * ellipsoidRadius;
                     }
                 }
             }

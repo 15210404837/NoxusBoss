@@ -51,7 +51,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Release short-lived orange-red sparks.
             if (Main.rand.NextBool(15))
             {
-                Color sparkColor = Color.Lerp(Color.Yellow, Color.Red, Main.rand.NextFloat(0.25f, 0.75f));
+                Color sparkColor = Color.Lerp(Color.Yellow, Color.Cyan, Main.rand.NextFloat(0.4f, 0.85f));
                 sparkColor = Color.Lerp(sparkColor, Color.Wheat, 0.4f);
 
                 Dust spark = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), 264);
@@ -86,7 +86,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     for (int i = 0; i < 12; i++)
                     {
-                        Color sparkColor = Color.Lerp(Color.Yellow, Color.Red, Main.rand.NextFloat(0.25f, 0.75f));
+                        Color sparkColor = Color.Lerp(Color.Yellow, Color.Cyan, Main.rand.NextFloat(0.4f, 0.98f));
                         sparkColor = Color.Lerp(sparkColor, Color.Wheat, 0.4f);
 
                         Dust spark = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(10f, 10f), 264);
