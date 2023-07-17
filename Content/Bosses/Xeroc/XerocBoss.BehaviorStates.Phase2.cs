@@ -537,6 +537,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (Hands.Count >= 2)
             {
+                Hands[0].Rotation = Pi - PiOver2;
+                Hands[1].Rotation = Pi + PiOver2;
                 DefaultHandDrift(Hands[0], leftHandHoverDestination, handMoveSpeedFactor);
                 DefaultHandDrift(Hands[1], rightHandHoverDestination, handMoveSpeedFactor);
             }
@@ -1156,6 +1158,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Hands.Count >= 2)
             {
                 Vector2 handOffset = handOffsetAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(500f, 160f);
+
+                Hands[0].Rotation = PiOver2;
+                Hands[1].Rotation = -PiOver2;
                 DefaultHandDrift(Hands[0], NPC.Center + handOffset * new Vector2(-1f, 1f), 2f);
                 DefaultHandDrift(Hands[1], NPC.Center + handOffset, 2f);
             }

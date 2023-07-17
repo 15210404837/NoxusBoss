@@ -6,6 +6,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics;
 using ReLogic.Graphics;
 using Terraria;
@@ -53,15 +54,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            // Draw wings.
-            Main.spriteBatch.SetBlendState(BlendState.Additive);
-
-            for (int i = 0; i < Wings.Length; i++)
-            {
-                Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - screenPos;
-                DrawWing(bottom + Vector2.UnitY * (i * -180f - 30f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity);
-            }
-            Main.spriteBatch.ResetBlendState();
+            // Draw wings with afterimages.
+            if (!NPC.IsABestiaryIconDummy)
+                Main.spriteBatch.Draw(XerocWingDrawer.AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, Color.White);
 
             // Draw all hands.
             if (UniversalBlackOverlayInterpolant <= 0f)
@@ -102,29 +97,37 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Vector2 leftWingOrigin = wingsTexture.Size() * new Vector2(1f, 0.86f);
             Vector2 rightWingOrigin = leftWingOrigin;
             rightWingOrigin.X = wingsTexture.Width - rightWingOrigin.X;
-            Color wingsDrawColor = Color.Lerp(Color.Transparent, Color.Wheat, fadeInterpolant);
-            Color wingsDrawColorWeak = Color.Lerp(Color.Transparent, Color.Red * 0.4f, fadeInterpolant);
+            Color wingsDrawColor = Color.Lerp(Color.Transparent, Color.White, fadeInterpolant);
 
             // Wings become squished the faster they're moving, to give an illusion of 3D motion.
             float squishOffset = MathF.Min(0.7f, Math.Abs(rotationDifferenceMovingAverage) * 3.5f);
 
-            // Draw multiple instances of the wings. This includes afterimages based on how quickly they're flapping.
-            Vector2 scale = MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(1f, 1f - squishOffset) * fadeInterpolant * 1.5f;
-            for (int i = 4; i >= 0; i--)
+            Vector2 scale = MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(1f, 1f - squishOffset) * fadeInterpolant * new Vector2(1f, 1.15f);
+            Main.spriteBatch.Draw(wingsTexture, drawPosition - Vector2.UnitX * TeleportVisualsAdjustedScale * 64f, null, wingsDrawColor, generalRotation + wingRotation, leftWingOrigin, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(wingsTexture, drawPosition + Vector2.UnitX * TeleportVisualsAdjustedScale * 64f, null, wingsDrawColor, generalRotation - wingRotation, rightWingOrigin, scale, SpriteEffects.FlipHorizontally, 0f);
+        }
+
+        public void DrawWings()
+        {
+            // Prepare the wing psychedelic shader.
+            var wingShader = GameShaders.Misc["NoxusBoss:XerocPsychedelicWingShader"];
+            wingShader.Shader.Parameters["colorShift"].SetValue(new Vector3(Sin(Main.GlobalTimeWrappedHourly * 5.8f) * 0.5f + 1f, 0.5f, 0.67f));
+            wingShader.Shader.Parameters["lightDirection"].SetValue(Vector3.Backward);
+            wingShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
+            wingShader.SetShaderTexture2(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap"));
+            wingShader.Apply();
+
+            for (int i = 0; i < Wings.Length; i++)
             {
-                // Make wings slightly brighter when they're moving at a fast angular pace.
-                Color wingColor = Color.Lerp(wingsDrawColor, wingsDrawColorWeak, i / 4f) * Remap(rotationDifferenceMovingAverage, 0f, 0.04f, 0.66f, 0.75f) * ZPositionOpacity;
-
-                float rotationOffset = i * MathF.Min(rotationDifferenceMovingAverage, 0.16f) * (1f - squishOffset) * 0.5f;
-                float currentWingRotation = wingRotation + rotationOffset;
-
-                Main.spriteBatch.Draw(wingsTexture, drawPosition - Vector2.UnitX * TeleportVisualsAdjustedScale * 104f, null, wingColor, generalRotation + currentWingRotation, leftWingOrigin, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(wingsTexture, drawPosition + Vector2.UnitX * TeleportVisualsAdjustedScale * 104f, null, wingColor, generalRotation - currentWingRotation, rightWingOrigin, scale, SpriteEffects.FlipHorizontally, 0f);
+                Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
+                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity);
             }
         }
 
         public void DrawHands(Vector2 screenPos)
         {
+            Main.spriteBatch.ExitShaderRegion();
+
             // TODO -- Add sigil drawing to this.
             bool canDrawRobeArms = CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.DeathAnimation;
             Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPalm").Value;
@@ -139,7 +142,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     handTexture = palmTexture;
                     frame = handTexture.Frame();
-                    handScale *= 2f;
+                    handScale *= 1.3f;
                 }
 
                 ulong seed = hand.UniqueID;
@@ -150,7 +153,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || TeleportVisualsAdjustedScale.Length() >= 10f)
                     handColor = Color.White;
 
-                SpriteEffects direction = hand.Center.X < NPC.Center.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                SpriteEffects direction = hand.Center.X > NPC.Center.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
                 // Draw the arm robe.
                 if (canDrawRobeArms && hand.UseRobe)
@@ -165,16 +168,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 // Draw hand afterimages.
+                float handRotation = hand.Rotation;
                 for (int i = 8; i >= 0; i--)
                 {
                     float afterimageOpacity = 1f - i / 7f;
                     Vector2 afterimageDrawOffset = hand.Velocity * i * -0.15f;
-                    Main.spriteBatch.Draw(handTexture, drawPosition + afterimageDrawOffset, frame, handColor * afterimageOpacity, hand.Rotation, frame.Size() * 0.5f, handScale, direction, 0f);
+                    Main.spriteBatch.Draw(handTexture, drawPosition + afterimageDrawOffset, frame, handColor * afterimageOpacity, handRotation, frame.Size() * 0.5f, handScale, direction, 0f);
                 }
 
                 // Draw the hands in their true position.
-                Main.spriteBatch.Draw(handTexture, drawPosition, frame, handColor, hand.Rotation, frame.Size() * 0.5f, handScale, direction, 0f);
-                Main.spriteBatch.Draw(handTexture, drawPosition, frame, handColor with { A = 0 } * 0.5f, hand.Rotation, frame.Size() * 0.5f, handScale, direction, 0f);
+                Main.spriteBatch.Draw(handTexture, drawPosition, frame, handColor, handRotation, frame.Size() * 0.5f, handScale, direction, 0f);
+                Main.spriteBatch.Draw(handTexture, drawPosition, frame, handColor with { A = 0 } * 0.5f, handRotation, frame.Size() * 0.5f, handScale, direction, 0f);
             }
         }
 
@@ -191,8 +195,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Calculate internal arm positions.
             float midpointDistanceFactor = Pow(TeleportVisualsAdjustedScale.Y, 0.5f);
             float incrementFactor = Remap(TeleportVisualsAdjustedScale.Y, 0.2f, 1f, 1.18f, 1.84f);
-            Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 120f, -140f);
-            Vector2 robeEnd = hand.Center;
+            Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 80f, -140f);
+            Vector2 robeEnd = hand.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * -30f, -4f);
             Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 118f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
 
             // Calculate internal positions for the open hand radius.
@@ -217,7 +221,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Hold the start of the robe to Xeroc.
             for (int i = 0; i < cloth.CellCountY - 2; i++)
-                cloth.SetStickPosition(startX, i, robeStart + Vector2.UnitY * i * Sqrt(TeleportVisualsAdjustedScale.Y) * cloth.CellSizeY * 2.3f - Vector2.UnitY * TeleportVisualsAdjustedScale * 60f, true);
+                cloth.SetStickPosition(startX, i, robeStart + Vector2.UnitY * i * Sqrt(TeleportVisualsAdjustedScale.Y) * cloth.CellSizeY * incrementFactor * 1.25f - Vector2.UnitY * TeleportVisualsAdjustedScale * 60f, true);
 
             // Hold the top of the robe in accordance with the IK arms.
             for (int i = 0; i < cloth.CellCountX; i++)
@@ -274,8 +278,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             // TODO -- This is larger than usual for placeholder reasons.
             Texture2D pixel = TextureAssets.MagicPixel.Value;
-            Vector2 censorScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(300f, 540f) / pixel.Size();
-            Vector2 censorDrawPosition = EyePosition - screenPos + Vector2.UnitY * censorScale * 350f;
+            Vector2 censorScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(200f, 340f) / pixel.Size();
+            Vector2 censorDrawPosition = EyePosition - screenPos + Vector2.UnitY * censorScale * 80f;
             Main.spriteBatch.Draw(pixel, censorDrawPosition, null, Color.Black * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant), 0f, pixel.Size() * 0.5f, censorScale, 0, 0f);
 
             // Draaw the universal overlay if necessary.
@@ -303,18 +307,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DrawTeeth(Vector2 screenPos)
         {
             // Collect textures.
+            Texture2D bottomTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Bottom").Value; // HAHAHAHAHA Bottom Text.
             Texture2D outlineTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline1").Value;
             Texture2D outlineTexture2 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline2").Value;
             Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Calculate draw values.
             Vector2 teethScale = TeleportVisualsAdjustedScale * 0.85f;
-            Vector2 outlineDrawPosition = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 200f - screenPos;
+            Vector2 outlineDrawPosition = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 110f - screenPos;
+            Vector2 bottomDrawPosition = outlineDrawPosition - Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 150f;
             Color teethColor = Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant) * 0.9f;
 
-            // Draw a white teeth behind the teeth so that pitch black isn't revealed behind them.
-            for (int i = 0; i < 2; i++)
-                Main.spriteBatch.Draw(backglowTexture, outlineDrawPosition, null, (Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)) with { A = 0 }, 0f, backglowTexture.Size() * 0.5f, new Vector2(0.3f, 0.2f) * TeleportVisualsAdjustedScale, 0, 0f);
+            // Draw the bottom texture.
+            Main.spriteBatch.Draw(bottomTexture, bottomDrawPosition, null, teethColor, 0f, bottomTexture.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
+
+            // Draw a black circle behind the teeth so that background isn't revealed behind them.
+            Main.spriteBatch.Draw(backglowTexture, outlineDrawPosition, null, (Color.Black * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)), 0f, backglowTexture.Size() * 0.5f, new Vector2(0.54f, 0.5f) * TeleportVisualsAdjustedScale, 0, 0f);
 
             // Draw the teeth outlines.
             Main.spriteBatch.Draw(outlineTexture1, outlineDrawPosition + Vector2.UnitY * TopTeethOffset * teethScale, null, teethColor, 0f, outlineTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
@@ -421,8 +429,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Texture2D crownTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/SupremeCrown").Value;
 
             Vector2 crownScale = TeleportVisualsAdjustedScale * 0.75f;
-            Vector2 leftCrownDrawPosition = NPC.Center + new Vector2(-120f, -304f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
-            Vector2 rightCrownDrawPosition = NPC.Center + new Vector2(120f, -304f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
+            Vector2 leftCrownDrawPosition = NPC.Center + new Vector2(-80f, -274f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
+            Vector2 rightCrownDrawPosition = NPC.Center + new Vector2(80f, -274f).RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale - Main.screenPosition;
 
             Main.spriteBatch.Draw(crownTexture1, leftCrownDrawPosition, null, Color.White * ZPositionOpacity * NPC.Opacity, NPC.rotation, crownTexture1.Size() * 0.5f, crownScale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(crownTexture1, rightCrownDrawPosition, null, Color.White * ZPositionOpacity * NPC.Opacity, NPC.rotation, crownTexture1.Size() * 0.5f, crownScale, SpriteEffects.FlipHorizontally, 0f);

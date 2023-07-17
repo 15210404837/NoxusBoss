@@ -417,7 +417,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set => NPC.localAI[3] = (int)value;
         }
 
-        public Vector2 EyePosition => NPC.Center - Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * (NPC.scale * 110f + 120f);
+        public Vector2 EyePosition => NPC.Center - Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * (NPC.scale * 110f + 50f);
 
         public Vector2 IdealCensorPosition => EyePosition;
 
@@ -463,7 +463,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle SupernovaSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSupernova") with { Volume = 0.8f, MaxInstances = 20 };
 
-        public static int WingCount => 3;
+        public static int WingCount => 1;
 
         public static int BackgroundStarDamage => Main.expertMode ? 400 : 300;
 
