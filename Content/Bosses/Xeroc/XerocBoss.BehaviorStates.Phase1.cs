@@ -49,13 +49,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update teeth.
             PerformTeethChomp(AttackTimer / 84f % 1f, 0.84f);
 
-            // Conjure two hands after the redirect.
-            if (AttackTimer == redirectTime + 3f)
-            {
-                ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 100f, -Vector2.UnitX * 4f, true, -1);
-                ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 100f, Vector2.UnitX * 4f, true, 1);
-            }
-
             // Update hands.
             if (Hands.Count >= 2)
             {
@@ -65,25 +58,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Hands[1].Rotation = Hands[1].Rotation.AngleLerp(-PiOver2, 0.1f);
                 Hands[0].ShouldOpen = AttackTimer >= redirectTime + hoverTime - 7f;
                 Hands[1].ShouldOpen = AttackTimer >= redirectTime + hoverTime - 7f;
+                Hands[0].RobeDirection = -1;
+                Hands[1].RobeDirection = 1;
 
                 // Snap fingers and make the screen shake.
                 if (AttackTimer == redirectTime + hoverTime - 10f)
                 {
                     SoundEngine.PlaySound(FingerSnapSound with { Volume = 4f });
                     Target.Calamity().GeneralScreenShakePower = 11f;
-                }
-
-                // Calculate the opacity of the hands. If they are invisible they are removed.
-                float handOpacity = GetLerpValue(redirectTime + hoverTime + 15f, redirectTime + hoverTime, AttackTimer, true);
-                for (int i = 0; i < Hands.Count; i++)
-                {
-                    Hands[i].Opacity = handOpacity;
-                    if (handOpacity <= 0f)
-                    {
-                        DestroyAllHands();
-                        NPC.netUpdate = true;
-                        break;
-                    }
                 }
             }
 
@@ -220,6 +202,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 GeneralParticleHandler.SpawnParticle(bloom);
             }
 
+            // Update universal hands.
+            DefaultUniversalHandMotion();
+
             if (postTeleportAttackTimer >= shootDelay + starburstCount + attackTransitionDelay)
                 SelectNextAttack();
         }
@@ -271,7 +256,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Create hands.
             if (AttackTimer == 1f)
             {
-                for (int i = 0; i < totalRadialSlices; i++)
+                for (int i = TotalUniversalHands; i < totalRadialSlices; i++)
                 {
                     Vector2 handOffset = (TwoPi * i / totalRadialSlices).ToRotationVector2() * NPC.scale * 400f;
                     if (Abs(handOffset.X) <= 0.001f)
@@ -322,6 +307,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     DefaultHandDrift(hand, handDestination, 1.2f);
                     hand.Rotation = ((hand.Center - EyePosition) * new Vector2(1f, 0.1f)).ToRotation() - PiOver2;
+                    hand.RobeDirection = (i % 2 == 1).ToDirectionInt();
+                    if (sliceCounter >= totalSlices)
+                        hand.RobeDirection *= -1;
 
                     hand.Frame = 2;
                     hand.ShouldOpen = false;
@@ -392,12 +380,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Vector2 starSpawnPosition = NPC.Center + new Vector2(300f, -350f) * TeleportVisualsAdjustedScale;
                 CreateTwinkle(starSpawnPosition, Vector2.One * 1.3f);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
                     NewProjectileBetter(starSpawnPosition, Vector2.Zero, ModContent.ProjectileType<ControlledStar>(), 0, 0f);
-
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * 300f, Vector2.UnitY * -4f, false, -1);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * 300f, Vector2.UnitY * -4f, false, 1);
-                }
                 return;
             }
 
@@ -451,8 +434,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update hand positions.
             DefaultHandDrift(Hands[0], NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * 320f, 1.8f);
             DefaultHandDrift(Hands[1], NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * 320f, 1.8f);
+            Hands[0].UsePalmForm = false;
+            Hands[1].UsePalmForm = false;
             Hands[0].Rotation = Hands[0].Rotation.AngleLerp(PiOver2, 0.1f);
-            Hands[1].Rotation = Hands[1].Rotation.AngleLerp(-PiOver2, 0.1f);
+            Hands[1].Rotation = Hands[1].Rotation.AngleLerp(-0.67f - PiOver2, 0.1f);
+            Hands[1].DirectionOverride = 1;
+            Hands[0].RobeDirection = -1;
+            Hands[1].RobeDirection = 1;
 
             // Hold the star in Xeroc's right hand.
             float verticalOffset = Convert01To010(GetLerpValue(0f, starGrowTime, AttackTimer, true)) * 175f;
@@ -506,10 +494,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             if (AttackTimer >= attackDelay + shootTime)
-            {
-                DestroyAllHands();
                 SelectNextAttack();
-            }
         }
 
         public void DoBehavior_PortalLaserBarrages()
@@ -533,6 +518,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Update teeth.
             PerformTeethChomp(AttackTimer / 45f % 1f);
+
+            // Update universal hands.
+            DefaultUniversalHandMotion();
 
             // Look at the player.
             PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 50f, 0.2f);
@@ -745,6 +733,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
             }
 
+            // Update universal hands.
+            DefaultUniversalHandMotion();
+
             // Calculate the background hover position.
             float hoverHorizontalWaveSine = Sin(TwoPi * AttackTimer / 96f);
             float hoverVerticalWaveSine = Sin(TwoPi * AttackTimer / 120f);
@@ -838,9 +829,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Make hands circle the star.
             for (int i = 0; i < Hands.Count; i++)
             {
-                DefaultHandDrift(Hands[i], star.Center + (TwoPi * i / Hands.Count + AttackTimer / 18f).ToRotationVector2() * (star.scale * handOrbitOffset + 50f), 1.4f);
-                Hands[i].Rotation = Hands[i].Center.AngleTo(star.Center) - PiOver2;
+                if (star is not null)
+                {
+                    DefaultHandDrift(Hands[i], star.Center + (TwoPi * i / Hands.Count + AttackTimer / 18f).ToRotationVector2() * (star.scale * handOrbitOffset + 50f), 1.4f); ;
+                    Hands[i].Rotation = Hands[i].Center.AngleTo(star.Center) - PiOver2;
+                }
                 Hands[i].Center += Main.rand.NextVector2Circular(10f, 10f) * Pow(pressureInterpolant, 2f);
+                Hands[i].UseRobe = false;
             }
 
             // Destroy the star and create a supernova and quasar.

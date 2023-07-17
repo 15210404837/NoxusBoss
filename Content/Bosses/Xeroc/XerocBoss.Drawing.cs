@@ -133,6 +133,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawHands(Vector2 screenPos)
         {
+            if (DrawCongratulatoryText)
+                return;
+
             Main.spriteBatch.ExitShaderRegion();
 
             // TODO -- Add sigil drawing to this.
@@ -156,13 +159,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 int brightness = (int)Lerp(102f, 186f, PolyInOutEasing(RandomFloat(ref seed), 7));
 
                 Color baseHandColor = new(brightness, brightness, brightness);
-                Color handColor = baseHandColor * hand.Opacity * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
+                Color handColor = baseHandColor * Pow(hand.Opacity, 3f) * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
                 if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken)
                     handColor = Color.White;
                 if (TeleportVisualsAdjustedScale.Length() >= 10f)
                     handColor = Color.White with { A = 0 };
 
                 SpriteEffects direction = hand.Center.X > NPC.Center.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                if (hand.DirectionOverride != 0)
+                    direction = hand.DirectionOverride == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
                 // Draw the arm robe.
                 if (canDrawRobeArms && hand.UseRobe)
@@ -206,8 +211,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float incrementFactor = Remap(TeleportVisualsAdjustedScale.Y, 0.2f, 1f, 1.18f, 1.84f);
             Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 80f, -140f);
             Vector2 robeEnd = hand.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * -30f, -4f);
-            if (CurrentAttack == XerocAttackType.RealityTearDaggers || CurrentAttack == XerocAttackType.PunchesWithScreenSlices)
-                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 36f;
+            if (hand.Frame <= 1)
+                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 37.5f;
 
             Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 118f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
 

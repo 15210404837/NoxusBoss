@@ -38,6 +38,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 48f % 1f);
 
+            // Update universal hands.
+            DefaultUniversalHandMotion();
+
             if (AttackTimer <= sliceShootDelay)
             {
                 // Hover above the target at first.
@@ -170,7 +173,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Prepare the hands for attacking.
                 if (AttackTimer == redirectTime + handSummonTime)
                 {
-                    usedHandIndex = 1f;
+                    usedHandIndex = 2f;
                     NPC.netUpdate = true;
                 }
             }
@@ -415,6 +418,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 DefaultHandDrift(hand, handDestination, localHandMoveSpeedFactor);
                 hand.ShouldOpen = false;
+                hand.ScaleFactor = 1f;
             }
         }
 
@@ -444,12 +448,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Decide the spin direction on the first frame, based on which side of the player Xeroc is.
                 // This is done so that the spin continues moving in the direction the hover made Xeroc move.
-                // Also create two hands.
                 if (AttackTimer == 1f)
                 {
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 270f, Vector2.Zero, false, -1);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 270f, Vector2.Zero, true, 1);
-
                     spinDirection = (Target.Center.X > NPC.Center.X).ToDirectionInt();
                     NPC.netUpdate = true;
                 }
@@ -537,10 +537,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (Hands.Count >= 2)
             {
-                Hands[0].Rotation = Pi - PiOver2;
-                Hands[1].Rotation = Pi + PiOver2;
-                DefaultHandDrift(Hands[0], leftHandHoverDestination, handMoveSpeedFactor);
-                DefaultHandDrift(Hands[1], rightHandHoverDestination, handMoveSpeedFactor);
+                Hands[0].Rotation = Pi + PiOver2;
+                Hands[1].Rotation = Pi - PiOver2;
+                DefaultHandDrift(Hands[0], rightHandHoverDestination, handMoveSpeedFactor);
+                DefaultHandDrift(Hands[1], leftHandHoverDestination, handMoveSpeedFactor);
             }
         }
 
@@ -571,13 +571,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Make the background dim and have Xeroc go into the background at first.
             if (AttackTimer <= backgroundDimTime)
             {
-                // Conjure a two hands on the first frame. It will be used later to bring the stars forward.
-                if (AttackTimer == 1f)
-                {
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 50f, Vector2.Zero, true, -1);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 50f, Vector2.Zero, true, 1);
-                }
-
                 HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.5f, 0.09f);
                 ZPosition = Pow(AttackTimer / backgroundDimTime, 1.74f) * 4.5f;
             }
@@ -711,9 +704,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Hands[0].UsePalmForm = Hands[1].UsePalmForm = true;
                 Hands[0].ScaleFactor = Lerp(Hands[0].ScaleFactor, 1f, 0.09f);
                 Hands[1].ScaleFactor = Lerp(Hands[1].ScaleFactor, 1f, 0.09f);
+                Hands[0].Rotation = 0f;
+                Hands[1].Rotation = 0f;
+                Hands[0].RobeDirection = 1;
+                Hands[1].RobeDirection = -1;
+                Hands[0].DirectionOverride = 0;
+                Hands[1].DirectionOverride = 0;
+                Hands[0].UseRobe = true;
+                Hands[1].UseRobe = true;
 
-                DefaultHandDrift(Hands[0], leftHandHoverPosition, 4f);
-                DefaultHandDrift(Hands[1], rightHandHoverPosition, 4f);
+                DefaultHandDrift(Hands[0], rightHandHoverPosition, 4f);
+                DefaultHandDrift(Hands[1], leftHandHoverPosition, 4f);
             }
         }
 
@@ -756,8 +757,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, -1f);
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, 1f);
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
                 }
             }
 
@@ -937,10 +936,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false, Sign(Target.Center.X - NPC.Center.X));
-                }
             }
 
             if (SwordSlashCounter >= slashCount + 1f)
@@ -973,7 +969,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (wrappedAttackTimer == 2f)
                 {
                     DestroyAllHands();
-                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false, Sign(Target.Center.X - NPC.Center.X));
                     SwordSlashCounter++;
                     NPC.netUpdate = true;
                 }
@@ -1058,12 +1053,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Move the hands, keeping the sword attached to it.
-            if (Hands.Any())
+            if (Hands.Count >= 2)
             {
-                Hands[0].ShouldOpen = false;
-                Hands[0].ScaleFactor = 2f;
-                Hands[0].Rotation = NPC.AngleTo(Hands[0].Center) - PiOver2;
-                DefaultHandDrift(Hands[0], NPC.Center + handHoverOffset, 300f);
+                int handIndex = SwordSlashDirection == 0 ? 1 : 0;
+                Hands[handIndex].ShouldOpen = false;
+                Hands[handIndex].ScaleFactor = 1.5f;
+                Hands[handIndex].Rotation = NPC.AngleTo(Hands[handIndex].Center) - PiOver2;
+                DefaultHandDrift(Hands[handIndex], NPC.Center + handHoverOffset + Vector2.UnitX * SwordSlashDirection * 2f, 300f);
+
+                Hands[1 - handIndex].ShouldOpen = true;
+                Hands[1 - handIndex].ScaleFactor = 1.5f;
+                Hands[handIndex].Rotation = NPC.AngleTo(Hands[1 - handIndex].Center) - PiOver2;
+                Hands[0].UsePalmForm = false;
+                Hands[1].UsePalmForm = false;
+                Hands[0].RobeDirection = 1;
+                Hands[1].RobeDirection = -1;
+                DefaultHandDrift(Hands[1 - handIndex], NPC.Center + new Vector2(SwordSlashDirection * -500f, 100f) * TeleportVisualsAdjustedScale, 10f);
 
                 var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
                 foreach (Projectile sword in swords)
@@ -1072,7 +1077,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     // The swordRotation variable is used here instead of the rotation value stored in the sword's AI because this would have a one-frame discrepancy and
                     // cause the sword to look like it's dragging behind a bit during slashes.
-                    sword.Center = Hands[0].Center + (swordRotation - PiOver2).ToRotationVector2() * sword.scale * (sword.width * 0.5f + 20f);
+                    sword.Center = Hands[handIndex].Center + (swordRotation - PiOver2).ToRotationVector2() * sword.scale * (sword.width * 0.5f + 20f);
                 }
             }
         }
@@ -1109,9 +1114,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     RadialScreenShoveSystem.Start(NPC.Center, 16);
                     NPC.velocity = (hoverDestination - Target.Center) * 0.075f;
                     NPC.netUpdate = true;
-
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 100f, Vector2.Zero, true, -1);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 100f, Vector2.Zero, true, 1);
                 }
                 else
                     NPC.velocity *= 0.8f;
@@ -1162,6 +1164,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 Hands[0].Rotation = PiOver2;
                 Hands[1].Rotation = -PiOver2;
+                Hands[0].UseRobe = true;
+                Hands[1].UseRobe = true;
+                Hands[0].RobeDirection = -1;
+                Hands[1].RobeDirection = 1;
                 DefaultHandDrift(Hands[0], NPC.Center + handOffset * new Vector2(-1f, 1f), 2f);
                 DefaultHandDrift(Hands[1], NPC.Center + handOffset, 2f);
             }

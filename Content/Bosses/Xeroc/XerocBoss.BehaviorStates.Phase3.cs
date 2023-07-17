@@ -98,6 +98,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
             else if (AttackTimer >= redirectTime + upwardRiseTime + chaseTime + 60f)
                 SelectNextAttack();
+
+            // Update universal hands.
+            DefaultUniversalHandMotion();
         }
 
         public void DoBehavior_LightMagicCircle()
@@ -179,6 +182,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float idealLaserDirection = NPC.AngleTo(Target.Center);
             laserDirection = laserDirection.AngleLerp(idealLaserDirection, 0.0167f);
 
+            // Update universal hands.
+            DefaultUniversalHandMotion();
+            if (Hands.Count >= 2)
+            {
+                Hands[0].Rotation = Pi - PiOver2;
+                Hands[1].Rotation = Pi + PiOver2;
+            }
+
             if (AttackTimer >= attackDelay + shootTime)
             {
                 DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.05f, 0f, 1f);
@@ -210,13 +221,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Make the background dim and have Xeroc go into the background at first.
             if (AttackTimer <= backgroundDimTime)
             {
-                // Conjure a two hands on the first frame. It will be used later to bring the stars forward.
-                if (AttackTimer == 1f)
-                {
-                    ConjureHandsAtPosition(NPC.Center - Vector2.UnitX * 50f, Vector2.Zero, true);
-                    ConjureHandsAtPosition(NPC.Center + Vector2.UnitX * 50f, Vector2.Zero, true);
-                }
-
                 HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.5f, 0.09f);
                 ZPosition = Pow(AttackTimer / backgroundDimTime, 1.74f) * 3f;
                 HandFireDestination = Vector2.Lerp(NPC.Center, Target.Center, 0.7f);
@@ -454,6 +458,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                 }
             }
+
+            // Update universal hands.
+            DefaultUniversalHandMotion();
 
             // Make the background return.
             if (attackHasConcluded == 1f)

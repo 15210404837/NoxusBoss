@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -10,11 +11,14 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
+        public static int TotalUniversalHands => 2;
+
         public void PerformZPositionEffects()
         {
             // Give the illusion of being in 3D space by shrinking. This is also followed by darkening effects in the draw code, to make it look like he's fading into the dark clouds.
@@ -148,17 +152,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        public void DestroyAllHands()
+        public void DestroyAllHands(bool includeUniversalHands = false)
         {
-            for (int i = 0; i < Hands.Count; i++)
+            for (int i = includeUniversalHands ? 0 : TotalUniversalHands; i < Hands.Count; i++)
                 CreateHandVanishVisuals(Hands[i]);
 
             if (Main.netMode != NetmodeID.Server)
             {
-                for (int i = 0; i < Hands.Count; i++)
+                for (int i = includeUniversalHands ? 0 : TotalUniversalHands; i < Hands.Count; i++)
                     Hands[i].HandTrailDrawer?.BaseEffect?.Dispose();
             }
-            Hands.Clear();
+            while (Hands.Count > (includeUniversalHands ? 0 : TotalUniversalHands))
+                Hands.Remove(Hands.Last());
+
             NPC.netUpdate = true;
         }
 
@@ -180,6 +186,26 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 hand.Velocity = Vector2.Zero;
                 hand.Center = hoverDestination;
             }
+        }
+
+        public void DefaultUniversalHandMotion()
+        {
+            while (Hands.Count(h => h.UseRobe) < TotalUniversalHands)
+                Hands.Insert(0, new(NPC.Center, true, (Hands.Count % 2 == 0).ToDirectionInt()));
+
+            float verticalOffset = Sin(TwoPi * AttackTimer / 120f) * 35f;
+            DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-340f, -verticalOffset + 80f) * TeleportVisualsAdjustedScale, 12f);
+            DefaultHandDrift(Hands[1], NPC.Center + new Vector2(340f, verticalOffset + 80f) * TeleportVisualsAdjustedScale, 12f);
+            Hands[0].Rotation = 0f;
+            Hands[1].Rotation = 0f;
+            Hands[0].RobeDirection = -1;
+            Hands[1].RobeDirection = 1;
+            Hands[0].UseRobe = true;
+            Hands[1].UseRobe = true;
+            Hands[0].ShouldOpen = true;
+            Hands[1].ShouldOpen = true;
+            Hands[0].UsePalmForm = false;
+            Hands[1].UsePalmForm = false;
         }
 
         public void UpdateWings(float animationCompletion)
@@ -257,6 +283,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         phaseCycle = Phase2Cycle;
                     if (CurrentPhase == 2)
                         phaseCycle = Phase3Cycle;
+
+                    for (int i = 0; i < Hands.Count; i++)
+                    {
+                        Hands[i].UsePalmForm = false;
+                        Hands[i].ScaleFactor = 1f;
+                        Hands[i].UseRobe = true;
+                    }
 
                     CurrentAttack = phaseCycle[PhaseCycleIndex % phaseCycle.Length];
                     PhaseCycleIndex++;

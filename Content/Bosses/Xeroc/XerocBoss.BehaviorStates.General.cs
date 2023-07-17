@@ -171,6 +171,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 bool left = i % 2 == 0;
                 Vector2 handDestination = Target.Center + verticalOffsetDirection * -left.ToDirectionInt() * (i * 50f + 150f);
+                if (handDestination.Y <= Target.Center.Y)
+                    handDestination.X -= 100f;
+
                 Hands[i].Center = Vector2.Lerp(Hands[i].Center, handDestination, handMoveInterpolant);
                 if (Hands[i].Center.WithinRange(handDestination, 60f))
                 {
@@ -192,7 +195,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Delete the hands once the seam is fully opened.
             if (AttackTimer == gripTime + ripOpenTime + 60f)
             {
-                DestroyAllHands();
+                DestroyAllHands(true);
                 NPC.netUpdate = true;
             }
 
@@ -222,10 +225,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_RoarAnimation()
         {
             int screamTime = 210;
-            int handCreationRate = 90000;
-            int handDestructionRateDefault = 31;
-            int handDestructionRateNearEnd = 4;
-            int handDestructionRate = AttackTimer >= screamTime - 60f ? handDestructionRateNearEnd : handDestructionRateDefault;
 
             // Appear on the foreground.
             if (AttackTimer == 1f)
@@ -266,30 +265,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Become completely opaque.
             NPC.Opacity = 1f;
 
-            // Randomly create and destroy hands.
-            if (AttackTimer <= screamTime - 60f && AttackTimer % handCreationRate == handCreationRate - 1f)
-                ConjureHandsAtPosition(NPC.Center, Main.rand.NextVector2Circular(10f, 10f), false);
-            if (Hands.Any() && AttackTimer % handDestructionRate == 0f)
-            {
-                CreateHandVanishVisuals(Hands.First());
-                Hands.RemoveAt(0);
-                NPC.netUpdate = true;
-            }
-
-            // Update all hands.
-            foreach (var hand in Hands)
-            {
-                ulong handOffsetSeed = hand.UniqueID;
-                int handHoverSide = (RandomNext(ref handOffsetSeed, 2) == 0).ToDirectionInt();
-                float handHoverAmplitude = Lerp(8f, 320f, RandomFloat(ref handOffsetSeed));
-                float handHoverPeriod = TwoPi * Lerp(19.5f, 42f, RandomFloat(ref handOffsetSeed));
-                Vector2 handHoverOffset = new Vector2(Lerp(320f, 480f, RandomFloat(ref handOffsetSeed)) * handHoverSide, Lerp(-208f, 85f, RandomFloat(ref handOffsetSeed))) * TeleportVisualsAdjustedScale;
-                handHoverOffset += handHoverOffset.SafeNormalize(Vector2.UnitY) * Cos(handHoverPeriod * AttackTimer) * handHoverAmplitude;
-
-                DefaultHandDrift(hand, NPC.Center + handHoverOffset, 3f);
-                hand.RobeDirection = handHoverSide;
-                hand.UseRobe = true;
-            }
+            // Update universal hands.
+            DefaultUniversalHandMotion();
 
             if (AttackTimer >= screamTime)
                 SelectNextAttack();
@@ -348,8 +325,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 return NPC.Center + (TwoPi * goldenRatio * handIndex).ToRotationVector2() * (handIndex * NPC.scale * 12f + 40f);
             }
 
-            if (AttackTimer == 1f)
-                DestroyAllHands();
+            if (AttackTimer <= blackDelay + riseDelay + 60f)
+            {
+                foreach (var hand in Hands)
+                    hand.Opacity = 0f;
+                NPC.netUpdate = true;
+            }
 
             // Slow down and make the background go pitch black again while screaming at first.
             if (AttackTimer <= blackDelay)
@@ -407,7 +388,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Cast a ridiculous quantity of arms outward.
             if (AttackTimer >= blackDelay + riseDelay + riseTime && AttackTimer % handReleaseRate == 0f && Hands.Count < handCount)
+            {
+                foreach (var hand in Hands)
+                    hand.Opacity = 1f;
                 ConjureHandsAtPosition(hoverDestinationForHand(Hands.Count), Vector2.Zero, false);
+            }
 
             // Move further into the background.
             if (AttackTimer >= blackDelay + riseDelay + riseTime + handCount * handReleaseRate && AttackTimer < blackDelay + riseDelay + riseTime + handCount * handReleaseRate + chargeLineUpTime)

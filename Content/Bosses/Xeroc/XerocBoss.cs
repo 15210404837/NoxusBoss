@@ -28,6 +28,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             public int RobeDirection;
 
+            public int DirectionOverride;
+
             public bool ShouldOpen;
 
             public bool UsePalmForm;
@@ -68,7 +70,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Create the robe cloth.
                 UseRobe = useRobe;
-                RobeCloth = new(Center, 20, 20, 18f, 6f, 10f, 0.56f);
+                RobeCloth = new(Center, 20, 20, 18f, 6f, 10f, 0.3f);
                 RobeDirection = robeDirection;
                 UniqueID = (ulong)Main.rand.Next(1000000);
             }
