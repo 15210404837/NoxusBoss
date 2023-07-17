@@ -461,6 +461,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Update universal hands.
             DefaultUniversalHandMotion();
+            if (Hands.Count >= 2)
+            {
+                Hands[0].RobeDirection = -1;
+                Hands[1].RobeDirection = 1;
+            }
 
             // Make the background return.
             if (attackHasConcluded == 1f)

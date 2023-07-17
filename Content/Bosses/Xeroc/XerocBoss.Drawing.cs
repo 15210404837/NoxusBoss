@@ -98,27 +98,38 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return false;
         }
 
-        public void DrawWing(Vector2 drawPosition, float wingRotation, float rotationDifferenceMovingAverage, float generalRotation, float fadeInterpolant)
+        public void DrawWing(Vector2 drawPosition, float wingRotation, float rotationDifferenceMovingAverage, float generalRotation, float fadeInterpolant, bool glow)
         {
             Texture2D wingsTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWing").Value;
+            if (glow)
+                wingsTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingGlow").Value;
+
             Vector2 leftWingOrigin = wingsTexture.Size() * new Vector2(1f, 0.86f);
             Vector2 rightWingOrigin = leftWingOrigin;
             rightWingOrigin.X = wingsTexture.Width - rightWingOrigin.X;
             Color wingsDrawColor = Color.Lerp(Color.Transparent, Color.White, fadeInterpolant);
+            if (glow)
+                wingsDrawColor.A = 0;
 
             // Wings become squished the faster they're moving, to give an illusion of 3D motion.
             float squishOffset = MathF.Min(0.7f, Math.Abs(rotationDifferenceMovingAverage) * 3.5f);
 
             Vector2 scale = MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(1f, 1f - squishOffset) * fadeInterpolant * new Vector2(1f, 1.15f);
-            Main.spriteBatch.Draw(wingsTexture, drawPosition - Vector2.UnitX * TeleportVisualsAdjustedScale * 64f, null, wingsDrawColor, generalRotation + wingRotation, leftWingOrigin, scale, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(wingsTexture, drawPosition + Vector2.UnitX * TeleportVisualsAdjustedScale * 64f, null, wingsDrawColor, generalRotation - wingRotation, rightWingOrigin, scale, SpriteEffects.FlipHorizontally, 0f);
+            Main.spriteBatch.Draw(wingsTexture, drawPosition - Vector2.UnitX * TeleportVisualsAdjustedScale * 58f, null, wingsDrawColor, generalRotation + wingRotation, leftWingOrigin, scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(wingsTexture, drawPosition + Vector2.UnitX * TeleportVisualsAdjustedScale * 58f, null, wingsDrawColor, generalRotation - wingRotation, rightWingOrigin, scale, SpriteEffects.FlipHorizontally, 0f);
         }
 
         public void DrawWings()
         {
+            for (int i = 0; i < Wings.Length; i++)
+            {
+                Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
+                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity, true);
+            }
+
             // Prepare the wing psychedelic shader.
             var wingShader = GameShaders.Misc["NoxusBoss:XerocPsychedelicWingShader"];
-            wingShader.Shader.Parameters["colorShift"].SetValue(new Vector3(Sin(Main.GlobalTimeWrappedHourly * 5.8f) * 0.5f + 1f, 0.5f, 0.67f));
+            wingShader.Shader.Parameters["colorShift"].SetValue(new Vector3(Sin(Main.GlobalTimeWrappedHourly * 5.8f) * 0.5f + 1f, 0.8f, 0.6f));
             wingShader.Shader.Parameters["lightDirection"].SetValue(Vector3.Backward);
             wingShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
             wingShader.SetShaderTexture2(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap"));
@@ -127,7 +138,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = 0; i < Wings.Length; i++)
             {
                 Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
-                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity);
+                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation, NPC.Opacity, false);
             }
         }
 
@@ -212,7 +223,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 80f, -140f);
             Vector2 robeEnd = hand.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * -30f, -4f);
             if (hand.Frame <= 1)
-                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 37.5f;
+                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 46f;
 
             Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 118f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
 

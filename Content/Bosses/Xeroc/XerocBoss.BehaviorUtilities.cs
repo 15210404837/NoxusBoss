@@ -194,12 +194,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Hands.Insert(0, new(NPC.Center, true, (Hands.Count % 2 == 0).ToDirectionInt()));
 
             float verticalOffset = Sin(TwoPi * AttackTimer / 120f) * 35f;
-            DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-340f, -verticalOffset + 80f) * TeleportVisualsAdjustedScale, 12f);
-            DefaultHandDrift(Hands[1], NPC.Center + new Vector2(340f, verticalOffset + 80f) * TeleportVisualsAdjustedScale, 12f);
+            DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-340f, -verticalOffset + 80f) * TeleportVisualsAdjustedScale, 300f);
+            DefaultHandDrift(Hands[1], NPC.Center + new Vector2(340f, verticalOffset + 80f) * TeleportVisualsAdjustedScale, 300f);
+
+            Hands[0].DirectionOverride = 0;
+            Hands[1].DirectionOverride = 0;
             Hands[0].Rotation = 0f;
             Hands[1].Rotation = 0f;
-            Hands[0].RobeDirection = -1;
-            Hands[1].RobeDirection = 1;
+
             Hands[0].UseRobe = true;
             Hands[1].UseRobe = true;
             Hands[0].ShouldOpen = true;

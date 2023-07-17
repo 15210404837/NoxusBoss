@@ -62,7 +62,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draw Xeroc's wings.
             XerocBoss.Myself.ModNPC<XerocBoss>().DrawWings();
 
-            // Draw the afterimage to the intermediate buffer with the wing shader.
+            // Draw the afterimage shader to the result.
             ApplyPsychedelicDiffusionEffects();
 
             // Return to the backbuffer.

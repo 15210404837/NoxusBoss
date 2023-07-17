@@ -58,7 +58,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float3 psychedelicColor = palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.5), float3(1.5, 1, 0), float3(0.5, 0.2, 0.25)) * 0.8;
     float4 psychedelicColor4 = float4(psychedelicColor, 1) * color.a;
     
-    // Calculate ring-based brighness values.
+    // Calculate ring-based brightness values.
     float ringBrightness = saturate(0.2 / TriangleWave(uTime * 2.33 - distanceFromEdge * 5)) + 1;
     float4 result = lerp(color, psychedelicColor4, color.r * 0.8) * ringBrightness;
     

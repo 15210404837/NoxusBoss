@@ -1068,7 +1068,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Hands[1].UsePalmForm = false;
                 Hands[0].RobeDirection = 1;
                 Hands[1].RobeDirection = -1;
-                DefaultHandDrift(Hands[1 - handIndex], NPC.Center + new Vector2(SwordSlashDirection * -500f, 100f) * TeleportVisualsAdjustedScale, 10f);
+                DefaultHandDrift(Hands[1 - handIndex], NPC.Center + new Vector2(SwordSlashDirection * -500f, 100f) * TeleportVisualsAdjustedScale, 300f);
 
                 var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
                 foreach (Projectile sword in swords)
