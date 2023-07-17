@@ -62,7 +62,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             // Draw wings with afterimages.
-            if (!NPC.IsABestiaryIconDummy)
+            if (!NPC.IsABestiaryIconDummy && CurrentAttack != XerocAttackType.Awaken)
                 Main.spriteBatch.Draw(XerocWingDrawer.AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, Color.White);
 
             // Draw all hands.
