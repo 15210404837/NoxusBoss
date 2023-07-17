@@ -10,8 +10,8 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Debug Xeroc Spawner");
-            Tooltip.SetDefault("Summons Xeroc");
+            DisplayName.SetDefault("Debug Deity of Light Spawner");
+            Tooltip.SetDefault("Summons a nameless deity of light");
             SacrificeTotal = 1;
         }
 

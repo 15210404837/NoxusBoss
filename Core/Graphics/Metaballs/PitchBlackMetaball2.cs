@@ -3,15 +3,13 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Content.Projectiles.Pets;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics
 {
-    public class PitchBlackMetaball : Metaball
+    public class PitchBlackMetaball2 : Metaball
     {
         public class GasParticle
         {
@@ -26,7 +24,7 @@ namespace NoxusBoss.Core.Graphics
 
         public override MetaballDrawLayerType DrawContext => MetaballDrawLayerType.BeforeBlack;
 
-        public override Color EdgeColor => Color.MediumPurple;
+        public override Color EdgeColor => Color.LightCoral;
 
         public override List<Texture2D> Layers => new()
         {
@@ -60,17 +58,11 @@ namespace NoxusBoss.Core.Graphics
             foreach (GasParticle particle in GasParticles)
                 Main.spriteBatch.Draw(circle, particle.Center - Main.screenPosition, null, Color.White, 0f, circle.Size() * 0.5f, new Vector2(particle.Size) / circle.Size(), 0, 0f);
 
-            foreach (NPC noxus in Main.npc.Where(n => n.active && n.type == ModContent.NPCType<EntropicGod>()))
+            foreach (NPC xeroc in Main.npc.Where(n => n.active && n.type == ModContent.NPCType<XerocBoss>()))
             {
-                Vector2 drawPosition = noxus.Center - Main.screenPosition;
-                if (noxus.Opacity >= 0.8f)
-                    noxus.ModNPC<EntropicGod>().DrawBack(drawPosition, noxus.GetAlpha(noxus.ModNPC<EntropicGod>().GeneralColor), noxus.rotation);
-            }
-            foreach (Projectile babyNoxus in Main.projectile.Where(p => p.active && p.type == ModContent.ProjectileType<BabyNoxus>()))
-            {
-                Vector2 drawPosition = babyNoxus.Center - Main.screenPosition;
-                if (babyNoxus.Opacity >= 0.8f)
-                    babyNoxus.ModProjectile<BabyNoxus>().DrawBack();
+                Vector2 drawPosition = xeroc.Center - Main.screenPosition;
+                if (xeroc.Opacity >= 0.5f)
+                    xeroc.ModNPC<XerocBoss>().DrawBottom();
             }
         }
     }

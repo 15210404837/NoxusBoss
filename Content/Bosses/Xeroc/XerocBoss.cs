@@ -696,6 +696,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 hand.OldCenters[0] = hand.Center;
             }
 
+            // Create pitch black particles.
+            for (int i = 0; i < NPC.Opacity * TeleportVisualsAdjustedScale.X * 8f; i++)
+            {
+                Vector2 particleSpawnPosition = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale * Main.rand.NextFloat(220f, 330f);
+                if (Main.rand.NextBool())
+                    particleSpawnPosition = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation).RotatedByRandom(1.3f) * TeleportVisualsAdjustedScale * Main.rand.NextFloat(162f, 170f);
+                PitchBlackMetaball2.CreateParticle(particleSpawnPosition, Main.rand.NextVector2Circular(3f, 3f), TeleportVisualsAdjustedScale.X * Main.rand.NextFloat(14f, 21f));
+            }
+
             // Rotate based on horizontal speed.
             NPC.rotation = NPC.velocity.X * 0.001f;
         }

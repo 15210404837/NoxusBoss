@@ -39,6 +39,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
+        public override void ModifyTypeName(ref string typeName)
+        {
+            typeName = string.Empty;
+            for (int i = 0; i < 8; i++)
+                typeName += (char)Main.rand.Next(700);
+        }
+
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         {
             scale *= TeleportVisualsAdjustedScale.Length() * 0.707f;
@@ -150,8 +157,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 Color baseHandColor = new(brightness, brightness, brightness);
                 Color handColor = baseHandColor * hand.Opacity * (CurrentAttack == XerocAttackType.DeathAnimation ? 1f : NPC.Opacity) * ZPositionOpacity;
-                if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || TeleportVisualsAdjustedScale.Length() >= 10f)
+                if (CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken)
                     handColor = Color.White;
+                if (TeleportVisualsAdjustedScale.Length() >= 10f)
+                    handColor = Color.White with { A = 0 };
 
                 SpriteEffects direction = hand.Center.X > NPC.Center.X ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -197,6 +206,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float incrementFactor = Remap(TeleportVisualsAdjustedScale.Y, 0.2f, 1f, 1.18f, 1.84f);
             Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 80f, -140f);
             Vector2 robeEnd = hand.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * -30f, -4f);
+            if (CurrentAttack == XerocAttackType.RealityTearDaggers || CurrentAttack == XerocAttackType.PunchesWithScreenSlices)
+                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 36f;
+
             Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 118f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
 
             // Calculate internal positions for the open hand radius.
@@ -307,7 +319,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DrawTeeth(Vector2 screenPos)
         {
             // Collect textures.
-            Texture2D bottomTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Bottom").Value; // HAHAHAHAHA Bottom Text.
             Texture2D outlineTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline1").Value;
             Texture2D outlineTexture2 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline2").Value;
             Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
@@ -315,11 +326,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Calculate draw values.
             Vector2 teethScale = TeleportVisualsAdjustedScale * 0.85f;
             Vector2 outlineDrawPosition = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 110f - screenPos;
-            Vector2 bottomDrawPosition = outlineDrawPosition - Vector2.UnitY.RotatedBy(NPC.rotation) * teethScale * 150f;
             Color teethColor = Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant) * 0.9f;
-
-            // Draw the bottom texture.
-            Main.spriteBatch.Draw(bottomTexture, bottomDrawPosition, null, teethColor, 0f, bottomTexture.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
 
             // Draw a black circle behind the teeth so that background isn't revealed behind them.
             Main.spriteBatch.Draw(backglowTexture, outlineDrawPosition, null, (Color.Black * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)), 0f, backglowTexture.Size() * 0.5f, new Vector2(0.54f, 0.5f) * TeleportVisualsAdjustedScale, 0, 0f);
@@ -346,6 +353,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Vector2 toothOffset = (upperTeethOffset[i] - Vector2.UnitX * outlineTexture1.Width * 0.5f) * teethScale;
                 Main.spriteBatch.Draw(toothTexture, (outlineDrawPosition + toothOffset + Vector2.UnitY * TopTeethOffset * teethScale).Floor(), null, teethColor, toothRotation, toothTexture.Size() * 0.5f, teethScale, 0, 0f);
             }
+        }
+
+        public void DrawBottom()
+        {
+            Texture2D bottomTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/Bottom").Value; // HAHAHAHAHA Bottom Text.
+            Vector2 bottomScale = TeleportVisualsAdjustedScale * 0.85f;
+            Vector2 bottomDrawPosition = NPC.Center - Vector2.UnitY.RotatedBy(NPC.rotation) * bottomScale * 40f - Main.screenPosition;
+            Color bottomColor = Color.White * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant);
+
+            // Draw the bottom texture.
+            Main.spriteBatch.Draw(bottomTexture, bottomDrawPosition, null, bottomColor, 0f, bottomTexture.Size() * new Vector2(0.5f, 0f), bottomScale, 0, 0f);
         }
 
         public void DrawEye(Vector2 screenPos)

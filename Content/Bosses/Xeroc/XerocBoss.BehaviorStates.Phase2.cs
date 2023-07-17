@@ -1062,6 +1062,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 Hands[0].ShouldOpen = false;
                 Hands[0].ScaleFactor = 2f;
+                Hands[0].Rotation = NPC.AngleTo(Hands[0].Center) - PiOver2;
                 DefaultHandDrift(Hands[0], NPC.Center + handHoverOffset, 300f);
 
                 var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());

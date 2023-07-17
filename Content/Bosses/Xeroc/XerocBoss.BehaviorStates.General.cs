@@ -134,6 +134,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Keep the seam scale at its minimum at first.
             SeamScale = 5f;
 
+            // Stay above the target.
+            NPC.Center = Target.Center - Vector2.UnitY * 1000f;
+
             // Stay invisible.
             NPC.Opacity = 0f;
 
@@ -238,6 +241,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Bring the music.
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Xeroc");
+            Music = MusicLoader.GetMusicSlot(ModLoader.GetMod("CalamityModMusic"), "Sounds/Music/BossRushTier3");
 
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);

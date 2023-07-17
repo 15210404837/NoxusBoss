@@ -61,8 +61,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-400f, 100f) * TeleportVisualsAdjustedScale);
                 DefaultHandDrift(Hands[1], NPC.Center + new Vector2(400f, 100f) * TeleportVisualsAdjustedScale);
-                Hands[0].Rotation = Hands[0].Rotation.AngleLerp(Pi, 0.1f);
-                Hands[1].Rotation = Hands[1].Rotation.AngleLerp(Pi, 0.1f);
+                Hands[0].Rotation = Hands[0].Rotation.AngleLerp(PiOver2, 0.1f);
+                Hands[1].Rotation = Hands[1].Rotation.AngleLerp(-PiOver2, 0.1f);
                 Hands[0].ShouldOpen = AttackTimer >= redirectTime + hoverTime - 7f;
                 Hands[1].ShouldOpen = AttackTimer >= redirectTime + hoverTime - 7f;
 
@@ -321,9 +321,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     hand.Center = Vector2.Lerp(hand.Center, handDestination, wrappedAttackTimer / handWaveTime * 0.3f + 0.02f);
 
                     DefaultHandDrift(hand, handDestination, 1.2f);
-                    hand.Rotation = (hand.Center - EyePosition).ToRotation();
-                    if (hand.Center.X >= NPC.Center.X)
-                        hand.Rotation += Pi;
+                    hand.Rotation = ((hand.Center - EyePosition) * new Vector2(1f, 0.1f)).ToRotation() - PiOver2;
 
                     hand.Frame = 2;
                     hand.ShouldOpen = false;
