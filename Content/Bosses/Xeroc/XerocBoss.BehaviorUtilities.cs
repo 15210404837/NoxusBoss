@@ -222,9 +222,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        public void PerformTeethChomp(float animationCompletion, float chompAnimationDelay = 0.7f, int risePower = 2, int chompPower = 12)
+        public void PerformTeethChomp(float animationCompletion, float chompAnimationDelay = 0.7f, int risePower = 4, int chompPower = 24)
         {
-            CurveSegment rise = new(EasingType.PolyOut, 0f, 6, -32f, risePower);
+            CurveSegment rise = new(EasingType.PolyOut, 0f, 2f, -32f, risePower);
             CurveSegment chomp = new(EasingType.PolyOut, chompAnimationDelay, rise.EndingHeight, 6f - rise.EndingHeight, chompPower);
             TopTeethOffset = PiecewiseAnimation(animationCompletion, rise, chomp);
         }

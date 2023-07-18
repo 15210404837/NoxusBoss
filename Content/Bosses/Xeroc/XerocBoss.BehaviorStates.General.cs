@@ -319,6 +319,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 42f % 1f);
 
+            // Get rid of Xeroc's ingame name.
+            string name = string.Empty;
+            for (int i = 0; i < 8; i++)
+                name += (char)Main.rand.Next(700);
+            NPC.GivenName = name;
+
             Vector2 hoverDestinationForHand(int handIndex)
             {
                 float goldenRatio = 1.618033f;

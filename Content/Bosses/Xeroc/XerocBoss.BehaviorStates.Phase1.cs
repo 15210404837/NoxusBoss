@@ -240,7 +240,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Move into the background.
             if (AttackTimer <= riseTime)
-                ZPosition = Pow(AttackTimer / riseTime, 1.6f) * 2.8f;
+                ZPosition = Pow(AttackTimer / riseTime, 1.6f) * 2.4f;
 
             // Calculate the background hover position.
             float hoverHorizontalWaveSine = Sin(TwoPi * AttackTimer / 96f);

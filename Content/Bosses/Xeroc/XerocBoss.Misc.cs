@@ -19,6 +19,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             writer.Write(PhaseCycleIndex);
             writer.Write(SwordSlashCounter);
             writer.Write(SwordSlashDirection);
+            writer.Write(SwordAnimationTimer);
 
             writer.Write(PunchOffsetAngle);
             writer.Write(FightLength);
@@ -45,7 +46,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             PhaseCycleIndex = reader.ReadInt32();
             SwordSlashCounter = reader.ReadInt32();
             SwordSlashDirection = reader.ReadInt32();
-            SwordChargeDestination = reader.ReadVector2();
+            SwordAnimationTimer = reader.ReadInt32();
 
             FightLength = reader.ReadSingle();
             PunchOffsetAngle = reader.ReadSingle();
@@ -53,6 +54,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             GeneralHoverOffset = reader.ReadVector2();
             CensorPosition = reader.ReadVector2();
             PunchDestination = reader.ReadVector2();
+            SwordChargeDestination = reader.ReadVector2();
             HandFireDestination = reader.ReadVector2();
 
             // Read lists.

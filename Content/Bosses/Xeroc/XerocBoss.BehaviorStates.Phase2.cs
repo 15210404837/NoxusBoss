@@ -398,6 +398,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 hand.UseRobe = true;
                 hand.RobeDirection = (handDestination.X >= NPC.Center.X).ToDirectionInt();
+                hand.ShouldOpen = true;
 
                 // Instruct the hands to move towards a preset offset from the target if this hand is the one being used.
                 float localHandMoveSpeedFactor = 5f;
@@ -407,6 +408,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         handDestination = Target.Center + idealHandOffsetFromPlayer1;
                     localHandMoveSpeedFactor = handMoveSpeedFactor;
                     hand.UseRobe = false;
+                    hand.ShouldOpen = false;
                 }
                 if ((i + Hands.Count / 2) % Hands.Count == usedHandIndex)
                 {
@@ -414,10 +416,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         handDestination = Target.Center + idealHandOffsetFromPlayer2;
                     localHandMoveSpeedFactor = handMoveSpeedFactor;
                     hand.UseRobe = false;
+                    hand.ShouldOpen = false;
                 }
 
                 DefaultHandDrift(hand, handDestination, localHandMoveSpeedFactor);
-                hand.ShouldOpen = false;
                 hand.ScaleFactor = 1f;
             }
         }
@@ -884,14 +886,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_SwordConstellation2()
         {
             int constellationConvergeTime = SwordConstellation.ConvergeTime;
-            int animationTime = 63 - SwordSlashCounter * 3;
+            int animationTime = 58 - SwordSlashCounter * 5;
             int slashCount = 5;
             float anticipationAnimationPercentage = 0.5f;
 
             // Make the attack faster in successive phases.
             if (CurrentPhase >= 2)
             {
-                animationTime -= 3;
+                animationTime--;
                 slashCount++;
             }
 
@@ -900,9 +902,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (SwordSlashCounter <= 0)
                 animationTime += 39;
-            if (animationTime <= 29)
-                animationTime = 29;
-            float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
@@ -927,6 +926,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 ZPosition = 1f;
+                SwordAnimationTimer = 0;
                 TeleportTo(Target.Center - Vector2.UnitY * 300f);
 
                 // Apply visual and sound effects.
@@ -958,15 +958,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     sword.Kill();
                 }
 
+                SwordAnimationTimer = 0;
                 SelectNextAttack();
                 DestroyAllHands();
                 return;
             }
 
+            // Increment the slash counter.
+            if (AttackTimer >= constellationConvergeTime)
+                SwordAnimationTimer++;
+            if (SwordAnimationTimer >= animationTime)
+                SwordAnimationTimer = 0;
+
             // Hover to the top left/right of the target in anticipation of the slash at first.
-            if (wrappedAttackTimer <= animationTime * anticipationAnimationPercentage || AttackTimer <= constellationConvergeTime)
+            if (SwordAnimationTimer <= animationTime * anticipationAnimationPercentage || AttackTimer <= constellationConvergeTime)
             {
-                if (wrappedAttackTimer == 2f)
+                if (SwordAnimationTimer == 2f)
                 {
                     DestroyAllHands();
                     SwordSlashCounter++;
@@ -974,7 +981,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 // Decide the charge destination right before the charge.
-                if (wrappedAttackTimer <= animationTime * anticipationAnimationPercentage - 13f)
+                if (SwordAnimationTimer <= animationTime * anticipationAnimationPercentage - 13f)
                 {
                     float distanceToTarget = NPC.Distance(Target.Center);
                     float dashDistance = MathF.Max(distanceToTarget + 250f, 850f);
@@ -997,7 +1004,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NPC.velocity *= 0.93f;
 
                 // Charge at the target once ready.
-                if (wrappedAttackTimer == (int)(animationTime * anticipationAnimationPercentage) - 1f && AttackTimer >= constellationConvergeTime + 1f)
+                if (SwordAnimationTimer == (int)(animationTime * anticipationAnimationPercentage) - 1f && AttackTimer >= constellationConvergeTime + 1f)
                 {
                     NPC.velocity = (SwordChargeDestination - Target.Center) * 0.075f;
                     NPC.netUpdate = true;
@@ -1029,12 +1036,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Look at the target.
                 PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - PupilPosition).SafeNormalize(Vector2.UnitY) * 40f, 0.12f);
 
-                bool doingEndSwing = wrappedAttackTimer >= animationTime * 0.65f;
+                bool doingEndSwing = SwordAnimationTimer >= animationTime * 0.65f;
                 slashOpacity = Clamp(slashOpacity - doingEndSwing.ToDirectionInt() * 0.5f, 0f, 1f);
             }
 
             // Calculate sword direction values.
-            float animationCompletion = wrappedAttackTimer / animationTime;
+            float animationCompletion = SwordAnimationTimer / (float)animationTime;
             float anticipationAngle = PiecewiseAnimation(animationCompletion, slowStart, swingFast, endSwing) - PiOver2;
             Vector2 handHoverOffset = anticipationAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(SwordSlashDirection * 800f, 450f);
             swordRotation = handHoverOffset.ToRotation() + SwordSlashDirection * PiOver2;
@@ -1063,12 +1070,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 Hands[1 - handIndex].ShouldOpen = true;
                 Hands[1 - handIndex].ScaleFactor = 1.5f;
-                Hands[handIndex].Rotation = NPC.AngleTo(Hands[1 - handIndex].Center) - PiOver2;
+                Hands[1 - handIndex].Rotation = 0f;
+                Hands[1 - handIndex].DirectionOverride = SwordSlashDirection;
                 Hands[0].UsePalmForm = false;
                 Hands[1].UsePalmForm = false;
                 Hands[0].RobeDirection = 1;
                 Hands[1].RobeDirection = -1;
-                DefaultHandDrift(Hands[1 - handIndex], NPC.Center + new Vector2(SwordSlashDirection * -500f, 100f) * TeleportVisualsAdjustedScale, 300f);
+                DefaultHandDrift(Hands[1 - handIndex], NPC.Center + new Vector2(SwordSlashDirection * -400f, 140f) * TeleportVisualsAdjustedScale, 300f);
 
                 var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
                 foreach (Projectile sword in swords)

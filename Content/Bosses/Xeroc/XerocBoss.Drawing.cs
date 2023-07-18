@@ -41,6 +41,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void ModifyTypeName(ref string typeName)
         {
+            if (CurrentAttack == XerocAttackType.DeathAnimation)
+            {
+                typeName = string.Empty;
+                return;
+            }
+
             typeName = string.Empty;
             for (int i = 0; i < 8; i++)
                 typeName += (char)Main.rand.Next(700);
@@ -220,21 +226,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             var cloth = hand.RobeCloth;
 
             // Calculate internal arm positions.
-            float midpointDistanceFactor = Pow(TeleportVisualsAdjustedScale.Y, 0.5f);
             float incrementFactor = Remap(TeleportVisualsAdjustedScale.Y, 0.2f, 1f, 1.18f, 1.84f);
             Vector2 robeStart = NPC.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * 80f, -140f);
             Vector2 robeEnd = hand.Center + TeleportVisualsAdjustedScale * new Vector2(hand.RobeDirection * -30f, -4f);
             if (hand.Frame <= 1)
-                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 46f;
+                robeEnd.Y -= TeleportVisualsAdjustedScale.Y * 40f;
 
-            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, midpointDistanceFactor * 118f, midpointDistanceFactor * 120f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
+            float robeLength = robeStart.Distance(robeEnd);
+            Vector2 robeMidpoint = IKSolve2(robeStart, robeEnd, robeLength * 0.36f, robeLength * 0.64f, hand.RobeDirection == -1) + Vector2.UnitY * Pow(TeleportVisualsAdjustedScale.Y, 0.67f) * 100f;
 
             // Calculate internal positions for the open hand radius.
             Vector2 ellipsoidCenter = robeEnd + new Vector2(hand.RobeDirection * -20f, 150f) * TeleportVisualsAdjustedScale;
-            Vector3 ellipsoidRadius = new(TeleportVisualsAdjustedScale.Length() * 42f);
-            ellipsoidRadius.Y *= 2.6f;
+            Vector3 ellipsoidRadius = new Vector3(24f, 109f, 42f) * new Vector3(TeleportVisualsAdjustedScale, 1f);
             if (CurrentAttack == XerocAttackType.StarConvergenceAndRedirecting)
                 ellipsoidRadius.X *= 0.7f;
+            ellipsoidRadius.Y *= Remap(Distance(NPC.position.Y, NPC.oldPosition.Y), 9f, 20f, 1f, 0.3f);
 
             // Hold the end of the robe to the hand. This has a mild amount of horizontal wind force.
             int endX = hand.RobeDirection == -1 ? 0 : (cloth.CellCountX - 1);

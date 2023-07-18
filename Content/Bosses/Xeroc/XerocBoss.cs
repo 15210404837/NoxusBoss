@@ -262,6 +262,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public int SwordAnimationTimer
+        {
+            get;
+            set;
+        }
+
         public float PupilScale
         {
             get;

@@ -137,7 +137,7 @@ namespace NoxusBoss.Core.Graphics
                 {
                     M11 = Lerp(0.7f, 1.3f, RandomFloat(ref seed)),
                     M12 = Lerp(-0.3f, 0.3f, RandomFloat(ref seed)),
-                    M21 = Lerp(0.3f, 0.3f, RandomFloat(ref seed)),
+                    M21 = Lerp(0.2f, 0.3f, RandomFloat(ref seed)),
                     M22 = Lerp(0.7f, 1.3f, RandomFloat(ref seed))
                 };
                 galaxyShader.Shader.Parameters["transformation"].SetValue(transformation);

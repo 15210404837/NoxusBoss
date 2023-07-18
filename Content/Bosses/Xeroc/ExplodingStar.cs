@@ -95,7 +95,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.BrightStarJumpscares)
                 {
-                    starburstCount = 13;
+                    starburstCount = 19;
                     starburstID = ModContent.ProjectileType<Starburst>();
                 }
 
