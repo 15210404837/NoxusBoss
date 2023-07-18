@@ -353,8 +353,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int flareShootCount = 5;
             int shootTime = 450;
             int starburstReleaseRate = 35;
-            int starburstCount = 9;
-            float starburstStartingSpeed = 1.05f;
+            int starburstCount = 32;
+            float starburstStartingSpeed = 0.6f;
 
             // Make things faster in successive phases.
             if (CurrentPhase >= 1)
@@ -408,6 +408,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 if (NPC.velocity.Length() > 4f)
                     NPC.velocity *= 0.8f;
+
+                float hoverSpeedInterpolant = Remap(NPC.Distance(Target.Center), 750f, 1800f, 0.003f, 0.04f);
+                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, hoverSpeedInterpolant);
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 4f, 0.1f);
             }
             else
@@ -466,6 +469,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     for (int i = 0; i < starburstCount; i++)
                     {
                         Vector2 starburstVelocity = star.SafeDirectionTo(Target.Center).RotatedBy(TwoPi * i / starburstCount + shootOffsetAngle) * starburstStartingSpeed;
+                        NewProjectileBetter(star.Center + starburstVelocity * 8f, starburstVelocity, starburstID, StarburstDamage, 0f);
+                    }
+                    for (int i = 0; i < starburstCount / 2; i++)
+                    {
+                        Vector2 starburstVelocity = star.SafeDirectionTo(Target.Center).RotatedBy(TwoPi * i / starburstCount / 2f + shootOffsetAngle) * starburstStartingSpeed * 0.6f;
                         NewProjectileBetter(star.Center + starburstVelocity * 8f, starburstVelocity, starburstID, StarburstDamage, 0f);
                     }
                 }
@@ -755,7 +763,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int supernovaDelay = 30;
             int pressureArmsCount = 9;
             int plasmaShootDelay = 60;
-            int plasmaShootRate = 3;
+            int plasmaShootRate = 2;
             int plasmaShootTime = Supernova.Lifetime - 90;
             float plasmaShootSpeed = 9f;
             float handOrbitOffset = 100f;

@@ -15,7 +15,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         public ref float Time => ref Projectile.ai[0];
 
-        public static int Lifetime => 540;
+        public static int Lifetime => 480;
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 

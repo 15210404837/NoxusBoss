@@ -141,7 +141,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Projectile.WithinRange(target.Center, 50f) || TimeIsStopped)
                 Projectile.velocity *= 0.9f;
             else
-                Projectile.velocity = Projectile.SafeDirectionTo(target.Center) * 3f;
+            {
+                float approachSpeed = Pow(GetLerpValue(ConvergeTime, 0f, Time, true), 2f) * 24f + 3f;
+                Projectile.velocity = Projectile.SafeDirectionTo(target.Center) * approachSpeed;
+            }
 
             // Store the clock shape.
             ClockShape = clockShape;

@@ -67,7 +67,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.frame = Projectile.frameCounter / 4 % Main.projFrames[Type];
 
             // Hande arcing behaviors.
-            int slowdownTime = 48;
+            int slowdownTime = 53;
             int redirectTime = 27;
             int fastHomeTime = 86;
             Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
