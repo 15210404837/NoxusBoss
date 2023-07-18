@@ -824,6 +824,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     star.ai[1] = pressureInterpolant;
                     handOrbitOffset += Sin(AttackTimer / 4f) * pressureInterpolant * 8f;
                 }
+
+                // Make remaining universal hands invisible.
+                for (int i = 0; i < Hands.Count; i++)
+                    Hands[i].Opacity = 0f;
             }
 
             // Make hands circle the star.
@@ -856,10 +860,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Delete the hands.
                 DestroyAllHands();
-
-                // Make remaining universal hands invisible.
-                for (int i = 0; i < Hands.Count; i++)
-                    Hands[i].Opacity = 0f;
 
                 NPC.netUpdate = true;
             }
