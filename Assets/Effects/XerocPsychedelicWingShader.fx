@@ -23,6 +23,8 @@ float4 uShaderSpecificData;
 
 float3 colorShift;
 float3 lightDirection;
+float2 normalMapZoom;
+float normalMapCrispness;
 
 float InverseLerp(float from, float to, float x)
 {
@@ -55,15 +57,17 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float psychedelicInterpolant = tex2D(uImage1, coords * 0.9 + warpNoiseOffset * 0.023).r * 1.45;
     
     // Calculate the base psychedelic color from the warp noise.
-    float3 psychedelicColor = palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.5), float3(1.5, 1, 0), float3(0.5, 0.2, 0.25)) * 0.8;
+    float3 psychedelicColor = palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.2), float3(1, 1, 1), float3(0, 0.333, 0.667)) * 0.8;
     float4 psychedelicColor4 = float4(psychedelicColor, 1) * color.a;
     
     // Calculate ring-based brightness values.
     float ringBrightness = saturate(0.2 / TriangleWave(uTime * 2.33 - distanceFromEdge * 5)) + 1;
+    
     float4 result = lerp(color, psychedelicColor4, color.r * 0.8) * ringBrightness;
     
     // Apply the normal map to the result to apply texturing.
-    float brightness = saturate(dot(lightDirection, tex2D(uImage2, coords).xyz));
+    float3 normal = normalize(tex2D(uImage2, coords * normalMapZoom).xyz * 2 - 1);
+    float brightness = pow(saturate(dot(lightDirection, normal)), normalMapCrispness);
     result.rgb *= brightness;
     
     return result;
@@ -72,6 +76,6 @@ technique Technique1
 {
     pass AutoloadPass
     {
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        PixelShader = compile ps_3_0 PixelShaderFunction();
     }
 }

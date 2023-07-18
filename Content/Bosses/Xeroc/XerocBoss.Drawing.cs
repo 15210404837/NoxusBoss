@@ -128,11 +128,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Prepare the wing psychedelic shader.
+            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap").Value;
             var wingShader = GameShaders.Misc["NoxusBoss:XerocPsychedelicWingShader"];
-            wingShader.Shader.Parameters["colorShift"].SetValue(new Vector3(Sin(Main.GlobalTimeWrappedHourly * 5.8f) * 0.5f + 1f, 0.8f, 0.6f));
-            wingShader.Shader.Parameters["lightDirection"].SetValue(Vector3.Backward);
+            wingShader.Shader.Parameters["colorShift"].SetValue(new Vector3(Cos(Main.GlobalTimeWrappedHourly * 5.8f) * 0.15f + 1.4f, 0.25f, 0.32f));
+            wingShader.Shader.Parameters["lightDirection"].SetValue(Vector3.UnitZ);
+            wingShader.Shader.Parameters["normalMapCrispness"].SetValue(0.86f);
+            wingShader.Shader.Parameters["normalMapZoom"].SetValue(new Vector2(0.7f, 0.4f));
             wingShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
-            wingShader.SetShaderTexture2(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap"));
             wingShader.Apply();
 
             for (int i = 0; i < Wings.Length; i++)
@@ -348,8 +350,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.spriteBatch.Draw(backglowTexture, outlineDrawPosition, null, (Color.Black * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)), 0f, backglowTexture.Size() * 0.5f, new Vector2(0.54f, 0.5f) * TeleportVisualsAdjustedScale, 0, 0f);
 
             // Draw the teeth outlines.
-            Main.spriteBatch.Draw(outlineTexture1, outlineDrawPosition + Vector2.UnitY * TopTeethOffset * teethScale, null, teethColor, 0f, outlineTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
-            Main.spriteBatch.Draw(outlineTexture2, outlineDrawPosition, null, teethColor, 0f, outlineTexture2.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
+            Main.spriteBatch.Draw(outlineTexture1, outlineDrawPosition + Vector2.UnitY * TopTeethOffset * teethScale * 0.4f, null, teethColor, 0f, outlineTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
+            Main.spriteBatch.Draw(outlineTexture2, outlineDrawPosition + Vector2.UnitY * (TopTeethOffset - 6f) * -teethScale * 0.6f, null, teethColor, 0f, outlineTexture2.Size() * new Vector2(0.5f, 0f), teethScale, 0, 0f);
 
             // Draw individual teeth.
             Vector2[] upperTeethOffset = new[]
@@ -367,7 +369,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 float toothRotation = Sin(Main.GlobalTimeWrappedHourly * 6f + i) * 0.09f;
                 Texture2D toothTexture = ModContent.Request<Texture2D>($"NoxusBoss/Content/Bosses/Xeroc/Parts/UpperTooth{i + 1}").Value;
                 Vector2 toothOffset = (upperTeethOffset[i] - Vector2.UnitX * outlineTexture1.Width * 0.5f) * teethScale;
-                Main.spriteBatch.Draw(toothTexture, (outlineDrawPosition + toothOffset + Vector2.UnitY * TopTeethOffset * teethScale).Floor(), null, teethColor, toothRotation, toothTexture.Size() * 0.5f, teethScale, 0, 0f);
+                Main.spriteBatch.Draw(toothTexture, (outlineDrawPosition + toothOffset + Vector2.UnitY * TopTeethOffset * teethScale * 0.4f).Floor(), null, teethColor, toothRotation, toothTexture.Size() * 0.5f, teethScale, 0, 0f);
             }
         }
 

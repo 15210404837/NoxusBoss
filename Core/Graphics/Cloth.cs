@@ -189,7 +189,7 @@ namespace NoxusBoss.Core.Graphics
                 }
             }
 
-            // Apply sphere collision if one is considered in the simulation.
+            // Apply ellipsoid collision if one is considered in the simulation.
             if (ellipsoidPosition.Length() > 0.001f)
             {
                 foreach (VerletPoint point in points)
@@ -210,7 +210,7 @@ namespace NoxusBoss.Core.Graphics
                     float ellipsoidSqr = Vector3.Dot(relativePos, relativePos);
 
                     // Resolve the collision if it happened.
-                    if (ellipsoidSqr < 1.0f)
+                    if (ellipsoidSqr < 1f)
                     {
                         Vector3 normalizedRelativePosition = Vector3.Normalize(relativePos);
                         point.Position = ellipsoidPosition + normalizedRelativePosition * ellipsoidRadius;

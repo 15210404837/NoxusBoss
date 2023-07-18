@@ -34,7 +34,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     
     // Make the colors dissipate and move around in accordance with the warp noise.
     float4 color = tex2D(uImage0, coords - warpNoiseOffset * 0.0008);
-    color.rgb *= 0.9;
+    color.rgb *= 0.884;
     color.a *= 0.8;
     
     return color;
