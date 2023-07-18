@@ -857,6 +857,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Delete the hands.
                 DestroyAllHands();
 
+                // Make remaining universal hands invisible.
+                for (int i = 0; i < Hands.Count; i++)
+                    Hands[i].Opacity = 0f;
+
                 NPC.netUpdate = true;
             }
 

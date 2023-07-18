@@ -290,6 +290,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         Hands[i].UsePalmForm = false;
                         Hands[i].ScaleFactor = 1f;
+                        Hands[i].Opacity = 1f;
                         Hands[i].UseRobe = true;
                     }
 
