@@ -353,7 +353,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int flareShootCount = 5;
             int shootTime = 450;
             int starburstReleaseRate = 35;
-            int starburstCount = 32;
+            int starburstCount = 23;
             float starburstStartingSpeed = 0.6f;
 
             // Make things faster in successive phases.

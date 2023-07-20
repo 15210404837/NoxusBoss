@@ -43,6 +43,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = 150;
+            if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarManagement)
+                Projectile.timeLeft = 300;
         }
 
         public override void AI()
