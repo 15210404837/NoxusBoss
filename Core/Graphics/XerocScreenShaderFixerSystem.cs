@@ -22,7 +22,7 @@ namespace NoxusBoss.Core.Graphics
             if (!cursor.TryGotoNext(MoveType.After, i => i.MatchCallOrCallvirt<Lighting>("get_NotRetro")))
                 return;
 
-            cursor.EmitDelegate(() => XerocBoss.Myself is not null);
+            cursor.EmitDelegate(() => !Main.gameMenu && XerocBoss.Myself is not null);
             cursor.Emit(OpCodes.Or);
         }
     }
