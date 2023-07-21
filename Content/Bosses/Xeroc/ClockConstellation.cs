@@ -138,8 +138,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Approach the nearest player.
-            if (Projectile.WithinRange(target.Center, 50f) || TimeIsStopped)
-                Projectile.velocity *= 0.9f;
+            if (Projectile.WithinRange(target.Center, 100f) || TimeIsStopped)
+                Projectile.velocity *= 0.82f;
             else
             {
                 float approachSpeed = Pow(GetLerpValue(ConvergeTime, 0f, Time, true), 2f) * 24f + 3f;

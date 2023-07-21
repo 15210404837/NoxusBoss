@@ -68,7 +68,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float4 backgroundDimensionColor = backgroundDimensionColor1 + backgroundDimensionColor2;
     
     // Combine colors based on how close the pixel is to the line.
-    float brightness = pow(InverseLerp(0.06, 0.4, brightnessBoost), 2.11);
+    float brightness = pow(InverseLerp(0.06, 0.4, brightnessBoost), 2);
     return lerp(baseColor, backgroundDimensionColor, brightness);
 }
 technique Technique1
