@@ -23,6 +23,10 @@ namespace NoxusBoss.Assets
 
             foreach (var path in Mod.GetFileNames().Where(f => f.Contains("Assets/Effects/")))
             {
+                // Ignore paths inside of the compiler directory.
+                if (path.Contains("Compiler"))
+                    continue;
+
                 string shaderName = Path.GetFileNameWithoutExtension(path);
                 string clearedPath = Path.Combine(Path.GetDirectoryName(path), shaderName).Replace(@"\", @"/");
                 Ref<Effect> shader = new(Mod.Assets.Request<Effect>(clearedPath, AssetRequestMode.ImmediateLoad).Value);
