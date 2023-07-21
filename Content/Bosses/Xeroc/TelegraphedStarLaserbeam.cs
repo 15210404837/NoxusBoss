@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
-    public class TelegraphedStarLaserbeam : ModProjectile, IDrawPixelatedPrims
+    public class TelegraphedStarLaserbeam : ModProjectile, IDrawsWithShader
     {
         public PrimitiveTrail TelegraphDrawer
         {
@@ -25,6 +25,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             get;
             private set;
         }
+
+        public bool DrawAdditiveShader => true;
 
         public ref float TelegraphTime => ref Projectile.ai[0];
 
@@ -165,7 +167,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             LaserDrawer?.BaseEffect?.Dispose();
         }
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
             // Initialize primitive drawers.
             var telegraphShader = GameShaders.Misc[$"{Mod.Name}:SideStreakShader"];
@@ -196,13 +198,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 LineRotation = -Projectile.rotation,
                 Opacity = Sqrt(Projectile.Opacity),
                 WidthFactor = 0.001f,
-                LightStrength = 1.1f,
+                LightStrength = 0.38f,
                 MainColor = Color.Wheat,
                 DarkerColor = Color.SaddleBrown,
                 BloomIntensity = Projectile.Opacity * 0.8f + 0.35f,
                 BloomOpacity = Projectile.Opacity,
                 Scale = Vector2.One * LaserLengthFactor * MaxLaserLength
-            }, true);
+            });
 
             // Draw the laser after the telegraph is no longer necessary.
             Vector2[] laserPoints = new Vector2[]
@@ -215,7 +217,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
             laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"));
-            LaserDrawer.Draw(laserPoints, -Projectile.velocity * LaserLengthFactor * 150f - Main.screenPosition, 45);
+            LaserDrawer.Draw(laserPoints, -Projectile.velocity * LaserLengthFactor * 150f - Main.screenPosition, 21);
         }
 
         public override bool ShouldUpdatePosition() => false;
