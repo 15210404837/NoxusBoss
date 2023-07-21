@@ -70,7 +70,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Create the robe cloth.
                 UseRobe = useRobe;
-                RobeCloth = new(Center, 20, 20, 18f, 6f, 10f, 0.3f);
+                RobeCloth = new(Center, 14, 14, 25.7f, 8.6f, 10f, 0.3f);
                 RobeDirection = robeDirection;
                 UniqueID = (ulong)Main.rand.Next(1000000);
             }
