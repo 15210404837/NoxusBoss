@@ -411,7 +411,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             // Draw a glowing orb before the eye.
             float universalOpacity = Pow(ZPositionOpacity, 0.7f) * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant);
-            float glowDissipateFactor = Remap(NPC.Opacity, 0.2f, 1f, 1f, 0.74f);
+            float glowDissipateFactor = Remap(NPC.Opacity, 0.2f, 1f, 1f, 0.74f) * 0.32f;
             Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
             Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             Texture2D spiresTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/XerocSpires").Value;
