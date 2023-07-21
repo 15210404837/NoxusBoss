@@ -141,7 +141,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Make the pupil line telegraph appear as Xeroc looks intently at the player.
             float telegraphDissipateInterpolant = GetLerpValue(shootDelay + starburstCount + 10f, shootDelay + starburstCount, postTeleportAttackTimer, true);
-            PupilTelegraphOpacity = lookAtTargetInterpolant * telegraphDissipateInterpolant;
+            PupilTelegraphOpacity = lookAtTargetInterpolant * telegraphDissipateInterpolant * 0.5f;
             PupilTelegraphArc = Pow(PupilTelegraphOpacity, 0.6f) * starburstArc;
 
             // Quickly hover above the player, zipping back and forth, before firing.
@@ -353,7 +353,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int flareShootCount = 5;
             int shootTime = 450;
             int starburstReleaseRate = 35;
-            int starburstCount = 23;
+            int starburstCount = 16;
             float starburstStartingSpeed = 0.6f;
 
             // Make things faster in successive phases.

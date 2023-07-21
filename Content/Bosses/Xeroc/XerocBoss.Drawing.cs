@@ -312,14 +312,31 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawProtectiveCensor(Vector2 screenPos)
         {
-            // TODO -- This is larger than usual for placeholder reasons.
+            // Collect textures.
             Texture2D pixel = TextureAssets.MagicPixel.Value;
+            Texture2D backlightTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocBacklight").Value;
+            Texture2D overlayTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
+
+            // Draw the bright backlight.
             Vector2 censorScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(200f, 340f) / pixel.Size();
-            Vector2 censorDrawPosition = EyePosition - screenPos + Vector2.UnitY * censorScale * 80f;
+            Vector2 backlightScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(400f, 448f) / backlightTexture.Size();
+            Vector2 idealCensorDrawPosition = IdealCensorPosition - screenPos + Vector2.UnitY * censorScale * 80f;
+            Vector2 censorDrawPosition = CensorPosition - screenPos + Vector2.UnitY * censorScale * 80f;
+
+            for (float offsetInterpolant = -1f; offsetInterpolant < 1f; offsetInterpolant += 0.4f)
+            {
+                Color backlightColor = (Color.IndianRed * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant)) with { A = 0 };
+                float backlightRotation = Cos(TwoPi * Main.GlobalTimeWrappedHourly * offsetInterpolant * 0.19f) * 0.4f;
+                Main.spriteBatch.Draw(backlightTexture, idealCensorDrawPosition, null, backlightColor, backlightRotation * offsetInterpolant, backlightTexture.Size() * 0.5f, backlightScale * (1f + Abs(offsetInterpolant) * 0.1f) * new Vector2(1f, 1.8f), 0, 0f);
+
+                backlightColor = (Color.Wheat * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant)) with { A = 0 } * 0.04f;
+                Main.spriteBatch.Draw(backlightTexture, idealCensorDrawPosition, null, backlightColor, 0f, backlightTexture.Size() * 0.5f, backlightScale * (1f + Abs(offsetInterpolant) * 0.1f) * 3f, 0, 0f);
+            }
+
+            // Draw the censor.
             Main.spriteBatch.Draw(pixel, censorDrawPosition, null, Color.Black * Pow(NPC.Opacity, 0.4f) * (1f - UniversalBlackOverlayInterpolant), 0f, pixel.Size() * 0.5f, censorScale, 0, 0f);
 
             // Draaw the universal overlay if necessary.
-            Texture2D overlayTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
             Vector2 overlayScale = Vector2.One * Lerp(0.1f, 15f, UniversalBlackOverlayInterpolant);
             for (int i = 0; i < 3; i++)
                 Main.spriteBatch.Draw(overlayTexture, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, (ZPosition <= -0.7f ? Color.Transparent : Color.Black) * Sqrt(UniversalBlackOverlayInterpolant), 0f, overlayTexture.Size() * 0.5f, overlayScale, 0, 0f);

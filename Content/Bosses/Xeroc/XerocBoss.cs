@@ -449,7 +449,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle CosmicLaserSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocCosmicLaser") with { Volume = 0.8f };
 
-        public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocExplosion") with { Volume = 1.3f };
+        public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocExplosion") with { Volume = 1.3f, PitchVariance = 0.15f };
 
         public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFastHandMovement") with { Volume = 1.25f };
 
@@ -663,8 +663,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // enough away.
             // As a failsafe, it sticks perfectly if Xeroc is moving really quickly so that it doesn't gain too large of a one-frame delay. Don't want to be
             // accidentally revealing what's behind there, after all.
-            if (NPC.velocity.Length() >= 32f || !CensorPosition.WithinRange(IdealCensorPosition, 12f))
+            if (NPC.position.Distance(NPC.oldPosition) >= 32f)
                 CensorPosition = IdealCensorPosition;
+            else
+            {
+                float step = TeleportVisualsAdjustedScale.X * 9f;
+                CensorPosition = (IdealCensorPosition / step).Floor() * step;
+            }
 
             // Increment timers.
             AttackTimer++;
