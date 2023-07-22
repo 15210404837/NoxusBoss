@@ -150,7 +150,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
                 return;
 
             // Try to send texture sizes as parameters. Such parameters are optional, and no penalty is incurred if a shader decides that it doesn't need that data.
-            TrySetParameter($"TextureSizeParameterPrefix{textureIndex}", texture.Size());
+            TrySetParameter($"{TextureSizeParameterPrefix}{textureIndex}", texture.Size());
 
             // Grab the graphics device and send the texture to it.
             var gd = Main.instance.GraphicsDevice;

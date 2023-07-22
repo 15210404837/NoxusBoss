@@ -1,12 +1,11 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics
 {
-    public class XerocScreenShaderFixerSystem : ModSystem
+    public class ScreenShaderFixerSystem : ModSystem
     {
         public override void OnModLoad()
         {
@@ -22,7 +21,7 @@ namespace NoxusBoss.Core.Graphics
             if (!cursor.TryGotoNext(MoveType.After, i => i.MatchCallOrCallvirt<Lighting>("get_NotRetro")))
                 return;
 
-            cursor.EmitDelegate(() => !Main.gameMenu && XerocBoss.Myself is not null);
+            cursor.EmitDelegate(() => !Main.gameMenu);
             cursor.Emit(OpCodes.Or);
         }
     }

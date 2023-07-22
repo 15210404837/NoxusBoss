@@ -97,6 +97,7 @@ namespace NoxusBoss.Assets
                 if (!easyXnb.WaitForExit(3000))
                 {
                     Main.NewText("Shader compiler timed out. Likely error.");
+                    easyXnb.Kill();
                     return;
                 }
 
