@@ -2,6 +2,7 @@
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -72,22 +73,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Color starColor = Color.Lerp(Color.Yellow, Color.IndianRed, 0.8f);
             starColor = Color.Lerp(starColor, Color.Wheat, UnstableOverlayInterpolant * 0.7f);
 
-            Effect fireballShader = GameShaders.Misc[$"{Mod.Name}:FireballShader"].Shader;
-            fireballShader.Parameters["sampleTexture2"].SetValue(noise);
-            fireballShader.Parameters["sampleTexture3"].SetValue(noise2);
-            fireballShader.Parameters["mainColor"].SetValue(starColor.ToVector3() * Projectile.Opacity);
-            fireballShader.Parameters["resolution"].SetValue(new Vector2(200f, 200f));
-            fireballShader.Parameters["speed"].SetValue(0.76f);
-            fireballShader.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
-            fireballShader.Parameters["zoom"].SetValue(0.0004f);
-            fireballShader.Parameters["dist"].SetValue(60f);
-            fireballShader.Parameters["opacity"].SetValue(Projectile.Opacity);
-            fireballShader.CurrentTechnique.Passes[0].Apply();
+            var fireballShader = ShaderManager.GetShader("FireballShader");
+            fireballShader.TrySetParameter("mainColor", starColor.ToVector3() * Projectile.Opacity);
+            fireballShader.TrySetParameter("resolution", new Vector2(200f, 200f));
+            fireballShader.TrySetParameter("speed", 0.76f);
+            fireballShader.TrySetParameter("zoom", 0.0004f);
+            fireballShader.TrySetParameter("dist", 60f);
+            fireballShader.TrySetParameter("opacity", Projectile.Opacity);
+            fireballShader.SetTexture(noise, 1);
+            fireballShader.SetTexture(noise2, 2);
+            fireballShader.Apply();
 
             Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.5f, 0, 0f);
 
-            fireballShader.Parameters["mainColor"].SetValue(Color.Wheat.ToVector3() * Projectile.Opacity * 0.6f);
-            fireballShader.CurrentTechnique.Passes[0].Apply();
+            fireballShader.TrySetParameter("mainColor", Color.Wheat.ToVector3() * Projectile.Opacity * 0.6f);
+            fireballShader.Apply();
             Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.31f, 0, 0f);
 
             // Draw a pure white overlay over the fireball if instructed.

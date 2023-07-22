@@ -3,6 +3,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -140,15 +141,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Vector2 scale = Vector2.One * Projectile.width * Projectile.scale * 0.2f;
             Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
-            var blackHoleShader = GameShaders.Misc[$"{Mod.Name}:BlackHoleShader"];
-            blackHoleShader.Shader.Parameters["spriteSize"].SetValue(scale);
-            blackHoleShader.Shader.Parameters["blackHoleRadius"].SetValue(scale.X * 0.5f);
-            blackHoleShader.Shader.Parameters["spiralFadeSharpness"].SetValue(6.6f);
-            blackHoleShader.Shader.Parameters["spiralSpinSpeed"].SetValue(7f);
-            blackHoleShader.Shader.Parameters["transformation"].SetValue(Matrix.CreateScale(1f, Projectile.width / (float)Projectile.height, 1f));
-            blackHoleShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"));
-            blackHoleShader.UseOpacity(Projectile.Opacity);
+            var blackHoleShader = ShaderManager.GetShader("BlackHoleShader");
+            blackHoleShader.TrySetParameter("spriteSize", scale);
+            blackHoleShader.TrySetParameter("blackHoleRadius", scale.X * 0.5f);
+            blackHoleShader.TrySetParameter("spiralFadeSharpness", 6.6f);
+            blackHoleShader.TrySetParameter("spiralSpinSpeed", 7f);
+            blackHoleShader.TrySetParameter("generalOpacity", Projectile.Opacity);
+            blackHoleShader.TrySetParameter("transformation", Matrix.CreateScale(1f, Projectile.width / (float)Projectile.height, 1f));
+            blackHoleShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1);
             blackHoleShader.Apply();
+
             Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.Orange * Projectile.Opacity, Projectile.rotation, pixel.Size() * 0.5f, scale, 0, 0f);
 
             Main.spriteBatch.SetBlendState(BlendState.Additive);
@@ -176,16 +178,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Texture2D bloomTex = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
 
                 float squish = 0.21f;
-                float rot = particle.Velocity.ToRotation();
+                float rotation = particle.Velocity.ToRotation();
                 Vector2 origin = tex.Size() * 0.5f;
                 Vector2 scale = new(baseScale - baseScale * squish * 0.3f, baseScale * squish);
                 float properBloomSize = tex.Height / (float)bloomTex.Height;
 
                 Vector2 drawPosition = particle.Center - Main.screenPosition;
 
-                Main.spriteBatch.Draw(bloomTex, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity * 0.8f, rot, bloomTex.Size() * 0.5f, scale * properBloomSize * 2f, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(tex, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity, rot, origin, scale * 1.1f, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(tex, drawPosition, null, Color.White * particle.Opacity * Projectile.Opacity * 0.9f, rot, origin, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(bloomTex, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity * 0.8f, rotation, bloomTex.Size() * 0.5f, scale * properBloomSize * 2f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(tex, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity, rotation, origin, scale * 1.1f, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(tex, drawPosition, null, Color.White * particle.Opacity * Projectile.Opacity * 0.9f, rotation, origin, scale, SpriteEffects.None, 0f);
             }
         }
 

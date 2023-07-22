@@ -1,21 +1,9 @@
 sampler uImage0 : register(s0);
-sampler uImage1 : register(s1);
-float3 uColor;
-float3 uSecondaryColor;
-float uOpacity : register(C0);
-float uSaturation;
-float uCircularRotation;
-float uRotation;
-float uTime;
-float4 uSourceRect;
-float2 uWorldPosition;
-float uDirection;
-float3 uLightSource;
-float2 uImageSize0;
-float2 uImageSize1;
-float2 overallImageSize;
+
+bool flip;
+float orientationRotation;
+float spinRotation;
 matrix uWorldViewProjection;
-float4 uShaderSpecificData;
 
 struct VertexShaderInput
 {
@@ -35,10 +23,10 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
 {
     VertexShaderOutput output = (VertexShaderOutput) 0;
     float2 coords = input.Coordinates - 0.5;
-    float rotationSine = sin(uSaturation);
-    float rotationCosine = sin(uSaturation + 1.57);
-    float rotationOriginSine = sin(uCircularRotation);
-    float rotationOriginCosine = sin(uCircularRotation + 1.57);
+    float rotationSine = sin(orientationRotation);
+    float rotationCosine = sin(orientationRotation + 1.57);
+    float rotationOriginSine = sin(spinRotation);
+    float rotationOriginCosine = sin(spinRotation + 1.57);
     float2x2 rotationMatrix = float2x2(rotationCosine, -rotationSine, rotationSine, rotationCosine);
     float2x2 circularRotationMatrix = float2x2(rotationOriginCosine, -rotationOriginSine, rotationOriginSine, rotationOriginCosine);
     float2x2 scalingMatrix = float2x2(3, 0, 0, 1);
@@ -59,11 +47,9 @@ float4 PixelFunction(VertexShaderOutput input) : COLOR0
     float2 updatedCoords = input.Coordinates;
     
     // Adjust for horizontal rotation.
-    if (uDirection == -1)
+    if (flip)
         updatedCoords.y = 1 - updatedCoords.y;
-    float4 baseColor = tex2D(uImage0, updatedCoords);
-    
-    return baseColor * input.Color;
+    return tex2D(uImage0, updatedCoords) * input.Color;
 }
 
 technique Technique1

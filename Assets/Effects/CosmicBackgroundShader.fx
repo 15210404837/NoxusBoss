@@ -1,22 +1,10 @@
 sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
-float3 uColor;
-float3 uSecondaryColor;
-float uOpacity;
-float uSaturation;
-float uRotation;
-float4 uSourceRect;
-float2 uWorldPosition;
-float uDirection;
-float3 uLightSource;
-float2 uImageSize0;
-float2 uImageSize1;
-float4 uShaderSpecificData;
+
 float zoom;
 float scrollSpeedFactor;
 float brightness;
-float uTime;
-float2 uImage0Size;
+float globalTime;
 float3 frontStarColor;
 float3 backStarColor;
 
@@ -40,7 +28,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float volumetricLayerFade = 1.0;
     for (int i = 0; i < 12; i++)
     {
-        float time = uTime / volumetricLayerFade;
+        float time = globalTime / volumetricLayerFade;
         float2 p = coords * zoom;
         p.y += 1.5;
 

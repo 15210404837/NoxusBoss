@@ -5,11 +5,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.Shaders;
 
 namespace NoxusBoss.Core.Graphics.Primitives
 {
-    public class PrimitiveTrailCopy
+    public class PrimitiveTrail3D
     {
         internal Matrix? PerspectiveMatrixMultiplier;
 
@@ -32,10 +31,10 @@ namespace NoxusBoss.Core.Graphics.Primitives
         public static BasicEffect BaseEffect
         {
             get;
-            private set;
+            internal set;
         }
 
-        public PrimitiveTrailCopy(VertexWidthFunction widthFunction, VertexColorFunction colorFunction, VertexOffsetFunction offsetFunction = null, bool useSmoothening = true, ManagedShader specialShader = null)
+        public PrimitiveTrail3D(VertexWidthFunction widthFunction, VertexColorFunction colorFunction, VertexOffsetFunction offsetFunction = null, bool useSmoothening = true, ManagedShader specialShader = null)
         {
             if (widthFunction is null || colorFunction is null)
                 throw new NullReferenceException($"In order to create a primitive trail, a non-null {(widthFunction is null ? "width" : "color")} function must be specified.");
@@ -206,15 +205,18 @@ namespace NoxusBoss.Core.Graphics.Primitives
 
         public void SpecifyPerspectiveMatrixMultiplier(Matrix m) => PerspectiveMatrixMultiplier = m;
 
-        public void Draw(IEnumerable<Vector2> originalPositions, Vector2 generalOffset, int totalTrailPoints, float? directionOverride = null) => DrawPrims(originalPositions, generalOffset, totalTrailPoints, false, directionOverride);
+        public void Draw(IEnumerable<Vector2> originalPositions, Vector2 startingPoint, int totalTrailPoints, float? directionOverride = null) => DrawPrims(originalPositions, startingPoint, totalTrailPoints, directionOverride);
 
-        private void DrawPrims(IEnumerable<Vector2> originalPositions, Vector2 generalOffset, int totalTrailPoints, bool pixelated, float? directionOverride = null)
+        private void DrawPrims(IEnumerable<Vector2> originalPositions, Vector2 startingPoint, int totalTrailPoints, float? directionOverride = null)
         {
             if (originalPositions.Count() <= 2)
                 return;
 
             originalPositions = originalPositions.Where(p => p != Vector2.Zero);
-            List<Vector2> trailPoints = GetTrailPoints(originalPositions, generalOffset, totalTrailPoints);
+
+            // Apply transformations to the original positions.
+            int positionCount = originalPositions.Count();
+            List<Vector2> trailPoints = GetTrailPoints(originalPositions, -Main.screenPosition, totalTrailPoints);
 
             // A trail with only one point or less has nothing to connect to, and therefore, can't make a trail.
             if (trailPoints.Count <= 2)
@@ -228,10 +230,12 @@ namespace NoxusBoss.Core.Graphics.Primitives
             if (trailPoints.All(point => point == trailPoints[0]))
                 return;
 
-            DrawPrimsFromVertexData(GetVerticesFromTrailPoints(trailPoints, directionOverride), GetIndicesFromTrailPoints(trailPoints.Count), pixelated);
+            Vector2 screenCenter = Main.screenPosition + new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f;
+            Vector2 offset = (startingPoint - screenCenter) * new Vector2(1f, -1f);
+            DrawPrimsFromVertexData(GetVerticesFromTrailPoints(trailPoints, directionOverride), GetIndicesFromTrailPoints(trailPoints.Count), offset);
         }
 
-        internal void DrawPrimsFromVertexData(List<VertexPositionColorTexture> vertices, List<short> triangleIndices, bool pixelated)
+        internal void DrawPrimsFromVertexData(List<VertexPositionColorTexture> vertices, List<short> triangleIndices, Vector2 offset)
         {
             if (triangleIndices.Count % 6 != 0 || vertices.Count <= 3)
                 return;
@@ -244,7 +248,13 @@ namespace NoxusBoss.Core.Graphics.Primitives
 
             if (SpecialShader != null)
             {
-                SpecialShader.TrySetParameter("uWorldViewProjection", view * projection);
+                // This is necessary to ensure that the coordinates have the correct origin point for whatever linear transformation is desired, with the first vertex being at <0, 0>.
+                // If this isn't done undesirable effects may happen, such as a rotation matrix just spinning the primitives around instead of rotating them around the first vertex.
+                Matrix world = Matrix.CreateTranslation(-vertices[0].Position.X, -vertices[0].Position.Y, 0f);
+
+                Matrix fuck = world * projection * view;
+                SpecialShader.TrySetParameter("uWorldViewProjection", fuck);
+                SpecialShader.TrySetParameter("uCorrectionOffset", offset / new Vector2(Main.screenWidth, Main.screenHeight) * Main.GameViewMatrix.Zoom * 2f);
                 SpecialShader.Apply();
             }
             else

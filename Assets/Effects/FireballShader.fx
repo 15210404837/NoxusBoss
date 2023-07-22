@@ -1,32 +1,13 @@
 ﻿sampler uImage0 : register(s0);
-
-texture sampleTexture2;
-sampler2D NoiseMap = sampler_state
-{
-    texture = <sampleTexture2>;
-    magfilter = LINEAR;
-    minfilter = LINEAR;
-    mipfilter = LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
-texture sampleTexture3;
-sampler2D NoiseMap2 = sampler_state
-{
-    texture = <sampleTexture3>;
-    magfilter = LINEAR;
-    minfilter = LINEAR;
-    mipfilter = LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
+sampler uImage1 : register(s1);
+sampler uImage2 : register(s2);
 
 float3 mainColor;
 float2 resolution;
 float speed;
 float zoom;
 float dist;
-float time;
+float globalTime;
 float opacity;
 
 float4 PixelShaderFunction(float2 coords : TEXCOORD0) : COLOR0
@@ -59,7 +40,7 @@ float4 PixelShaderFunction(float2 coords : TEXCOORD0) : COLOR0
     float2 blownUpUV = float2(-blownUpUVY * blowUpSize * 0.5 + coords.x * (1 + blownUpUVY * blowUpSize), -blownUpUVX * blowUpSize * 0.5 + coords.y * (1 + blownUpUVX * blowUpSize));
 
     // Get the texture coords from the modified coords.
-    float noiseAmount = tex2D(NoiseMap, float2(blownUpUV.x, blownUpUV.y + time * speed)).r;
+    float noiseAmount = tex2D(uImage1, float2(blownUpUV.x, blownUpUV.y + globalTime * speed)).r;
     float finalNoiseAmount = noiseAmount;
     
     // Modify the opacity by the noisemap.
@@ -67,8 +48,8 @@ float4 PixelShaderFunction(float2 coords : TEXCOORD0) : COLOR0
     mainOpacity /= finalNoiseAmount;
     
     // Modify the color by the opacity, toned down and clamped to allow for more of the main color to show.
-    float2 noiseCoords = coords * 0.1 + float2(0, time * speed * 0.5);
-    float3 color = (mainColor - tex2D(NoiseMap2, noiseCoords).r) * clamp(pow(mainOpacity, 0.5), 0, 2.7);
+    float2 noiseCoords = coords * 0.1 + float2(0, globalTime * speed * 0.5);
+    float3 color = (mainColor - tex2D(uImage2, noiseCoords).r) * clamp(pow(mainOpacity, 0.5), 0, 2.7);
     
     // Multiply the final color by a provided opacity.
     return float4(color, 1) * opacity;

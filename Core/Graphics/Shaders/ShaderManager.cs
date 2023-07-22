@@ -1,26 +1,30 @@
-﻿using System.IO;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Core.Graphics;
 using ReLogic.Content;
-using Terraria;
+using System.IO;
+using System.Linq;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
-using Terraria.ID;
+using Terraria;
 using Terraria.ModLoader;
+using Terraria.Graphics.Shaders;
+using Microsoft.Xna.Framework;
+using Terraria.ID;
 
-namespace NoxusBoss.Assets
+namespace NoxusBoss.Core.Graphics.Shaders
 {
-    public class ShaderAutoloader : ModSystem
+    public class ShaderManager : ModSystem
     {
+        private static Dictionary<string, ManagedShader> shaders;
+
         public override void OnModLoad()
         {
+            // Don't attempt to load shaders on servers.
             if (Main.netMode == NetmodeID.Server)
                 return;
 
+            shaders = new();
             foreach (var path in Mod.GetFileNames().Where(f => f.Contains("Assets/Effects/")))
             {
                 // Ignore paths inside of the compiler directory.
@@ -30,10 +34,10 @@ namespace NoxusBoss.Assets
                 string shaderName = Path.GetFileNameWithoutExtension(path);
                 string clearedPath = Path.Combine(Path.GetDirectoryName(path), shaderName).Replace(@"\", @"/");
                 Ref<Effect> shader = new(Mod.Assets.Request<Effect>(clearedPath, AssetRequestMode.ImmediateLoad).Value);
-                GameShaders.Misc[$"{Mod.Name}:{shaderName}"] = new MiscShaderData(shader, "AutoloadPass");
+                SetShader(shaderName, shader);
             }
 
-            // This is kind of hideous but I'm not sure how to best handle these screen shaders. Perhaps some marker in the file name?
+            // This is kind of hideous but I'm not sure how to best handle these screen shaders. Perhaps some marker in the file name or a dedicated folder?
             Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/Effects/LocalizedDistortionShader", AssetRequestMode.ImmediateLoad).Value);
             Filters.Scene["NoxusBoss:NoxusEggSky"] = new Filter(new NoxusEggScreenShaderData(s, "AutoloadPass"), EffectPriority.VeryHigh);
 
@@ -58,5 +62,9 @@ namespace NoxusBoss.Assets
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"] = new Filter(telegraphShader, EffectPriority.VeryHigh);
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"].Load();
         }
+
+        public static ManagedShader GetShader(string name) => shaders[name];
+
+        public static void SetShader(string name, Ref<Effect> newShaderData) => shaders[name] = new(newShaderData);
     }
 }

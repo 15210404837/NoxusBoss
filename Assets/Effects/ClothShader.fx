@@ -1,25 +1,9 @@
 sampler uImage0 : register(s0);
-sampler uImage1 : register(s1);
-sampler uImage2 : register(s2);
-sampler uImage3 : register(s3);
-float3 uColor;
-float3 uSecondaryColor;
-float uOpacity;
-float uSaturation;
-float uRotation;
-float uTime;
-float4 uSourceRect;
-float2 uWorldPosition;
-float uDirection;
-float3 uLightSource;
-float2 uImageSize0;
-float2 uImageSize1;
-float2 uImageSize2;
-matrix uWorldViewProjection;
-float4 uShaderSpecificData;
 
 float brightnessPower;
+float3 lightDirection;
 float2 pixelationZoom;
+matrix uWorldViewProjection;
 
 struct VertexShaderInput
 {
@@ -51,7 +35,7 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float3 baseColor = tex2D(uImage0, round(input.TextureCoordinates / pixelationZoom) * pixelationZoom);
-    float brightness = pow(saturate(dot(uLightSource, normalize(input.Normal))), brightnessPower);
+    float brightness = pow(saturate(dot(lightDirection, normalize(input.Normal))), brightnessPower);
     return float4(baseColor * brightness, 1);
 }
 

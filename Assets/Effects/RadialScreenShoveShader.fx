@@ -21,6 +21,8 @@ float4 uSourceRect;
 float2 uZoom;
 float4 uShaderSpecificData;
 
+// !!! Screen shader, do not delete the above parameters !!!
+
 float blurPower;
 float distortionPower;
 float2 distortionCenter;

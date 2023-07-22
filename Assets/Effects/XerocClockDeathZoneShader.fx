@@ -21,6 +21,8 @@ float4 uSourceRect;
 float2 uZoom;
 float4 uShaderSpecificData;
 
+// !!! Screen shader, do not delete the above parameters !!!
+
 float2 clockCenter;
 
 float InverseLerp(float from, float to, float x)

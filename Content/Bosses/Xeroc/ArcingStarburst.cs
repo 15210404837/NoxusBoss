@@ -30,7 +30,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 13;
         }
-        
+
         public override void SetDefaults()
         {
             Projectile.width = 22;

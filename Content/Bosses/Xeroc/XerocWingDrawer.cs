@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using Terraria;
 using CalamityMod;
 using Terraria.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.Shaders;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -77,9 +78,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             gd.Clear(Color.Transparent);
 
             // Prepare the afterimage psychedelic shader.
-            var afterimageShader = GameShaders.Misc["NoxusBoss:XerocPsychedelicAfterimageShader"];
-            afterimageShader.Shader.Parameters["uScreenResolution"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-            afterimageShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
+            var afterimageShader = ShaderManager.GetShader("XerocPsychedelicAfterimageShader");
+            afterimageShader.TrySetParameter("uScreenResolution", new Vector2(Main.screenWidth, Main.screenHeight));
+            afterimageShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
             afterimageShader.Apply();
 
             Main.spriteBatch.Draw(AfterimageTarget.Target, Vector2.Zero, Color.White);

@@ -2,6 +2,7 @@
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
 using ReLogic.Content;
 using Terraria;
@@ -216,23 +217,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Color circleColor = Projectile.GetAlpha(Color.Coral) * CircleOpacity;
 
             // Apply the shader.
-            var magicCircleShader = GameShaders.Misc[$"{Mod.Name}:MagicCircleShader"];
+            var magicCircleShader = ShaderManager.GetShader("MagicCircleShader");
             CalamityUtils.CalculatePerspectiveMatricies(out Matrix viewMatrix, out Matrix projectionMatrix);
-            magicCircleShader.UseSaturation(Projectile.rotation);
-            magicCircleShader.Shader.Parameters["uDirection"].SetValue((float)Projectile.direction);
-            magicCircleShader.Shader.Parameters["uCircularRotation"].SetValue(-Main.GlobalTimeWrappedHourly * 3.87f);
-            magicCircleShader.Shader.Parameters["uImageSize0"].SetValue(magicCircle.Size());
-            magicCircleShader.Shader.Parameters["overallImageSize"].SetValue(magicCircle.Size());
-            magicCircleShader.Shader.Parameters["uWorldViewProjection"].SetValue(viewMatrix * projectionMatrix);
+            magicCircleShader.TrySetParameter("orientationRotation", Projectile.rotation);
+            magicCircleShader.TrySetParameter("spinRotation", -Main.GlobalTimeWrappedHourly * 3.87f);
+            magicCircleShader.TrySetParameter("flip", Projectile.direction == -1f);
+            magicCircleShader.TrySetParameter("uWorldViewProjection", viewMatrix * projectionMatrix);
             magicCircleShader.Apply();
 
             // Draw the circle.
             Main.EntitySpriteDraw(magicCircle, circleDrawPosition, null, circleColor with { A = 0 }, 0f, magicCircle.Size() * 0.5f, circleScale, 0, 0);
 
             // Draw the eye on top of the circle.
-            magicCircleShader.Shader.Parameters["uImageSize0"].SetValue(magicCircleCenter.Size());
-            magicCircleShader.Shader.Parameters["overallImageSize"].SetValue(magicCircleCenter.Size());
-            magicCircleShader.Shader.Parameters["uCircularRotation"].SetValue(0f);
+            magicCircleShader.TrySetParameter("spinRotation", 0f);
             magicCircleShader.Apply();
             Main.EntitySpriteDraw(magicCircleCenter, circleDrawPosition, null, Color.Lerp(circleColor, Color.White * CircleOpacity, 0.5f) with { A = 0 }, 0f, magicCircleCenter.Size() * 0.5f, circleScale, 0, 0);
         }

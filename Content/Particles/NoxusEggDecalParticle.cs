@@ -2,6 +2,7 @@
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -41,10 +42,11 @@ namespace NoxusBoss.Content.Particles
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 
-            float contrastInterpolant = GetLerpValue(0.6f, 0.8f, Opacity, true);
             Color c = Color * Opacity;
-            var backgroundShader = GameShaders.Misc[$"{NoxusBoss.Instance.Name}:MonochromeShader"];
-            backgroundShader.Shader.Parameters["contrastInterpolant"].SetValue(contrastInterpolant);
+            float contrastInterpolant = GetLerpValue(0.6f, 0.8f, Opacity, true);
+
+            var backgroundShader = ShaderManager.GetShader("MonochromeShader");
+            backgroundShader.TrySetParameter("contrastInterpolant", contrastInterpolant);
             backgroundShader.Apply();
 
             Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEgg").Value;

@@ -8,6 +8,7 @@ using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
@@ -224,20 +225,19 @@ namespace NoxusBoss.Content.Bosses.Noxus
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Vector2 textureArea = screenArea / pixel.Size();
 
-            var backgroundShader = GameShaders.Misc[$"{NoxusBoss.Instance.Name}:NoxusBackgroundShader"];
-            backgroundShader.Shader.Parameters["luminanceThreshold"].SetValue(0.9f);
-            backgroundShader.Shader.Parameters["uIntensity"].SetValue(localIntensity * Clamp(intensity, SkyIntensityOverride, 1f));
-            backgroundShader.Shader.Parameters["scrollSpeed"].SetValue(scrollSpeed);
-            backgroundShader.Shader.Parameters["noiseZoom"].SetValue(noiseZoom * 0.16f);
-            backgroundShader.Shader.Parameters["flashCoordsOffset"].SetValue(FlashNoiseOffset);
-            backgroundShader.Shader.Parameters["flashPosition"].SetValue(FlashPosition);
-            backgroundShader.Shader.Parameters["flashIntensity"].SetValue(FlashIntensity);
-            backgroundShader.Shader.Parameters["flashNoiseZoom"].SetValue(0.02f);
-            backgroundShader.Shader.Parameters["uScreenPosition"].SetValue(Main.screenPosition);
-            backgroundShader.SetShaderTexture(texture ?? ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"));
-            backgroundShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 2);
-            backgroundShader.UseColor(color);
-            backgroundShader.UseShaderSpecificData(new Vector4(screenArea.Y, screenArea.X, 0f, 0f));
+            var backgroundShader = ShaderManager.GetShader("NoxusBackgroundShader");
+            backgroundShader.TrySetParameter("luminanceThreshold", 0.9f);
+            backgroundShader.TrySetParameter("intensity", localIntensity * Clamp(intensity, SkyIntensityOverride, 1f));
+            backgroundShader.TrySetParameter("scrollSpeed", scrollSpeed);
+            backgroundShader.TrySetParameter("noiseZoom", noiseZoom * 0.16f);
+            backgroundShader.TrySetParameter("flashCoordsOffset", FlashNoiseOffset);
+            backgroundShader.TrySetParameter("flashPosition", FlashPosition);
+            backgroundShader.TrySetParameter("flashIntensity", FlashIntensity);
+            backgroundShader.TrySetParameter("flashNoiseZoom", 0.02f);
+            backgroundShader.TrySetParameter("screenPosition", Main.screenPosition);
+            backgroundShader.TrySetParameter("backgroundColor", color);
+            backgroundShader.SetTexture(texture ?? ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1);
+            backgroundShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 2);
             backgroundShader.Apply();
             Main.spriteBatch.Draw(pixel, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, textureArea, 0, 0f);
         }
@@ -248,12 +248,11 @@ namespace NoxusBoss.Content.Bosses.Noxus
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Vector2 textureArea = screenArea / pixel.Size();
 
-            var gd = Main.instance.GraphicsDevice;
-            var backgroundShader = GameShaders.Misc[$"{NoxusBoss.Instance.Name}:DarkFogShader"];
-            gd.Textures[1] = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Smudges").Value;
-            backgroundShader.Shader.Parameters["uTargetPosition"].SetValue((fogCenter - Main.screenPosition) / screenArea);
-            backgroundShader.Shader.Parameters["uScreenResolution"].SetValue(screenArea);
-            backgroundShader.Shader.Parameters["fogTravelDistance"].SetValue(fogSpreadDistance);
+            var backgroundShader = ShaderManager.GetShader("DarkFogShader");
+            backgroundShader.TrySetParameter("fogCenter", (fogCenter - Main.screenPosition) / screenArea);
+            backgroundShader.TrySetParameter("screenResolution", screenArea);
+            backgroundShader.TrySetParameter("fogTravelDistance", fogSpreadDistance);
+            backgroundShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Smudges"), 1);
             backgroundShader.Apply();
             Main.spriteBatch.Draw(pixel, Vector2.Zero, null, FogColor * fogIntensity, 0f, Vector2.Zero, textureArea, 0, 0f);
         }

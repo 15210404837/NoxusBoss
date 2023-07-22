@@ -2,8 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,7 +12,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public class SuperLightBeam : ModProjectile, IDrawPixelatedPrims
     {
-        public PrimitiveTrail LaserDrawer
+        public PrimitiveTrailCopy LaserDrawer
         {
             get;
             private set;
@@ -88,13 +89,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
-        public override void Kill(int timeLeft) => LaserDrawer?.BaseEffect?.Dispose();
-
         public void Draw()
         {
             // Initialize the laser drawer.
-            var laserShader = GameShaders.Misc[$"{Mod.Name}:XerocStarLaserShader"];
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, laserShader);
+            var laserShader = ShaderManager.GetShader("XerocStarLaserShader");
+            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
 
             // Draw a backglow for the laser.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
@@ -121,9 +120,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.75f,
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
-            laserShader.Shader.Parameters["uStretchReverseFactor"].SetValue(0.15f);
-            laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"));
-            LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
+            laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 1);
+            LaserDrawer.Draw(laserPoints, -Main.screenPosition, 41);
         }
 
         public override bool ShouldUpdatePosition() => false;

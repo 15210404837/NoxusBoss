@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
@@ -342,20 +343,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Color sunColor = Color.Lerp(Color.Orange, Color.Red, 0.32f);
                 float sunScale = ManualSunScale * Intensity * 67f;
 
-                Effect fireballShader = GameShaders.Misc[$"NoxusBoss:FireballShader"].Shader;
-                fireballShader.Parameters["sampleTexture2"].SetValue(noise);
-                fireballShader.Parameters["sampleTexture3"].SetValue(pixel);
-                fireballShader.Parameters["mainColor"].SetValue(sunColor.ToVector3() * ManualSunOpacity);
-                fireballShader.Parameters["resolution"].SetValue(new Vector2(200f, 200f) * ManualSunScale);
-                fireballShader.Parameters["speed"].SetValue(0.56f);
-                fireballShader.Parameters["time"].SetValue(Main.GlobalTimeWrappedHourly);
-                fireballShader.Parameters["opacity"].SetValue(ManualSunOpacity * realisticStarInterpolant * Intensity * 0.9f);
-                fireballShader.CurrentTechnique.Passes[0].Apply();
+                var fireballShader = ShaderManager.GetShader("FireballShader");
+                fireballShader.TrySetParameter("mainColor", sunColor.ToVector3() * ManualSunOpacity);
+                fireballShader.TrySetParameter("resolution", new Vector2(200f, 200f) * ManualSunScale);
+                fireballShader.TrySetParameter("speed", 0.56f);
+                fireballShader.TrySetParameter("zoom", 0.0004f);
+                fireballShader.TrySetParameter("dist", 60f);
+                fireballShader.TrySetParameter("opacity", ManualSunOpacity * realisticStarInterpolant * Intensity * 0.9f);
+                fireballShader.SetTexture(noise, 1);
+                fireballShader.SetTexture(pixel, 2);
 
                 Main.spriteBatch.Draw(pixel, sunDrawPosition, null, Color.White, 0f, pixel.Size() * 0.5f, sunScale, SpriteEffects.None, 0f);
 
-                fireballShader.Parameters["mainColor"].SetValue(Color.Wheat.ToVector3() * ManualSunOpacity * realisticStarInterpolant * 0.5f);
-                fireballShader.CurrentTechnique.Passes[0].Apply();
+                fireballShader.TrySetParameter("mainColor", Color.Wheat.ToVector3() * ManualSunOpacity * realisticStarInterpolant * 0.5f);
+                fireballShader.Apply();
                 Main.spriteBatch.Draw(pixel, sunDrawPosition, null, Color.White, 0f, pixel.Size() * 0.5f, sunScale, SpriteEffects.None, 0f);
             }
         }

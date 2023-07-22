@@ -21,6 +21,8 @@ float4 uSourceRect;
 float2 uZoom;
 float4 uShaderSpecificData;
 
+// !!! Screen shader, do not delete the above parameters !!!
+
 float2 splitCenters[10];
 float splitSlopes[10];
 float2 splitDirections[10];

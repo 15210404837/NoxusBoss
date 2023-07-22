@@ -2,6 +2,7 @@
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
@@ -74,13 +75,13 @@ namespace NoxusBoss.Content.Bosses.Noxus
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             DrawData explosionDrawData = new(ExplosionNoiseTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * Projectile.Opacity);
 
-            var shader = GameShaders.Misc[$"{Mod.Name}:ShockwaveShader"];
-            shader.UseColor(DetermineExplosionColor());
-            shader.Shader.Parameters["screenSize"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-            shader.Shader.Parameters["explosionDistance"].SetValue(Radius * Projectile.scale * 0.5f);
-            shader.Shader.Parameters["projectilePosition"].SetValue(Projectile.Center - Main.screenPosition);
-            shader.Shader.Parameters["shockwaveOpacityFactor"].SetValue(Projectile.Opacity);
-            shader.Apply();
+            var shockwaveShader = ShaderManager.GetShader("ShockwaveShader");
+            shockwaveShader.TrySetParameter("shockwaveColor", DetermineExplosionColor().ToVector3());
+            shockwaveShader.TrySetParameter("screenSize", new Vector2(Main.screenWidth, Main.screenHeight));
+            shockwaveShader.TrySetParameter("explosionDistance", Radius * Projectile.scale * 0.5f);
+            shockwaveShader.TrySetParameter("projectilePosition", Projectile.Center - Main.screenPosition);
+            shockwaveShader.TrySetParameter("shockwaveOpacityFactor", Projectile.Opacity);
+            shockwaveShader.Apply();
             explosionDrawData.Draw(Main.spriteBatch);
 
             Main.spriteBatch.ExitShaderRegion();

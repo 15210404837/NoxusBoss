@@ -4,6 +4,7 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -94,19 +95,19 @@ namespace NoxusBoss.Core.Graphics
 
         internal static void DrawMetaballs(MetaballDrawLayerType layerType)
         {
-            var metaballShader = GameShaders.Misc[$"{NoxusBoss.Instance.Name}:MetaballEdgeShader"];
+            var metaballShader = ShaderManager.GetShader("MetaballEdgeShader");
             var gd = Main.instance.GraphicsDevice;
 
             foreach (Metaball metaball in metaballs.Where(m => m.DrawContext == layerType))
             {
                 for (int i = 0; i < metaball.LayerTargets.Count; i++)
                 {
-                    gd.Textures[1] = metaball.Layers[i];
-                    metaballShader.Shader.Parameters["layerSize"].SetValue(metaball.Layers[i].Size());
-                    metaballShader.Shader.Parameters["screenSize"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-                    metaballShader.Shader.Parameters["layerOffset"].SetValue(metaball.FixedInPlace ? Vector2.Zero : Main.screenPosition / new Vector2(Main.screenWidth, Main.screenHeight));
-                    metaballShader.Shader.Parameters["edgeColor"].SetValue(metaball.EdgeColor.ToVector4());
-                    metaballShader.Shader.Parameters["singleFrameScreenOffset"].SetValue((Main.screenLastPosition - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight));
+                    metaballShader.TrySetParameter("layerSize", metaball.Layers[i].Size());
+                    metaballShader.TrySetParameter("screenSize", new Vector2(Main.screenWidth, Main.screenHeight));
+                    metaballShader.TrySetParameter("layerOffset", metaball.FixedInPlace ? Vector2.Zero : Main.screenPosition / new Vector2(Main.screenWidth, Main.screenHeight));
+                    metaballShader.TrySetParameter("edgeColor", metaball.EdgeColor.ToVector4());
+                    metaballShader.TrySetParameter("singleFrameScreenOffset", (Main.screenLastPosition - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight));
+                    metaballShader.SetTexture(metaball.Layers[i], 1);
                     metaballShader.Apply();
 
                     Main.spriteBatch.Draw(metaball.LayerTargets[i].Target, Main.screenLastPosition - Main.screenPosition, Color.White);

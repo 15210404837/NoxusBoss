@@ -1,21 +1,10 @@
 sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
-float3 uColor;
-float3 uSecondaryColor;
-float uOpacity;
-float uSaturation;
-float uRotation;
-float uTime;
-float4 uSourceRect;
-float2 uWorldPosition;
-float uDirection;
-float3 uLightSource;
-float2 uImageSize0;
-float2 uImageSize1;
-matrix uWorldViewProjection;
-float4 uShaderSpecificData;
 
 bool flipY;
+float generalOpacity;
+float globalTime;
+matrix uWorldViewProjection;
 
 struct VertexShaderInput
 {
@@ -57,7 +46,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Create some noisy opaque blotches in the inner part of the trail.
     if (coords.y > 0.15 && coords.y < 0.85)
     {
-        float minOpacity = pow(1 - sin(coords.y * 3.141) + tex2D(uImage1, coords * 1.1 + float2(uTime * -0.6, 0)).r * 2.2, 0.2);
+        float minOpacity = pow(1 - sin(coords.y * 3.141) + tex2D(uImage1, coords * 1.1 + float2(globalTime * -0.6, 0)).r * 2.2, 0.2);
         bloomOpacity += pow(coords.x, 0.3) * lerp(0.04, 0.4, minOpacity);
     }
     
@@ -66,7 +55,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
         bloomOpacity *= (1 - coords.x * 2) * innerBrightnessIntensity + 1;
     float4 finalColor = color * lerp(0, 3.6, bloomOpacity * pow(coords.x, 0.1)) * pow(1 - coords.x, 1.1);
     
-    return finalColor * uOpacity;
+    return finalColor * generalOpacity;
 }
 
 technique Technique1

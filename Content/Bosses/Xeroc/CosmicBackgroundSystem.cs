@@ -3,6 +3,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
@@ -108,14 +109,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             Main.instance.GraphicsDevice.Textures[1] = KalisetFractal.Target;
 
-            MiscShaderData backgroundShader = GameShaders.Misc["NoxusBoss:CosmicBackgroundShader"];
-            backgroundShader.Shader.Parameters["uTime"].SetValue(Main.GlobalTimeWrappedHourly);
-            backgroundShader.Shader.Parameters["zoom"].SetValue(0.11f);
-            backgroundShader.Shader.Parameters["brightness"].SetValue(intensity);
-            backgroundShader.Shader.Parameters["scrollSpeedFactor"].SetValue(0.0015f);
-            backgroundShader.Shader.Parameters["frontStarColor"].SetValue(Color.Lerp(Color.Coral, Color.White, DifferentStarsInterpolant).ToVector3() * 0.5f);
-            backgroundShader.Shader.Parameters["backStarColor"].SetValue(Color.Lerp(Color.Yellow, Color.Pink, DifferentStarsInterpolant).ToVector3() * 0.4f);
-            backgroundShader.Apply();
+            var cosmicShader = ShaderManager.GetShader("CosmicBackgroundShader");
+            cosmicShader.TrySetParameter("zoom", 0.11f);
+            cosmicShader.TrySetParameter("brightness", intensity);
+            cosmicShader.TrySetParameter("scrollSpeedFactor", 0.0015f);
+            cosmicShader.TrySetParameter("frontStarColor", Color.Lerp(Color.Coral, Color.White, DifferentStarsInterpolant).ToVector3() * 0.5f);
+            cosmicShader.TrySetParameter("backStarColor", Color.Lerp(Color.Yellow, Color.Pink, DifferentStarsInterpolant).ToVector3() * 0.4f);
+            cosmicShader.Apply();
 
             Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Vector2.Zero, null, Color.White * 0.25f, 0f, Vector2.Zero, scale, 0, 0f);
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();

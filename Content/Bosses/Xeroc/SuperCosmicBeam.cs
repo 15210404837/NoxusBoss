@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -11,7 +13,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public class SuperCosmicBeam : ModProjectile, IDrawPixelatedPrims
     {
-        public PrimitiveTrail LaserDrawer
+        public PrimitiveTrailCopy LaserDrawer
         {
             get;
             private set;
@@ -88,14 +90,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
-        public override void Kill(int timeLeft) => LaserDrawer?.BaseEffect?.Dispose();
-
         public void Draw()
         {
             // Initialize the laser drawer.
             var gd = Main.instance.GraphicsDevice;
-            var laserShader = GameShaders.Misc[$"{Mod.Name}:XerocCosmicLaserShader"];
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, laserShader);
+            var laserShader = ShaderManager.GetShader("XerocCosmicLaserShader");
+            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
 
             // Draw the laser after the telegraph is no longer necessary.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
@@ -107,12 +107,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.75f,
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
-            laserShader.Shader.Parameters["uStretchReverseFactor"].SetValue(0.15f);
-            laserShader.Shader.Parameters["scrollSpeedFactor"].SetValue(0.8f);
-            laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"));
-            laserShader.SetShaderTexture2(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
-            gd.Textures[3] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise").Value;
-
+            laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
+            laserShader.TrySetParameter("scrollSpeedFactor", 0.8f);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"), 1);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 3);
             LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
         }
 

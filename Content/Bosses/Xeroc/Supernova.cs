@@ -3,6 +3,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;
@@ -77,17 +78,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.spriteBatch.EnterShaderRegion();
 
             Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-            var fireballShader = GameShaders.Misc[$"{Mod.Name}:SupernovaShader"];
-            fireballShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"));
-            fireballShader.SetShaderTexture2(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"));
-            fireballShader.UseColor(Color.Orange);
-            fireballShader.UseSecondaryColor(Color.Red);
-            fireballShader.UseOpacity(Projectile.Opacity);
-            fireballShader.Shader.Parameters["scale"].SetValue(Projectile.scale);
-            fireballShader.Shader.Parameters["brightness"].SetValue(GetLerpValue(20f, 4f, Projectile.scale, true) * 2f + 1.25f);
+            var fireballShader = ShaderManager.GetShader("SupernovaShader");
+            fireballShader.TrySetParameter("supernovaColor1", Color.Orange.ToVector3());
+            fireballShader.TrySetParameter("supernovaColor2", Color.Red.ToVector3());
+            fireballShader.TrySetParameter("generalOpacity", Projectile.Opacity);
+            fireballShader.TrySetParameter("scale", Projectile.scale);
+            fireballShader.TrySetParameter("brightness", GetLerpValue(20f, 4f, Projectile.scale, true) * 2f + 1.25f);
+            fireballShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
+            fireballShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 2);
+            fireballShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void"), 3);
             fireballShader.Apply();
 
-            Main.instance.GraphicsDevice.Textures[3] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void").Value;
             Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.42f, Projectile.rotation, pixel.Size() * 0.5f, Projectile.scale * 400f, 0, 0f);
 
             Main.spriteBatch.ExitShaderRegion();

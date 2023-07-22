@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -60,13 +61,12 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 
             // Prepare the overlay shader and supply it with tile information.
-            var gd = Main.instance.GraphicsDevice;
-            var shader = GameShaders.Misc[$"{Mod.Name}:TileOverlayShader"];
-            shader.Shader.Parameters["uZoom"].SetValue(new Vector2(1.15f, 1.27f));
-            shader.Shader.Parameters["tileOverlayOffset"].SetValue((Main.sceneTilePos - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight) * -1f);
-            shader.Shader.Parameters["inversionZoom"].SetValue(Main.GameViewMatrix.Zoom);
-            gd.Textures[1] = Main.instance.tileTarget;
-            gd.Textures[2] = Main.instance.blackTarget;
+            var shader = ShaderManager.GetShader("TileOverlayShader");
+            shader.TrySetParameter("zoom", new Vector2(1.15f, 1.27f));
+            shader.TrySetParameter("tileOverlayOffset", (Main.sceneTilePos - Main.screenPosition) / new Vector2(Main.screenWidth, Main.screenHeight) * -1f);
+            shader.TrySetParameter("inversionZoom", Main.GameViewMatrix.Zoom);
+            shader.SetTexture(Main.instance.tileTarget, 1);
+            shader.SetTexture(Main.instance.blackTarget, 2);
             shader.Apply();
 
             Main.spriteBatch.Draw(OverlayableTarget.Target, Vector2.Zero, Color.White);

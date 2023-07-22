@@ -11,6 +11,7 @@ using System.Linq;
 using ReLogic.Content;
 using Terraria.Graphics.Shaders;
 using Microsoft.Xna.Framework.Content;
+using NoxusBoss.Core.Graphics.Shaders;
 
 namespace NoxusBoss.Assets
 {
@@ -93,7 +94,7 @@ namespace NoxusBoss.Assets
                     }
                 };
                 easyXnb.Start();
-                easyXnb.WaitForExit();
+                easyXnb.WaitForExit(3000);
                 easyXnb.Kill();
             }
 
@@ -107,15 +108,15 @@ namespace NoxusBoss.Assets
                 File.Copy(compiledXnbPath, originalXnbPath);
                 File.Delete(compiledXnbPath);
 
-                // Finally, load the new XNB into the game's shaders that reference it.
+                // Finally, load the new XNB's shader data into the game's managed wrappers that reference it.
                 string shaderPathInCompilerDirectory = compilerDirectory + Path.GetFileName(shaderPath);
                 File.Delete(shaderPathInCompilerDirectory);
                 Main.QueueMainThreadAction(() =>
                 {
                     ContentManager tempManager = new(Main.instance.Content.ServiceProvider, EffectsPath);
                     string assetName = Path.GetFileNameWithoutExtension(originalXnbPath);
-                    Effect newEffect = tempManager.Load<Effect>(assetName);
-                    UpdateShaderReferences(compiledXnbPath, newEffect);
+                    Effect recompiledEffect = tempManager.Load<Effect>(assetName);
+                    ShaderManager.SetShader(Path.GetFileNameWithoutExtension(compiledXnbPath), new(recompiledEffect));
 
                     Main.NewText($"Shader with the file name '{Path.GetFileName(shaderPath)}' has been successfully recompiled.");
                 });
@@ -133,38 +134,6 @@ namespace NoxusBoss.Assets
                 return;
 
             CompilingFiles.Enqueue(e.FullPath);
-        }
-
-        private void UpdateShaderReferences(string file, Effect recompiledEffect)
-        {
-            var modEffects = Mod.Assets.GetLoadedAssets().OfType<Asset<Effect>>().ToDictionary(x => x.Name);
-            string key = @"Assets\Effects\" + Path.GetFileNameWithoutExtension(file);
-
-            Effect originalEffect = null;
-            if (modEffects.TryGetValue(key, out Asset<Effect> effect))
-                originalEffect = effect.Value;
-
-            // Go through reflection hell to acquire all of the shader references.
-            FieldInfo shaderRefField = typeof(ShaderData).GetField("_shader", BindingFlags.Instance | BindingFlags.NonPublic);
-            FieldInfo ownValueField = modEffects[key].GetType().GetField("ownValue", BindingFlags.Instance | BindingFlags.NonPublic);
-            ownValueField.SetValue(modEffects[key], recompiledEffect);
-
-            FieldInfo shaderDataField = typeof(ArmorShaderDataSet).GetField("_shaderData", BindingFlags.Instance | BindingFlags.NonPublic);
-            var armorShaderDataList = (List<ArmorShaderData>)typeof(ArmorShaderDataSet).GetField("_shaderData", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(GameShaders.Armor);
-            var hairShaderDataList = (List<HairShaderData>)typeof(HairShaderDataSet).GetField("_shaderData", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(GameShaders.Hair);
-            var miscShaderDataList = GameShaders.Misc.Values.ToList();
-            var filtersShaderDataList = ((Dictionary<string, Filter>)typeof(EffectManager<Filter>).GetField("_effects", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Filters.Scene)).Values.ToList().Select(x => (ScreenShaderData)typeof(Filter).GetField("_shader", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(x));
-
-            int entriesFound = 0;
-            var shaderData = armorShaderDataList.Cast<ShaderData>().Union(hairShaderDataList.Cast<ShaderData>()).Union(miscShaderDataList.Cast<ShaderData>()).Union(filtersShaderDataList.Cast<ShaderData>());
-            foreach (var shaderDataShader in shaderData)
-            {
-                if (originalEffect != null && shaderDataShader.Shader == originalEffect)
-                {
-                    entriesFound++;
-                    shaderRefField.SetValue(shaderDataShader, new Ref<Effect>(recompiledEffect));
-                }
-            }
         }
     }
 }

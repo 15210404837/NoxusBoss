@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items;
 using NoxusBoss.Content.MainMenuThemes;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -117,7 +118,7 @@ namespace NoxusBoss.Core.Graphics
             if (backgroundIntensity > 1f)
                 backgroundIntensity = 1f;
 
-            var galaxyShader = GameShaders.Misc[$"NoxusBoss:GalaxyShader"];
+            var galaxyShader = ShaderManager.GetShader("GalaxyShader");
             var gd = Main.instance.GraphicsDevice;
             Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/MoltenNoise").Value;
             Vector2 scalingFactor = new(gd.DisplayMode.Width / 2560f, gd.DisplayMode.Height / 1440f);
@@ -140,7 +141,7 @@ namespace NoxusBoss.Core.Graphics
                     M21 = Lerp(0.2f, 0.3f, RandomFloat(ref seed)),
                     M22 = Lerp(0.7f, 1.3f, RandomFloat(ref seed))
                 };
-                galaxyShader.Shader.Parameters["transformation"].SetValue(transformation);
+                galaxyShader.TrySetParameter("transformation", transformation);
                 galaxyShader.Apply();
 
                 float baseGalaxyScale = Lerp(0.16f, 1.1f, Pow(RandomFloat(ref seed), 6.3f)) * backgroundIntensity;

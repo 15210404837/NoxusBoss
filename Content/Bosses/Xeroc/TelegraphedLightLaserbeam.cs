@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;
@@ -14,13 +16,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public class TelegraphedLightLaserbeam : ModProjectile, IDrawPixelatedPrims
     {
-        public PrimitiveTrail TelegraphDrawer
+        public PrimitiveTrailCopy TelegraphDrawer
         {
             get;
             private set;
         }
 
-        public PrimitiveTrail LaserDrawer
+        public PrimitiveTrailCopy LaserDrawer
         {
             get;
             private set;
@@ -139,19 +141,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
-        public override void Kill(int timeLeft)
-        {
-            TelegraphDrawer?.BaseEffect?.Dispose();
-            LaserDrawer?.BaseEffect?.Dispose();
-        }
-
         public void Draw()
         {
             // Initialize primitive drawers.
-            var telegraphShader = GameShaders.Misc[$"{Mod.Name}:SideStreakShader"];
-            var laserShader = GameShaders.Misc[$"{Mod.Name}:XerocStarLaserShader"];
-            TelegraphDrawer ??= new(TelegraphWidthFunction, TelegraphColorFunction, null, telegraphShader);
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, laserShader);
+            var telegraphShader = ShaderManager.GetShader("SideStreakShader");
+            var laserShader = ShaderManager.GetShader("XerocStarLaserShader");
+            TelegraphDrawer ??= new(TelegraphWidthFunction, TelegraphColorFunction, null, true, telegraphShader);
+            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
 
             // Draw the telegraph at first.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
@@ -166,6 +162,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Projectile.Center + laserDirection * MaxLaserLength * 0.8f,
                     Projectile.Center + laserDirection * MaxLaserLength,
                 };
+                telegraphShader.TrySetParameter("generalOpacity", Projectile.Opacity);
                 TelegraphDrawer.Draw(telegraphPoints, -Main.screenPosition, 33);
                 return;
             }
@@ -180,8 +177,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.8f,
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
-            laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"));
-            LaserDrawer.Draw(laserPoints, -Projectile.velocity * LaserLengthFactor * 150f - Main.screenPosition, 45);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
+            LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
         }
 
         public override bool ShouldUpdatePosition() => false;

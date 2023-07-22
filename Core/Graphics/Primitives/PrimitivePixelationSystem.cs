@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -61,8 +62,8 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Matrix.Identity);
 
             // Apply the pixelation shader.
-            var pixelationShader = GameShaders.Misc[$"{Mod.Name}:PixelationShader"];
-            pixelationShader.Shader.Parameters["pixelationFactor"].SetValue(Vector2.One * 3f / PixelationTarget.Target.Size());
+            var pixelationShader = ShaderManager.GetShader("PixelationShader");
+            pixelationShader.TrySetParameter("pixelationFactor", Vector2.One * 3f / PixelationTarget.Target.Size());
             pixelationShader.Apply();
 
             Main.spriteBatch.Draw(PixelationTarget.Target, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);

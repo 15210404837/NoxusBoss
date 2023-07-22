@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
@@ -97,8 +98,8 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
             // Apply the blur shader.
-            var blurShader = GameShaders.Misc[$"{Mod.Name}:HorizontalBlurShader"];
-            blurShader.Shader.Parameters["maxBlurOffset"].SetValue(maxBlurOffset);
+            var blurShader = ShaderManager.GetShader("HorizontalBlurShader");
+            blurShader.TrySetParameter("maxBlurOffset", maxBlurOffset);
             blurShader.Apply();
 
             Main.spriteBatch.Draw(noxusEggTexture, noxusDrawPosition, null, noxusDrawColor, 0f, noxusEggTexture.Size() * 0.5f, eggScale, 0, 0f);

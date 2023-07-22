@@ -2,25 +2,13 @@ sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
 sampler uImage2 : register(s2);
 sampler uImage3 : register(s3);
-float3 uColor;
-float3 uSecondaryColor;
-float uOpacity;
-float uSaturation;
-float uRotation;
-float uTime;
-float4 uSourceRect;
-float2 uWorldPosition;
-float uDirection;
-float3 uLightSource;
-float2 uImageSize0;
-float2 uImageSize1;
-float2 uImageSize2;
-matrix uWorldViewProjection;
-float2 uCorrectionOffset;
-float4 uShaderSpecificData;
+
+float globalTime;
 float uStretchReverseFactor;
 float scrollOffset;
 float scrollSpeedFactor;
+float2 uCorrectionOffset;
+matrix uWorldViewProjection;
 
 struct VertexShaderInput
 {
@@ -64,7 +52,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float adjustedCompletionRatio = coords.x * stretchReverseFactor + scrollOffset;
     
     // Read the fade map as a streak.
-    float time = uTime * stretchReverseFactor * scrollSpeedFactor * 4;
+    float time = globalTime * stretchReverseFactor * scrollSpeedFactor * 4;
     float bloomFadeout = pow(sin(coords.y * 3.141), 0.92);
     float4 fadeMapColor1 = tex2D(uImage1, float2(frac(adjustedCompletionRatio * 20 - time * 1.6), coords.y));
     float4 fadeMapColor2 = tex2D(uImage1, float2(frac(adjustedCompletionRatio * 7 - time * 0.8), coords.y * 0.5));

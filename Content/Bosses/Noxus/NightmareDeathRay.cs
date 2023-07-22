@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -14,7 +15,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NightmareDeathRay : ModProjectile
     {
-        public PrimitiveTrailCopy BeamDrawer
+        public PrimitiveTrail3D BeamDrawer
         {
             get;
             set;
@@ -213,14 +214,13 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public void DrawLaser()
         {
-            var laserShader = GameShaders.Misc[$"{Mod.Name}:NoxusLaserShader"];
-            BeamDrawer ??= new PrimitiveTrailCopy(WidthFunction, ColorFunction, null, true, laserShader);
+            var laserShader = ShaderManager.GetShader("NoxusLaserShader");
+            BeamDrawer ??= new PrimitiveTrail3D(WidthFunction, ColorFunction, null, true, laserShader);
 
-            laserShader.UseSaturation(4326f);
-            laserShader.UseOpacity(0.5f);
-            laserShader.UseColor(Color.Lerp(Color.White, Color.Black, DarknessInterpolant * 0.4f + 0.16f) * Pow(Projectile.scale, 1.8f));
-            laserShader.SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/MoltenNoise"));
-            laserShader.Shader.Parameters["uStretchReverseFactor"].SetValue(0.3f);
+            laserShader.TrySetParameter("scrollSpeed", 0.5f);
+            laserShader.TrySetParameter("uStretchReverseFactor", 0.3f);
+            laserShader.TrySetParameter("electricityBaseColor", (Color.Lerp(Color.White, Color.Black, DarknessInterpolant * 0.4f + 0.16f) * Pow(Projectile.scale, 1.8f)).ToVector3());
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/MoltenNoise"), 1);
 
             List<Vector2> points = new();
             for (int i = 0; i <= 32; i++)

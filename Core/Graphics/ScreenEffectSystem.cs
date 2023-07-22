@@ -1,6 +1,7 @@
 ﻿using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
@@ -250,9 +251,9 @@ namespace NoxusBoss.Core.Graphics
                 screenTarget1.SwapToRenderTarget();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
-                var aberrationShader = GameShaders.Misc[$"{NoxusBoss.Instance.Name}:ChromaticAberrationShader"];
-                aberrationShader.Shader.Parameters["uIntensity"].SetValue((1f - AberrationLifetimeRatio) * AberrationIntensity);
-                aberrationShader.Shader.Parameters["impactPoint"].SetValue(AberrationPosition / new Vector2(Main.screenWidth, Main.screenHeight));
+                var aberrationShader = ShaderManager.GetShader("ChromaticAberrationShader");
+                aberrationShader.TrySetParameter("splitIntensity", (1f - AberrationLifetimeRatio) * AberrationIntensity);
+                aberrationShader.TrySetParameter("impactPoint", AberrationPosition / new Vector2(Main.screenWidth, Main.screenHeight));
                 aberrationShader.Apply();
 
                 Main.spriteBatch.Draw(AberrationTarget, Vector2.Zero, Color.White);

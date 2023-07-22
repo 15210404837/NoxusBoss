@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;
@@ -111,25 +112,24 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            var gd = Main.instance.GraphicsDevice;
-            var portalShader = GameShaders.Misc[$"{Mod.Name}:PortalShader"];
-            portalShader.Shader.Parameters["circleStretchInterpolant"].SetValue(Projectile.scale);
-            portalShader.Shader.Parameters["transformation"].SetValue(Matrix.CreateScale(3f, 1f, 1f));
-            portalShader.Shader.Parameters["aimDirection"].SetValue(Projectile.velocity);
-            portalShader.Shader.Parameters["edgeFadeInSharpness"].SetValue(20.3f);
-            portalShader.Shader.Parameters["aheadCircleMoveBackFactor"].SetValue(0.67f);
-            portalShader.Shader.Parameters["aheadCircleZoomFactor"].SetValue(0.9f);
+            var portalShader = ShaderManager.GetShader("PortalShader");
+            portalShader.TrySetParameter("generalColor", Color.White.ToVector3());
+            portalShader.TrySetParameter("circleStretchInterpolant", Projectile.scale);
+            portalShader.TrySetParameter("transformation", Matrix.CreateScale(3f, 1f, 1f));
+            portalShader.TrySetParameter("aimDirection", Projectile.velocity);
+            portalShader.TrySetParameter("edgeFadeInSharpness", 20.3f);
+            portalShader.TrySetParameter("aheadCircleMoveBackFactor", 0.67f);
+            portalShader.TrySetParameter("aheadCircleZoomFactor", 0.9f);
+            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/StarDistanceLookup"), 1);
+            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2);
+            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void"), 3);
+            portalShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/Perlin"), 4);
+            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/Spikes"), 5);
             portalShader.Apply();
 
             Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Pixel").Value;
             Vector2 textureArea = Projectile.Size / pixel.Size() * MaxScale;
             textureArea *= 1f + Cos(Main.GlobalTimeWrappedHourly * 15f + Projectile.identity) * 0.012f;
-
-            gd.Textures[1] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/StarDistanceLookup").Value;
-            gd.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise").Value;
-            gd.Textures[3] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void").Value;
-            gd.Textures[4] = ModContent.Request<Texture2D>("Terraria/Images/Misc/Perlin").Value;
-            gd.Textures[5] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/Spikes").Value;
 
             spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.MediumPurple), Projectile.rotation, pixel.Size() * 0.5f, textureArea, 0, 0f);
         }
