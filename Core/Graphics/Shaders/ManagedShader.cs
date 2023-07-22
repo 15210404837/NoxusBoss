@@ -90,6 +90,13 @@ namespace NoxusBoss.Core.Graphics.Shaders
                 return true;
             }
 
+            // Colors.
+            if (value is Color c)
+            {
+                parameter.SetValue(c.ToVector3());
+                return true;
+            }
+
             // Vector4s.
             if (value is Vector4 v4)
             {

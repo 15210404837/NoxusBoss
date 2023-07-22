@@ -235,7 +235,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             backgroundShader.TrySetParameter("flashIntensity", FlashIntensity);
             backgroundShader.TrySetParameter("flashNoiseZoom", 0.02f);
             backgroundShader.TrySetParameter("screenPosition", Main.screenPosition);
-            backgroundShader.TrySetParameter("backgroundColor", color);
+            backgroundShader.TrySetParameter("backgroundColor", color.ToVector3());
             backgroundShader.SetTexture(texture ?? ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1);
             backgroundShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 2);
             backgroundShader.Apply();

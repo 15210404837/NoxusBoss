@@ -58,12 +58,12 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float flash = tex2D(uImage2, coords * noiseZoom + flashCoordsOffset) * intensity * flashIntensity / pow(flashDissipation, 8.1);
     finalColor = finalColor * (1 + flash) + flash * 0.02;
     
-    return finalColor * 50;
+    return finalColor;
 }
 technique Technique1
 {
     pass AutoloadPass
     {
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        PixelShader = compile ps_3_0 PixelShaderFunction();
     }
 }

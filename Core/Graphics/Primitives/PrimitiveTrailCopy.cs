@@ -11,7 +11,28 @@ namespace NoxusBoss.Core.Graphics.Primitives
 {
     public class PrimitiveTrailCopy
     {
-        internal Matrix? PerspectiveMatrixMultiplier;
+        public struct VertexPosition2DColor : IVertexType
+        {
+            public Vector2 Position;
+            public Color Color;
+            public Vector2 TextureCoordinates;
+            public VertexDeclaration VertexDeclaration => _vertexDeclaration;
+
+            private static readonly VertexDeclaration _vertexDeclaration = new(new VertexElement[]
+            {
+                new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 0),
+                new VertexElement(8, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+                new VertexElement(12, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
+            });
+            public VertexPosition2DColor(Vector2 position, Color color, Vector2 textureCoordinates)
+            {
+                Position = position;
+                Color = color;
+                TextureCoordinates = textureCoordinates;
+            }
+        }
+
+        internal Matrix? PerspectiveMatrixOverride;
 
         public delegate float VertexWidthFunction(float completionRatio);
 
@@ -53,14 +74,44 @@ namespace NoxusBoss.Core.Graphics.Primitives
                 VertexColorEnabled = true,
                 TextureEnabled = false
             };
+            UpdateBaseEffect(out _, out _);
         }
 
-        public void UpdateBaseEffect(out Matrix effectProjection, out Matrix effectView)
+        public static void UpdateBaseEffect(out Matrix effectProjection, out Matrix effectView)
         {
-            effectView = PerspectiveMatrixMultiplier ?? Matrix.Identity;
-            effectProjection = Matrix.CreateOrthographic(Main.screenWidth / Main.GameViewMatrix.Zoom.X, Main.screenHeight / Main.GameViewMatrix.Zoom.Y, 0f, 1000f);
+            // Screen bounds.
+            int height = Main.instance.GraphicsDevice.Viewport.Height;
+
+            Vector2 zoom = Main.GameViewMatrix.Zoom;
+            Matrix zoomScaleMatrix = Matrix.CreateScale(zoom.X, zoom.Y, 1f);
+
+            // Get a matrix that aims towards the Z axis (these calculations are relative to a 2D world).
+            effectView = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up);
+
+            // Offset the matrix to the appropriate position.
+            effectView *= Matrix.CreateTranslation(0f, -height, 0f);
+
+            // Flip the matrix around 180 degrees.
+            effectView *= Matrix.CreateRotationZ(Pi);
+
+            // Account for the inverted gravity effect.
+            if (Main.LocalPlayer.gravDir == -1f)
+                effectView *= Matrix.CreateScale(1f, -1f, 1f) * Matrix.CreateTranslation(0f, height, 0f);
+
+            // And account for the current zoom.
+            effectView *= zoomScaleMatrix;
+
+            effectProjection = Matrix.CreateOrthographicOffCenter(0f, Main.screenWidth * zoom.X, 0f, Main.screenHeight * zoom.Y, 0f, 1f) * zoomScaleMatrix;
             BaseEffect.View = effectView;
             BaseEffect.Projection = effectProjection;
+        }
+
+        public static void UpdatePixelatedBaseEffect(out Matrix effectProjection, out Matrix effectView)
+        {
+            effectProjection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, -1, 1);
+            effectView = Matrix.Identity;
+            BaseEffect.Projection = effectProjection;
+            BaseEffect.View = effectView;
         }
 
         public List<Vector2> GetTrailPoints(IEnumerable<Vector2> originalPositions, Vector2 generalOffset, int totalTrailPoints)
@@ -145,11 +196,10 @@ namespace NoxusBoss.Core.Graphics.Primitives
             return points;
         }
 
-        public List<VertexPositionColorTexture> GetVerticesFromTrailPoints(List<Vector2> trailPoints, float? directionOverride = null)
+        public List<VertexPosition2DColor> GetVerticesFromTrailPoints(List<Vector2> trailPoints, float? directionOverride = null)
         {
-            List<VertexPositionColorTexture> vertices = new();
+            List<VertexPosition2DColor> vertices = new();
 
-            Vector2 start = trailPoints[0];
             for (int i = 0; i < trailPoints.Count - 1; i++)
             {
                 float completionRatio = i / (float)trailPoints.Count;
@@ -172,8 +222,8 @@ namespace NoxusBoss.Core.Graphics.Primitives
                 // What this is doing, at its core, is defining a rectangle based on two triangles.
                 // These triangles are defined based on the width of the strip at that point.
                 // The resulting rectangles combined are what make the trail itself.
-                vertices.Add(new VertexPositionColorTexture(new(currentPosition - sideDirection * widthAtVertex, 0f), vertexColor, leftCurrentTextureCoord));
-                vertices.Add(new VertexPositionColorTexture(new(currentPosition + sideDirection * widthAtVertex, 0f), vertexColor, rightCurrentTextureCoord));
+                vertices.Add(new VertexPosition2DColor(currentPosition - sideDirection * widthAtVertex, vertexColor, leftCurrentTextureCoord));
+                vertices.Add(new VertexPosition2DColor(currentPosition + sideDirection * widthAtVertex, vertexColor, rightCurrentTextureCoord));
             }
 
             return vertices;
@@ -204,8 +254,15 @@ namespace NoxusBoss.Core.Graphics.Primitives
             return indices.ToList();
         }
 
-        public void SpecifyPerspectiveMatrixMultiplier(Matrix m) => PerspectiveMatrixMultiplier = m;
+        public void SpecifyPerspectiveMatrix(Matrix m) => PerspectiveMatrixOverride = m;
 
+        /// <summary>
+        /// Call this to draw primitives to the base RenderTarget.
+        /// </summary>
+        /// <param name="originalPositions"></param>
+        /// <param name="generalOffset"></param>
+        /// <param name="totalTrailPoints"></param>
+        /// <param name="directionOverride"></param>
         public void Draw(IEnumerable<Vector2> originalPositions, Vector2 generalOffset, int totalTrailPoints, float? directionOverride = null) => DrawPrims(originalPositions, generalOffset, totalTrailPoints, false, directionOverride);
 
         private void DrawPrims(IEnumerable<Vector2> originalPositions, Vector2 generalOffset, int totalTrailPoints, bool pixelated, float? directionOverride = null)
@@ -231,12 +288,18 @@ namespace NoxusBoss.Core.Graphics.Primitives
             DrawPrimsFromVertexData(GetVerticesFromTrailPoints(trailPoints, directionOverride), GetIndicesFromTrailPoints(trailPoints.Count), pixelated);
         }
 
-        internal void DrawPrimsFromVertexData(List<VertexPositionColorTexture> vertices, List<short> triangleIndices, bool pixelated)
+        internal void DrawPrimsFromVertexData(List<VertexPosition2DColor> vertices, List<short> triangleIndices, bool pixelated)
         {
             if (triangleIndices.Count % 6 != 0 || vertices.Count <= 3)
                 return;
 
-            UpdateBaseEffect(out Matrix projection, out Matrix view);
+            Matrix projection;
+            Matrix view;
+
+            if (pixelated)
+                UpdatePixelatedBaseEffect(out projection, out view);
+            else
+                UpdateBaseEffect(out projection, out view);
 
             Main.instance.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             Main.instance.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
@@ -244,8 +307,9 @@ namespace NoxusBoss.Core.Graphics.Primitives
 
             if (SpecialShader != null)
             {
-                SpecialShader.TrySetParameter("uWorldViewProjection", view * projection);
+                SpecialShader.TrySetParameter("uWorldViewProjection", PerspectiveMatrixOverride ?? view * projection);
                 SpecialShader.Apply();
+                PerspectiveMatrixOverride = null;
             }
             else
                 BaseEffect.CurrentTechnique.Passes[0].Apply();
