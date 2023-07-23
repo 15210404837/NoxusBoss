@@ -459,7 +459,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocPortalCast") with { Volume = 1.2f };
 
-        public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/QuasarLoopSound") with { Volume = 1.2f, IsLooped = true };
+        public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/QuasarLoopSound") with { Volume = 1.2f };
 
         public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
 
@@ -533,6 +533,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Disable rain.
             CalamityMod.CalamityMod.StopRain();
+            for (int i = 0; i < Main.maxRain; i++)
+                Main.rain[i].active = false;
 
             // Reset things every frame.
             NPC.damage = NPC.defDamage;

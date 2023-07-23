@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using CalamityMod;
 using CalamityMod.Events;
@@ -274,16 +275,92 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_EnterPhase2()
         {
-            // TODO -- Implement this.
-            if (AttackTimer == 1f)
-            {
-                TeleportTo(Target.Center - Vector2.UnitY * 350f);
-                Target.Calamity().GeneralScreenShakePower = 12f;
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+            int backgroundEnterTime = 60;
+            int sliceTelegraphTime = 41;
+            int daggerShootCount = 14;
+            int blackHoleSummonDelay = 60;
+            ref float daggerShootTimer = ref NPC.ai[2];
+            ref float daggerShootCounter = ref NPC.ai[3];
 
-                SelectNextAttack();
+            int daggerShootRate = (int)(60f - daggerShootCounter * 4.5f);
+            float daggerSpacing = Remap(daggerShootTimer, 0f, 7f, 216f, 141f);
+            if (daggerShootRate < 32)
+                daggerShootRate = 32;
+
+            // Enter the background and dissapear.
+            if (AttackTimer < backgroundEnterTime)
+            {
+                ZPosition = MathF.Max(ZPosition, Remap(AttackTimer, 0f, backgroundEnterTime, 0f, 11f));
+                NPC.Opacity = GetLerpValue(backgroundEnterTime - 1f, backgroundEnterTime * 0.56f, AttackTimer, true);
+                KaleidoscopeInterpolant = 1f - NPC.Opacity;
+                NPC.dontTakeDamage = true;
             }
+            else
+                daggerShootTimer++;
+
+            // Release daggers.
+            if (daggerShootTimer >= daggerShootRate && daggerShootCounter < daggerShootCount)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Vector2 sliceDirection = Vector2.UnitY.RotatedBy(TwoPi * Main.rand.Next(6) / 6f);
+                    Vector2 perpendicularDirection = sliceDirection.RotatedBy(PiOver2);
+                    Vector2 daggerSpawnPosition = Target.Center - sliceDirection * 600f;
+                    for (float d = 0f; d < 1300f; d += daggerSpacing * (d < 84f ? 0.18f : 1f))
+                    {
+                        float hueInterpolant = d / 1800f;
+                        Vector2 daggerStartingVelocity = sliceDirection * 16f;
+                        Vector2 left = daggerSpawnPosition - perpendicularDirection * d;
+                        Vector2 right = daggerSpawnPosition + perpendicularDirection * d;
+
+                        NewProjectileBetter(left, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), DaggerDamage, 0f, -1, sliceTelegraphTime, hueInterpolant);
+                        NewProjectileBetter(right, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), DaggerDamage, 0f, -1, sliceTelegraphTime, hueInterpolant);
+                    }
+                }
+
+                daggerShootTimer = 0f;
+                daggerShootCounter++;
+                NPC.netUpdate = true;
+            }
+
+            // Keep the attack timer locked while the daggers are in the process of being fired.
+            if (daggerShootCounter < daggerShootCount && AttackTimer >= backgroundEnterTime)
+                AttackTimer = backgroundEnterTime;
+
+            // Summon three black holes above the target after the dagger patterns have passed.
+            if (AttackTimer == backgroundEnterTime + blackHoleSummonDelay)
+            {
+                Vector2 blackHoleSpawnPoint = Target.Center - Vector2.UnitY * 240f;
+                SoundEngine.PlaySound(ExplosionTeleportSound);
+                SoundEngine.PlaySound(SupernovaSound);
+                ScreenEffectSystem.SetFlashEffect(blackHoleSpawnPoint, 2f, 150);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    NewProjectileBetter(blackHoleSpawnPoint, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    for (int i = 0; i < 2; i++)
+                        NewProjectileBetter(blackHoleSpawnPoint, (TwoPi * i / 2f).ToRotationVector2() * 3f - Vector2.UnitY * 20f, ModContent.ProjectileType<Quasar>(), QuasarDamage, 0f);
+                }
+            }
+
+            if (AttackTimer >= backgroundEnterTime + blackHoleSummonDelay + Supernova.Lifetime)
+            {
+                KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant - 0.006f, 0.37f, 1f);
+                if (KaleidoscopeInterpolant <= 0.37f)
+                    SelectNextAttack();
+            }
+
+            // Update universal hands.
+            DefaultUniversalHandMotion();
+
+            // Calculate the background hover position.
+            float hoverHorizontalWaveSine = Sin(TwoPi * AttackTimer / 106f);
+            Vector2 hoverDestination = Target.Center + new Vector2(Target.velocity.X * 3f, ZPosition * -27f - 180f);
+            hoverDestination.X += hoverHorizontalWaveSine * ZPosition * 36f;
+
+            // Stay above the target while in the background.
+            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.084f);
+            NPC.velocity = Vector2.Lerp(NPC.velocity, (hoverDestination - NPC.Center) * 0.07f, 0.095f);
         }
 
         public void DoBehavior_EnterPhase3()

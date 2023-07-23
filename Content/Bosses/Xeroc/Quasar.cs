@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -43,6 +45,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public ref float Time => ref Projectile.ai[0];
 
+        public ref float ReboundCountdown => ref Projectile.ai[1];
+
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
         public override void SetStaticDefaults()
@@ -52,7 +56,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetDefaults()
         {
-            Projectile.width = 850;
+            Projectile.width = 810;
             Projectile.height = 500;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
@@ -77,9 +81,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Accelerate towards the target.
             Player target = Main.player[XerocBoss.Myself.target];
 
-            if (!Projectile.WithinRange(target.Center, 300f))
+            if (ReboundCountdown > 0f)
+            {
+                Projectile.velocity *= 0.99f;
+                ReboundCountdown--;
+            }
+            else if (!Projectile.WithinRange(target.Center, 380f) && Time >= 56f)
             {
                 Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.09f;
+                if (AllProjectilesByID(Projectile.type).Count() >= 2)
+                    force *= 0.43f;
+
                 Projectile.velocity += force;
 
                 // Make the black hole go faster if it's moving away from the target.
@@ -88,7 +100,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Zip towards the target if they're not moving much.
                 if (target.velocity.Length() <= 4f)
-                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 28f, 0.08f);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 22f, 0.08f);
             }
 
             // Enforce a hard limit on the velocity.
@@ -102,7 +114,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Center = energySpawnPosition,
                 Velocity = energyVelocity,
                 Opacity = 1f,
-                DrawColor = Color.Lerp(Color.Yellow, Color.OrangeRed, Main.rand.NextFloat()),
+                DrawColor = Color.Lerp(Color.Lerp(Color.Yellow, Color.OrangeRed, Main.rand.NextFloat()), Color.White, XerocSky.KaleidoscopeInterpolant * 0.9f),
                 Lifetime = 30
             });
 
@@ -131,6 +143,35 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 s.Volume = Projectile.Opacity;
             }
 
+            // Avoid other quasars.
+            float pushForce = 2f;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile otherProj = Main.projectile[i];
+
+                // Short circuits to make the loop as fast as possible
+                if (!otherProj.active || i == Projectile.whoAmI)
+                    continue;
+
+                // If the other projectile is indeed the same owned by the same player and they're too close, nudge them away.
+                bool sameProjType = otherProj.type == Projectile.type;
+                float taxicabDist = Math.Abs(Projectile.position.X - otherProj.position.X) + Math.Abs(Projectile.position.Y - otherProj.position.Y);
+                if (sameProjType && taxicabDist < Projectile.width * 0.9f)
+                {
+                    if (Projectile.position.X < otherProj.position.X)
+                        Projectile.velocity.X -= pushForce;
+                    else
+                        Projectile.velocity.X += pushForce;
+
+                    // Prevent the momentum gained from the pushed quasars serving as a basis for it to slam so quickly into the player that it basically telefrags them.
+                    ReboundCountdown = 27f;
+                    otherProj.ModProjectile<Quasar>().ReboundCountdown = 27f;
+
+                    if (RadialScreenShoveSystem.DistortionTimer <= 0)
+                        RadialScreenShoveSystem.Start((Projectile.Center + otherProj.Center) * 0.5f, 30);
+                }
+            }
+
             Time++;
         }
 
@@ -147,11 +188,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             blackHoleShader.TrySetParameter("spiralFadeSharpness", 6.6f);
             blackHoleShader.TrySetParameter("spiralSpinSpeed", 7f);
             blackHoleShader.TrySetParameter("generalOpacity", Projectile.Opacity);
-            blackHoleShader.TrySetParameter("transformation", Matrix.CreateScale(1f, Projectile.width / (float)Projectile.height, 1f));
+            blackHoleShader.TrySetParameter("transformation", Matrix.CreateScale(1.1f, Projectile.width / (float)Projectile.height, 1f));
             blackHoleShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1);
             blackHoleShader.Apply();
 
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.Orange * Projectile.Opacity, Projectile.rotation, pixel.Size() * 0.5f, scale, 0, 0f);
+            Color quasarColor = Color.Lerp(Color.Orange, Color.Wheat, XerocSky.KaleidoscopeInterpolant);
+            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, quasarColor * Projectile.Opacity, Projectile.rotation, pixel.Size() * 0.5f, scale, 0, 0f);
 
             Main.spriteBatch.SetBlendState(BlendState.Additive);
 

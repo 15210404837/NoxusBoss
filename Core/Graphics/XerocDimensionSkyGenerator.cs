@@ -90,10 +90,14 @@ namespace NoxusBoss.Core.Graphics
 
         public static void DrawBackground(float backgroundIntensity)
         {
-            DrawSkyOverlay(backgroundIntensity);
-            CosmicBackgroundSystem.Draw(backgroundIntensity);
-            DrawSmoke(backgroundIntensity);
-            DrawGalaxies(backgroundIntensity);
+            float kaleidoscopeOverpowerInterpolant = Pow(1f - KaleidoscopeInterpolant, 0.4f);
+            DrawSkyOverlay(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
+            CosmicBackgroundSystem.Draw(backgroundIntensity * Remap(KaleidoscopeInterpolant, 1f, 0.2f, 0.3f, 1f));
+            DrawSmoke(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
+            DrawGalaxies(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
+
+            if (KaleidoscopeInterpolant >= 0.001f)
+                DrawKaleidoscopicBackground(backgroundIntensity * KaleidoscopeInterpolant);
         }
 
         public static void DrawSkyOverlay(float backgroundIntensity)
@@ -172,6 +176,30 @@ namespace NoxusBoss.Core.Graphics
 
                 galaxyPositions.Add(galaxySpawnPosition);
             }
+        }
+
+        public static void DrawKaleidoscopicBackground(float backgroundIntensity)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Matrix.Identity);
+
+            // Apply the kaleidoscope shader.
+            var kaleidoscopeShader = ShaderManager.GetShader("KaleidoscopeShader");
+            kaleidoscopeShader.TrySetParameter("totalSplits", 7f);
+            kaleidoscopeShader.TrySetParameter("distanceBandingFactor", 0f);
+            kaleidoscopeShader.TrySetParameter("animationSpeed", 0.1687f);
+            kaleidoscopeShader.TrySetParameter("greyscaleInterpolant", 1f);
+            kaleidoscopeShader.TrySetParameter("contrastPower", 1.9f);
+            kaleidoscopeShader.TrySetParameter("vignetteStrength", 1.8f);
+            kaleidoscopeShader.TrySetParameter("screenPosition", Main.screenPosition);
+            kaleidoscopeShader.TrySetParameter("zoom", Vector2.One * 0.4f);
+            kaleidoscopeShader.Apply();
+
+            // Draw the pattern.
+            Rectangle screenArea = new(0, -170, 1920, 1250);
+            Texture2D patternTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/BackgroundPattern").Value;
+
+            Main.spriteBatch.Draw(patternTexture, screenArea, Color.White * backgroundIntensity);
         }
     }
 }
