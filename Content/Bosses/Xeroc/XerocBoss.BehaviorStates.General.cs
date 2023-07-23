@@ -276,7 +276,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_EnterPhase2()
         {
             int backgroundEnterTime = 75;
-            int cooldownTime = 300;
+            int cooldownTime = 240;
             int sliceTelegraphTime = 41;
             int daggerShootCount = 14;
             int blackHoleSummonDelay = 60;
@@ -291,7 +291,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Destroy the ripper UI.
             CurveSegment anticipation = new(EasingType.PolyIn, 0f, 50f, 360f, 4);
-            CurveSegment punch = new(EasingType.PolyIn, 0.7f, anticipation.EndingHeight, -anticipation.EndingHeight, 8);
+            CurveSegment punch = new(EasingType.PolyIn, 0.72f, anticipation.EndingHeight, -anticipation.EndingHeight, 17);
 
             float ripperDestructionAnimationCompletion = GetLerpValue(0f, ripperDestructionAnimationTime, AttackTimer - cooldownTime + ripperDestructionAnimationTime, true);
             RipperUIDestructionSystem.FistOffset = PiecewiseAnimation(ripperDestructionAnimationCompletion, anticipation, punch);
