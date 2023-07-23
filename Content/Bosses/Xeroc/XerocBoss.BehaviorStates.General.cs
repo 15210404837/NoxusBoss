@@ -275,26 +275,27 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_EnterPhase2()
         {
-            int backgroundEnterTime = 60;
+            int backgroundEnterTime = 75;
+            int cooldownTime = 300;
             int sliceTelegraphTime = 41;
             int daggerShootCount = 14;
             int blackHoleSummonDelay = 60;
-            int ripperDestructionAnimationTime = 54;
+            int ripperDestructionAnimationTime = 80;
             ref float daggerShootTimer = ref NPC.ai[2];
             ref float daggerShootCounter = ref NPC.ai[3];
 
-            int daggerShootRate = (int)(60f - daggerShootCounter * 4.1f);
+            int daggerShootRate = (int)(60f - daggerShootCounter * 4.6f);
             float daggerSpacing = Remap(daggerShootTimer, 0f, 7f, 216f, 141f);
-            if (daggerShootRate < 38)
-                daggerShootRate = 38;
+            if (daggerShootRate < 35)
+                daggerShootRate = 35;
 
             // Destroy the ripper UI.
             CurveSegment anticipation = new(EasingType.PolyIn, 0f, 50f, 360f, 4);
             CurveSegment punch = new(EasingType.PolyIn, 0.7f, anticipation.EndingHeight, -anticipation.EndingHeight, 8);
 
-            float ripperDestructionAnimationCompletion = GetLerpValue(0f, ripperDestructionAnimationTime, AttackTimer, true);
+            float ripperDestructionAnimationCompletion = GetLerpValue(0f, ripperDestructionAnimationTime, AttackTimer - cooldownTime + ripperDestructionAnimationTime, true);
             RipperUIDestructionSystem.FistOffset = PiecewiseAnimation(ripperDestructionAnimationCompletion, anticipation, punch);
-            RipperUIDestructionSystem.FistOpacity = GetLerpValue(0f, 0.25f, ripperDestructionAnimationCompletion, true);
+            RipperUIDestructionSystem.FistOpacity = GetLerpValue(0f, 0.59f, ripperDestructionAnimationCompletion, true);
             if (!RipperUIDestructionSystem.IsUIDestroyed && ripperDestructionAnimationCompletion >= 1f)
             {
                 RipperUIDestructionSystem.CreateBarDestructionEffects();
@@ -302,7 +303,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Enter the background and dissapear.
-            if (AttackTimer < backgroundEnterTime)
+            if (AttackTimer < backgroundEnterTime + cooldownTime)
             {
                 ZPosition = MathF.Max(ZPosition, Remap(AttackTimer, 0f, backgroundEnterTime, 0f, 11f));
                 NPC.Opacity = GetLerpValue(backgroundEnterTime - 1f, backgroundEnterTime * 0.56f, AttackTimer, true);
@@ -339,11 +340,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Keep the attack timer locked while the daggers are in the process of being fired.
-            if (daggerShootCounter < daggerShootCount && AttackTimer >= backgroundEnterTime)
-                AttackTimer = backgroundEnterTime;
+            if (daggerShootCounter < daggerShootCount && AttackTimer >= backgroundEnterTime + cooldownTime)
+                AttackTimer = backgroundEnterTime + cooldownTime;
 
             // Summon three black holes above the target after the dagger patterns have passed.
-            if (AttackTimer == backgroundEnterTime + blackHoleSummonDelay)
+            if (AttackTimer == backgroundEnterTime + cooldownTime + blackHoleSummonDelay)
             {
                 Vector2 blackHoleSpawnPoint = Target.Center - Vector2.UnitY * 240f;
                 SoundEngine.PlaySound(ExplosionTeleportSound);
@@ -358,7 +359,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
             }
 
-            if (AttackTimer >= backgroundEnterTime + blackHoleSummonDelay + Supernova.Lifetime)
+            if (AttackTimer >= backgroundEnterTime + cooldownTime + blackHoleSummonDelay + Supernova.Lifetime)
             {
                 KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant - 0.006f, 0.37f, 1f);
                 if (KaleidoscopeInterpolant <= 0.37f)

@@ -10,6 +10,7 @@ using MonoMod.RuntimeDetour;
 using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -37,9 +38,25 @@ namespace NoxusBoss.Core.Graphics
             set;
         }
 
-        public static Vector2 RageScreenPosition => new Vector2(CalamityConfig.Instance.RageMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.RageMeterPosY * Main.screenHeight * 0.01f).Floor();
+        public static float MoveToCenterOfScreenInterpolant => Pow(FistOpacity, 2f);
 
-        public static Vector2 AdrenalineScreenPosition => new Vector2(CalamityConfig.Instance.AdrenalineMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.AdrenalineMeterPosY * Main.screenHeight * 0.01f).Floor();
+        public static Vector2 RageScreenPosition
+        {
+            get
+            {
+                Vector2 originalPosition = new Vector2(CalamityConfig.Instance.RageMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.RageMeterPosY * Main.screenHeight * 0.01f).Floor();
+                return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(-100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
+            }
+        }
+
+        public static Vector2 AdrenalineScreenPosition
+        {
+            get
+            {
+                Vector2 originalPosition = new Vector2(CalamityConfig.Instance.AdrenalineMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.AdrenalineMeterPosY * Main.screenHeight * 0.01f).Floor();
+                return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
+            }
+        }
 
         public static readonly SoundStyle RipperDestructionSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/RipperBarDestruction") with { Volume = 1.4f };
 
@@ -87,7 +104,19 @@ namespace NoxusBoss.Core.Graphics
             if (IsUIDestroyed)
                 return;
 
+            Vector2 oldRagePosition = new(CalamityConfig.Instance.RageMeterPosX, CalamityConfig.Instance.RageMeterPosY);
+            Vector2 oldAdrenalinePosition = new(CalamityConfig.Instance.AdrenalineMeterPosX, CalamityConfig.Instance.AdrenalineMeterPosY);
+            CalamityConfig.Instance.RageMeterPosX = RageScreenPosition.X / Main.screenWidth * 100f;
+            CalamityConfig.Instance.RageMeterPosY = RageScreenPosition.Y / Main.screenHeight * 100f;
+            CalamityConfig.Instance.AdrenalineMeterPosX = AdrenalineScreenPosition.X / Main.screenWidth * 100f;
+            CalamityConfig.Instance.AdrenalineMeterPosY = AdrenalineScreenPosition.Y / Main.screenHeight * 100f;
+
             orig(spriteBatch, player);
+
+            CalamityConfig.Instance.RageMeterPosX = oldRagePosition.X;
+            CalamityConfig.Instance.RageMeterPosY = oldRagePosition.Y;
+            CalamityConfig.Instance.AdrenalineMeterPosX = oldAdrenalinePosition.X;
+            CalamityConfig.Instance.AdrenalineMeterPosY = oldAdrenalinePosition.Y;
 
             // Don't bother wasting resources drawing if the fists are invisible.
             if (FistOpacity <= 0f)
@@ -122,13 +151,16 @@ namespace NoxusBoss.Core.Graphics
 
         public static void CreateBarDestructionEffects()
         {
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
             if (!Main.LocalPlayer.Calamity().RageEnabled || !Main.LocalPlayer.Calamity().AdrenalineEnabled)
                 return;
 
             SoundEngine.PlaySound(RipperDestructionSound);
 
-            Vector2 rageBarPositionWorld = RageScreenPosition + Main.screenPosition + new Vector2(85f, 132f) * Main.UIScale;
-            Vector2 adrenalineBarPositionWorld = AdrenalineScreenPosition + Main.screenPosition + new Vector2(85f, 112f) * Main.UIScale;
+            Vector2 rageBarPositionWorld = RageScreenPosition + Main.screenPosition + new Vector2(20f, 4f) * Main.UIScale;
+            Vector2 adrenalineBarPositionWorld = AdrenalineScreenPosition + Main.screenPosition + new Vector2(-20f, 4f) * Main.UIScale;
             List<Vector2> barPositions = new()
             {
                 rageBarPositionWorld,
@@ -164,6 +196,12 @@ namespace NoxusBoss.Core.Graphics
                 smoke = new(adrenalineBarPositionWorld + Main.rand.NextVector2Circular(50f, 18f), smokeVelocity, adrenalineSmokeColor, Color.LightGray, 1.8f, 255f, 0.004f);
                 GeneralParticleHandler.SpawnParticle(smoke);
             }
+
+            // Create destruction gores.
+            for (int i = 1; i <= 4; i++)
+                Gore.NewGore(new EntitySource_WorldEvent(), rageBarPositionWorld + Main.rand.NextVector2Circular(50f, 20f), Main.rand.NextVector2CircularEdge(4f, 4f), ModContent.Find<ModGore>("NoxusBoss", $"RageBar{i}").Type, Main.UIScale * 0.75f);
+            for (int i = 1; i <= 3; i++)
+                Gore.NewGore(new EntitySource_WorldEvent(), adrenalineBarPositionWorld + Main.rand.NextVector2Circular(50f, 20f), Main.rand.NextVector2CircularEdge(4f, 4f), ModContent.Find<ModGore>("NoxusBoss", $"AdrenalineBar{i}").Type, Main.UIScale * 0.75f);
 
             Main.LocalPlayer.Calamity().GeneralScreenShakePower = 15f;
             ScreenEffectSystem.SetChromaticAberrationEffect((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, 1.6f, 45);
