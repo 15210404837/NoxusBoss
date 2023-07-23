@@ -62,7 +62,7 @@ namespace NoxusBoss.Content.Particles
             if (Variant == 2)
                 texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Particles/NoxusFumesDraedonIllusion").Value;
             if (Variant == 3)
-                texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Particles/LaRugaIllusion").Value;
+                texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Particles/NoxusFumesLaRugaIllusion").Value;
 
             Vector2 scale = new(Cbrt(Sin(Main.GlobalTimeWrappedHourly * 6.2f + Direction + Variant)) * 0.07f + Scale, Scale);
 
