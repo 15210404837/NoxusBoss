@@ -497,7 +497,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int IdealFightDuration => SecondsToFrames(270f);
 
-        public static float MaxTimedDRDamageReduction => 0.35f;
+        public static float MaxTimedDRDamageReduction => 0.24f;
 
         public const int DefaultTeleportDelay = 8;
 

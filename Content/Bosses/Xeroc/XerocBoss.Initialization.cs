@@ -132,7 +132,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPC.width = 400;
             NPC.height = 500;
             NPC.defense = 150;
-            NPC.LifeMaxNERB(8000000, 9364000);
+            NPC.LifeMaxNERB(9600000, 11000000);
 
             // That is all. Goodbye.
             // No, I will not entertain Master Mode or the difficulty seeds.

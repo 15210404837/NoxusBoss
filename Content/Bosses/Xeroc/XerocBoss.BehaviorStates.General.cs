@@ -279,13 +279,27 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int sliceTelegraphTime = 41;
             int daggerShootCount = 14;
             int blackHoleSummonDelay = 60;
+            int ripperDestructionAnimationTime = 54;
             ref float daggerShootTimer = ref NPC.ai[2];
             ref float daggerShootCounter = ref NPC.ai[3];
 
-            int daggerShootRate = (int)(60f - daggerShootCounter * 4.5f);
+            int daggerShootRate = (int)(60f - daggerShootCounter * 4.1f);
             float daggerSpacing = Remap(daggerShootTimer, 0f, 7f, 216f, 141f);
-            if (daggerShootRate < 32)
-                daggerShootRate = 32;
+            if (daggerShootRate < 38)
+                daggerShootRate = 38;
+
+            // Destroy the ripper UI.
+            CurveSegment anticipation = new(EasingType.PolyIn, 0f, 50f, 360f, 4);
+            CurveSegment punch = new(EasingType.PolyIn, 0.7f, anticipation.EndingHeight, -anticipation.EndingHeight, 8);
+
+            float ripperDestructionAnimationCompletion = GetLerpValue(0f, ripperDestructionAnimationTime, AttackTimer, true);
+            RipperUIDestructionSystem.FistOffset = PiecewiseAnimation(ripperDestructionAnimationCompletion, anticipation, punch);
+            RipperUIDestructionSystem.FistOpacity = GetLerpValue(0f, 0.25f, ripperDestructionAnimationCompletion, true);
+            if (!RipperUIDestructionSystem.IsUIDestroyed && ripperDestructionAnimationCompletion >= 1f)
+            {
+                RipperUIDestructionSystem.CreateBarDestructionEffects();
+                RipperUIDestructionSystem.IsUIDestroyed = true;
+            }
 
             // Enter the background and dissapear.
             if (AttackTimer < backgroundEnterTime)
@@ -301,6 +315,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Release daggers.
             if (daggerShootTimer >= daggerShootRate && daggerShootCounter < daggerShootCount)
             {
+                SoundEngine.PlaySound(PortalCastSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 sliceDirection = Vector2.UnitY.RotatedBy(TwoPi * Main.rand.Next(6) / 6f);

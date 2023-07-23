@@ -90,7 +90,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.09f;
                 if (AllProjectilesByID(Projectile.type).Count() >= 2)
-                    force *= 0.43f;
+                    force *= 0.56f;
 
                 Projectile.velocity += force;
 

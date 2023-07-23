@@ -8,11 +8,6 @@ float3 lightDirection;
 float2 normalMapZoom;
 float normalMapCrispness;
 
-float InverseLerp(float from, float to, float x)
-{
-    return saturate((x - from) / (from - to));
-}
-
 // Refer to the following links for an explanation as to how this function works.
 // http://dev.thi.ng/gradients/
 // https://iquilezles.org/articles/palettes/

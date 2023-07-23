@@ -23,7 +23,7 @@ namespace NoxusBoss.Core.Graphics
 
         public static string SprayDeletionTipsText => "Do not.";
 
-        public static string DeathAnimationTipsText => "ALL BOW IN SERVITUDE TO THE GREAT XEROC ALL BOW IN SERVITUDE TO THE GREAT XEROC ALL BOW IN SERVITUDE TO THE GREAT XEROC ALL BOW IN SERVITUDE TO THE GREAT XEROC";
+        public static string DeathAnimationTipsText => "You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test.";
 
         public override void OnModLoad()
         {
