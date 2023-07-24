@@ -834,8 +834,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 // Make remaining universal hands invisible.
-                for (int i = 0; i < Hands.Count; i++)
-                    Hands[i].Opacity = 0f;
+                if (AttackTimer >= redirectTime + starPressureTime + supernovaDelay)
+                {
+                    for (int i = 0; i < Hands.Count; i++)
+                        Hands[i].Opacity = 0f;
+                }
             }
 
             // Make hands circle the star.
