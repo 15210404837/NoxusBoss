@@ -927,7 +927,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 ZPosition = 1f;
                 SwordAnimationTimer = 0;
-                TeleportTo(Target.Center - Vector2.UnitY * 300f);
+                TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(340f, 340f));
 
                 // Apply visual and sound effects.
                 Target.Calamity().GeneralScreenShakePower = 9f;
@@ -992,6 +992,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 700f, -100f);
                     Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.14f;
+                    if (SwordSlashCounter <= 0f)
+                        idealVelocity *= 0.067f;
+
                     NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.14f);
 
                     // Decide which side Xeroc is hovering on.
