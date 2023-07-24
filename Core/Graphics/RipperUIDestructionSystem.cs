@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Content.Particles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -45,7 +46,7 @@ namespace NoxusBoss.Core.Graphics
             get
             {
                 Vector2 originalPosition = new Vector2(CalamityConfig.Instance.RageMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.RageMeterPosY * Main.screenHeight * 0.01f).Floor();
-                return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(-100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
+                return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
             }
         }
 
@@ -54,7 +55,7 @@ namespace NoxusBoss.Core.Graphics
             get
             {
                 Vector2 originalPosition = new Vector2(CalamityConfig.Instance.AdrenalineMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.AdrenalineMeterPosY * Main.screenHeight * 0.01f).Floor();
-                return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
+                return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(-100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
             }
         }
 
@@ -158,6 +159,7 @@ namespace NoxusBoss.Core.Graphics
                 return;
 
             SoundEngine.PlaySound(RipperDestructionSound);
+            SoundEngine.PlaySound(XerocBoss.ScreamSound);
 
             Vector2 rageBarPositionWorld = RageScreenPosition + Main.screenPosition + new Vector2(20f, 4f) * Main.UIScale;
             Vector2 adrenalineBarPositionWorld = AdrenalineScreenPosition + Main.screenPosition + new Vector2(-20f, 4f) * Main.UIScale;
@@ -203,8 +205,16 @@ namespace NoxusBoss.Core.Graphics
             for (int i = 1; i <= 3; i++)
                 Gore.NewGore(new EntitySource_WorldEvent(), adrenalineBarPositionWorld + Main.rand.NextVector2Circular(50f, 20f), Main.rand.NextVector2CircularEdge(4f, 4f), ModContent.Find<ModGore>("NoxusBoss", $"AdrenalineBar{i}").Type, Main.UIScale * 0.75f);
 
+            // Create some screen imapct effects to add to the intensity.
             Main.LocalPlayer.Calamity().GeneralScreenShakePower = 15f;
             ScreenEffectSystem.SetChromaticAberrationEffect((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, 1.6f, 45);
+            ScreenEffectSystem.SetFlashEffect((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, 3f, 60);
+
+            ExpandingChromaticBurstParticle burst = new((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, Vector2.Zero, Color.Wheat, 20, 0.1f);
+            GeneralParticleHandler.SpawnParticle(burst);
+
+            ExpandingChromaticBurstParticle burst2 = new((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, Vector2.Zero, Color.Wheat, 16, 0.1f);
+            GeneralParticleHandler.SpawnParticle(burst2);
         }
 
         public static void DrawFists(Vector2 center, float left, float right)
