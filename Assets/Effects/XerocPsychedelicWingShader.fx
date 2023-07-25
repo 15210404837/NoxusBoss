@@ -11,7 +11,7 @@ float normalMapCrispness;
 // Refer to the following links for an explanation as to how this function works.
 // http://dev.thi.ng/gradients/
 // https://iquilezles.org/articles/palettes/
-float3 palette(float t, float3 a, float3 b, float3 c, float3 d)
+float3 Palette(float t, float3 a, float3 b, float3 c, float3 d)
 {
     return a + b * sin(6.28318 * (c * t + d) + 1.5707);
 }
@@ -34,7 +34,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float psychedelicInterpolant = tex2D(uImage1, coords * 0.9 + warpNoiseOffset * 0.023).r * 1.45;
     
     // Calculate the base psychedelic color from the warp noise.
-    float3 psychedelicColor = palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.2), float3(1, 1, 1), float3(0, 0.333, 0.667)) * 0.8;
+    float3 psychedelicColor = Palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.2), float3(1, 1, 1), float3(0, 0.333, 0.667)) * 0.8;
     float4 psychedelicColor4 = float4(psychedelicColor, 1) * color.a;
     
     // Calculate ring-based brightness values.

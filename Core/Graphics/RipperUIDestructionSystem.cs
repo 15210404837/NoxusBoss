@@ -73,9 +73,7 @@ namespace NoxusBoss.Core.Graphics
             MethodInfo ripperUIDrawMethod = typeof(RipperUI).GetMethod("Draw", BindingFlags.Public | BindingFlags.Static);
             ripperUIDrawHook = new(ripperUIDrawMethod, (hook_RipperDrawMethod)DisableRipperUI);
         }
-
-        public override void Unload() => ripperUIDrawHook?.Undo();
-
+        
         public override void OnWorldLoad()
         {
             IsUIDestroyed = false;
