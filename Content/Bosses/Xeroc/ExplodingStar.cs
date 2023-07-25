@@ -91,19 +91,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 int starburstCount = 5;
                 int starburstID = ModContent.ProjectileType<ArcingStarburst>();
+                float starburstSpread = TwoPi;
+                float starburstSpeed = 22f;
                 if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarConvergenceAndRedirecting)
                     starburstCount = 7;
 
                 if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.BrightStarJumpscares)
                 {
-                    starburstCount = 23;
+                    starburstSpread = ToRadians(49f);
                     starburstID = ModContent.ProjectileType<Starburst>();
+                    starburstSpeed = 6f;
                 }
 
                 Vector2 directionToTarget = Projectile.SafeDirectionTo(Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center);
                 for (int i = 0; i < starburstCount; i++)
                 {
-                    Vector2 starburstVelocity = directionToTarget.RotatedBy(TwoPi * i / starburstCount) * 22f + Main.rand.NextVector2Circular(2f, 2f);
+                    Vector2 starburstVelocity = directionToTarget.RotatedBy(Lerp(-starburstSpread, starburstSpread, i / (float)(starburstCount - 1f)) * 0.5f) * starburstSpeed + Main.rand.NextVector2Circular(starburstSpeed, starburstSpeed) / 11f;
                     NewProjectileBetter(Projectile.Center, starburstVelocity, starburstID, XerocBoss.StarburstDamage, 0f, -1);
                 }
             }

@@ -82,7 +82,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 ZPosition = Lerp(ZPosition, -0.93f, 0.13f);
 
-                Vector2 targetPosition = Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center - Vector2.UnitY * 380f;
+                Vector2 targetPosition = Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center - Vector2.UnitY * 420f;
                 if (Projectile.velocity == Vector2.Zero)
                 {
                     Projectile.velocity = (targetPosition - Projectile.Center) * 0.014f;

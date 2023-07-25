@@ -105,6 +105,7 @@ namespace NoxusBoss.Core.Graphics
             if (IsUIDestroyed)
                 return;
 
+            // Move the bar positions temporarily in accordance with the draw position override. Afterwards they are reset, to prevent the changes from altering the config file.
             Vector2 oldRagePosition = new(CalamityConfig.Instance.RageMeterPosX, CalamityConfig.Instance.RageMeterPosY);
             Vector2 oldAdrenalinePosition = new(CalamityConfig.Instance.AdrenalineMeterPosX, CalamityConfig.Instance.AdrenalineMeterPosY);
             CalamityConfig.Instance.RageMeterPosX = RageScreenPosition.X / Main.screenWidth * 100f;
@@ -206,14 +207,16 @@ namespace NoxusBoss.Core.Graphics
                 Gore.NewGore(new EntitySource_WorldEvent(), adrenalineBarPositionWorld + Main.rand.NextVector2Circular(50f, 20f), Main.rand.NextVector2CircularEdge(4f, 4f), ModContent.Find<ModGore>("NoxusBoss", $"AdrenalineBar{i}").Type, Main.UIScale * 0.75f);
 
             // Create some screen imapct effects to add to the intensity.
-            Main.LocalPlayer.Calamity().GeneralScreenShakePower = 15f;
-            ScreenEffectSystem.SetChromaticAberrationEffect((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, 1.6f, 45);
-            ScreenEffectSystem.SetFlashEffect((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, 3f, 60);
+            Vector2 barCenter = (rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f;
 
-            ExpandingChromaticBurstParticle burst = new((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, Vector2.Zero, Color.Wheat, 20, 0.1f);
+            Main.LocalPlayer.Calamity().GeneralScreenShakePower = 15f;
+            ScreenEffectSystem.SetChromaticAberrationEffect(barCenter, 1.6f, 45);
+            ScreenEffectSystem.SetFlashEffect(barCenter, 3f, 60);
+
+            ExpandingChromaticBurstParticle burst = new(barCenter, Vector2.Zero, Color.Wheat, 20, 0.1f);
             GeneralParticleHandler.SpawnParticle(burst);
 
-            ExpandingChromaticBurstParticle burst2 = new((rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f, Vector2.Zero, Color.Wheat, 16, 0.1f);
+            ExpandingChromaticBurstParticle burst2 = new(barCenter, Vector2.Zero, Color.Wheat, 16, 0.1f);
             GeneralParticleHandler.SpawnParticle(burst2);
         }
 
