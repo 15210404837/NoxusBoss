@@ -178,9 +178,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             else
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 2f, 0.15f);
 
-            // Spin the laser towards the target.
+            // Spin the laser towards the target. If the player runs away it locks onto them.
+            float laserAngularVelocity = Remap(NPC.Distance(Target.Center), 1150f, 1775f, 0.0167f, 0.08f);
             float idealLaserDirection = NPC.AngleTo(Target.Center);
-            laserDirection = laserDirection.AngleLerp(idealLaserDirection, 0.0167f);
+            laserDirection = laserDirection.AngleLerp(idealLaserDirection, laserAngularVelocity);
 
             // Update universal hands.
             DefaultUniversalHandMotion();

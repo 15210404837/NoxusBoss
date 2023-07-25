@@ -18,7 +18,9 @@ float mod(float a, float n)
 
 float easeInOut(float x)
 {
-    return (x * x) * 3 - (x * x * x) * 2;
+    float x2 = x * x;
+    float x3 = x2 * x;
+    return x2 * 3 - x3 * 2;
 }
 
 float easeInOut2(float x)
@@ -30,10 +32,9 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
 {
     // Calculate the distance and angle from the pixel relative to the center of the texture.
     float distanceFromCenter = distance(coords, 0.5);
-    float angleFromCenter = atan2(coords.y - 0.5, coords.x - 0.5);    
-        
-    // Calculate the angle at which the texture should be sampled. This is calculated in such a way that the result swirl around slowly over time and distorts
-    // the further away a pixel is from the center.
+    float angleFromCenter = atan2(coords.y - 0.5, coords.x - 0.5);
+    
+    // Calculate the angle at which the texture should be sampled. This is calculated in such a way that the result swirls around slowly over time.
     float splitAngleSlice = 6.283 / totalSplits;
     float splitAngle = mod(angleFromCenter, splitAngleSlice);
     splitAngle = abs(splitAngle - splitAngleSlice * 0.5) - globalTime * animationSpeed;
@@ -41,14 +42,17 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float offsetAngle = splitAngle + distanceFromCenter * distanceBandingFactor;
     float2 distortedCoords = float2(sin(offsetAngle + 1.57), sin(offsetAngle)) * distanceFromCenter;
     
+    // Calculate the resulting color. This adheres to world position so that the effect changes as the player moves around, and is interpolated
+    // towards a high contrast greyscale in accordance with various parameters.
     float4 result = tex2D(uImage0, distortedCoords * float2(1, 1.7777) * zoom - screenPosition * 0.0000036) * sampleColor;
     result.rgb = lerp(result.rgb, pow(easeInOut2(dot(result.rgb, float3(0.299, 0.587, 0.114))), contrastPower), greyscaleInterpolant);
     
-    // Apply a vignette effect.
+    // Apply a vignette effect, to make the edges feel more smooth.
     result = lerp(result, float4(0, 0, 0, 1) * result.a, saturate(distanceFromCenter * vignetteStrength));
     
     return result;
 }
+
 technique Technique1
 {
     pass AutoloadPass

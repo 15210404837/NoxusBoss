@@ -1,11 +1,9 @@
-﻿using CalamityMod;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -25,7 +23,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int LaserLifetime => 540;
 
-        public static float MaxLaserLength => 5000f;
+        public static float MaxLaserLength => 7200f;
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
