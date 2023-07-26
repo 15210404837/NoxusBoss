@@ -75,7 +75,7 @@ namespace NoxusBoss.Core
                 XerocWasAliveAtTimeOfDeath = XerocBoss.Myself is not null;
                 DeathTimerOverride = 0;
             }
-            else
+            else if (XerocWasAliveAtTimeOfDeath)
             {
                 DeathTimerOverride = Clamp(DeathTimerOverride + 1, 0, DeathTimerMax);
                 if (DeathTimerOverride < DeathTimerMax)
