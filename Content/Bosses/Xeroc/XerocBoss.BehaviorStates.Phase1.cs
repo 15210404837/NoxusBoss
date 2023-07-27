@@ -764,6 +764,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int pressureArmsCount = 9;
             int plasmaShootDelay = 60;
             int plasmaShootRate = 2;
+            int plasmaSkipChance = 0;
             int plasmaShootTime = Supernova.Lifetime - 90;
             float plasmaShootSpeed = 9f;
             float handOrbitOffset = 100f;
@@ -771,7 +772,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Make things faster in successive phases.
             if (CurrentPhase >= 1)
-                plasmaShootRate--;
+            {
+                plasmaShootRate = 1;
+                plasmaSkipChance = 3;
+            }
 
             Projectile star = null;
             Projectile quasar = null;
@@ -878,6 +882,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Create plasma around the player that converges into the black quasar.
             if (quasar is not null && AttackTimer >= redirectTime + starPressureTime + supernovaDelay + plasmaShootDelay && AttackTimer <= redirectTime + starPressureTime + supernovaDelay + plasmaShootDelay + plasmaShootTime && AttackTimer % plasmaShootRate == 0f)
             {
+                if (plasmaSkipChance >= 1 && Main.rand.NextBool(plasmaSkipChance))
+                    return;
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 plasmaSpawnPosition = quasar.Center + (TwoPi * AttackTimer / 30f).ToRotationVector2() * (quasar.Distance(Target.Center) + Main.rand.NextFloat(600f, 700f));

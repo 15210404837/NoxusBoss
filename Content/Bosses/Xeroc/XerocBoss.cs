@@ -487,13 +487,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int ScreenSliceDamage => Main.expertMode ? 450 : 360;
 
-        public static int LightLaserbeamDamage => Main.expertMode ? 720 : 480;
+        public static int LightLaserbeamDamage => Main.expertMode ? 650 : 450;
 
-        public static int SwordConstellationDamage => Main.expertMode ? 720 : 480;
+        public static int SwordConstellationDamage => Main.expertMode ? 650 : 450;
 
-        public static int QuasarDamage => Main.expertMode ? 775 : 500;
+        public static int QuasarDamage => Main.expertMode ? 700 : 500;
 
-        public static int SuperLaserbeamDamage => Main.expertMode ? 900 : 560;
+        public static int SuperLaserbeamDamage => Main.expertMode ? 720 : 560;
 
         public static int IdealFightDuration => SecondsToFrames(270f);
 

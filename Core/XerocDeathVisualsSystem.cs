@@ -22,8 +22,8 @@ namespace NoxusBoss.Core
 
         public static bool XerocWasAliveAtTimeOfDeath
         {
-            get => Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GetValue<bool>("NoxusAliveAtDeath");
-            set => Main.LocalPlayer.GetModPlayer<NoxusPlayer>().SetValue("NoxusAliveAtDeath", value);
+            get => Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GetValue<bool>("XerocAliveAtDeath");
+            set => Main.LocalPlayer.GetModPlayer<NoxusPlayer>().SetValue("XerocAliveAtDeath", value);
         }
 
         public override void OnModLoad()

@@ -686,6 +686,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     HeavenlyBackgroundIntensity = 1f;
                     DestroyAllHands();
                     SelectNextAttack();
+                    ClearAllProjectiles();
                 }
             }
 
