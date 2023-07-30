@@ -55,7 +55,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public ref float Time => ref Projectile.localAI[1];
 
-        public override string Texture => $"Terraria/Images/Extra_89";
+        public override string Texture => "Terraria/Images/Extra_89";
 
         public override void SetStaticDefaults()
         {
@@ -181,7 +181,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
             Color color = Projectile.GetAlpha(Color.Wheat) with { A = 0 };
 
-            // Make the color interpolant err towards more reddish stars based on the slash.
+            // Make the color interpolant err towards more cyan stars based on the slash.
             color = Color.Lerp(color, Projectile.GetAlpha(Color.DeepSkyBlue) with { A = 0 }, SlashOpacity * 0.7f);
             color *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.3f, 1f);
 

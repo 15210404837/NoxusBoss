@@ -358,6 +358,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public int MumbleTimer;
+
         public bool ShouldDrawBehindTiles => ZPosition >= 0.2f;
 
         public float LifeRatio => NPC.life / (float)NPC.lifeMax;
@@ -455,7 +457,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle FingerSnapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFingerSnap") with { Volume = 1.4f };
 
+        public static readonly SoundStyle GameBreakSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocGameBreak") with { Volume = 1.1f };
+
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocHumm") with { Volume = 1.1f, IsLooped = true };
+
+        public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocMumble", 5) with { Volume = 0.89f };
 
         public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocPortalCast") with { Volume = 1.2f };
 
@@ -646,6 +652,26 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.DeathAnimation:
                     DoBehavior_DeathAnimation();
                     break;
+            }
+
+            // Handle mumble sounds.
+            if (MumbleTimer >= 1)
+            {
+                MumbleTimer++;
+
+                float mumbleCompletion = MumbleTimer / 45f;
+                if (mumbleCompletion >= 1f)
+                    MumbleTimer = 0;
+
+                // Play the sound.
+                if (MumbleTimer == 16)
+                {
+                    SoundEngine.PlaySound(MumbleSound, Target.Center);
+                    Target.Calamity().GeneralScreenShakePower += 7f;
+                }
+
+                // Update the position of the teeth to make it look like the mouth is opening.
+                TopTeethOffset = GetLerpValue(0f, 0.32f, mumbleCompletion, true) * GetLerpValue(1f, 0.9f, mumbleCompletion, true) * -32f;
             }
 
             // Disable damage when invisible.

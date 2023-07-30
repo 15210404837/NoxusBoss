@@ -38,6 +38,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     RadialScreenShoveSystem.Start(NPC.Center, 16);
                     NPC.velocity = (hoverDestination - Target.Center) * 0.075f;
                     NPC.netUpdate = true;
+
+                    // Play mumble sounds.
+                    PerformMumble();
                 }
                 else
                     NPC.velocity *= 0.8f;
@@ -159,6 +162,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1f, 20);
                 RadialScreenShoveSystem.Start(Vector2.Lerp(laserStart, Target.Center, 0.9f), 20);
             }
+
+            // Play mumble sounds.
+            if (AttackTimer == attackDelay - 40f)
+                PerformMumble();
 
             // Create the super laser.
             if (AttackTimer == attackDelay)

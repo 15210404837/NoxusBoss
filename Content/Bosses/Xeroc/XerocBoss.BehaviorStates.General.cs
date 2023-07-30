@@ -302,6 +302,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 RipperUIDestructionSystem.IsUIDestroyed = true;
             }
 
+            // Play mumble sounds.
+            if (AttackTimer == 1f)
+                PerformMumble();
+
             // Enter the background and dissapear.
             if (AttackTimer < backgroundEnterTime + cooldownTime)
             {
@@ -402,7 +406,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int riseTime = 210;
             int chargeLineUpTime = 45;
             int screenShatterDelay = 14;
-            int crashDelay = 120;
+            int crashDelay = 269;
             ref float screenShattered = ref NPC.ai[2];
 
             // Stay at 1 HP.
@@ -514,7 +518,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     SoundEngine.PlaySound(ExplosionTeleportSound with { Volume = 4f });
                     Target.Calamity().GeneralScreenShakePower = 30f;
                     DestroyAllHands();
-                    ScreenShatterSystem.CreateShatterEffect(NPC.Center - Main.screenPosition);
+                    ScreenShatterSystem.CreateShatterEffect(NPC.Center - Main.screenPosition, true);
                     ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 3f, 90);
 
                     screenShattered = 1f;

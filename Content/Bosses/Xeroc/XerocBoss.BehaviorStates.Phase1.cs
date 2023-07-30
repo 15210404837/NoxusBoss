@@ -264,6 +264,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     ConjureHandsAtPosition(NPC.Center + handOffset, sliceDirection * 3f, false, Math.Sign(handOffset.X));
                 }
+
+                // Play mumble sounds.
+                PerformMumble();
             }
 
             // Operate hands that move in the direction of the slice.
@@ -381,6 +384,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 CreateTwinkle(starSpawnPosition, Vector2.One * 1.3f);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(starSpawnPosition, Vector2.Zero, ModContent.ProjectileType<ControlledStar>(), 0, 0f);
+
+                // Play mumble sounds.
+                PerformMumble();
                 return;
             }
 

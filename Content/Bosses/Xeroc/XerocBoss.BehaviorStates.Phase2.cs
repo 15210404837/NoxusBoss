@@ -43,6 +43,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (AttackTimer <= sliceShootDelay)
             {
+                // Play mumble sounds.
+                if (AttackTimer == 1f)
+                    PerformMumble();
+
                 // Hover above the target at first.
                 Vector2 hoverDestination = Target.Center - Vector2.UnitY * 442f;
                 NPC.velocity = (hoverDestination - NPC.Center) * 0.1f;
@@ -634,6 +638,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Make the background dim even more for a bit of extra suspense before the stars are fired.
                 if (AttackTimer >= backgroundDimTime + starCreationRate * starCreationCountPerSide)
                     HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.35f, 0.11f);
+
+                // Play mumble sounds.
+                if (AttackTimer == backgroundDimTime + starCreationTime - 30f)
+                    PerformMumble();
             }
 
             // Shove hands towards the screen.
@@ -761,6 +769,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, -1f);
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, 1f);
                 }
+
+                // Play mumble sounds.
+                PerformMumble();
             }
 
             // Increment the slash counter.
@@ -939,6 +950,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
             }
+
+            // Play mumble sounds.
+            if (AttackTimer == constellationConvergeTime - 32f)
+                PerformMumble();
 
             if (SwordSlashCounter >= slashCount + 1f)
             {

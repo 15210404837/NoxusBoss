@@ -4,6 +4,7 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -56,6 +57,8 @@ namespace NoxusBoss.Core.Graphics
         }
 
         private static LineSegment[] manualSliceLines;
+
+        private static bool useXerocGameBreakSound;
 
         public static int SliceUpdatesPerFrame
         {
@@ -192,7 +195,7 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.End();
         }
 
-        public static void CreateShatterEffect(Vector2 shatterScreenPosition, int sliceUpdatesPerFrame = 1)
+        public static void CreateShatterEffect(Vector2 shatterScreenPosition, bool gameBreakVariant = false, int sliceUpdatesPerFrame = 1)
         {
             if (!NoxusBossConfig.Instance.ScreenShatterEffects)
             {
@@ -200,6 +203,7 @@ namespace NoxusBoss.Core.Graphics
                 return;
             }
 
+            useXerocGameBreakSound = gameBreakVariant;
             ShatterFocalPoint = shatterScreenPosition;
             ShouldCreateSnapshot = true;
             ShardOpacity = 1f;
@@ -311,7 +315,8 @@ namespace NoxusBoss.Core.Graphics
             }
 
             ScreenEffectSystem.SetFlashEffect(ShatterFocalPoint + Main.screenPosition, 2f, 32);
-            SoundEngine.PlaySound(ShatterSound);
+            SoundEngine.PlaySound(useXerocGameBreakSound ? XerocBoss.GameBreakSound : ShatterSound);
+            useXerocGameBreakSound = false;
         }
 
         public static bool IntersectsLine(LineSegment line, Rectangle rect, out float intersectionX, out float intersectionY)

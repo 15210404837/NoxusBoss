@@ -11,7 +11,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -295,6 +294,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     }
 
                     CurrentAttack = phaseCycle[PhaseCycleIndex % phaseCycle.Length];
+                    CurrentAttack = XerocAttackType.DeathAnimation;
                     PhaseCycleIndex++;
                     break;
             }
@@ -316,6 +316,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPC.dontTakeDamage = true;
             CurrentAttack = XerocAttackType.DeathAnimation;
             NPC.netUpdate = true;
+        }
+
+        public void PerformMumble()
+        {
+            if (MumbleTimer <= 0)
+                MumbleTimer = 1;
         }
 
         public static TwinkleParticle CreateTwinkle(Vector2 spawnPosition, Vector2 scaleFactor)
