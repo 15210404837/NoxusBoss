@@ -469,6 +469,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
 
+        public static readonly SoundStyle ScreamSoundLong = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScreamLong") with { Volume = 1.2f };
+
         public static readonly SoundStyle SliceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSliceTelegraph") with { Volume = 1.05f, MaxInstances = 20 };
 
         public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };

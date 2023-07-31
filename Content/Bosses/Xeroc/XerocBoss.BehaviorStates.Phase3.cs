@@ -66,7 +66,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NPC.netUpdate = true;
 
                     LocalScreenSplitSystem.Start(NPC.Center, 20, PiOver2 * 0.9999f, 500f);
-                    SoundEngine.PlaySound(ScreamSound with { Volume = 3f });
+                    SoundEngine.PlaySound(ScreamSound with { Volume = 2f });
                     SoundEngine.PlaySound(SupernovaSound with { Volume = 8f });
                     ScreenEffectSystem.SetFlashEffect(NPC.Center, 8f, 60);
 

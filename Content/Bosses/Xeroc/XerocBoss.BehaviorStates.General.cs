@@ -249,10 +249,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             PerformTeethChomp(AttackTimer / 40f % 1f);
 
             // Jitter in place and scream.
+            if (AttackTimer == 1f)
+                SoundEngine.PlaySound(ScreamSoundLong);
             if (AttackTimer % 10f == 0f && AttackTimer <= screamTime - 75f)
             {
-                if (AttackTimer % 30f == 0f || AttackTimer <= 4f)
-                    SoundEngine.PlaySound(ScreamSound with { Volume = 1.2f });
                 Color burstColor = Main.rand.NextBool() ? Color.LightGoldenrodYellow : Color.Lerp(Color.White, Color.IndianRed, 0.7f);
 
                 // Create blur and burst particle effects.
@@ -447,10 +447,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             else
                 UniversalBlackOverlayInterpolant = Clamp(UniversalBlackOverlayInterpolant + 0.06f, 0f, 1f);
 
+            if (AttackTimer == 1f)
+                SoundEngine.PlaySound(ScreamSoundLong);
             if (AttackTimer % 8f == 0f && AttackTimer <= blackDelay + riseDelay - 75f)
             {
-                if (AttackTimer % 16f == 0f || AttackTimer <= 4f)
-                    SoundEngine.PlaySound(ScreamSound with { Volume = 1.2f });
                 Color burstColor = Main.rand.NextBool() ? Color.LightGoldenrodYellow : Color.Lerp(Color.White, Color.IndianRed, 0.7f);
 
                 // Create blur and burst particle effects.
