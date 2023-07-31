@@ -23,6 +23,7 @@ namespace NoxusBoss.Core.Graphics.UI
             });
         }
 
+        // TODO -- This is concerningly slow. It may be necessary to achieve this via IL edits instead of detours for performance reasons.
         private Asset<Texture2D> UsePostXerocIcon(On.Terraria.GameContent.UI.Elements.UIWorldListItem.orig_GetIcon orig, UIWorldListItem self)
         {
             WorldFileData worldData = (WorldFileData)typeof(UIWorldListItem).GetField("_data", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(self);
