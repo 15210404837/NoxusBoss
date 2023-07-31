@@ -8,10 +8,16 @@ namespace NoxusBoss.Core
 {
     public class WorldSaveSystem : ModSystem
     {
-        // This field is used for performance reasons, since it could be a bit unideal to be doing file existence checks many tiles every frame.
+        // This field is used for performance reasons, since it could be a bit unideal to be doing file existence checks many times every frame.
         private static bool? hasDefeatedXerocInAnyWorldField;
 
         public static bool HasDefeatedEgg
+        {
+            get;
+            set;
+        }
+
+        public static bool HasDefeatedXeroc
         {
             get;
             set;
@@ -49,6 +55,7 @@ namespace NoxusBoss.Core
         public override void OnWorldLoad()
         {
             HasDefeatedEgg = false;
+            HasDefeatedXeroc = false;
             HasMetXeroc = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
         }
@@ -56,6 +63,7 @@ namespace NoxusBoss.Core
         public override void OnWorldUnload()
         {
             HasDefeatedEgg = false;
+            HasDefeatedXeroc = false;
             HasMetXeroc = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
         }
@@ -64,6 +72,8 @@ namespace NoxusBoss.Core
         {
             if (HasDefeatedEgg)
                 tag["HasDefeatedEgg"] = true;
+            if (HasDefeatedXeroc)
+                tag["HasDefeatedXeroc"] = true;
             if (NoxusEggCutsceneSystem.HasSummonedNoxus)
                 tag["HasSummonedNoxus"] = true;
             if (HasMetXeroc)
@@ -73,6 +83,7 @@ namespace NoxusBoss.Core
         public override void LoadWorldData(TagCompound tag)
         {
             HasDefeatedEgg = tag.ContainsKey("HasDefeatedEgg");
+            HasDefeatedXeroc = tag.ContainsKey("HasDefeatedXeroc");
             NoxusEggCutsceneSystem.HasSummonedNoxus = tag.ContainsKey("HasSummonedNoxus");
             HasMetXeroc = tag.ContainsKey("HasMetXeroc");
         }
@@ -81,8 +92,9 @@ namespace NoxusBoss.Core
         {
             BitsByte b1 = new();
             b1[0] = HasDefeatedEgg;
-            b1[1] = HasMetXeroc;
-            b1[2] = NoxusEggCutsceneSystem.HasSummonedNoxus;
+            b1[1] = HasDefeatedXeroc;
+            b1[2] = HasMetXeroc;
+            b1[3] = NoxusEggCutsceneSystem.HasSummonedNoxus;
 
             writer.Write(b1);
         }
@@ -91,8 +103,9 @@ namespace NoxusBoss.Core
         {
             BitsByte b1 = reader.ReadByte();
             HasDefeatedEgg = b1[0];
-            HasMetXeroc = b1[1];
-            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[2];
+            HasDefeatedXeroc = b1[1];
+            HasMetXeroc = b1[2];
+            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[3];
         }
     }
 }

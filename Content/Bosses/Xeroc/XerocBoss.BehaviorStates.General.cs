@@ -542,6 +542,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Main.gameMenu = true;
                         Main.hideUI = false;
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
+                        WorldSaveSystem.HasDefeatedXeroc = true;
                         WorldGen.SaveAndQuit();
 
                         // Forcefully change the menu theme to the Xeroc one if he was defeated for the first time.

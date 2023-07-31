@@ -2,6 +2,7 @@
 using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using ReLogic.Utilities;
 using Terraria;
@@ -656,6 +657,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
             }
 
+            Music = MusicLoader.GetMusicSlot(ModLoader.GetMod("CalamityModMusic"), "Sounds/Music/BossRushTier3");
+
             // Handle mumble sounds.
             if (MumbleTimer >= 1)
             {
@@ -685,6 +688,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Get rid of all falling stars. Their noises completely ruin the ambience.
+            // active = false must be used over Kill because the Kill method causes them to drop their fallen star items.
             var fallingStars = AllProjectilesByID(ProjectileID.FallingStar);
             foreach (Projectile star in fallingStars)
                 star.active = false;

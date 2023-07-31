@@ -451,7 +451,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 SoundEngine.PlaySound(SupernovaSound);
-                SoundEngine.PlaySound(ScreamSound);
                 SoundEngine.PlaySound(ExplosionTeleportSound);
                 Target.Calamity().GeneralScreenShakePower = 12f;
 
