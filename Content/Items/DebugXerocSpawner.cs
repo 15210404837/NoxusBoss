@@ -10,9 +10,7 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Debug Deity of Light Spawner");
-            Tooltip.SetDefault("Summons a nameless deity of light");
-            SacrificeTotal = 1;
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()
@@ -44,7 +42,7 @@ namespace NoxusBoss.Content.Items
 
                 // If the player is in multiplayer, request a boss spawn.
                 else
-                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: xerocID);
+                    NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: xerocID);
             }
 
             return true;

@@ -27,8 +27,8 @@ namespace NoxusBoss.Core.Graphics
                 metaballs.Add((Metaball)Activator.CreateInstance(t));
             }
 
-            Terraria.On_Main.DrawProjectiles += DrawMetaballsAfterProjectiles;
-            Terraria.On_Main.DrawNPCs += DrawMetaballsBeforeNPCs;
+            On_Main.DrawProjectiles += DrawMetaballsAfterProjectiles;
+            On_Main.DrawNPCs += DrawMetaballsBeforeNPCs;
         }
 
         public override void OnModUnload()

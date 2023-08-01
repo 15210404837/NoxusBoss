@@ -13,9 +13,7 @@ namespace NoxusBoss.Content.Items
 
         public override void SetStaticDefaults()
         {
-            SacrificeTotal = 1;
-            DisplayName.SetDefault("Deific Touch");
-            Tooltip.SetDefault("Reveals Xeroc's dimension behind your cursor");
+            Item.ResearchUnlockCount = 1;
             NoxusPlayer.ResetEffectsEvent += ResetValue;
         }
 

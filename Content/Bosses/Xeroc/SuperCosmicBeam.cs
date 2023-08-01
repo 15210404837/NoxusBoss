@@ -27,11 +27,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Cosmic Deathray");
-            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
-        }
+        public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
 
         public override void SetDefaults()
         {

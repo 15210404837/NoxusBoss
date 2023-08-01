@@ -15,10 +15,10 @@ namespace NoxusBoss.Core.Graphics
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            On.Terraria.Main.DrawProjectiles += DrawInterfaceProjectiles;
+            On_Main.DrawProjectiles += DrawInterfaceProjectiles;
         }
 
-        private void DrawInterfaceProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
+        private void DrawInterfaceProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
             orig(self);
 

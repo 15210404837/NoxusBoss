@@ -449,7 +449,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 telegraphShader.Parameters["halfSpreadAngle"].SetValue(PupilTelegraphArc * Sqrt(PupilTelegraphOpacity) * 0.5f);
                 telegraphShader.Parameters["edgeColor"].SetValue(Color.Red.ToVector3());
                 telegraphShader.Parameters["centerColor"].SetValue(Color.Coral.ToVector3());
-                telegraphShader.Parameters["edgeBlendLenght"].SetValue(0.07f);
+                telegraphShader.Parameters["edgeBlendLenght"]?.SetValue(0.07f);
+                telegraphShader.Parameters["edgeBlendLength"]?.SetValue(0.07f);
                 telegraphShader.Parameters["edgeBlendStrength"].SetValue(16f);
                 telegraphShader.Parameters["spreadOutPower"]?.SetValue(2.32f);
 
@@ -467,7 +468,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     telegraphShader.Parameters["halfSpreadAngle"].SetValue(PupilTelegraphArc * Sqrt(PupilTelegraphOpacity) * 0.5f);
                     telegraphShader.Parameters["edgeColor"].SetValue(Color.Transparent.ToVector3());
                     telegraphShader.Parameters["centerColor"].SetValue(Color.SpringGreen.ToVector3());
-                    telegraphShader.Parameters["edgeBlendLenght"].SetValue(0.011f);
+                    telegraphShader.Parameters["edgeBlendLenght"]?.SetValue(0.011f);
+                    telegraphShader.Parameters["edgeBlendLength"]?.SetValue(0.011f);
                     telegraphShader.Parameters["edgeBlendStrength"].SetValue(3f);
 
                     Main.spriteBatch.End();

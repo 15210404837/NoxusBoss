@@ -19,12 +19,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void Load()
         {
-            On.Terraria.Main.DrawSunAndMoon += MakeMoonFadeAway;
-            On.Terraria.Main.DrawBackground += NoBackgroundDuringXerocFight;
-            On.Terraria.Main.DrawSurfaceBG += NoBackgroundDuringXerocFight2;
+            On_Main.DrawSunAndMoon += MakeMoonFadeAway;
+            On_Main.DrawBackground += NoBackgroundDuringXerocFight;
+            On_Main.DrawSurfaceBG += NoBackgroundDuringXerocFight2;
         }
 
-        private void MakeMoonFadeAway(On.Terraria.Main.orig_DrawSunAndMoon orig, Main self, Main.SceneArea sceneArea, Color moonColor, Color sunColor, float tempMushroomInfluence)
+        private void MakeMoonFadeAway(On_Main.orig_DrawSunAndMoon orig, Main self, Main.SceneArea sceneArea, Color moonColor, Color sunColor, float tempMushroomInfluence)
         {
             orig(self, sceneArea, moonColor * Pow(1f - XerocSky.SkyEyeOpacity, 2f), sunColor, tempMushroomInfluence);
 
@@ -36,13 +36,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        private void NoBackgroundDuringXerocFight(On.Terraria.Main.orig_DrawBackground orig, Main self)
+        private void NoBackgroundDuringXerocFight(Terraria.On_Main.orig_DrawBackground orig, Main self)
         {
             if (XerocSky.HeavenlyBackgroundIntensity < 0.3f)
                 orig(self);
         }
 
-        private void NoBackgroundDuringXerocFight2(On.Terraria.Main.orig_DrawSurfaceBG orig, Main self)
+        private void NoBackgroundDuringXerocFight2(Terraria.On_Main.orig_DrawSurfaceBG orig, Main self)
         {
             if (XerocSky.HeavenlyBackgroundIntensity < 0.3f)
                 orig(self);

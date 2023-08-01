@@ -3,6 +3,7 @@ Mods: {
 		Bestiary: {
 			EntropicGod: A fathomless being beyond description.
 			NoxusEgg: An anomalous egg of pure darkness. For countless eons it has been patiently waiting to hatch.
+			XerocBoss: The cosmic creator.
 		}
 
 		Buffs: {
@@ -62,12 +63,23 @@ Mods: {
 				DisplayName: Oblivion Rattle
 				Tooltip: ""
 			}
+
+			DebugXerocSpawner: {
+				DisplayName: Debug Deity of Light Spawner
+				Tooltip: Summons a nameless deity of light
+			}
+
+			DeificTouch: {
+				DisplayName: Deific Touch
+				Tooltip: Reveals a light dimension dimension behind your cursor
+			}
 		}
 
 		NPCs: {
 			EntropicGod.DisplayName: The Entropic God, Noxus
 			NoxusEgg.DisplayName: Godless Spawn, Noxus
 			NoxusEggCutscene.DisplayName: ???
+			XerocBoss.DisplayName: .....
 		}
 
 		Projectiles: {
@@ -83,6 +95,28 @@ Mods: {
 			NoxusGas.DisplayName: Noxus Gas
 			NoxusSprayerGas.DisplayName: Noxus Sprayer Gas
 			BabyNoxus.DisplayName: Baby Noxus
+			ArcingStarburst.DisplayName: Starburst
+			BackgroundStar.DisplayName: Star
+			BookConstellation.DisplayName: Grand Wisdom
+			ClockConstellation.DisplayName: Chronos' Hand
+			ControlledStar.DisplayName: Star
+			ConvergingSupernovaEnergy.DisplayName: Supernova Plasma
+			ExplodingStar.DisplayName: Star
+			LightDagger.DisplayName: Light Dagger
+			LightPortal.DisplayName: Light Portal
+			LightWave.DisplayName: Light Wave
+			Quasar.DisplayName: Quasar
+			Starburst.DisplayName: Starburst
+			StarPatterenedStarburst.DisplayName: Starburst
+			SunFireball.DisplayName: Sun Fireball
+			SuperCosmicBeam.DisplayName: Cosmic Deathray
+			SuperLightBeam.DisplayName: Light Deathray
+			Supernova.DisplayName: Supernova
+			SwordConstellation.DisplayName: Orion's Sword
+			TelegraphedLightLaserbeam.DisplayName: Light Deathray
+			TelegraphedScreenSlice.DisplayName: Dimensional Slice
+			TelegraphedScreenSlice2.DisplayName: Dimensional Slice
+			TelegraphedStarLaserbeam.DisplayName: Solar Burst
 		}
 
 		Configs: {

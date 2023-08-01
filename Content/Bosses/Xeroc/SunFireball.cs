@@ -17,7 +17,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Sun Fireball");
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
         }

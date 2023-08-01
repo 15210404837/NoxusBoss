@@ -13,7 +13,7 @@ namespace NoxusBoss.Core
 
         public override void OnModLoad()
         {
-            IL.Terraria.Projectile.Update += PreventXerocProjectilesFromDespawning;
+            IL_Projectile.Update += PreventXerocProjectilesFromDespawning;
         }
 
         private void PreventXerocProjectilesFromDespawning(ILContext il)

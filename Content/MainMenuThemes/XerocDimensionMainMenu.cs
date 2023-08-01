@@ -20,7 +20,7 @@ namespace NoxusBoss.Content.MainMenuThemes
             Instance = this;
         }
 
-        public override string DisplayName => "Xeroc's Dimension";
+        public override string DisplayName => "Light Dimension";
 
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
         {

@@ -24,11 +24,11 @@ namespace NoxusBoss.Core.Graphics
                 return;
 
             Main.QueueMainThreadAction(() => PixelationTarget = new(true, RenderTargetManager.CreateScreenSizedTarget));
-            On.Terraria.Main.CheckMonoliths += PreparePixelationTarget; ;
-            On.Terraria.Main.DoDraw_DrawNPCsOverTiles += DrawPixelationTarget;
+            On_Main.CheckMonoliths += PreparePixelationTarget; ;
+            On_Main.DoDraw_DrawNPCsOverTiles += DrawPixelationTarget;
         }
 
-        private void PreparePixelationTarget(On.Terraria.Main.orig_CheckMonoliths orig)
+        private void PreparePixelationTarget(Terraria.On_Main.orig_CheckMonoliths orig)
         {
             // Start a spritebatch, as one does not exist before the method we're detouring.
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null);
@@ -50,7 +50,7 @@ namespace NoxusBoss.Core.Graphics
             orig();
         }
 
-        private void DrawPixelationTarget(On.Terraria.Main.orig_DoDraw_DrawNPCsOverTiles orig, Main self)
+        private void DrawPixelationTarget(Terraria.On_Main.orig_DoDraw_DrawNPCsOverTiles orig, Main self)
         {
             // Simply call orig if no prims were drawn as an optimization.
             if (!primsWereDrawnLastFrame)

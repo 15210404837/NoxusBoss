@@ -19,12 +19,12 @@ namespace NoxusBoss.Core.Graphics.UI
         {
             Main.QueueMainThreadAction(() =>
             {
-                On.Terraria.GameContent.UI.Elements.UIWorldListItem.GetIcon += UsePostXerocIcon;
+                On_AWorldListItem.GetIcon += UsePostXerocIcon;
             });
         }
 
         // TODO -- This is concerningly slow. It may be necessary to achieve this via IL edits instead of detours for performance reasons.
-        private Asset<Texture2D> UsePostXerocIcon(On.Terraria.GameContent.UI.Elements.UIWorldListItem.orig_GetIcon orig, UIWorldListItem self)
+        private Asset<Texture2D> UsePostXerocIcon(On_AWorldListItem.orig_GetIcon orig, AWorldListItem self)
         {
             WorldFileData worldData = (WorldFileData)typeof(UIWorldListItem).GetField("_data", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(self);
             byte[] worldBinary = FileUtilities.ReadAllBytes(worldData.Path.Replace(".wld", ".twld"), worldData.IsCloudSave);

@@ -44,11 +44,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Solar Burst");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = 138;

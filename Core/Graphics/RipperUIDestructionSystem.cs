@@ -67,13 +67,10 @@ namespace NoxusBoss.Core.Graphics
 
         public override void Load()
         {
-            // Technically HookEndpointManager should be used in 1.4.3 but that standard is changing in 1.4.4 so whatever.
-            MonoModHooks.RequestNativeAccess();
-
             MethodInfo ripperUIDrawMethod = typeof(RipperUI).GetMethod("Draw", BindingFlags.Public | BindingFlags.Static);
             ripperUIDrawHook = new(ripperUIDrawMethod, (hook_RipperDrawMethod)DisableRipperUI);
         }
-        
+
         public override void OnWorldLoad()
         {
             IsUIDestroyed = false;

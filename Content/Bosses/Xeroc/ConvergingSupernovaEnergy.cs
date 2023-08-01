@@ -12,7 +12,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Supernova Plasma");
             Main.projFrames[Type] = 4;
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 5;

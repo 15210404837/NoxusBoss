@@ -37,7 +37,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Star");
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 13;
         }
@@ -164,8 +163,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, Sqrt(Projectile.scale), 0, 0f);
             return false;
         }
-
-        public override void Kill(int timeLeft) => TrailDrawer?.BaseEffect?.Dispose();
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {

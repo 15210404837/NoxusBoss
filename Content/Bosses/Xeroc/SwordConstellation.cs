@@ -59,7 +59,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Orion's Sword");
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 50;
         }
@@ -273,8 +272,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SlashDrawer.Draw(slashPoints, generalOffset, 90);
         }
 
-        public override void Kill(int timeLeft) => SlashDrawer?.BaseEffect?.Dispose();
-
         public override bool PreDraw(ref Color lightColor)
         {
             ulong starSeed = (ulong)Projectile.identity * 674uL + 25uL;
@@ -291,7 +288,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             telegraphShader.Parameters["halfSpreadAngle"].SetValue(Pi * 4f);
             telegraphShader.Parameters["edgeColor"].SetValue(Color.Wheat.ToVector3());
             telegraphShader.Parameters["centerColor"].SetValue(Color.Cyan.ToVector3());
-            telegraphShader.Parameters["edgeBlendLenght"].SetValue(0.4f);
+            telegraphShader.Parameters["edgeBlendLength"].SetValue(0.4f);
             telegraphShader.Parameters["edgeBlendStrength"].SetValue(3f);
             telegraphShader.CurrentTechnique.Passes[0].Apply();
 

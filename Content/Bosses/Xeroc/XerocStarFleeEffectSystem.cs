@@ -11,13 +11,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         public override void OnModLoad()
         {
-            On.Terraria.Main.DrawStarsInBackground += MakeStarsFleeWrapper;
+            On_Main.DrawStarsInBackground += MakeStarsFleeWrapper;
         }
 
-        private void MakeStarsFleeWrapper(On.Terraria.Main.orig_DrawStarsInBackground orig, Main self, Main.SceneArea sceneArea)
+        private void MakeStarsFleeWrapper(On_Main.orig_DrawStarsInBackground orig, Main self, Main.SceneArea sceneArea, bool artificial)
         {
-            if (Main.gameMenu || Main.dayTime)
-                orig(self, sceneArea);
+            if (Main.gameMenu || Main.dayTime || artificial)
+                orig(self, sceneArea, artificial);
             else
                 MakeStarsFlee(sceneArea);
         }

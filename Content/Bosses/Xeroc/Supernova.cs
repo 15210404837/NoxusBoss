@@ -20,11 +20,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Supernova");
-            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 25000;
-        }
+        public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 25000;
 
         public override void SetDefaults()
         {

@@ -28,7 +28,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Starburst");
             Main.projFrames[Type] = 6;
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 8;
@@ -177,8 +176,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
             return false;
         }
-
-        public override void Kill(int timeLeft) => TrailDrawer?.BaseEffect?.Dispose();
 
         public void Draw()
         {

@@ -28,7 +28,7 @@ namespace NoxusBoss.Core
 
         public override void OnModLoad()
         {
-            IL.Terraria.Main.DrawInterface_35_YouDied += ChangeXerocText;
+            IL_Main.DrawInterface_35_YouDied += ChangeXerocText;
         }
 
         private void ChangeXerocText(ILContext il)

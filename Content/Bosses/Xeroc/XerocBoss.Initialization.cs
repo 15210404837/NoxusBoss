@@ -109,7 +109,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         #region Initialization
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Xeroc");
             Main.npcFrameCount[Type] = 1;
             NPCID.Sets.TrailingMode[NPC.type] = 3;
             NPCID.Sets.TrailCacheLength[NPC.type] = 90;
@@ -122,7 +121,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPCID.Sets.BossBestiaryPriority.Add(Type);
             NPCID.Sets.MPAllowedEnemies[Type] = true;
 
-            On.Terraria.NPC.GetMeleeCollisionData += ExpandEffectiveHitboxForHands;
+            On_NPC.GetMeleeCollisionData += ExpandEffectiveHitboxForHands;
         }
 
         public override void SetDefaults()
@@ -162,16 +161,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Wings = new XerocWing[WingCount];
         }
 
-        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
-            NPC.lifeMax = (int)(NPC.lifeMax * bossLifeScale / (Main.masterMode ? 3f : 2f));
+            NPC.lifeMax = (int)(NPC.lifeMax * bossAdjustment / (Main.masterMode ? 3f : 2f));
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
             {
-                new FlavorTextBestiaryInfoElement("The cosmic creator."),
+                new FlavorTextBestiaryInfoElement($"Mods.{Mod.Name}.Bestiary.{Name}"),
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement()
             });
         }

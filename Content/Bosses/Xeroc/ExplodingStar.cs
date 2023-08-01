@@ -25,11 +25,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Star");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = 200;

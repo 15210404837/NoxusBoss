@@ -58,15 +58,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             HandFireDestination = reader.ReadVector2();
 
             // Read lists.
-            if (Hands.Any())
-            {
-                if (Main.netMode != NetmodeID.Server)
-                {
-                    for (int i = 0; i < Hands.Count; i++)
-                        Hands[i].HandTrailDrawer?.BaseEffect?.Dispose();
-                }
-                Hands.Clear();
-            }
+            Hands.Clear();
             StarSpawnOffsets.Clear();
 
             int handCount = reader.ReadInt32();
@@ -82,7 +74,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         #region Hit Effects and Loot
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.soundDelay >= 1)
                 return;
@@ -123,7 +115,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return false;
         }
 
-        private void ExpandEffectiveHitboxForHands(On.Terraria.NPC.orig_GetMeleeCollisionData orig, Rectangle victimHitbox, int enemyIndex, ref int specialHitSetter, ref float damageMultiplier, ref Rectangle npcRect)
+        private void ExpandEffectiveHitboxForHands(Terraria.On_NPC.orig_GetMeleeCollisionData orig, Rectangle victimHitbox, int enemyIndex, ref int specialHitSetter, ref float damageMultiplier, ref Rectangle npcRect)
         {
             orig(victimHitbox, enemyIndex, ref specialHitSetter, ref damageMultiplier, ref npcRect);
 
@@ -134,7 +126,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         // Timed DR but a bit different. I'm typically very, very reluctant towards this mechanic, but given that this boss exists in shadowspec tier, I am willing to make
         // an exception. This will not cause the dumb "lol do 0 damage for 30 seconds" problems that Calamity had in the past.
-        public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
+        public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
         {
             // Calculate how far ahead Xeroc's HP is relative to how long he's existed so far.
             // This would be one if you somehow got him to death on the first frame of the fight.
@@ -144,8 +136,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             float damageReductionInterpolant = Pow(aheadOfFightLengthInterpolant, 0.64f);
             float damageReductionFactor = Lerp(1f, MaxTimedDRDamageReduction, damageReductionInterpolant);
-            damage *= damageReductionFactor;
-            return true;
+            modifiers.FinalDamage *= damageReductionFactor;
         }
 
         #endregion Hit Effects and Loot

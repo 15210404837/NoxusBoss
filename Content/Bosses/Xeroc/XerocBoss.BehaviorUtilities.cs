@@ -156,11 +156,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = includeUniversalHands ? 0 : TotalUniversalHands; i < Hands.Count; i++)
                 CreateHandVanishVisuals(Hands[i]);
 
-            if (Main.netMode != NetmodeID.Server)
-            {
-                for (int i = includeUniversalHands ? 0 : TotalUniversalHands; i < Hands.Count; i++)
-                    Hands[i].HandTrailDrawer?.BaseEffect?.Dispose();
-            }
             while (Hands.Count > (includeUniversalHands ? 0 : TotalUniversalHands))
                 Hands.Remove(Hands.Last());
 

@@ -28,7 +28,7 @@ namespace NoxusBoss.Core.Graphics
 
         public override void OnModLoad()
         {
-            IL.Terraria.GameContent.UI.GameTipsDisplay.Draw += ChangeTipText;
+            Terraria.GameContent.UI.IL_GameTipsDisplay.Draw += ChangeTipText;
         }
 
         public override void PostUpdateEverything()

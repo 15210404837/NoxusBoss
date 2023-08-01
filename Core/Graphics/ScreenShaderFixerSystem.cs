@@ -11,7 +11,7 @@ namespace NoxusBoss.Core.Graphics
         {
             Main.QueueMainThreadAction(() =>
             {
-                IL.Terraria.Main.DoDraw += SubjugateTheRetroPilled;
+                IL_Main.DoDraw += SubjugateTheRetroPilled;
             });
         }
 
