@@ -15,8 +15,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override string Texture => "NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/HollowCircleSoftEdge";
 
-        public override void SetStaticDefaults() => DisplayName.SetDefault("Distortion Field");
-
         public override void SetDefaults()
         {
             Projectile.width = 360;
@@ -49,7 +47,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
                 Projectile.damage = 0;
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(ModContent.BuffType<NoxusFumes>(), EntropicGod.DebuffDuration_RegularAttack);
         }

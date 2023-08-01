@@ -25,10 +25,7 @@ namespace NoxusBoss.Content.Items
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus Sprayer");
-            Tooltip.SetDefault("Shoots a stream of chaos mist that vaporizes everything it touches\n" +
-                "Kills 99.99% of lesser beings guaranteed!");
-            SacrificeTotal = 1;
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()

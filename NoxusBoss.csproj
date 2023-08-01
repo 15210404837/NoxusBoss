@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CalamityMod">
-      <HintPath>..\..\..\tModLoader\ModSources\InfernumMode\bin\Debug\net6.0\CalamityMod.dll</HintPath>
+      <HintPath>..\..\ModReader\CalamityMod\CalamityMod.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

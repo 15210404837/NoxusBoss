@@ -10,8 +10,7 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            SacrificeTotal = 1;
-            DisplayName.SetDefault("Noxus Relic");
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()

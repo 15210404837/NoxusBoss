@@ -62,7 +62,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
         #region Initialization
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Godless Spawn, Noxus");
             Main.npcFrameCount[Type] = 1;
             NPCID.Sets.TrailingMode[NPC.type] = 3;
             NPCID.Sets.TrailCacheLength[NPC.type] = 90;
@@ -75,10 +74,10 @@ namespace NoxusBoss.Content.Bosses.Noxus
             NPCID.Sets.BossBestiaryPriority.Add(Type);
             NPCID.Sets.MPAllowedEnemies[Type] = true;
 
-            On.Terraria.NPC.DoDeathEvents_DropBossPotionsAndHearts += DisableNoxusEggBossDeathEffects;
+            Terraria.On_NPC.DoDeathEvents_DropBossPotionsAndHearts += DisableNoxusEggBossDeathEffects;
         }
 
-        private void DisableNoxusEggBossDeathEffects(On.Terraria.NPC.orig_DoDeathEvents_DropBossPotionsAndHearts orig, NPC self, ref string typeName)
+        private void DisableNoxusEggBossDeathEffects(Terraria.On_NPC.orig_DoDeathEvents_DropBossPotionsAndHearts orig, NPC self, ref string typeName)
         {
             if (self.type != Type)
                 orig(self, ref typeName);
@@ -125,7 +124,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         {
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
             {
-                new FlavorTextBestiaryInfoElement("An anomalous egg of pure darkness. For countless eons it has been patiently waiting to hatch."),
+                new FlavorTextBestiaryInfoElement($"Mods.{Mod.Name}.Bestiary.{Name}"),
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement()
             });
         }
@@ -855,7 +854,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         #region Hit Effects and Loot
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.soundDelay >= 1)
                 return;
@@ -893,7 +892,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             return true;
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(ModContent.BuffType<NoxusFumes>(), DebuffDuration_RegularAttack);
         }

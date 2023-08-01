@@ -12,10 +12,10 @@ namespace NoxusBoss.Core.Graphics
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            On.Terraria.Main.DrawProjectiles += DrawShaderProjectiles;
+            Terraria.On_Main.DrawProjectiles += DrawShaderProjectiles;
         }
 
-        private void DrawShaderProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
+        private void DrawShaderProjectiles(Terraria.On_Main.orig_DrawProjectiles orig, Main self)
         {
             orig(self);
 

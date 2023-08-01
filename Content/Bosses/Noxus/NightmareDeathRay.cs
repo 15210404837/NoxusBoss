@@ -53,11 +53,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Nightmare Deathray");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 225;
@@ -149,7 +144,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + direction * LaserLength, width, ref _);
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(ModContent.BuffType<NoxusFumes>(), EntropicGod.DebuffDuration_PowerfulAttack);
         }

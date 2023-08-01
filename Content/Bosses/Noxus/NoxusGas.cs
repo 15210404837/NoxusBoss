@@ -14,7 +14,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus Gas");
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
         }
@@ -53,7 +52,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             Time++;
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(ModContent.BuffType<NoxusFumes>(), EntropicGod.DebuffDuration_RegularAttack);
         }

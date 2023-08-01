@@ -36,10 +36,10 @@ namespace NoxusBoss.Core.Graphics
 
         public override void OnModLoad()
         {
-            On.Terraria.Main.DrawSunAndMoon += DrawNoxusInBackgroundHook;
+            Terraria.On_Main.DrawSunAndMoon += DrawNoxusInBackgroundHook;
         }
 
-        private void DrawNoxusInBackgroundHook(On.Terraria.Main.orig_DrawSunAndMoon orig, Main self, Main.SceneArea sceneArea, Color moonColor, Color sunColor, float tempMushroomInfluence)
+        private void DrawNoxusInBackgroundHook(Terraria.On_Main.orig_DrawSunAndMoon orig, Main self, Main.SceneArea sceneArea, Color moonColor, Color sunColor, float tempMushroomInfluence)
         {
             orig(self, sceneArea, moonColor, sunColor, tempMushroomInfluence);
             PreviousSceneDetails = sceneArea;

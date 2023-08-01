@@ -1,0 +1,104 @@
+Mods: {
+	NoxusBoss: {
+		Bestiary: {
+			EntropicGod: A fathomless being beyond description.
+			NoxusEgg: An anomalous egg of pure darkness. For countless eons it has been patiently waiting to hatch.
+		}
+
+		Buffs: {
+			NoxusFumes: {
+				DisplayName: Noxus Fumes
+				Description: Cosmic hallucinations surround you...
+			}
+
+			BabyNoxusBuff: {
+				DisplayName: Noxus
+				Description: He's a smol lad now
+			}
+		}
+
+		Items: {
+			Genesis: {
+				DisplayName: Genesis
+				Tooltip: Summons The Godless Spawn, Noxus
+				AlternateTooltip: Left click to summon the The Entropic God, right click to summon the Godless Spawn
+			}
+
+			NoxiousEvocator: {
+				DisplayName: Noxious Evocator
+				Tooltip: Makes cosmic hallucinations materialize around you
+			}
+
+			NoxusEclipseCalculator: {
+				DisplayName: Noxus Eclipse Calculator [DEBUG]
+				Tooltip: Provides information on upcoming Noxus Eclipses within the next 100 days
+			}
+
+			NoxusMask: {
+				DisplayName: Noxus Mask
+				Tooltip: ""
+			}
+
+			NoxusRelic: {
+				DisplayName: Noxus Relic
+				Tooltip: ""
+			}
+
+			NoxusSprayer: {
+				DisplayName: Noxus Sprayer
+				Tooltip:
+					'''
+					Shoots a stream of chaos mist that vaporizes everything it touches
+					Kills 99.99% of lesser beings guaranteed!
+					'''
+			}
+
+			NoxusTrophy: {
+				DisplayName: Noxus Trophy
+				Tooltip: ""
+			}
+
+			OblivionRattle: {
+				DisplayName: Oblivion Rattle
+				Tooltip: ""
+			}
+		}
+
+		NPCs: {
+			EntropicGod.DisplayName: The Entropic God, Noxus
+			NoxusEgg.DisplayName: Godless Spawn, Noxus
+			NoxusEggCutscene.DisplayName: ???
+		}
+
+		Projectiles: {
+			DarkComet.DisplayName: Dark Comet
+			DarkFireball.DisplayName: Dark Fireball
+			DarkPortal.DisplayName: Dark Portal
+			DarkWave.DisplayName: Dark Wave
+			DistortionField.DisplayName: Distortion Field
+			GroundStompShock.DisplayName: Ground Stomp Shock
+			NightmareDeathRay.DisplayName: Nightmare Death Ray
+			NoxSpike.DisplayName: Nox Spike
+			NoxusExplosion.DisplayName: Noxus Explosion
+			NoxusGas.DisplayName: Noxus Gas
+			NoxusSprayerGas.DisplayName: Noxus Sprayer Gas
+			BabyNoxus.DisplayName: Baby Noxus
+		}
+
+		Configs: {
+			NoxusBossConfig: {
+				DisplayName: Config
+
+				ScreenShatterEffects: {
+					Label: Screen Shatter Effects
+					Tooltip: Enables screen shatter effects. Disable if they're too straining on the eyes.
+				}
+
+				VisualOverlayIntensity: {
+					Label: Visual Overlay Intensity
+					Tooltip: Changes the intensity of visual overlays such as blur and chromatic aberration.
+				}
+			}
+		}
+	}
+}

@@ -8,6 +8,7 @@ using NoxusBoss.Content.NPCs;
 using NoxusBoss.Core;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items
@@ -16,9 +17,7 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Genesis");
-            Tooltip.SetDefault("Summons The Godless Spawn, Noxus");
-            SacrificeTotal = 1;
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()
@@ -51,7 +50,7 @@ namespace NoxusBoss.Content.Items
 
                 // If the player is in multiplayer, request a boss spawn.
                 else
-                    NetMessage.SendData(MessageID.SpawnBoss, number: player.whoAmI, number2: noxusID);
+                    NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: noxusID);
             }
 
             return true;
@@ -63,7 +62,7 @@ namespace NoxusBoss.Content.Items
         {
             var toolip = tooltips.Find(l => l.Text.Contains("Summons"));
             if (WorldSaveSystem.HasDefeatedEgg)
-                toolip.Text = "Left click to summon the The Entropic God, right click to summon the Godless Spawn";
+                toolip.Text = Language.GetTextValue($"Mods.{Mod.Name}.Items.{Name}.AlternateTooltip");
         }
 
         public override void AddRecipes()

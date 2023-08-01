@@ -406,7 +406,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
         #region Initialization
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("The Entropic God, Noxus");
             Main.npcFrameCount[Type] = 1;
             NPCID.Sets.MustAlwaysDraw[Type] = true;
             NPCID.Sets.TrailingMode[NPC.type] = 3;
@@ -487,7 +486,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         {
             bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
             {
-                new FlavorTextBestiaryInfoElement("A fathomless being beyond description."),
+                new FlavorTextBestiaryInfoElement($"Mods.{Mod.Name}.Bestiary.{Name}"),
                 new MoonLordPortraitBackgroundProviderBestiaryInfoElement()
             });
         }
@@ -2972,7 +2971,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         #region Hit Effects and Loot
 
-        public override void HitEffect(int hitDirection, double damage)
+        public override void HitEffect(NPC.HitInfo hit)
         {
             if (NPC.soundDelay >= 1 || CurrentAttack == EntropicGodAttackType.DeathAnimation)
                 return;
@@ -3022,14 +3021,14 @@ namespace NoxusBoss.Content.Bosses.Noxus
             return true;
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
             target.AddBuff(ModContent.BuffType<NoxusFumes>(), DebuffDuration_RegularAttack);
         }
 
         // Timed DR but a bit different. I'm typically very, very reluctant towards this mechanic, but given that this boss exists in shadowspec tier, I am willing to make
         // an exception. This will not cause the dumb "lol do 0 damage for 30 seconds" problems that Calamity had in the past.
-        public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
+        public override void ModifyIncomingHit(ref NPC.HitModifiers modifiers)
         {
             // Calculate how far ahead Noxus' HP is relative to how long he's existed so far.
             // This would be one if you somehow got him to death on the first frame of the fight.
@@ -3039,8 +3038,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
             float damageReductionInterpolant = Pow(aheadOfFightLengthInterpolant, 0.64f);
             float damageReductionFactor = Lerp(1f, MaxTimedDRDamageReduction, damageReductionInterpolant);
-            damage *= damageReductionFactor;
-            return true;
+            modifiers.FinalDamage *= damageReductionFactor;
         }
         #endregion Hit Effects and Loot
 

@@ -14,7 +14,7 @@ namespace NoxusBoss.Core.Graphics
 
         public static event RenderTargetUpdateDelegate RenderTargetUpdateLoopEvent;
 
-        internal static void ResetTargetSizes(On.Terraria.Main.orig_SetDisplayMode orig, int width, int height, bool fullscreen)
+        internal static void ResetTargetSizes(Terraria.On_Main.orig_SetDisplayMode orig, int width, int height, bool fullscreen)
         {
             foreach (ManagedRenderTarget target in ManagedTargets)
             {
@@ -51,7 +51,7 @@ namespace NoxusBoss.Core.Graphics
         {
             ManagedTargets = new();
             Main.OnPreDraw += HandleTargetUpdateLoop;
-            On.Terraria.Main.SetDisplayMode += ResetTargetSizes;
+            Terraria.On_Main.SetDisplayMode += ResetTargetSizes;
         }
 
         public override void OnModUnload()

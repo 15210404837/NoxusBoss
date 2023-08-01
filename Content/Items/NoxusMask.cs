@@ -9,8 +9,7 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            SacrificeTotal = 1;
-            DisplayName.SetDefault("Noxus Mask");
+            Item.ResearchUnlockCount = 1;
 
             if (Main.netMode != NetmodeID.Server)
                 ArmorIDs.Head.Sets.DrawHead[Item.headSlot] = false;

@@ -9,8 +9,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NoxusExplosion : ModProjectile
     {
-        public override void SetStaticDefaults() => DisplayName.SetDefault("Dark Explosion");
-
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 720;
@@ -54,7 +52,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             }
         }
 
-        public override void OnHitPlayer(Player target, int damage, bool crit)
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(ModContent.BuffType<NoxusFumes>(), EntropicGod.DebuffDuration_RegularAttack);
         }
