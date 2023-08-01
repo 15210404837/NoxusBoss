@@ -13,9 +13,7 @@ namespace NoxusBoss.Content.Items
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus Eclipse Calculator [DEBUG]");
-            Tooltip.SetDefault($"Provides information on upcoming Noxus Eclipses within the next {TotalDaysToCheck} days");
-            SacrificeTotal = 1;
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()

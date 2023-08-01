@@ -1,13 +1,12 @@
 ﻿using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Items;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses.Noxus
+namespace NoxusBoss.Content.Items
 {
     public class NoxusSprayerGas : ModProjectile
     {
@@ -23,7 +22,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus Gas");
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;
         }

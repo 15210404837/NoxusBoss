@@ -10,9 +10,7 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            SacrificeTotal = 1;
-            DisplayName.SetDefault("Noxious Evocator");
-            Tooltip.SetDefault("Makes cosmic hallucinations materialize around you");
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()

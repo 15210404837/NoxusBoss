@@ -53,7 +53,6 @@ namespace NoxusBoss.Content.NPCs
         #region Initialization
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("???");
             this.HideFromBestiary();
         }
 

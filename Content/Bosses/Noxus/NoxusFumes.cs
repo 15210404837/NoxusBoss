@@ -12,8 +12,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus Fumes");
-            Description.SetDefault("Cosmic hallucinations surround you...");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

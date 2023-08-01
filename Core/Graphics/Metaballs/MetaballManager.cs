@@ -27,8 +27,8 @@ namespace NoxusBoss.Core.Graphics
                 metaballs.Add((Metaball)Activator.CreateInstance(t));
             }
 
-            On.Terraria.Main.DrawProjectiles += DrawMetaballsAfterProjectiles;
-            On.Terraria.Main.DrawNPCs += DrawMetaballsBeforeNPCs;
+            Terraria.On_Main.DrawProjectiles += DrawMetaballsAfterProjectiles;
+            Terraria.On_Main.DrawNPCs += DrawMetaballsBeforeNPCs;
         }
 
         public override void OnModUnload()
@@ -72,7 +72,7 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.End();
         }
 
-        private void DrawMetaballsAfterProjectiles(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
+        private void DrawMetaballsAfterProjectiles(Terraria.On_Main.orig_DrawProjectiles orig, Main self)
         {
             orig(self);
 
@@ -81,7 +81,7 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.End();
         }
 
-        private void DrawMetaballsBeforeNPCs(On.Terraria.Main.orig_DrawNPCs orig, Main self, bool behindTiles)
+        private void DrawMetaballsBeforeNPCs(Terraria.On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
         {
             if (!behindTiles)
             {

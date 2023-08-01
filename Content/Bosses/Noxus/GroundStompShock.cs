@@ -11,11 +11,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
     {
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Ground Shock");
-        }
-
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 2;

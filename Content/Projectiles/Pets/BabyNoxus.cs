@@ -25,7 +25,6 @@ namespace NoxusBoss.Content.Projectiles.Pets
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus");
             Main.projPet[Projectile.type] = true;
         }
 

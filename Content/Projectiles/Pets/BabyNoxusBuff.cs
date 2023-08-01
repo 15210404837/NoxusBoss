@@ -7,8 +7,6 @@ namespace NoxusBoss.Content.Projectiles.Pets
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Noxus");
-            Description.SetDefault("He's a smol lad now");
             Main.buffNoTimeDisplay[Type] = true;
             Main.vanityPet[Type] = true;
         }

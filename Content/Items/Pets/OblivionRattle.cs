@@ -11,8 +11,7 @@ namespace NoxusBoss.Content.Items.Pets
     {
         public override void SetStaticDefaults()
         {
-            SacrificeTotal = 1;
-            DisplayName.SetDefault("Oblivion Rattle");
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()

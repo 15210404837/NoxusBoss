@@ -64,7 +64,7 @@ namespace NoxusBoss.Core.Graphics
         {
             Main.QueueMainThreadAction(() =>
             {
-                IL.Terraria.Main.DoDraw += DrawOverBlackNPCCache;
+                Terraria.IL_Main.DoDraw += DrawOverBlackNPCCache;
             });
         }
 
@@ -72,7 +72,7 @@ namespace NoxusBoss.Core.Graphics
         {
             Main.QueueMainThreadAction(() =>
             {
-                IL.Terraria.Main.DoDraw -= DrawOverBlackNPCCache;
+                Terraria.IL_Main.DoDraw -= DrawOverBlackNPCCache;
             });
         }
     }

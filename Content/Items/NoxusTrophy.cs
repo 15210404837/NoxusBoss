@@ -9,8 +9,7 @@ namespace NoxusBoss.Content.Items
     {
         public override void SetStaticDefaults()
         {
-            SacrificeTotal = 1;
-            DisplayName.SetDefault("Noxus Trophy");
+            Item.ResearchUnlockCount = 1;
         }
 
         public override void SetDefaults()

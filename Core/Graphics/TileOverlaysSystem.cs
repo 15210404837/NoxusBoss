@@ -23,7 +23,7 @@ namespace NoxusBoss.Core.Graphics
 
             Main.QueueMainThreadAction(() => OverlayableTarget = new(true, RenderTargetManager.CreateScreenSizedTarget));
             Main.OnPreDraw += PrepareOverlayTarget;
-            On.Terraria.Main.DrawProjectiles += DrawOverlayTarget;
+            Terraria.On_Main.DrawProjectiles += DrawOverlayTarget;
         }
 
         public override void OnModUnload()
@@ -54,7 +54,7 @@ namespace NoxusBoss.Core.Graphics
             gd.SetRenderTarget(null);
         }
 
-        private void DrawOverlayTarget(On.Terraria.Main.orig_DrawProjectiles orig, Main self)
+        private void DrawOverlayTarget(Terraria.On_Main.orig_DrawProjectiles orig, Main self)
         {
             orig(self);
 

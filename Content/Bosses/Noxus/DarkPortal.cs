@@ -25,8 +25,6 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
-        public override void SetStaticDefaults() => DisplayName.SetDefault("Dark Portal");
-
         public override void SetDefaults()
         {
             Projectile.width = 600;

@@ -26,10 +26,10 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override void Load()
         {
-            On.Terraria.GameContent.Events.MoonlordDeathDrama.DrawWhite += DrawFog;
+            Terraria.GameContent.Events.On_MoonlordDeathDrama.DrawWhite += DrawFog;
         }
 
-        private void DrawFog(On.Terraria.GameContent.Events.MoonlordDeathDrama.orig_DrawWhite orig, SpriteBatch spriteBatch)
+        private void DrawFog(Terraria.GameContent.Events.On_MoonlordDeathDrama.orig_DrawWhite orig, SpriteBatch spriteBatch)
         {
             orig(spriteBatch);
 
