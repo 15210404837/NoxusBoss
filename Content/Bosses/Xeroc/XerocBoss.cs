@@ -657,8 +657,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
             }
 
-            Music = MusicLoader.GetMusicSlot(ModLoader.GetMod("CalamityModMusic"), "Sounds/Music/BossRushTier3");
-
             // Handle mumble sounds.
             if (MumbleTimer >= 1)
             {

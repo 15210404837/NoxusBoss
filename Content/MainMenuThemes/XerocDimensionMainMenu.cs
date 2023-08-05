@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -21,6 +22,8 @@ namespace NoxusBoss.Content.MainMenuThemes
         }
 
         public override string DisplayName => "Light Dimension";
+
+        public override Asset<Texture2D> Logo => ModContent.Request<Texture2D>("NoxusBoss/Content/MainMenuThemes/XerocLogo");
 
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
         {

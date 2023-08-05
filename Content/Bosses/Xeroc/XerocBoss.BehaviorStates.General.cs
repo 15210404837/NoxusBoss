@@ -409,6 +409,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int crashDelay = 269;
             ref float screenShattered = ref NPC.ai[2];
 
+            // Make the different stars interpolant dissipate, in case Xeroc was defeated when it was changed.
+            DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.03f, 0f, 1f);
+
             // Stay at 1 HP.
             NPC.life = 1;
             NPC.dontTakeDamage = true;

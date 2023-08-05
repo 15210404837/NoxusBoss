@@ -46,6 +46,9 @@ namespace NoxusBoss.Core.Graphics
             get
             {
                 Vector2 originalPosition = new Vector2(CalamityConfig.Instance.RageMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.RageMeterPosY * Main.screenHeight * 0.01f).Floor();
+                if (IsUIDestroyed)
+                    return originalPosition;
+
                 return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
             }
         }
@@ -55,6 +58,9 @@ namespace NoxusBoss.Core.Graphics
             get
             {
                 Vector2 originalPosition = new Vector2(CalamityConfig.Instance.AdrenalineMeterPosX * Main.screenWidth * 0.01f, CalamityConfig.Instance.AdrenalineMeterPosY * Main.screenHeight * 0.01f).Floor();
+                if (IsUIDestroyed)
+                    return originalPosition;
+
                 return Vector2.Lerp(originalPosition, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + new Vector2(-100f, -80f) * Main.UIScale, MoveToCenterOfScreenInterpolant);
             }
         }
