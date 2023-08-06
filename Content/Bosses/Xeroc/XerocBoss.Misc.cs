@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using CalamityMod;
 using CalamityMod.Items.Potions;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Items;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -100,6 +102,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void BossLoot(ref string name, ref int potionType) => potionType = ModContent.ItemType<OmegaHealingPotion>();
 
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ModContent.ItemType<CheatPermissionSlip>());
+        }
+
         // Ensure that Xeroc' contact damage adheres to the special boss-specific cooldown slot, to prevent things like lava cheese.
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
@@ -115,7 +122,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             return false;
         }
 
-        private void ExpandEffectiveHitboxForHands(Terraria.On_NPC.orig_GetMeleeCollisionData orig, Rectangle victimHitbox, int enemyIndex, ref int specialHitSetter, ref float damageMultiplier, ref Rectangle npcRect)
+        private void ExpandEffectiveHitboxForHands(On_NPC.orig_GetMeleeCollisionData orig, Rectangle victimHitbox, int enemyIndex, ref int specialHitSetter, ref float damageMultiplier, ref Rectangle npcRect)
         {
             orig(victimHitbox, enemyIndex, ref specialHitSetter, ref damageMultiplier, ref npcRect);
 

@@ -73,6 +73,17 @@ Mods: {
 				DisplayName: Deific Touch
 				Tooltip: Reveals a light dimension dimension behind your cursor
 			}
+
+			CheatPermissionSlip: {
+				DisplayName: Cheat Permission Slip
+				Tooltip:
+					'''
+					Congratulations! Now go download the DragonLens mod
+					It's not cheating. This slip gives you permission
+					Go on. Download it.
+					Right now.
+					'''
+			}
 		}
 
 		NPCs: {
