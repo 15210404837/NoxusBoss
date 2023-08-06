@@ -84,6 +84,11 @@ Mods: {
 					Right now.
 					'''
 			}
+
+			XerocMusicBoxItem: {
+				DisplayName: Music Box (Nameless Deity)
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -129,6 +134,8 @@ Mods: {
 			TelegraphedScreenSlice2.DisplayName: Dimensional Slice
 			TelegraphedStarLaserbeam.DisplayName: Solar Burst
 		}
+
+		Tiles.XerocMusicBox.MapEntry: Music Box
 
 		Configs: {
 			NoxusBossConfig: {
