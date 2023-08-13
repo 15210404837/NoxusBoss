@@ -544,6 +544,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Main.menuMode = 10;
                         Main.gameMenu = true;
                         Main.hideUI = false;
+                        Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GiveXerocLootUponReenteringWorld = true;
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
                         WorldSaveSystem.HasDefeatedXeroc = true;
                         WorldGen.SaveAndQuit();
