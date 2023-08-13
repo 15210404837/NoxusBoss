@@ -4,7 +4,6 @@ using NoxusBoss.Core.Graphics;
 using Terraria.ModLoader;
 using Terraria;
 using CalamityMod;
-using Terraria.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
@@ -18,12 +17,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         }
 
         public static ManagedRenderTarget AfterimageTargetPrevious
-        {
-            get;
-            private set;
-        }
-
-        public static ManagedRenderTarget BlurBuffer
         {
             get;
             private set;
@@ -80,6 +73,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Prepare the afterimage psychedelic shader.
             var afterimageShader = ShaderManager.GetShader("XerocPsychedelicAfterimageShader");
             afterimageShader.TrySetParameter("uScreenResolution", new Vector2(Main.screenWidth, Main.screenHeight));
+            afterimageShader.TrySetParameter("warpSpeed", 0.0008f);
             afterimageShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
             afterimageShader.Apply();
 

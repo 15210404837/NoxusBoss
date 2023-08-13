@@ -26,8 +26,8 @@ namespace NoxusBoss.Content.Items
         {
             Item.width = 36;
             Item.height = 36;
-            Item.value = CalamityGlobalItem.Rarity9BuyPrice;
-            Item.rare = ModContent.RarityType<Violet>();
+            Item.value = CalamityGlobalItem.RarityHotPinkBuyPrice;
+            Item.rare = ModContent.RarityType<CalamityRed>();
             Item.accessory = true;
         }
 

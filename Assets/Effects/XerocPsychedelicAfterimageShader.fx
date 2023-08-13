@@ -2,7 +2,7 @@ sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
 
 float globalTime;
-float uIntensity;
+float warpSpeed;
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
@@ -11,7 +11,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float2 warpNoiseOffset = float2(sin(warpAngle + 1.57), sin(warpAngle));
     
     // Make the colors dissipate and move around in accordance with the warp noise.
-    float4 color = tex2D(uImage0, coords - warpNoiseOffset * 0.0008);
+    float4 color = tex2D(uImage0, coords - warpNoiseOffset * warpSpeed);
     color.rgb *= 0.884;
     color.a *= 0.8;
     

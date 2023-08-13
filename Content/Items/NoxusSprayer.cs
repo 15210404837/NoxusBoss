@@ -46,8 +46,8 @@ namespace NoxusBoss.Content.Items
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.UseSound = SoundID.Item20 with { MaxInstances = 50, Volume = 0.3f };
 
-            Item.value = CalamityGlobalItem.RarityVioletBuyPrice;
-            Item.rare = ModContent.RarityType<Violet>();
+            Item.value = CalamityGlobalItem.RarityHotPinkBuyPrice;
+            Item.rare = ModContent.RarityType<CalamityRed>();
 
             Item.shoot = ModContent.ProjectileType<NoxusSprayerGas>();
             Item.shootSpeed = 7f;

@@ -105,6 +105,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ModContent.ItemType<CheatPermissionSlip>());
+            npcLoot.Add(ModContent.ItemType<DivineWings>());
         }
 
         // Ensure that Xeroc' contact damage adheres to the special boss-specific cooldown slot, to prevent things like lava cheese.

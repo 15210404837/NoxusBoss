@@ -16,7 +16,7 @@ namespace NoxusBoss.Content.Items
             Item.width = 22;
             Item.height = 22;
             Item.value = 0;
-            Item.rare = ModContent.RarityType<Violet>();
+            Item.rare = ModContent.RarityType<CalamityRed>();
         }
     }
 }

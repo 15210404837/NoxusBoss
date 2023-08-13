@@ -18,6 +18,12 @@ namespace NoxusBoss.Core.Graphics.Shaders
     {
         private static Dictionary<string, ManagedShader> shaders;
 
+        public static bool HasFinishedLoading
+        {
+            get;
+            private set;
+        }
+
         public override void OnModLoad()
         {
             // Don't attempt to load shaders on servers.
@@ -61,6 +67,8 @@ namespace NoxusBoss.Core.Graphics.Shaders
             ScreenShaderData telegraphShader = new(s6, "AutoloadPass");
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"] = new Filter(telegraphShader, EffectPriority.VeryHigh);
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"].Load();
+
+            HasFinishedLoading = true;
         }
 
         public static ManagedShader GetShader(string name) => shaders[name];

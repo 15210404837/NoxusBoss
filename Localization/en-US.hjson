@@ -74,6 +74,18 @@ Mods: {
 				Tooltip: Reveals a light dimension dimension behind your cursor
 			}
 
+			DivineWings: {
+				DisplayName: Divine Wings
+				Tooltip:
+					'''
+					Horizontal speed: 16.67
+					Acceleration multiplier: 3.7
+					Sublime vertical speed
+					Flight time: ∞
+					You have passed the test
+					'''
+			}
+
 			CheatPermissionSlip: {
 				DisplayName: Cheat Permission Slip
 				Tooltip:
