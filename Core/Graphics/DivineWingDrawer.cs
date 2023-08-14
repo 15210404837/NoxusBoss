@@ -18,6 +18,8 @@ namespace NoxusBoss.Core.Graphics
     {
         private static bool disallowSpecialWingDrawing;
 
+        private static bool anyoneIsUsingWings;
+
         private static ManagedRenderTarget AfterimageTarget
         {
             get;
@@ -49,15 +51,18 @@ namespace NoxusBoss.Core.Graphics
 
         private void DrawWingsTarget(On_LegacyPlayerRenderer.orig_DrawPlayers orig, LegacyPlayerRenderer self, Camera camera, IEnumerable<Player> players)
         {
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, DepthStencilState.None, camera.Rasterizer, null, camera.GameViewMatrix.TransformationMatrix);
+            if (anyoneIsUsingWings)
+            {
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, DepthStencilState.None, camera.Rasterizer, null, camera.GameViewMatrix.TransformationMatrix);
 
-            // Optionally apply the wing shader. This will have some weird multiplayer oddities in terms of other's wings being affected by the client's shader but whatever.
-            // TODO -- Address that at some point potentially.
-            if (Main.LocalPlayer.cWings != 0)
-                GameShaders.Armor.Apply(Main.LocalPlayer.cWings, Main.LocalPlayer);
+                // Optionally apply the wing shader. This will have some weird multiplayer oddities in terms of other's wings being affected by the client's shader but whatever.
+                // TODO -- Address that at some point potentially.
+                if (Main.LocalPlayer.cWings != 0)
+                    GameShaders.Armor.Apply(Main.LocalPlayer.cWings, Main.LocalPlayer);
 
-            Main.spriteBatch.Draw(AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, Color.White);
-            Main.spriteBatch.End();
+                Main.spriteBatch.Draw(AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, Color.White);
+                Main.spriteBatch.End();
+            }
 
             orig(self, camera, players);
         }
@@ -90,7 +95,19 @@ namespace NoxusBoss.Core.Graphics
 
         private void PrepareAfterimageTarget(GameTime obj)
         {
-            if (!ShaderManager.HasFinishedLoading)
+            // Check if anyone is using the special wings.
+            anyoneIsUsingWings = false;
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                Player p = Main.player[i];
+                if (p.wings != DivineWings.WingSlotID || !p.active || p.dead)
+                    continue;
+
+                anyoneIsUsingWings = true;
+                break;
+            }
+
+            if (!ShaderManager.HasFinishedLoading || Main.gameMenu || !anyoneIsUsingWings)
                 return;
 
             var gd = Main.instance.GraphicsDevice;
@@ -147,7 +164,7 @@ namespace NoxusBoss.Core.Graphics
 
         public static void ApplyPsychedelicDiffusionEffects()
         {
-            if (!ShaderManager.HasFinishedLoading)
+            if (!ShaderManager.HasFinishedLoading || !anyoneIsUsingWings)
                 return;
 
             var gd = Main.instance.GraphicsDevice;

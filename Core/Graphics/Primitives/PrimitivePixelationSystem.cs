@@ -24,12 +24,30 @@ namespace NoxusBoss.Core.Graphics
                 return;
 
             Main.QueueMainThreadAction(() => PixelationTarget = new(true, RenderTargetManager.CreateScreenSizedTarget));
-            On_Main.CheckMonoliths += PreparePixelationTarget; ;
+            On_Main.CheckMonoliths += PreparePixelationTarget;
             On_Main.DoDraw_DrawNPCsOverTiles += DrawPixelationTarget;
         }
 
         private void PreparePixelationTarget(Terraria.On_Main.orig_CheckMonoliths orig)
         {
+            bool primsExist = false;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile p = Main.projectile[i];
+                if (!p.active || p.ModProjectile is not IDrawPixelatedPrims)
+                    continue;
+
+                primsExist = true;
+                break;
+            }
+
+            if (!primsExist)
+            {
+                primsWereDrawnLastFrame = false;
+                orig();
+                return;
+            }
+
             // Start a spritebatch, as one does not exist before the method we're detouring.
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null);
 

@@ -73,6 +73,6 @@ namespace NoxusBoss.Core.Graphics.Shaders
 
         public static ManagedShader GetShader(string name) => shaders[name];
 
-        public static void SetShader(string name, Ref<Effect> newShaderData) => shaders[name] = new(newShaderData);
+        public static void SetShader(string name, Ref<Effect> newShaderData) => shaders[name] = new(name, newShaderData);
     }
 }

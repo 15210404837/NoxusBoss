@@ -45,7 +45,7 @@ namespace NoxusBoss.Core.Graphics
         }
 
         public static RenderTarget2D CreateScreenSizedTarget(int screenWidth, int screenHeight) =>
-            new(Main.instance.GraphicsDevice, screenWidth, screenHeight, true, SurfaceFormat.Color, DepthFormat.Depth24, 8, RenderTargetUsage.PreserveContents);
+            new(Main.instance.GraphicsDevice, screenWidth, screenHeight, true, SurfaceFormat.Color, DepthFormat.Depth24, 1, RenderTargetUsage.PreserveContents);
 
         public override void OnModLoad()
         {

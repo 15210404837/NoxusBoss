@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -6,15 +7,22 @@ using Terraria.ID;
 
 namespace NoxusBoss.Core.Graphics.Shaders
 {
+    [DebuggerDisplay("Shader - '{Name}'")]
     public class ManagedShader
     {
         public readonly Ref<Effect> Shader;
+
+        public readonly string Name;
 
         public const string TextureSizeParameterPrefix = "textureSize";
 
         public const string DefaultPassName = "AutoloadPass";
 
-        public ManagedShader(Ref<Effect> shader) => Shader = shader;
+        public ManagedShader(string name, Ref<Effect> shader)
+        {
+            Name = name;
+            Shader = shader;
+        }
 
         public bool TrySetParameter(string parameterName, object value)
         {
