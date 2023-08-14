@@ -540,6 +540,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     Music = 0;
                     Main.hideUI = true;
+                    XerocKeyboardShader.RandomColorsTimer = 5;
                 }
 
                 if (AttackTimer >= blackDelay + riseDelay + riseTime + handCount * handReleaseRate + chargeLineUpTime + screenShatterDelay + crashDelay)

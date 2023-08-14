@@ -109,7 +109,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
                     float eyeBrightnessAtPixel = 0f;
 
                     int x = gridPosition.X + (int)horizontalEyeOffset - 4;
-                    int y = gridPosition.Y;
+                    int y = gridPosition.Y + 2;
                     if (x >= 0 && y >= 0 && x < EyeBrightnessIntensity.GetLength(0) && y < EyeBrightnessIntensity.GetLength(1))
                         eyeBrightnessAtPixel = EyeBrightnessIntensity[x, y];
                     gridColor += new Vector4(0.54f, 0.32f, 1f, 1f) * EyeBrightness * eyeBrightnessAtPixel * 1.7f;

@@ -33,6 +33,12 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
             set;
         }
 
+        public static int RandomColorsTimer
+        {
+            get;
+            set;
+        }
+
         public static readonly ChromaCondition IsActive = new KeyboardShaderLoader.SimpleCondition(player => CommonConditions.Boss.HighestTierBossOrEvent == ModContent.NPCType<XerocBoss>());
 
         public XerocKeyboardShader()
@@ -65,6 +71,8 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
             {
                 EyeBrightness = Clamp(EyeBrightness * 0.96f - 0.005f, 0f, 1f);
                 DarknessIntensity *= 0.94f;
+                if (RandomColorsTimer > 0)
+                    RandomColorsTimer--;
             }
         }
 
@@ -88,11 +96,20 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
         {
             for (int i = 0; i < fragment.Count; i++)
             {
-                // Calculate the base vibrancy color, with much of the background being dark with a handful of glimmering stars.
+                // Calculate coordinates.
                 Point gridPosition = fragment.GetGridPositionOfIndex(i);
                 Vector2 canvasPositionOfIndex = fragment.GetCanvasPositionOfIndex(i);
                 Vector2 uvPositionOfIndex = canvasPositionOfIndex / fragment.CanvasSize;
 
+                // Use random colors if necessary.
+                if (RandomColorsTimer >= 1)
+                {
+                    float hue = NoiseHelper.GetDynamicNoise(canvasPositionOfIndex * 2f, time * 0.72f);
+                    fragment.SetColor(i, Main.hslToRgb(hue, 0.7f, 0.5f).ToVector4());
+                    continue;
+                }
+
+                // Calculate the base vibrancy color, with much of the background being dark with a handful of glimmering stars.
                 float verticalOffset = NoiseHelper.GetDynamicNoise(canvasPositionOfIndex, time * 0.2f);
                 Vector4 gridColor = Color.Lerp(Color.Black, Color.Indigo, 0.3f).ToVector4();
                 float vibrancyInterpolant = Sin((verticalOffset + canvasPositionOfIndex.X + canvasPositionOfIndex.Y) * TwoPi);
@@ -120,7 +137,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
                     float eyeBrightnessAtPixel = 0f;
 
                     int x = gridPosition.X + (int)horizontalEyeOffset - 6;
-                    int y = gridPosition.Y;
+                    int y = gridPosition.Y + 2;
                     if (x >= 0 && y >= 0 && x < EyeBrightnessIntensity.GetLength(0) && y < EyeBrightnessIntensity.GetLength(1))
                         eyeBrightnessAtPixel = EyeBrightnessIntensity[x, y];
                     gridColor += Vector4.One * EyeBrightness * eyeBrightnessAtPixel * (1f - DarknessIntensity);
