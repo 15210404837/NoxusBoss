@@ -54,8 +54,10 @@ namespace NoxusBoss.Core.Graphics
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
 
             // Ensure that the target has the correct screen size.
-            if (XerocDimensionTarget.Width != Main.screenWidth || XerocDimensionTarget.Height != Main.screenHeight)
-                XerocDimensionTarget.Recreate(Main.screenWidth, Main.screenHeight);
+            int width = Main.instance.GraphicsDevice.Viewport.Width;
+            int height = Main.instance.GraphicsDevice.Viewport.Height;
+            if (XerocDimensionTarget.Width != width || XerocDimensionTarget.Height != height)
+                XerocDimensionTarget.Recreate(width, height);
 
             // Evaluate the intensity of the effect. If it is not in use, don't waste resources attempting to update it.
             float intensity = HeavenlyBackgroundIntensity * Remap(ManualSunScale, 1f, 12f, 1f, 0.45f);
