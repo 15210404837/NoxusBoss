@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using Terraria;
@@ -21,6 +22,8 @@ namespace NoxusBoss.Core.Graphics
             set;
         }
 
+        public static readonly Regex PercentageExtractor = new(@"([0-9]+%)", RegexOptions.Compiled);
+
         public static string SprayDeletionTipsText => "Do not.";
 
         public static string DeathAnimationTipsText => "You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. " +
@@ -29,6 +32,36 @@ namespace NoxusBoss.Core.Graphics
         public override void OnModLoad()
         {
             Terraria.GameContent.UI.IL_GameTipsDisplay.Draw += ChangeTipText;
+            On_Main.DrawMenu += ChangeStatusText;
+        }
+
+        private void ChangeStatusText(On_Main.orig_DrawMenu orig, Main self, GameTime gameTime)
+        {
+            if (UseSprayText)
+            {
+                Main.statusText = string.Empty;
+                orig(self, gameTime);
+                return;
+            }
+
+            if (UseDeathAnimationText || true)
+            {
+                string oldStatusText = Main.statusText;
+
+                // Incorporate the percentage into the replacement text, if one was present previously.
+                if (PercentageExtractor.IsMatch(oldStatusText))
+                {
+                    string percentage = PercentageExtractor.Match(oldStatusText).Value;
+                    Main.statusText = $"You have passed the test: {percentage}";
+                }
+
+                // Otherwise simply use the regular ominous text about having "passed the test".
+                else
+                    Main.statusText = "You have passed the test.";
+
+                Main.oldStatusText = Main.statusText;
+            }
+            orig(self, gameTime);
         }
 
         public override void PostUpdateEverything()
