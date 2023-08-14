@@ -10,6 +10,7 @@ using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -260,6 +261,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 GeneralParticleHandler.SpawnParticle(burst);
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
                 Target.Calamity().GeneralScreenShakePower = 15f;
+                XerocKeyboardShader.BrightnessIntensity += 0.3f;
             }
             NPC.Center += Main.rand.NextVector2Circular(12.5f, 12.5f);
 
@@ -300,6 +302,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 RipperUIDestructionSystem.CreateBarDestructionEffects();
                 RipperUIDestructionSystem.IsUIDestroyed = true;
+                XerocKeyboardShader.BrightnessIntensity = 1f;
             }
 
             // Play mumble sounds.
@@ -347,13 +350,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (daggerShootCounter < daggerShootCount && AttackTimer >= backgroundEnterTime + cooldownTime)
                 AttackTimer = backgroundEnterTime + cooldownTime;
 
-            // Summon three black holes above the target after the dagger patterns have passed.
+            // Summon two black holes above the target after the dagger patterns have passed.
             if (AttackTimer == backgroundEnterTime + cooldownTime + blackHoleSummonDelay)
             {
                 Vector2 blackHoleSpawnPoint = Target.Center - Vector2.UnitY * 240f;
                 SoundEngine.PlaySound(ExplosionTeleportSound);
                 SoundEngine.PlaySound(SupernovaSound);
                 ScreenEffectSystem.SetFlashEffect(blackHoleSpawnPoint, 2f, 150);
+                XerocKeyboardShader.BrightnessIntensity = 1f;
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
@@ -446,9 +450,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
                 SeamScale = 0f;
+                XerocKeyboardShader.BrightnessIntensity = 1f;
             }
             else
+            {
                 UniversalBlackOverlayInterpolant = Clamp(UniversalBlackOverlayInterpolant + 0.06f, 0f, 1f);
+                XerocKeyboardShader.DarknessIntensity = UniversalBlackOverlayInterpolant;
+            }
 
             if (AttackTimer == 1f)
                 SoundEngine.PlaySound(ScreamSoundLong);

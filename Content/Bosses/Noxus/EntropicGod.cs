@@ -19,6 +19,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static NoxusBoss.Core.Graphics.Shaders.Keyboard.NoxusKeyboardShader;
 
 namespace NoxusBoss.Content.Bosses.Noxus
 {
@@ -687,6 +688,9 @@ namespace NoxusBoss.Content.Bosses.Noxus
             if (CurrentPhase >= 1)
                 ChargeAfterimageInterpolant = 1f;
 
+            // Set the keyboard shader's eye intensity.
+            EyeBrightness = BigEyeOpacity;
+
             // Increment timers.
             AttackTimer++;
             FightLength++;
@@ -1071,6 +1075,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
                     SpinAngularOffset = Main.rand.NextFloat(TwoPi);
                     TeleportTo(Target.Center + SpinAngularOffset.ToRotationVector2() * spinRadius);
                     ScreenShatterSystem.CreateShatterEffect(NPC.Center - Main.screenPosition);
+                    BrightnessIntensity = 1f;
 
                     SoundEngine.PlaySound(ExplosionTeleportSound with
                     {
@@ -1796,6 +1801,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
                     // Make the screen shatter.
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     ScreenShatterSystem.CreateShatterEffect(new Vector2(NPC.Center.X - Main.screenPosition.X, Main.screenHeight));
+                    BrightnessIntensity = 1f;
 
                     // Release the spikes.
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -1837,6 +1843,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
                 SoundEngine.PlaySound(ExplosionTeleportSound);
                 ScreenShatterSystem.CreateShatterEffect(new Vector2(NPC.Center.X - Main.screenPosition.X, Main.screenHeight));
+                BrightnessIntensity = 1f;
             }
 
             // Move hands.
@@ -2107,6 +2114,8 @@ namespace NoxusBoss.Content.Bosses.Noxus
             if (AttackTimer == delayBeforeInvisible + twinkleHoverTime + chargeTime)
             {
                 ScreenShatterSystem.CreateShatterEffect(NPC.Center - Main.screenPosition);
+                BrightnessIntensity = 1f;
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
@@ -2217,6 +2226,8 @@ namespace NoxusBoss.Content.Bosses.Noxus
                     NPC.oldPos[i] = Vector2.Zero;
 
                 SoundEngine.PlaySound(JumpscareSound with { Volume = 0.5f }, NPC.Center);
+                BrightnessIntensity += 0.67f;
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
@@ -2311,6 +2322,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
                     NPC.oldPos[i] = Vector2.Zero;
 
                 SoundEngine.PlaySound(JumpscareSound with { Volume = 0.45f, MaxInstances = 9 }, NPC.Center);
+                BrightnessIntensity += 0.67f;
             }
 
             // Accelerate.
@@ -2357,6 +2369,8 @@ namespace NoxusBoss.Content.Bosses.Noxus
             {
                 NPC.Center = TeleportPosition;
                 SoundEngine.PlaySound(JumpscareSound with { Volume = 0.6f }, NPC.Center);
+                BrightnessIntensity += 0.67f;
+
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1.9f, 20);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {

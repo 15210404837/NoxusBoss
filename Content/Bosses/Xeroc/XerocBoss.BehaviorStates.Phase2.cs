@@ -5,6 +5,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -102,6 +103,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 ScreenShatterSystem.CreateShatterEffect(lineSegments.ToArray(), 2);
                 SoundEngine.PlaySound(ExplosionTeleportSound);
+                XerocKeyboardShader.BrightnessIntensity = 1f;
                 Target.Calamity().GeneralScreenShakePower = 15f;
             }
 
@@ -939,6 +941,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 ZPosition = 1f;
                 SwordAnimationTimer = 0;
+                XerocKeyboardShader.BrightnessIntensity = 1f;
                 TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(340f, 340f));
 
                 // Apply visual and sound effects.
@@ -1030,6 +1033,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     SoundEngine.PlaySound(SwordSlashSound);
                     RadialScreenShoveSystem.Start(NPC.Center, 20);
+                    XerocKeyboardShader.BrightnessIntensity += 0.6f;
 
                     // Reset the trail cache for all swords.
                     var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());

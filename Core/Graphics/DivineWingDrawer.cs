@@ -10,6 +10,7 @@ using Terraria.Graphics.Renderers;
 using Terraria.Graphics;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
+using NoxusBoss.Content.Bosses.Xeroc;
 
 namespace NoxusBoss.Core.Graphics
 {
@@ -49,7 +50,7 @@ namespace NoxusBoss.Core.Graphics
         private void DrawWingsTarget(On_LegacyPlayerRenderer.orig_DrawPlayers orig, LegacyPlayerRenderer self, Camera camera, IEnumerable<Player> players)
         {
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, DepthStencilState.None, camera.Rasterizer, null, camera.GameViewMatrix.TransformationMatrix);
-            
+
             // Optionally apply the wing shader. This will have some weird multiplayer oddities in terms of other's wings being affected by the client's shader but whatever.
             // TODO -- Address that at some point potentially.
             if (Main.LocalPlayer.cWings != 0)
@@ -118,7 +119,7 @@ namespace NoxusBoss.Core.Graphics
             // Prepare the wing psychedelic shader.
             Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap").Value;
             var wingShader = ShaderManager.GetShader("XerocPsychedelicWingShader");
-            wingShader.TrySetParameter("colorShift", new Vector3(Cos(Main.GlobalTimeWrappedHourly * 5.8f) * 0.15f + 1.4f, 0.25f, 0.32f));
+            wingShader.TrySetParameter("colorShift", XerocBoss.WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
             wingShader.TrySetParameter("normalMapZoom", new Vector2(0.7f, 0.4f));

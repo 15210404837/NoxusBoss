@@ -8,6 +8,7 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -171,14 +172,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Target.Calamity().GeneralScreenShakePower = 16f;
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
                         NewProjectileBetter(PupilPosition, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
 
-                    for (int i = 0; i < 21; i++)
-                    {
-                        Vector2 starburstVelocity = PupilOffset.SafeNormalize(Vector2.UnitY).RotatedBy(TwoPi * i / 21f) * starburstShootSpeed * 0.08f;
-                        NewProjectileBetter(PupilPosition, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                        for (int i = 0; i < 21; i++)
+                        {
+                            Vector2 starburstVelocity = PupilOffset.SafeNormalize(Vector2.UnitY).RotatedBy(TwoPi * i / 21f) * starburstShootSpeed * 0.08f;
+                            NewProjectileBetter(PupilPosition, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                        }
                     }
 
+                    XerocKeyboardShader.BrightnessIntensity += 0.67f;
                     ScreenEffectSystem.SetBlurEffect(EyePosition, 0.6f, 24);
                 }
 
@@ -330,6 +334,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(Target.Center - sliceDirection * sliceTelegraphLength * 0.5f + sliceSpawnOffset, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, sliceTelegraphTime, sliceTelegraphLength);
 
+                XerocKeyboardShader.BrightnessIntensity += 0.6f;
+
                 sliceCounter++;
                 NPC.netUpdate = true;
             }
@@ -396,7 +402,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Hands[i].ShouldOpen = false;
             }
             if (AttackTimer == 52f)
+            {
                 SoundEngine.PlaySound(FingerSnapSound with { Volume = 4f });
+                XerocKeyboardShader.BrightnessIntensity += 0.45f;
+            }
 
             // Verify that a star actually exists. If not, terminate this attack immediately.
             List<Projectile> stars = AllProjectilesByID(ModContent.ProjectileType<ControlledStar>()).ToList();
@@ -436,6 +445,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(star.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
 
+                XerocKeyboardShader.BrightnessIntensity += 0.72f;
                 NPC.ai[3] = 0f;
                 NPC.netUpdate = true;
             }
@@ -831,6 +841,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                         NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+
+                    XerocKeyboardShader.BrightnessIntensity += 0.6f;
                 }
                 NPC.Center = Target.Center + Vector2.UnitY * 1400f;
 
@@ -876,6 +888,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
                 Target.Calamity().GeneralScreenShakePower = 18f;
                 ScreenEffectSystem.SetChromaticAberrationEffect(star.Center, 1.5f, 54);
+                XerocKeyboardShader.BrightnessIntensity = 1f;
 
                 star.Kill();
 

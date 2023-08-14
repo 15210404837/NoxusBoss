@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;
@@ -69,6 +70,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower += screenShakePower;
                 SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound with { Pitch = 0.5f, MaxInstances = 2 });
                 ScreenEffectSystem.SetFlashEffect(Projectile.Center, 1f, 30);
+                XerocKeyboardShader.BrightnessIntensity += 0.23f;
             }
             if (fadeOut <= 0.8f)
                 Projectile.damage = 0;

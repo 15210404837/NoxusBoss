@@ -7,6 +7,7 @@ using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;
@@ -84,6 +85,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (Time == TelegraphTime - 1f)
             {
                 ScreenEffectSystem.SetFlashEffect(Projectile.Center, 1f, 20);
+                XerocKeyboardShader.BrightnessIntensity += 0.4f;
 
                 // Create particles.
                 for (int i = 0; i < Projectile.width / 4; i++)

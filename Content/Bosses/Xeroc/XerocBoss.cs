@@ -4,6 +4,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -706,6 +707,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Increment timers.
             AttackTimer++;
             FightLength++;
+
+            // Update keyboard shader effects.
+            XerocKeyboardShader.EyeBrightness = NPC.Opacity;
 
             // Perform Z position visual effects.
             PerformZPositionEffects();

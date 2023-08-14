@@ -3,6 +3,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.ShapeCurves;
 using ReLogic.Content;
 using ReLogic.Utilities;
@@ -141,7 +142,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Projectile.velocity *= 0.82f;
             else
             {
-                float approachSpeed = Pow(GetLerpValue(ConvergeTime, 0f, Time, true), 2f) * 24f + 3f;
+                float approachSpeed = Pow(GetLerpValue(ConvergeTime, 0f, Time, true), 2f) * 19f + 3f;
                 Projectile.velocity = Projectile.SafeDirectionTo(target.Center) * approachSpeed;
             }
 
@@ -175,6 +176,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 TimeRestartDelay = 150;
                 Projectile.netUpdate = true;
                 TollCounter++;
+                XerocKeyboardShader.BrightnessIntensity += 0.8f;
 
                 // Make the clock hands split the screen instead on the second toll.
                 if (TollCounter >= 2)

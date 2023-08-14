@@ -24,6 +24,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         private static readonly FieldInfo particlesField = typeof(GeneralParticleHandler).GetField("particles", BindingFlags.NonPublic | BindingFlags.Static);
 
+        public static Vector3 WingColorShift => new Vector3(Cos(Main.GlobalTimeWrappedHourly * 5.8f) * 0.15f + 1.4f, 0.25f, 0.32f);
+
         public override void DrawBehind(int index)
         {
             bool canDraw = CurrentAttack == XerocAttackType.OpenScreenTear || CurrentAttack == XerocAttackType.Awaken || CurrentAttack == XerocAttackType.DeathAnimation || NPC.Opacity >= 0.02f;
@@ -137,7 +139,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Prepare the wing psychedelic shader.
             Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap").Value;
             var wingShader = ShaderManager.GetShader("XerocPsychedelicWingShader");
-            wingShader.TrySetParameter("colorShift", new Vector3(Cos(Main.GlobalTimeWrappedHourly * 5.8f) * 0.15f + 1.4f, 0.25f, 0.32f));
+            wingShader.TrySetParameter("colorShift", WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
             wingShader.TrySetParameter("normalMapZoom", new Vector2(0.7f, 0.4f));

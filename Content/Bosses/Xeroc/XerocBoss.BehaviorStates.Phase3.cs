@@ -6,6 +6,7 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -69,6 +70,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     SoundEngine.PlaySound(ScreamSound with { Volume = 2f });
                     SoundEngine.PlaySound(SupernovaSound with { Volume = 8f });
                     ScreenEffectSystem.SetFlashEffect(NPC.Center, 8f, 60);
+                    XerocKeyboardShader.BrightnessIntensity = 1f;
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                         NewProjectileBetter(NPC.Center, Vector2.UnitY, ModContent.ProjectileType<SuperLightBeam>(), SuperLaserbeamDamage, 0f);
@@ -178,6 +180,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                 }
             }
+
+            // Keep the shader brightness at its maximum.
+            if (AttackTimer >= attackDelay && AttackTimer < attackDelay + shootTime)
+                XerocKeyboardShader.BrightnessIntensity = 1f;
 
             // Very slowly fly towards the target.
             if (NPC.WithinRange(Target.Center, 40f))
@@ -417,6 +423,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SoundEngine.PlaySound(ScreamSound);
                 SoundEngine.PlaySound(ExplosionTeleportSound);
                 Target.Calamity().GeneralScreenShakePower = 12f;
+                XerocKeyboardShader.BrightnessIntensity = 0.6f;
 
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
 

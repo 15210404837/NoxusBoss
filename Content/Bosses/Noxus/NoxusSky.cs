@@ -86,15 +86,19 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         private bool isActive;
 
-        private float intensity;
-
-        private float fogIntensity;
-
         private float fogSpreadDistance;
 
         private Vector2 fogCenter;
 
         private readonly List<FloatingRubble> rubble = new();
+
+        internal static float intensity;
+
+        public static float FogIntensity
+        {
+            get;
+            private set;
+        }
 
         public static float FlashIntensity
         {
@@ -130,7 +134,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             intensity = Clamp(intensity + isActive.ToDirectionInt() * 0.01f, 0f, 1f);
 
             // Make the fog intensity go down if the sky is not in use. It does not go up by default, however.
-            fogIntensity = Clamp(fogIntensity - (!isActive).ToInt(), 0f, 1f);
+            FogIntensity = Clamp(FogIntensity - (!isActive).ToInt(), 0f, 1f);
 
             // Disable ambient sky objects like wyverns and eyes appearing in front of the dark cloud of death.
             if (isActive)
@@ -150,19 +154,19 @@ namespace NoxusBoss.Content.Bosses.Noxus
                 flashIntensity = Lerp(35f, 90f, 1f - noxus.life / (float)noxus.lifeMax);
             }
 
-            if (FlashIntensity <= 2f && fogIntensity < 1f && Main.rand.NextBool(flashCreationChance))
+            if (FlashIntensity <= 2f && FogIntensity < 1f && Main.rand.NextBool(flashCreationChance))
             {
-                FlashIntensity = flashIntensity * (1f - fogIntensity);
+                FlashIntensity = flashIntensity * (1f - FogIntensity);
                 FlashNoiseOffset = Main.rand.NextVector2Square(0f, 1f);
                 FlashPosition = Main.rand.NextVector2Square(0.2f, 0.8f);
                 if (Main.instance.IsActive)
-                    SoundEngine.PlaySound(ThunderSound with { Volume = ((1f - fogIntensity) * 0.6f), MaxInstances = 5 });
+                    SoundEngine.PlaySound(ThunderSound with { Volume = ((1f - FogIntensity) * 0.6f), MaxInstances = 5 });
             }
 
             // Prepare the fog overlay.
             if (EntropicGod.Myself is not null)
             {
-                fogIntensity = EntropicGod.Myself.ModNPC<EntropicGod>().FogIntensity;
+                FogIntensity = EntropicGod.Myself.ModNPC<EntropicGod>().FogIntensity;
                 fogSpreadDistance = EntropicGod.Myself.ModNPC<EntropicGod>().FogSpreadDistance;
                 fogCenter = EntropicGod.Myself.Center + EntropicGod.Myself.ModNPC<EntropicGod>().HeadOffset;
             }
@@ -254,7 +258,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             backgroundShader.TrySetParameter("fogTravelDistance", fogSpreadDistance);
             backgroundShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Smudges"), 1);
             backgroundShader.Apply();
-            Main.spriteBatch.Draw(pixel, Vector2.Zero, null, FogColor * fogIntensity, 0f, Vector2.Zero, textureArea, 0, 0f);
+            Main.spriteBatch.Draw(pixel, Vector2.Zero, null, FogColor * FogIntensity, 0f, Vector2.Zero, textureArea, 0, 0f);
         }
 
         public void DrawRubble(float minDepth, float maxDepth)
