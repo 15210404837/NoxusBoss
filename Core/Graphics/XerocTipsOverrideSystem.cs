@@ -44,7 +44,7 @@ namespace NoxusBoss.Core.Graphics
                 return;
             }
 
-            if (UseDeathAnimationText || true)
+            if (UseDeathAnimationText)
             {
                 string oldStatusText = Main.statusText;
 

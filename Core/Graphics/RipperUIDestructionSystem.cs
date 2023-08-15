@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -19,8 +20,6 @@ namespace NoxusBoss.Core.Graphics
 {
     public class RipperUIDestructionSystem : ModSystem
     {
-        private static Hook ripperUIDrawHook;
-
         public static float FistOffset
         {
             get;
@@ -34,6 +33,18 @@ namespace NoxusBoss.Core.Graphics
         }
 
         public static bool IsUIDestroyed
+        {
+            get;
+            set;
+        }
+
+        public static int AdrenalineFailSoundCountdown
+        {
+            get;
+            set;
+        }
+
+        public static int RageFailSoundCountdown
         {
             get;
             set;
@@ -65,7 +76,11 @@ namespace NoxusBoss.Core.Graphics
             }
         }
 
-        public static readonly SoundStyle RipperDestructionSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/RipperBarDestruction") with { Volume = 1.4f };
+        public static readonly SoundStyle AdrenalineFailSound = new("NoxusBoss/Assets/Sounds/Custom/XerocAdrenalineFail");
+
+        public static readonly SoundStyle RageFailSound = new("NoxusBoss/Assets/Sounds/Custom/XerocRageFail");
+
+        public static readonly SoundStyle RipperDestructionSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/FUCKYOUSTUPIDRIPPERS") with { Volume = 1.4f };
 
         public delegate void orig_RipperDrawMethod(SpriteBatch spriteBatch, Player player);
 
@@ -74,7 +89,7 @@ namespace NoxusBoss.Core.Graphics
         public override void Load()
         {
             MethodInfo ripperUIDrawMethod = typeof(RipperUI).GetMethod("Draw", BindingFlags.Public | BindingFlags.Static);
-            ripperUIDrawHook = new(ripperUIDrawMethod, (hook_RipperDrawMethod)DisableRipperUI);
+            MonoModHooks.Add(ripperUIDrawMethod, (hook_RipperDrawMethod)DisableRipperUI);
         }
 
         public override void OnWorldLoad()
@@ -91,7 +106,26 @@ namespace NoxusBoss.Core.Graphics
             {
                 Main.LocalPlayer.Calamity().rage = 0f;
                 Main.LocalPlayer.Calamity().adrenaline = 0f;
+
+                if (CalamityKeybinds.AdrenalineHotKey.JustPressed && AdrenalineFailSoundCountdown <= 0)
+                {
+                    XerocKeyboardShader.BrightnessIntensity = 1f;
+                    SoundEngine.PlaySound(AdrenalineFailSound with { Volume = 3f });
+                    ScreenEffectSystem.SetChromaticAberrationEffect(Main.LocalPlayer.Center - Vector2.UnitY * 600f, 3f, 45);
+                    AdrenalineFailSoundCountdown = 180;
+                }
+                if (CalamityKeybinds.RageHotKey.JustPressed && RageFailSoundCountdown <= 0)
+                {
+                    XerocKeyboardShader.BrightnessIntensity = 1f;
+                    SoundEngine.PlaySound(RageFailSound with { Volume = 3f });
+                    ScreenEffectSystem.SetChromaticAberrationEffect(Main.LocalPlayer.Center - Vector2.UnitY * 600f, 3f, 45);
+                    RageFailSoundCountdown = 180;
+                }
             }
+
+            // Decrement failure sound countdowns.
+            AdrenalineFailSoundCountdown = Clamp(AdrenalineFailSoundCountdown - 1, 0, 300);
+            RageFailSoundCountdown = Clamp(RageFailSoundCountdown - 1, 0, 300);
 
             if (Main.LocalPlayer.dead || XerocBoss.Myself is null)
             {
@@ -160,8 +194,7 @@ namespace NoxusBoss.Core.Graphics
             if (!Main.LocalPlayer.Calamity().RageEnabled || !Main.LocalPlayer.Calamity().AdrenalineEnabled)
                 return;
 
-            SoundEngine.PlaySound(RipperDestructionSound);
-            SoundEngine.PlaySound(XerocBoss.ScreamSound);
+            SoundEngine.PlaySound(RipperDestructionSound with { Volume = 1.9f });
 
             Vector2 rageBarPositionWorld = RageScreenPosition + Main.screenPosition + new Vector2(20f, 4f) * Main.UIScale;
             Vector2 adrenalineBarPositionWorld = AdrenalineScreenPosition + Main.screenPosition + new Vector2(-20f, 4f) * Main.UIScale;
