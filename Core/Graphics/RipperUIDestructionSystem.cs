@@ -107,19 +107,49 @@ namespace NoxusBoss.Core.Graphics
                 Main.LocalPlayer.Calamity().rage = 0f;
                 Main.LocalPlayer.Calamity().adrenaline = 0f;
 
-                if (CalamityKeybinds.AdrenalineHotKey.JustPressed && AdrenalineFailSoundCountdown <= 0)
+                if (CalamityKeybinds.AdrenalineHotKey.JustPressed && AdrenalineFailSoundCountdown <= 0 && Main.netMode == NetmodeID.SinglePlayer)
                 {
                     XerocKeyboardShader.BrightnessIntensity = 1f;
                     SoundEngine.PlaySound(AdrenalineFailSound with { Volume = 3f });
                     ScreenEffectSystem.SetChromaticAberrationEffect(Main.LocalPlayer.Center - Vector2.UnitY * 600f, 3f, 45);
                     AdrenalineFailSoundCountdown = 180;
+
+                    // Create dust.
+                    for (int i = 0; i < 2; i++)
+                        Dust.NewDust(Main.LocalPlayer.position, 120, 120, 132, 0f, 0f, 100, default, 1.5f);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        float angle = MathHelper.TwoPi * i / 30f;
+                        int dustIndex = Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.TerraBlade, 0f, 0f, 0, default, 2f);
+                        Main.dust[dustIndex].noGravity = true;
+                        Main.dust[dustIndex].velocity *= 4f;
+                        dustIndex = Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.TerraBlade, 0f, 0f, 100, default, 1f);
+                        Main.dust[dustIndex].velocity *= 2.25f;
+                        Main.dust[dustIndex].noGravity = true;
+                        Dust.NewDust(Main.LocalPlayer.Center + angle.ToRotationVector2() * 160f, 0, 0, DustID.TerraBlade, 0f, 0f, 100, default, 1f);
+                    }
                 }
-                if (CalamityKeybinds.RageHotKey.JustPressed && RageFailSoundCountdown <= 0)
+                if (CalamityKeybinds.RageHotKey.JustPressed && RageFailSoundCountdown <= 0 && Main.netMode == NetmodeID.SinglePlayer)
                 {
                     XerocKeyboardShader.BrightnessIntensity = 1f;
                     SoundEngine.PlaySound(RageFailSound with { Volume = 3f });
                     ScreenEffectSystem.SetChromaticAberrationEffect(Main.LocalPlayer.Center - Vector2.UnitY * 600f, 3f, 45);
                     RageFailSoundCountdown = 180;
+
+                    // Create dust.
+                    for (int i = 0; i < 2; i++)
+                        Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.Rain_BloodMoon, 0f, 0f, 100, default, 1.5f);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        float angle = MathHelper.TwoPi * i / 30f;
+                        int dustIndex = Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.Rain_BloodMoon, 0f, 0f, 0, default, 2f);
+                        Main.dust[dustIndex].noGravity = true;
+                        Main.dust[dustIndex].velocity *= 4f;
+                        dustIndex = Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.Rain_BloodMoon, 0f, 0f, 100, default, 1f);
+                        Main.dust[dustIndex].velocity *= 2.25f;
+                        Main.dust[dustIndex].noGravity = true;
+                        Dust.NewDust(Main.LocalPlayer.Center + angle.ToRotationVector2() * 160f, 0, 0, DustID.Rain_BloodMoon, 0f, 0f, 100, default, 1f);
+                    }
                 }
             }
 
