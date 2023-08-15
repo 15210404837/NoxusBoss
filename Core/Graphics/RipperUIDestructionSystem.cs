@@ -76,11 +76,11 @@ namespace NoxusBoss.Core.Graphics
             }
         }
 
-        public static readonly SoundStyle AdrenalineFailSound = new("NoxusBoss/Assets/Sounds/Custom/XerocAdrenalineFail");
+        public static readonly SoundStyle AdrenalineFailSound = new("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocAdrenalineFail");
 
-        public static readonly SoundStyle RageFailSound = new("NoxusBoss/Assets/Sounds/Custom/XerocRageFail");
+        public static readonly SoundStyle RageFailSound = new("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocRageFail");
 
-        public static readonly SoundStyle RipperDestructionSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/FUCKYOUSTUPIDRIPPERS") with { Volume = 1.4f };
+        public static readonly SoundStyle RipperDestructionSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/FUCKYOUSTUPIDRIPPERS") with { Volume = 1.4f };
 
         public delegate void orig_RipperDrawMethod(SpriteBatch spriteBatch, Player player);
 

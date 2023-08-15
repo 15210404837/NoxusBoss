@@ -321,25 +321,25 @@ namespace NoxusBoss.Content.Bosses.Noxus
         public static readonly Vector2 DefaultHandOffset = new(226f, 108f);
 
         // Used during the migraine stun behavior.
-        public static readonly SoundStyle BrainRotSound = new("NoxusBoss/Assets/Sounds/Custom/NoxusBrainRot");
+        public static readonly SoundStyle BrainRotSound = new("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusBrainRot");
 
-        public static readonly SoundStyle ClapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusClap") with { Volume = 1.5f };
+        public static readonly SoundStyle ClapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusClap") with { Volume = 1.5f };
 
-        public static readonly SoundStyle ExplosionSound = new("NoxusBoss/Assets/Sounds/Custom/NoxusExplosion");
+        public static readonly SoundStyle ExplosionSound = new("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusExplosion");
 
-        public static readonly SoundStyle ExplosionTeleportSound = new("NoxusBoss/Assets/Sounds/Custom/NoxusExplosionTeleport");
+        public static readonly SoundStyle ExplosionTeleportSound = new("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusExplosionTeleport");
 
-        public static readonly SoundStyle FireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusFireballShoot") with { Volume = 0.65f, MaxInstances = 20 };
+        public static readonly SoundStyle FireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusFireballShoot") with { Volume = 0.65f, MaxInstances = 20 };
 
         public static readonly SoundStyle HitSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCHit/NoxusHurt") with { PitchVariance = 0.4f, Volume = 0.5f };
 
-        public static readonly SoundStyle JumpscareSound = new("NoxusBoss/Assets/Sounds/Custom/NoxusJumpscare");
+        public static readonly SoundStyle JumpscareSound = new("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusJumpscare");
 
-        public static readonly SoundStyle NightmareDeathrayShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusNightmareDeathray") with { Volume = 1.56f };
+        public static readonly SoundStyle NightmareDeathrayShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusNightmareDeathray") with { Volume = 1.56f };
 
-        public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusScream") with { Volume = 0.45f, MaxInstances = 20 };
+        public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusScream") with { Volume = 0.45f, MaxInstances = 20 };
 
-        public static readonly SoundStyle TwinkleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusTwinkle") with { MaxInstances = 5, PitchVariance = 0.16f };
+        public static readonly SoundStyle TwinkleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusTwinkle") with { MaxInstances = 5, PitchVariance = 0.16f };
 
         public const int DefaultTeleportDelay = 22;
 

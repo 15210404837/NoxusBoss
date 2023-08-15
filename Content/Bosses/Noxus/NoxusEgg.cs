@@ -52,7 +52,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public static readonly SoundStyle HitSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCHit/NoxusEggHurt") with { PitchVariance = 0.4f, Volume = 0.5f };
 
-        public static readonly SoundStyle GlitchSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusGlitch") with { PitchVariance = 0.2f, Volume = 1.3f, MaxInstances = 8 };
+        public static readonly SoundStyle GlitchSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusGlitch") with { PitchVariance = 0.2f, Volume = 1.3f, MaxInstances = 8 };
 
         public const float DefaultDR = 0.7f;
 

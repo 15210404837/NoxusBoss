@@ -447,39 +447,39 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             private set => myself = value;
         }
 
-        public static readonly SoundStyle ClockStrikeSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocClockStrike") with { Volume = 1.35f };
+        public static readonly SoundStyle ClockStrikeSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocClockStrike") with { Volume = 1.35f };
 
-        public static readonly SoundStyle ClockTickSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocClockTick") with { Volume = 1.1f, IsLooped = true };
+        public static readonly SoundStyle ClockTickSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocClockTick") with { Volume = 1.1f, IsLooped = true };
 
-        public static readonly SoundStyle CosmicLaserSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocCosmicLaser") with { Volume = 0.8f };
+        public static readonly SoundStyle CosmicLaserSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocCosmicLaser") with { Volume = 0.8f };
 
-        public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocExplosion") with { Volume = 1.3f, PitchVariance = 0.15f };
+        public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocExplosion") with { Volume = 1.3f, PitchVariance = 0.15f };
 
-        public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFastHandMovement") with { Volume = 1.25f };
+        public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocFastHandMovement") with { Volume = 1.25f };
 
-        public static readonly SoundStyle FingerSnapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocFingerSnap") with { Volume = 1.4f };
+        public static readonly SoundStyle FingerSnapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocFingerSnap") with { Volume = 1.4f };
 
-        public static readonly SoundStyle GameBreakSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocGameBreak") with { Volume = 1.1f };
+        public static readonly SoundStyle GameBreakSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocGameBreak") with { Volume = 1.1f };
 
-        public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocHumm") with { Volume = 1.1f, IsLooped = true };
+        public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocHumm") with { Volume = 1.1f, IsLooped = true };
 
-        public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocMumble", 5) with { Volume = 0.89f };
+        public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocMumble", 5) with { Volume = 0.89f };
 
-        public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocPortalCast") with { Volume = 1.2f };
+        public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalCast") with { Volume = 1.2f };
 
-        public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/QuasarLoopSound") with { Volume = 1.2f };
+        public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/QuasarLoopSound") with { Volume = 1.2f };
 
-        public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
+        public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
 
-        public static readonly SoundStyle ScreamSoundLong = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocScreamLong") with { Volume = 1.2f };
+        public static readonly SoundStyle ScreamSoundLong = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocScreamLong") with { Volume = 1.2f };
 
-        public static readonly SoundStyle SliceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSliceTelegraph") with { Volume = 1.05f, MaxInstances = 20 };
+        public static readonly SoundStyle SliceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSliceTelegraph") with { Volume = 1.05f, MaxInstances = 20 };
 
-        public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };
+        public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };
 
-        public static readonly SoundStyle SunFireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/SunFireballShootSound") with { Volume = 1.05f, MaxInstances = 5 };
+        public static readonly SoundStyle SunFireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/SunFireballShootSound") with { Volume = 1.05f, MaxInstances = 5 };
 
-        public static readonly SoundStyle SupernovaSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/XerocSupernova") with { Volume = 0.8f, MaxInstances = 20 };
+        public static readonly SoundStyle SupernovaSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSupernova") with { Volume = 0.8f, MaxInstances = 20 };
 
         public static int WingCount => 1;
 
