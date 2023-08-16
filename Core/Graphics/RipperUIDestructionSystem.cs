@@ -115,10 +115,10 @@ namespace NoxusBoss.Core.Graphics
 
                     // Create dust.
                     for (int i = 0; i < 2; i++)
-                        Dust.NewDust(Main.LocalPlayer.position, 120, 120, 132, 0f, 0f, 100, default, 1.5f);
+                        Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.Firework_Blue, 0f, 0f, 100, default, 1.5f);
                     for (int i = 0; i < 6; i++)
                     {
-                        float angle = MathHelper.TwoPi * i / 30f;
+                        float angle = TwoPi * i / 30f;
                         int dustIndex = Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.TerraBlade, 0f, 0f, 0, default, 2f);
                         Main.dust[dustIndex].noGravity = true;
                         Main.dust[dustIndex].velocity *= 4f;
@@ -140,7 +140,7 @@ namespace NoxusBoss.Core.Graphics
                         Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.Rain_BloodMoon, 0f, 0f, 100, default, 1.5f);
                     for (int i = 0; i < 6; i++)
                     {
-                        float angle = MathHelper.TwoPi * i / 30f;
+                        float angle = TwoPi * i / 30f;
                         int dustIndex = Dust.NewDust(Main.LocalPlayer.position, 120, 120, DustID.Rain_BloodMoon, 0f, 0f, 0, default, 2f);
                         Main.dust[dustIndex].noGravity = true;
                         Main.dust[dustIndex].velocity *= 4f;
