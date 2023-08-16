@@ -8,7 +8,6 @@ using Terraria.DataStructures;
 using System.Collections.Generic;
 using Terraria.Graphics.Renderers;
 using Terraria.Graphics;
-using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using NoxusBoss.Content.Bosses.Xeroc;
 
