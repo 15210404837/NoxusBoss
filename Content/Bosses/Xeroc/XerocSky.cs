@@ -8,7 +8,6 @@ using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc

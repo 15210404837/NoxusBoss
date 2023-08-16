@@ -1,10 +1,8 @@
 ﻿using System;
 using CalamityMod;
-using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 

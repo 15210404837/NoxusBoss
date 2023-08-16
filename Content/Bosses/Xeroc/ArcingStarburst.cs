@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using CalamityMod;
+﻿using CalamityMod;
 using CalamityMod.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

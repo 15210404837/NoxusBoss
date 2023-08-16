@@ -2,14 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
-using System.Reflection;
 using Terraria;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Linq;
-using ReLogic.Content;
-using Terraria.Graphics.Shaders;
 using Microsoft.Xna.Framework.Content;
 using NoxusBoss.Core.Graphics.Shaders;
 

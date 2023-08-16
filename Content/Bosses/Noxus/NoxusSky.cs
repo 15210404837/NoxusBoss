@@ -4,7 +4,6 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
@@ -13,7 +12,6 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Noxus

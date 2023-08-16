@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics

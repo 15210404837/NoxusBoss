@@ -6,7 +6,6 @@ using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 

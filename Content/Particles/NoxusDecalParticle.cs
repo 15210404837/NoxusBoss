@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.Shaders;
 
 namespace NoxusBoss.Content.Particles
 {

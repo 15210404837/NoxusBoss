@@ -6,7 +6,6 @@ using CalamityMod.Particles;
 using CalamityMod.UI.Rippers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoMod.RuntimeDetour;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;

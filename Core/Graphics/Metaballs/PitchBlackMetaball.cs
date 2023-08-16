@@ -4,7 +4,6 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
-using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Projectiles.Pets;
 using Terraria;
 using Terraria.ModLoader;

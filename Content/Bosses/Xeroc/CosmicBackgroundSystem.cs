@@ -6,7 +6,6 @@ using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;

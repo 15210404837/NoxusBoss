@@ -9,7 +9,6 @@ using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc

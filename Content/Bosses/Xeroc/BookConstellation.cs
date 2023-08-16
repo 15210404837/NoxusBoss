@@ -6,7 +6,6 @@ using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
 using ReLogic.Content;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 

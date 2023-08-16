@@ -2,7 +2,6 @@
 using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using ReLogic.Utilities;
