@@ -64,11 +64,6 @@ Mods: {
 				Tooltip: ""
 			}
 
-			DebugXerocSpawner: {
-				DisplayName: Debug Deity of Light Spawner
-				Tooltip: Summons a nameless deity of light
-			}
-
 			DeificTouch: {
 				DisplayName: Deific Touch
 				Tooltip: Reveals a light dimension behind your cursor

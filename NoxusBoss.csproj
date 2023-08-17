@@ -14,5 +14,8 @@
     <Reference Include="CalamityMod">
       <HintPath>..\..\ModReader\CalamityMod\CalamityMod.dll</HintPath>
     </Reference>
+    <Reference Include="SubworldLibrary">
+      <HintPath>..\InfernumMode\bin\Debug\net6.0\SubworldLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
