@@ -6,6 +6,13 @@ Mods: {
 			XerocBoss: The cosmic creator.
 		}
 
+		Biomes: {
+			EternalGardenBiome: {
+				DisplayName: Eternal Garden
+				TownNPCDialogueName: the Eternal Garden Biome
+			}
+		}
+
 		Buffs: {
 			NoxusFumes: {
 				DisplayName: Noxus Fumes
@@ -96,6 +103,24 @@ Mods: {
 				DisplayName: Music Box (Nameless Deity)
 				Tooltip: ""
 			}
+
+			BossRushStarter: {
+				DisplayName: Boss Rush Starter
+				Tooltip:
+					'''
+					We reject Boss Rush as an event in its current state. We do not consider it canonical in any way
+					As is, it's more or less just a slog with a small handful of challenges
+					In spite of this, we have decided that with Terminus' changed functionality it would be best
+					to add an alternative way of experiencing the event, for those who do enjoy it or wish to test
+					Noxus and the Nameless Deity's drops against it
+					'''
+			}
+
+			Terminus: {
+				BaseTooltip: An impossibly old artifact, locked away at the bottom of the abyss in an act of protection
+				UnopenedTooltip: Its gaze is closed
+				OpenedTooltip: Its gaze is opened. You will be tested
+			}
 		}
 
 		NPCs: {
@@ -140,6 +165,7 @@ Mods: {
 			TelegraphedScreenSlice.DisplayName: Dimensional Slice
 			TelegraphedScreenSlice2.DisplayName: Dimensional Slice
 			TelegraphedStarLaserbeam.DisplayName: Solar Burst
+			TerminusProj.DisplayName: Terminus
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box

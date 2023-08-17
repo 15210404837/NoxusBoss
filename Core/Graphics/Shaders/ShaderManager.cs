@@ -68,6 +68,11 @@ namespace NoxusBoss.Core.Graphics.Shaders
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"] = new Filter(telegraphShader, EffectPriority.VeryHigh);
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"].Load();
 
+            Ref<Effect> s7 = new(Mod.Assets.Request<Effect>("Assets/Effects/TerminusScreenOverlayShader", AssetRequestMode.ImmediateLoad).Value);
+            Filters.Scene["NoxusBoss:Terminus"] = new Filter(new TerminusScreenShaderData(s7, "AutoloadPass"), EffectPriority.VeryHigh);
+
+            Filters.Scene["NoxusBoss:TerminusVortex"] = new Filter(new ScreenShaderData("FilterCrystalDestructionVortex").UseImage("Images/Misc/noise"), EffectPriority.VeryHigh);
+
             HasFinishedLoading = true;
         }
 

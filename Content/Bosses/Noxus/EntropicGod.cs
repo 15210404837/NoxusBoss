@@ -12,6 +12,7 @@ using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Items;
 using NoxusBoss.Content.Items.Pets;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -3012,6 +3013,15 @@ namespace NoxusBoss.Content.Bosses.Noxus
             CurrentAttack = EntropicGodAttackType.DeathAnimation;
             NPC.netUpdate = true;
             return false;
+        }
+
+        public override void OnKill()
+        {
+            if (!WorldSaveSystem.HasDefeatedNoxus)
+            {
+                WorldSaveSystem.HasDefeatedNoxus = true;
+                CalamityNetcode.SyncWorld();
+            }
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
