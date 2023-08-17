@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using NoxusBoss.Core.Graphics;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -12,6 +13,12 @@ namespace NoxusBoss.Core
         private static bool? hasDefeatedXerocInAnyWorldField;
 
         public static bool HasDefeatedEgg
+        {
+            get;
+            set;
+        }
+
+        public static bool HasDefeatedNoxus
         {
             get;
             set;
@@ -54,7 +61,11 @@ namespace NoxusBoss.Core
 
         public override void OnWorldLoad()
         {
+            if (SubworldSystem.AnyActive())
+                return;
+
             HasDefeatedEgg = false;
+            HasDefeatedNoxus = false;
             HasDefeatedXeroc = false;
             HasMetXeroc = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
@@ -62,7 +73,11 @@ namespace NoxusBoss.Core
 
         public override void OnWorldUnload()
         {
+            if (SubworldSystem.AnyActive())
+                return;
+
             HasDefeatedEgg = false;
+            HasDefeatedNoxus = false;
             HasDefeatedXeroc = false;
             HasMetXeroc = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
@@ -72,6 +87,8 @@ namespace NoxusBoss.Core
         {
             if (HasDefeatedEgg)
                 tag["HasDefeatedEgg"] = true;
+            if (HasDefeatedNoxus)
+                tag["HasDefeatedNoxus"] = true;
             if (HasDefeatedXeroc)
                 tag["HasDefeatedXeroc"] = true;
             if (NoxusEggCutsceneSystem.HasSummonedNoxus)
@@ -83,6 +100,7 @@ namespace NoxusBoss.Core
         public override void LoadWorldData(TagCompound tag)
         {
             HasDefeatedEgg = tag.ContainsKey("HasDefeatedEgg");
+            HasDefeatedNoxus = tag.ContainsKey("HasDefeatedNoxus");
             HasDefeatedXeroc = tag.ContainsKey("HasDefeatedXeroc");
             NoxusEggCutsceneSystem.HasSummonedNoxus = tag.ContainsKey("HasSummonedNoxus");
             HasMetXeroc = tag.ContainsKey("HasMetXeroc");
@@ -92,9 +110,10 @@ namespace NoxusBoss.Core
         {
             BitsByte b1 = new();
             b1[0] = HasDefeatedEgg;
-            b1[1] = HasDefeatedXeroc;
-            b1[2] = HasMetXeroc;
-            b1[3] = NoxusEggCutsceneSystem.HasSummonedNoxus;
+            b1[1] = HasDefeatedNoxus;
+            b1[2] = HasDefeatedXeroc;
+            b1[3] = HasMetXeroc;
+            b1[4] = NoxusEggCutsceneSystem.HasSummonedNoxus;
 
             writer.Write(b1);
         }
@@ -103,9 +122,10 @@ namespace NoxusBoss.Core
         {
             BitsByte b1 = reader.ReadByte();
             HasDefeatedEgg = b1[0];
-            HasDefeatedXeroc = b1[1];
-            HasMetXeroc = b1[2];
-            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[3];
+            HasDefeatedNoxus = b1[1];
+            HasDefeatedXeroc = b1[2];
+            HasMetXeroc = b1[3];
+            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[4];
         }
     }
 }
