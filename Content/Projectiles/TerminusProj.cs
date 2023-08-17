@@ -99,7 +99,7 @@ namespace NoxusBoss.Content.Projectiles
         public List<ChargingEnergyStreak> EnergyStreaks = new();
 
         // These first three times are roughly synced to the duration of the Terminus chargeup sound, which is around 5.813 seconds (348 frames).
-        public static int RiseUpwardTime => 112;
+        public static int RiseUpwardTime => 92;
 
         public static int DimnessAppearTime => 96;
 
@@ -107,7 +107,7 @@ namespace NoxusBoss.Content.Projectiles
 
         public static int EyeAppearTime => 45;
 
-        public static int EyeOpenAnimationTime => 274;
+        public static int EyeOpenAnimationTime => 300;
 
         public ref float Time => ref Projectile.ai[1];
 
