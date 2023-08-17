@@ -104,6 +104,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
+            npcLoot.Add(ModContent.ItemType<BossRushStarter>());
             npcLoot.Add(ModContent.ItemType<CheatPermissionSlip>());
             npcLoot.Add(ModContent.ItemType<DeificTouch>());
             npcLoot.Add(ModContent.ItemType<DivineWings>());
