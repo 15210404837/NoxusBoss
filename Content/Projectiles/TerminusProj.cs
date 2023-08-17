@@ -105,9 +105,9 @@ namespace NoxusBoss.Content.Projectiles
 
         public static int EnergyChargeTime => 120;
 
-        public static int EyeAppearTime => 49;
+        public static int EyeAppearTime => 45;
 
-        public static int EyeOpenAnimationTime => 256;
+        public static int EyeOpenAnimationTime => 274;
 
         public ref float Time => ref Projectile.ai[1];
 
@@ -359,9 +359,9 @@ namespace NoxusBoss.Content.Projectiles
                 VortexIntensity = Clamp(VortexIntensity - 0.065f, 0f, 1f);
             }
 
-            // Make the screen go white.
+            // Make the screen go white. This draws over UI elements so that they don't suddenly and weirdly go away when the subworld is entered.
             if (animationCompletion >= 0.64f && Main.myPlayer == Projectile.owner)
-                MoonlordDeathDrama.RequestLight(2f, Main.LocalPlayer.Center);
+                TotalWhiteOverlaySystem.WhiteInterpolant = GetLerpValue(0.64f, 0.9f, animationCompletion, true);
 
             // Teleport the user to the garden.
             if (animationCompletion >= 1f)
