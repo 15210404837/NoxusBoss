@@ -47,7 +47,12 @@ namespace NoxusBoss.Content.Subworlds
                 // In order to address this, a final step is introduced:
                 // 5. Load data from step 3 again on the first frame of entity updating.
                 if (inGarden)
+                {
                     LoadWorldDataFromTag();
+
+                    // Set the respawn point now that the player is at the the initial spawn point already.
+                    EternalGardenWorldGen.SetPlayerRespawnPoint();
+                }
 
                 WasInSubworldLastUpdateFrame = inGarden;
             }

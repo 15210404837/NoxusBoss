@@ -168,7 +168,8 @@ namespace NoxusBoss.Content.Subworlds
 
         public static void SetPlayerRespawnPoint()
         {
-
+            Main.spawnTileX = Main.maxTilesX / 2 - 44;
+            Main.spawnTileY = SurfaceTilePoint - 1;
         }
 
         public static void ReplaceDirtWithGrass()
@@ -206,6 +207,8 @@ namespace NoxusBoss.Content.Subworlds
             WeightedRandom<ushort> plantSelector = new(WorldGen.genRand.Next());
             plantSelector.Add(TileID.Plants, 1.32);
             plantSelector.Add(TileID.Plants2, 0.5);
+            plantSelector.Add(TileID.LargePiles2, 0.15);
+            plantSelector.Add(TileID.FallenLog, 0.125);
             plantSelector.Add(TileID.DyePlants, 0.1);
             plantSelector.Add((ushort)ModContent.TileType<BrimstoneRose>(), 0.09);
             plantSelector.Add((ushort)ModContent.TileType<ElysianRose>(), 0.4);
@@ -274,6 +277,11 @@ namespace NoxusBoss.Content.Subworlds
                     // Uses the stylist strange plant variants.
                     case TileID.DyePlants:
                         frameVariant = WorldGen.genRand.Next(8, 12);
+                        break;
+
+                    // Uses living tree stump variants.
+                    case TileID.LargePiles2:
+                        frameVariant = WorldGen.genRand.Next(47, 52);
                         break;
                 }
                 if (plantID == ModContent.TileType<ElysianRose>())

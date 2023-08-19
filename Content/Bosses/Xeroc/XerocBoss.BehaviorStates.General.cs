@@ -11,6 +11,7 @@ using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
+using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -242,6 +243,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Bring the music.
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Xeroc");
+            SceneEffectPriority = SceneEffectPriority.BossHigh;
 
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);
@@ -550,13 +552,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                     if (Main.netMode != NetmodeID.Server)
                     {
-                        Main.menuMode = 10;
+                        typeof(SubworldSystem).GetField("current", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
+                        typeof(SubworldSystem).GetField("cache", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
+
+                        Main.menuMode = 0;
                         Main.gameMenu = true;
                         Main.hideUI = false;
                         Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GiveXerocLootUponReenteringWorld = true;
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
                         WorldSaveSystem.HasDefeatedXeroc = true;
-                        WorldGen.SaveAndQuit();
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                        {
+                            Netplay.Disconnect = true;
+                            Main.netMode = NetmodeID.SinglePlayer;
+                        }
 
                         // Forcefully change the menu theme to the Xeroc one if he was defeated for the first time.
                         // This is done half as an indicator that the world exist isn't a bug and half as a reveal that the option is unlocked.
