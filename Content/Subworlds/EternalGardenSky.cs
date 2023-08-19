@@ -34,6 +34,9 @@ namespace NoxusBoss.Content.Subworlds
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            if (Main.gameMenu)
+                return;
+
             // Disable ambient sky objects like wyverns and eyes appearing in the background.
             if (skyActive)
                 SkyManager.Instance["Ambience"].Deactivate();
