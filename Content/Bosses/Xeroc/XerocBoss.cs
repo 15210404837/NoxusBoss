@@ -443,7 +443,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 return myself;
             }
-            private set => myself = value;
+            internal set => myself = value;
         }
 
         public static readonly SoundStyle ClockStrikeSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocClockStrike") with { Volume = 1.35f };

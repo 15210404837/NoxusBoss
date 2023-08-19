@@ -218,6 +218,7 @@ namespace NoxusBoss.Content.Subworlds
                 int height = topography[i];
                 int x = i + left;
                 int y = surfaceY - height;
+                bool inCenter = Distance(x, Main.maxTilesX * 0.5f) <= TotalFlatTilesAtCenter + 24f;
                 ushort plantID = plantSelector.Get();
 
                 // Prevent placing special plants twice in succession.
@@ -232,6 +233,10 @@ namespace NoxusBoss.Content.Subworlds
                         plantID = plantSelector.Get();
                     }
                 }
+
+                // In the center special plants are always replaced with First Flowers.
+                if (inCenter && (plantID != TileID.Plants || plantID != TileID.Plants2))
+                    plantID = WorldGen.genRand.NextBool(4) ? (ushort)ModContent.TileType<FirstFlower>() : TileID.Plants2;
 
                 previousPlantID = plantID;
 
@@ -273,6 +278,8 @@ namespace NoxusBoss.Content.Subworlds
                 }
                 if (plantID == ModContent.TileType<ElysianRose>())
                     frameVariant = WorldGen.genRand.Next(2);
+                if (plantID == ModContent.TileType<FirstFlower>())
+                    frameVariant = WorldGen.genRand.Next(3);
 
                 // Since vanilla's grass variants seemingly use hardcoded frame code that's unresponsive to manual inputs, replace them with a modded variant.
                 if (plantID == TileID.Plants)

@@ -339,6 +339,13 @@ namespace NoxusBoss.Content.Projectiles
             if (Time == 1f)
                 SoundEngine.PlaySound(BossRushEvent.StartBuildupSound);
 
+            // Create a god ray from above on the first frame if entering the Garden.
+            if (Main.myPlayer == Projectile.owner && Time == 1f && !EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
+            {
+                Vector2 raySpawnPosition = Projectile.Bottom + Vector2.UnitY * 32f;
+                Projectile.NewProjectile(Projectile.GetSource_FromThis(), raySpawnPosition, Vector2.Zero, ModContent.ProjectileType<GodRayVisual>(), 0, 0f, Projectile.owner);
+            }
+
             // Make the screen rumble.
             ShakeScreen(Projectile.Center, 10f);
 

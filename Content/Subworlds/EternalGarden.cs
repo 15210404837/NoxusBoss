@@ -43,7 +43,7 @@ namespace NoxusBoss.Content.Subworlds
             set;
         }
 
-        public const string EnterText = "You will be tested.";
+        public const string EnterText = "your final test begins.";
 
         public override int Width => 1200;
 

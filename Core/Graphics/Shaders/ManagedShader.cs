@@ -35,7 +35,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
                 return false;
 
             // Unfortunately, there is no simple type upon which singles, ints, matrices, etc. can be converted in order to be sent to the GPU, and there is no
-            // super easy solution for checking a parameter's expected type (FNA just messes with pointers under the hood and tosses back exceptions if that doesn't work).
+            // super easy solution for checking a parameter's expected type. FNA just messes with pointers under the hood and tosses back exceptions if that doesn't work.
             // Unless something neater arises, this conditional chain will do, I suppose.
 
             // Booleans.

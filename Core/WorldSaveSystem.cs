@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Core.Graphics;
 using SubworldLibrary;
 using Terraria;
@@ -61,6 +62,7 @@ namespace NoxusBoss.Core
 
         public override void OnWorldLoad()
         {
+            XerocBoss.Myself = null;
             if (SubworldSystem.AnyActive())
                 return;
 
