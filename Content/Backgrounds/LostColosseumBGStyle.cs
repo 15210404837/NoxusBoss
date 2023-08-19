@@ -17,7 +17,8 @@ namespace NoxusBoss.Content.Backgrounds
     {
         public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
         {
-            b -= 250f;
+            // Go away this background is going to be drawn manually.
+            b += 99999f;
 
             int frameOffset = (int)(Main.GameUpdateCount / 10U) % 4;
             int backgroundFrameIndex = 251 + frameOffset;

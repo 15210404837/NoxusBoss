@@ -1,6 +1,7 @@
 ﻿using NoxusBoss.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -8,6 +9,8 @@ namespace NoxusBoss.Content.Biomes
 {
     public class EternalGardenBiome : ModBiome
     {
+        public const string SkyKey = "NoxusBoss:EternalGarden";
+
         public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("CalamityMod/SunkenSeaWater");
 
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("NoxusBoss/LostColosseumSurfaceBGStyle");
@@ -28,5 +31,21 @@ namespace NoxusBoss.Content.Biomes
         public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<EternalGarden>();
 
         public override float GetWeight(Player player) => 0.96f;
+
+        public override void Load()
+        {
+            SkyManager.Instance[SkyKey] = new EternalGardenSky();
+        }
+
+        public override void SpecialVisuals(Player player, bool isActive)
+        {
+            if (SkyManager.Instance[SkyKey] is not null && isActive != SkyManager.Instance[SkyKey].IsActive())
+            {
+                if (isActive)
+                    SkyManager.Instance.Activate(SkyKey);
+                else
+                    SkyManager.Instance.Deactivate(SkyKey);
+            }
+        }
     }
 }

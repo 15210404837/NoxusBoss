@@ -8,9 +8,10 @@ using Microsoft.Xna.Framework;
 using Terraria.GameContent;
 using ReLogic.Graphics;
 using Microsoft.Xna.Framework.Graphics;
-using static NoxusBoss.Core.WorldSaveSystem;
 using Terraria.ModLoader;
 using ReLogic.Content;
+using CalamityMod.World;
+using static NoxusBoss.Core.WorldSaveSystem;
 
 namespace NoxusBoss.Content.Subworlds
 {
@@ -34,7 +35,7 @@ namespace NoxusBoss.Content.Subworlds
             }
         }
 
-        private TagCompound savedWorldData;
+        private static TagCompound savedWorldData;
 
         public static float TextOpacity
         {
@@ -52,22 +53,6 @@ namespace NoxusBoss.Content.Subworlds
         {
             new EternalGardenPass()
         };
-
-        public override void CopyMainWorldData()
-        {
-            // Re-initialize the save data tag.
-            savedWorldData = new();
-
-            // Ensure that world save data for Noxus and Xeroc are preserved.
-            // Xeroc is obvious, the main world should know if Xeroc was defeated in the subworld.
-            // Noxus' defeat is required to use the Terminus, so not having him marked as defeated and thus unable to use it to leave the subworld would be a problem.
-            if (HasDefeatedEgg)
-                savedWorldData["HasDefeatedEgg"] = true;
-            if (HasDefeatedNoxus)
-                savedWorldData["HasDefeatedNoxus"] = true;
-            if (HasDefeatedXeroc)
-                savedWorldData["HasDefeatedXeroc"] = true;
-        }
 
         public override bool ChangeAudio()
         {
@@ -107,15 +92,39 @@ namespace NoxusBoss.Content.Subworlds
             Main.spriteBatch.DrawString(FontAssets.DeathText.Value, text, drawPosition, textColor * TextOpacity);
         }
 
-        public override void ReadCopiedMainWorldData()
+        public override void CopyMainWorldData()
+        {
+            // Re-initialize the save data tag.
+            savedWorldData = new();
+
+            // Ensure that world save data for Noxus and Xeroc are preserved.
+            // Xeroc is obvious, the main world should know if Xeroc was defeated in the subworld.
+            // Noxus' defeat is required to use the Terminus, so not having him marked as defeated and thus unable to use it to leave the subworld would be a problem.
+            if (HasDefeatedEgg)
+                savedWorldData["HasDefeatedEgg"] = true;
+            if (HasDefeatedNoxus)
+                savedWorldData["HasDefeatedNoxus"] = true;
+            if (HasDefeatedXeroc)
+                savedWorldData["HasDefeatedXeroc"] = true;
+
+            // Save difficulty data. This is self-explanatory.
+            if (CalamityWorld.revenge)
+                savedWorldData["RevengeanceMode"] = CalamityWorld.revenge;
+            if (CalamityWorld.death)
+                savedWorldData["DeathMode"] = CalamityWorld.death;
+        }
+
+        public static void LoadWorldDataFromTag()
         {
             HasDefeatedEgg = savedWorldData.ContainsKey("HasDefeatedEgg");
             HasDefeatedNoxus = savedWorldData.ContainsKey("HasDefeatedNoxus");
             HasDefeatedXeroc = savedWorldData.ContainsKey("HasDefeatedXeroc");
 
-            // Destroy the save data tag now that its contents have been read.
-            savedWorldData = null;
+            CalamityWorld.revenge = savedWorldData.ContainsKey("RevengeanceMode");
+            CalamityWorld.death = savedWorldData.ContainsKey("DeathMode");
         }
+
+        public override void ReadCopiedMainWorldData() => LoadWorldDataFromTag();
 
         public override void CopySubworldData() => CopyMainWorldData();
 
