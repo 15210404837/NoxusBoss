@@ -16,9 +16,29 @@ namespace NoxusBoss
             private set;
         }
 
+        public static Mod Infernum
+        {
+            get;
+            private set;
+        }
+
+        public static bool InfernumModeIsActive
+        {
+            get
+            {
+                if (Infernum is null)
+                    return false;
+
+                return (bool)Infernum.Call("GetInfernumActive");
+            }
+        }
+
         public override void Load()
         {
             Instance = this;
+            if (ModLoader.TryGetMod("InfernumMode", out Mod inf))
+                Infernum = inf;
+
             if (Main.netMode != NetmodeID.Server)
             {
                 var calamityMod = ModLoader.GetMod("CalamityMod");
