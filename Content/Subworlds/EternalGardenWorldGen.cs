@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
+using Terraria.WorldBuilding;
 
 namespace NoxusBoss.Content.Subworlds
 {
@@ -32,6 +33,29 @@ namespace NoxusBoss.Content.Subworlds
         public const int TotalFlatTilesAtCenter = 25;
 
         public const int TotalFlatTilesAtEdge = 12;
+
+        public const float LakeDescentSharpnessMin = 0.56f;
+
+        public const float LakeDescentSharpnessMax = 0.72f;
+
+        public const int MaxLakeGroundHeight = 12;
+
+        public const int MaxFlowerHeightDescent = 11;
+
+        // Same idea as SurfaceMapMagnification, but with respect to the lakebed instead of the surface grass.
+        public const float LakeSurfaceMapMagnification = 0.004f;
+
+        public const float ClayNoiseMagnification = 0.0075f;
+
+        public const float StoneNoiseMagnification = 0.0033f;
+
+        public const int MinLakeClusters = 4;
+
+        public const int MaxLakeClusters = 7;
+
+        public const int MinLakeClusterRadius = 5;
+
+        public const int MaxLakeClusterRadius = 10;
 
         public static void Generate()
         {
@@ -95,15 +119,108 @@ namespace NoxusBoss.Content.Subworlds
 
         public static void GenerateLake(Rectangle area, bool right)
         {
-            // Fill the currently empty rectangular box with water.
+            // Fill the currently empty rectangular box with water and flower walls.
+            int flowerWallSeed = WorldGen.genRand.Next(999999999);
+            for (int x = area.Left; x < area.Right; x++)
+            {
+                Vector2 heightMapInput = new Vector2(x, SurfaceTilePoint) * LakeSurfaceMapMagnification;
+                float flowerHeightDescent = (int)(Abs(SulphurousSea.FractalBrownianMotion(heightMapInput.X, heightMapInput.Y, flowerWallSeed, 3)) * MaxFlowerHeightDescent);
+                for (int y = area.Top; y < area.Bottom; y++)
+                {
+                    if (y >= area.Top + flowerHeightDescent)
+                        Main.tile[x, y].WallType = WallID.FlowerUnsafe;
+
+                    Main.tile[x, y].Get<LiquidData>().Amount = byte.MaxValue;
+                    Main.tile[x, y].Get<LiquidData>().LiquidType = LiquidID.Water;
+                    Main.tile[x, y].Get<TileWallWireStateData>().HasTile = false;
+                    WorldGen.SquareWallFrame(x, y);
+                }
+            }
+
+            // Calculate the height topography of the lake. This will always create natural descents from the surface to the bottom of the lake.
+            int heightMapSeed = WorldGen.genRand.Next(999999999);
+            float descentSharpnessInterpolant = WorldGen.genRand.NextFloat(LakeDescentSharpnessMin, LakeDescentSharpnessMax);
+            int[] topography = new int[area.Right - area.Left];
+            for (int x = area.Left; x < area.Right; x++)
+            {
+                int heightIndex = x - area.Left;
+                float distanceToStart = Distance(x, right ? area.Left : area.Right);
+                float distanceToStartInterpolant = distanceToStart / (area.Right - area.Left);
+
+                // Create the descent.
+                int descentHeight = (int)(Pow(GetLerpValue(descentSharpnessInterpolant, 0f, distanceToStartInterpolant, true), 0.49f) * LakeMaxDepth);
+
+                // Apply noise to the topography. The effects of the noise diminish if the height is already very close to the surface.
+                Vector2 heightMapInput = new Vector2(x, SurfaceTilePoint) * LakeSurfaceMapMagnification;
+                float noiseAffectionInterpolant = GetLerpValue(0.9f, 0.62f, descentHeight / (float)LakeMaxDepth);
+                int noiseHeight = (int)(Abs(SulphurousSea.FractalBrownianMotion(heightMapInput.X, heightMapInput.Y, heightMapSeed, 3)) * MaxLakeGroundHeight * noiseAffectionInterpolant);
+
+                // Use the height values to generate the topography.
+                topography[heightIndex] = descentHeight + noiseHeight;
+            }
+
+            // Use the height map to generate the ground.
+            for (int i = 0; i < topography.Length; i++)
+            {
+                int x = i + area.Left;
+                int height = topography[i];
+
+                for (int dy = 0; dy < height; dy++)
+                {
+                    int y = area.Bottom - dy;
+                    Main.tile[x, y].TileType = TileID.Dirt;
+                    Main.tile[x, y].Get<TileWallWireStateData>().Slope = SlopeType.Solid;
+                    Main.tile[x, y].Get<TileWallWireStateData>().IsHalfBlock = false;
+                    Main.tile[x, y].Get<TileWallWireStateData>().HasTile = true;
+                }
+            }
+
+            // Spice up the tile variety in the lakes by replacing some of the dirt with clay and stone.
+            int clayNoiseSeed = WorldGen.genRand.Next(999999999);
+            int stoneNoiseSeed = WorldGen.genRand.Next(999999999);
             for (int x = area.Left; x < area.Right; x++)
             {
                 for (int y = area.Top; y < area.Bottom; y++)
                 {
-                    Main.tile[x, y].Get<LiquidData>().Amount = byte.MaxValue;
-                    Main.tile[x, y].Get<LiquidData>().LiquidType = LiquidID.Water;
-                    Main.tile[x, y].Get<TileWallWireStateData>().HasTile = false;
+                    if (!Main.tile[x, y].HasTile)
+                        continue;
+
+                    ushort newTileType = TileID.Dirt;
+                    float distanceToStart = Distance(x, right ? area.Left : area.Right);
+                    float clayNoiseInterpolant = SulphurousSea.FractalBrownianMotion(x * ClayNoiseMagnification, y * ClayNoiseMagnification, clayNoiseSeed, 3);
+                    float stoneNoiseInterpolant = SulphurousSea.FractalBrownianMotion(x * StoneNoiseMagnification, y * StoneNoiseMagnification, stoneNoiseSeed, 3);
+
+                    // Bias away from stone and clay if close to the shore.
+                    clayNoiseInterpolant *= GetLerpValue(4f, 16f, distanceToStart, true);
+                    stoneNoiseInterpolant *= GetLerpValue(6f, 19f, distanceToStart, true);
+
+                    // Choose a tile variant based on the interpolants.
+                    if (clayNoiseInterpolant >= 0.284f)
+                        newTileType = TileID.ClayBlock;
+                    if (stoneNoiseInterpolant >= 0.3f)
+                        newTileType = TileID.Stone;
+
+                    Main.tile[x, y].TileType = newTileType;
                 }
+            }
+
+            // Create random clusters at the bottom of the lake.
+            int lakeClusterCount = WorldGen.genRand.Next(MinLakeClusters, MaxLakeClusters);
+            for (int i = 0; i < lakeClusterCount; i++)
+            {
+                int clusterRadius = WorldGen.genRand.Next(MinLakeClusterRadius, MaxLakeClusterRadius);
+                int x = WorldGen.genRand.Next(area.Left + 20, area.Right - 20);
+                int y = area.Bottom - topography[x - area.Left];
+                ushort originalTileType = CalamityUtils.ParanoidTileRetrieval(x, y).TileType;
+
+                WorldUtils.Gen(new(x, y + clusterRadius / 2 + WorldGen.genRand.Next(-2, 3)), new Shapes.Circle(clusterRadius), Actions.Chain(new GenAction[]
+                {
+                    new Modifiers.Blotches(),
+                    new Actions.PlaceTile(originalTileType),
+                    new Actions.PlaceWall(WallID.FlowerUnsafe),
+                    new Actions.SetFrames(),
+                    new Actions.SetLiquid()
+                }));
             }
         }
 
@@ -178,14 +295,14 @@ namespace NoxusBoss.Content.Subworlds
             {
                 for (int y = 10; y < Main.maxTilesY - 1; y++)
                 {
-                    // The tile found is dirt. Now check if it has an exposed air pocket.
+                    // The tile found is dirt. Now check if it has an exposed air or water pocket.
                     if (Main.tile[x, y].TileType == TileID.Dirt)
                     {
                         Tile left = CalamityUtils.ParanoidTileRetrieval(x - 1, y);
                         Tile right = CalamityUtils.ParanoidTileRetrieval(x + 1, y);
                         Tile top = CalamityUtils.ParanoidTileRetrieval(x, y - 1);
                         Tile bottom = CalamityUtils.ParanoidTileRetrieval(x, y + 1);
-                        bool anyExposedAir = (!left.HasTile && left.LiquidAmount <= 0) || (!right.HasTile && right.LiquidAmount <= 0) || (!top.HasTile && top.LiquidAmount <= 0) || (!bottom.HasTile && bottom.LiquidAmount <= 0);
+                        bool anyExposedAir = !left.HasTile || !right.HasTile || !top.HasTile || !bottom.HasTile;
                         if (anyExposedAir)
                             WorldGen.SpreadGrass(x, y, TileID.Dirt, TileID.Grass, false);
                     }

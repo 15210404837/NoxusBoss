@@ -12,7 +12,6 @@ using NoxusBoss.Core.Graphics;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;

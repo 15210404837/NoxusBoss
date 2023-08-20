@@ -2,7 +2,6 @@
 using SubworldLibrary;
 using Terraria;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Biomes
@@ -11,7 +10,7 @@ namespace NoxusBoss.Content.Biomes
     {
         public const string SkyKey = "NoxusBoss:EternalGarden";
 
-        public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("CalamityMod/SunkenSeaWater");
+        public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("NoxusBoss/EternalGardenWater");
 
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("NoxusBoss/LostColosseumSurfaceBGStyle");
 
@@ -25,8 +24,7 @@ namespace NoxusBoss.Content.Biomes
 
         public override string MapBackground => "NoxusBoss/Content/Backgrounds/EternalGardenBG";
 
-        // TODO -- Implement this.
-        public override int Music => 0;
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/EternalGarden");
 
         public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<EternalGarden>();
 

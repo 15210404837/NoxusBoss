@@ -6,7 +6,6 @@ using CalamityMod.Items;
 using CalamityMod.Items.Potions;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Items;
-using NoxusBoss.Core;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

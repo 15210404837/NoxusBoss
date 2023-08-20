@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Content.Particles;
+using NoxusBoss.Content.Subworlds;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -52,6 +56,7 @@ namespace NoxusBoss.Core
 
         public override void PostUpdate()
         {
+            // Give the player loot if they're entitled to it.
             if (GiveXerocLootUponReenteringWorld)
             {
                 NPC dummyXeroc = new();
@@ -70,6 +75,23 @@ namespace NoxusBoss.Core
 
                 GiveXerocLootUponReenteringWorld = false;
                 WorldSaveSystem.HasDefeatedXeroc = true;
+            }
+
+            // Create pale duckweed in the water if the player is in the eternal garden.
+            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is null && Main.rand.NextBool())
+            {
+                for (int tries = 0; tries < 50; tries++)
+                {
+                    Vector2 potentialSpawnPosition = Player.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(200f, 1500f);
+                    if (Collision.SolidCollision(potentialSpawnPosition, 1, 1) || !Collision.WetCollision(potentialSpawnPosition, 1, 1))
+                        continue;
+
+                    Vector2 spawnVelocity = -Vector2.UnitY.RotatedByRandom(0.82f) * Main.rand.NextFloat(0.5f, 1.35f);
+                    Color duckweedColor = Color.Lerp(Color.Wheat, Color.IndianRed, Main.rand.NextFloat(0.55f));
+                    PaleDuckweed duckweed = new(potentialSpawnPosition, spawnVelocity, duckweedColor, 540);
+                    GeneralParticleHandler.SpawnParticle(duckweed);
+                    break;
+                }
             }
         }
     }
