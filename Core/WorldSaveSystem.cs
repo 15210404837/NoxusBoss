@@ -28,7 +28,7 @@ namespace NoxusBoss.Core
             {
                 if (hasDefeatedNoxus != value)
                 {
-                    if (value && !Main.gameMenu)
+                    if (value && !Main.gameMenu && !Main.zenithWorld)
                         NoxusDefeatAnimationSystem.Start();
 
                     hasDefeatedNoxus = value;
