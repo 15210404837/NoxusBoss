@@ -561,6 +561,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GiveXerocLootUponReenteringWorld = true;
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
                         WorldSaveSystem.HasDefeatedXeroc = true;
+                        Player.SavePlayer(Main.ActivePlayerFileData);
                         if (Main.netMode == NetmodeID.MultiplayerClient)
                         {
                             Netplay.Disconnect = true;
