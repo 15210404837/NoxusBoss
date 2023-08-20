@@ -1,7 +1,9 @@
-﻿using CalamityMod.Particles;
+﻿using System.Reflection;
+using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -57,6 +59,8 @@ namespace NoxusBoss.Content.Items
                     float gasSize = player.width * Main.rand.NextFloat(0.1f, 0.8f);
                     NoxusGasMetaball.CreateParticle(player.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);
                 }
+                typeof(SubworldSystem).GetField("current", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
+                typeof(SubworldSystem).GetField("cache", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
                 NoxusSprayPlayerDeletionSystem.PlayerWasDeleted = true;
             }
 
