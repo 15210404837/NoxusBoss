@@ -186,5 +186,16 @@ Mods: {
 				}
 			}
 		}
+
+		Dialog: {
+			TerminusHintLine1: You have done well.
+			TerminusHintLine2: Now, seek the Terminus. Your final test is at hand.
+			XerocEndScreenText: You have passed the test.
+			XerocPlayerDeathText: You have failed the test.
+			XerocEndScreenMainMenuTip: You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test.
+			XerocNoxusSprayerTip: Do not.
+			XerocStatusText: You have passed the test.
+			XerocStatusPercentageText: You have passed the test:
+		}
 	}
 }

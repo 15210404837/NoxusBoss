@@ -14,6 +14,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using static CalamityMod.CalamityUtils;
@@ -348,7 +349,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draw congratulatory text if necessary.
             if (DrawCongratulatoryText)
             {
-                string text = "You have passed the test.";
+                string text = Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocEndScreenText");
                 DynamicSpriteFont font = FontAssets.DeathText.Value;
                 float scale = 0.8f;
                 float maxHeight = 225f;

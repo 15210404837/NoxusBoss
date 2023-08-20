@@ -4,6 +4,7 @@ using ReLogic.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics
@@ -31,10 +32,10 @@ namespace NoxusBoss.Core.Graphics
             private set;
         }
 
-        public static readonly string[] TextLines = new string[]
+        public static string[] TextLines => new string[]
         {
-            "You have done well.",
-            "Now, seek the Terminus. Your final test is at hand.",
+            Language.GetTextValue("Mods.NoxusBoss.Dialog.TerminusHintLine1"),
+            Language.GetTextValue("Mods.NoxusBoss.Dialog.TerminusHintLine2")
         };
 
         public static readonly SoundStyle AmbientSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/NoxusDefeatXerocMessageAmbience") with { Volume = 1.5f };

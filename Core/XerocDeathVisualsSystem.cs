@@ -39,7 +39,7 @@ namespace NoxusBoss.Core
             cursor.EmitDelegate<Func<string, string>>(originalText =>
             {
                 if (XerocWasAliveAtTimeOfDeath)
-                    return "You have failed the test.";
+                    return Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocPlayerDeathText");
 
                 return originalText;
             });

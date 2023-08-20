@@ -24,10 +24,9 @@ namespace NoxusBoss.Core.Graphics
 
         public static readonly Regex PercentageExtractor = new(@"([0-9]+%)", RegexOptions.Compiled);
 
-        public static string SprayDeletionTipsText => "Do not.";
+        public static string SprayDeletionTipsText => Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocNoxusSprayerTip");
 
-        public static string DeathAnimationTipsText => "You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. " +
-            "You have passed the test. You have passed the test. You have passed the test. You have passed the test.";
+        public static string DeathAnimationTipsText => Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocEndScreenMainMenuTip");
 
         public override void OnModLoad()
         {
@@ -52,12 +51,12 @@ namespace NoxusBoss.Core.Graphics
                 if (PercentageExtractor.IsMatch(oldStatusText))
                 {
                     string percentage = PercentageExtractor.Match(oldStatusText).Value;
-                    Main.statusText = $"You have passed the test: {percentage}";
+                    Main.statusText = $"{Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocStatusPercentageText")}: {percentage}";
                 }
 
                 // Otherwise simply use the regular ominous text about having "passed the test".
                 else
-                    Main.statusText = "You have passed the test.";
+                    Main.statusText = Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocStatusText");
 
                 Main.oldStatusText = Main.statusText;
             }
