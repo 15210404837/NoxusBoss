@@ -38,10 +38,13 @@ namespace NoxusBoss.Core
 
             // Draw the ogscule overlay.
             Main.spriteBatch.Begin();
+
+            float scale = Sin(Main.GlobalTimeWrappedHourly * 3.5f) * 0.03f + 0.55f;
+            Color gay = Main.hslToRgb(Main.GlobalTimeWrappedHourly * 4f % 1f, 0.5f, 0.45f);
             Texture2D ogscule = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Ogscule").Value;
             Vector2 ogsculeScale = new Vector2(Main.screenWidth, Main.screenHeight) / ogscule.Size();
             Main.spriteBatch.Draw(ogscule, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White * 0.35f, 0f, ogscule.Size() * 0.5f, ogsculeScale, 0, 0f);
-            Main.spriteBatch.DrawString(FontAssets.DeathText.Value, "This ogscule effect is not added by the base Calamity Mod. Don't annoy them about it.", DisclaimerPosition, Color.Red, 0f, Vector2.Zero, 0.55f, 0, 0f);
+            Main.spriteBatch.DrawString(FontAssets.DeathText.Value, "This ogscule effect is not added by the base Calamity Mod. Don't annoy them about it.", DisclaimerPosition, gay, 0f, Vector2.Zero, scale, 0, 0f);
 
             // Update the ogscule position.
             DisclaimerPosition += DisclaimerVelocity;
