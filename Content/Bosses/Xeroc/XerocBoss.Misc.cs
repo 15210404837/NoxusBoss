@@ -2,9 +2,11 @@
 using System.IO;
 using System.Linq;
 using CalamityMod;
+using CalamityMod.Items;
 using CalamityMod.Items.Potions;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Items;
+using NoxusBoss.Core;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -104,10 +106,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ModContent.ItemType<BossRushStarter>());
             npcLoot.Add(ModContent.ItemType<CheatPermissionSlip>());
             npcLoot.Add(ModContent.ItemType<DeificTouch>());
             npcLoot.Add(ModContent.ItemType<DivineWings>());
+            npcLoot.Add(ModContent.ItemType<Rock>());
         }
 
         // Ensure that Xeroc' contact damage adheres to the special boss-specific cooldown slot, to prevent things like lava cheese.

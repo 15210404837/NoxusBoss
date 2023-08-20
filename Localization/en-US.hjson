@@ -105,7 +105,7 @@ Mods: {
 			}
 
 			BossRushStarter: {
-				DisplayName: Boss Rush Starter
+				DisplayName: Terminal
 				Tooltip:
 					'''
 					We reject Boss Rush as an event in its current state. We do not consider it canonical in any way
