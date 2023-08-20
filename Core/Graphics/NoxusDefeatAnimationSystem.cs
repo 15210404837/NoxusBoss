@@ -53,7 +53,7 @@ namespace NoxusBoss.Core.Graphics
             if (!Main.instance.IsActive)
                 return;
 
-            float animationCompletion = GetLerpValue(0f, 420f, AnimationTimer, true);
+            float animationCompletion = GetLerpValue(0f, 540f, AnimationTimer, true);
             float whiteOverlayOpacity = GetLerpValue(0f, 0.19f, animationCompletion, true) * GetLerpValue(1f, 0.875f, animationCompletion, true);
 
             // Stop the animation once it has completed.

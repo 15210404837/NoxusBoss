@@ -69,6 +69,12 @@ namespace NoxusBoss.Core
             }
         }
 
+        public static bool OgsculeRulesOverTheUniverse
+        {
+            get;
+            set;
+        }
+
         public static string XerocDefeatConfirmationFilePath => Main.SavePath + "\\XerocDefeatConfirmation.txt";
 
         public override void OnWorldLoad()
@@ -81,6 +87,7 @@ namespace NoxusBoss.Core
             hasDefeatedNoxus = false;
             HasDefeatedXeroc = false;
             HasMetXeroc = false;
+            OgsculeRulesOverTheUniverse = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
         }
 
@@ -93,6 +100,7 @@ namespace NoxusBoss.Core
             hasDefeatedNoxus = false;
             HasDefeatedXeroc = false;
             HasMetXeroc = false;
+            OgsculeRulesOverTheUniverse = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
         }
 
@@ -108,6 +116,8 @@ namespace NoxusBoss.Core
                 tag["HasSummonedNoxus"] = true;
             if (HasMetXeroc)
                 tag["HasMetXeroc"] = true;
+            if (OgsculeRulesOverTheUniverse)
+                tag["OgsculeRulesOverTheUniverse"] = OgsculeRulesOverTheUniverse;
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -117,6 +127,7 @@ namespace NoxusBoss.Core
             HasDefeatedXeroc = tag.ContainsKey("HasDefeatedXeroc");
             NoxusEggCutsceneSystem.HasSummonedNoxus = tag.ContainsKey("HasSummonedNoxus");
             HasMetXeroc = tag.ContainsKey("HasMetXeroc");
+            OgsculeRulesOverTheUniverse = tag.ContainsKey("OgsculeRulesOverTheUniverse");
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -126,7 +137,8 @@ namespace NoxusBoss.Core
             b1[1] = hasDefeatedNoxus;
             b1[2] = HasDefeatedXeroc;
             b1[3] = HasMetXeroc;
-            b1[4] = NoxusEggCutsceneSystem.HasSummonedNoxus;
+            b1[4] = OgsculeRulesOverTheUniverse;
+            b1[5] = NoxusEggCutsceneSystem.HasSummonedNoxus;
 
             writer.Write(b1);
         }
@@ -138,7 +150,8 @@ namespace NoxusBoss.Core
             hasDefeatedNoxus = b1[1];
             HasDefeatedXeroc = b1[2];
             HasMetXeroc = b1[3];
-            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[4];
+            OgsculeRulesOverTheUniverse = b1[4];
+            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[5];
         }
     }
 }

@@ -15,7 +15,7 @@ namespace NoxusBoss.Core
         public override void SetDefaults(Item item)
         {
             // Replace Terminus' projectile with a custom one that has nothing to do with Boss Rush.
-            if (item.type == ModContent.ItemType<Terminus>())
+            if (item.type == ModContent.ItemType<Terminus>() && !Main.zenithWorld)
             {
                 item.shoot = ModContent.ProjectileType<TerminusProj>();
                 item.channel = false;
@@ -45,7 +45,7 @@ namespace NoxusBoss.Core
             #region Tooltip Edits
 
             // Alter the Terminus' text.
-            if (item.type == ModContent.ItemType<Terminus>())
+            if (item.type == ModContent.ItemType<Terminus>() && !Main.zenithWorld)
             {
                 EditTooltipByNum(0, line => line.Text = Language.GetTextValue("Mods.NoxusBoss.Items.Terminus.BaseTooltip"));
                 EditTooltipByNum(1, line =>
@@ -68,7 +68,7 @@ namespace NoxusBoss.Core
         public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             // Let Terminus use its closed eye form if Noxus is not yet defeated.
-            if (item.type == ModContent.ItemType<Terminus>() && !WorldSaveSystem.HasDefeatedNoxus)
+            if (item.type == ModContent.ItemType<Terminus>() && !WorldSaveSystem.HasDefeatedNoxus && !Main.zenithWorld)
             {
                 Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/TerminusClosedEye").Value;
                 spriteBatch.Draw(texture, position, null, Color.White, 0f, origin, scale, 0, 0);
@@ -81,7 +81,7 @@ namespace NoxusBoss.Core
         public override bool PreDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
             // Let Terminus use its closed eye form if Noxus is not yet defeated.
-            if (item.type == ModContent.ItemType<Terminus>() && !WorldSaveSystem.HasDefeatedNoxus)
+            if (item.type == ModContent.ItemType<Terminus>() && !WorldSaveSystem.HasDefeatedNoxus && !Main.zenithWorld)
             {
                 Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/TerminusClosedEye").Value;
                 spriteBatch.Draw(texture, item.position - Main.screenPosition, null, lightColor, 0f, Vector2.Zero, 1f, 0, 0);
@@ -94,10 +94,18 @@ namespace NoxusBoss.Core
         public override bool CanUseItem(Item item, Player player)
         {
             // Make the Terminus only usable after Noxus. Also disallow it being usable to create multiple instances of Terminus in the world. That'd be weird.
-            if (item.type == ModContent.ItemType<Terminus>())
+            if (item.type == ModContent.ItemType<Terminus>() && !Main.zenithWorld)
                 return WorldSaveSystem.HasDefeatedNoxus && player.ownedProjectileCounts[ModContent.ProjectileType<TerminusProj>()] <= 0;
 
             return true;
+        }
+
+        public override bool? UseItem(Item item, Player player)
+        {
+            if (item.type == ModContent.ItemType<Terminus>() && Main.zenithWorld)
+                WorldSaveSystem.OgsculeRulesOverTheUniverse = true;
+
+            return null;
         }
     }
 }

@@ -133,6 +133,12 @@ namespace NoxusBoss.Content.Projectiles
 
         public override void AI()
         {
+            if (Main.zenithWorld)
+            {
+                Projectile.active = false;
+                return;
+            }
+
             // Perform initialization effects on the first frame.
             if (!HasInitialized)
             {
