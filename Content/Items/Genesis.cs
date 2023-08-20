@@ -71,7 +71,6 @@ namespace NoxusBoss.Content.Items
                 AddTile<DraedonsForge>().
                 AddIngredient(ItemID.StoneBlock, 50).
                 AddIngredient(ModContent.ItemType<ShadowspecBar>(), 10).
-                AddIngredient(ModContent.ItemType<Rock>()).
                 Register();
         }
     }
