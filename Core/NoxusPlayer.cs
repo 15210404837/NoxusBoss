@@ -69,6 +69,7 @@ namespace NoxusBoss.Core
                 dummyXeroc.active = false;
 
                 GiveXerocLootUponReenteringWorld = false;
+                WorldSaveSystem.HasDefeatedXeroc = true;
             }
         }
     }

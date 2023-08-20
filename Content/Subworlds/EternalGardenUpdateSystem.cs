@@ -1,9 +1,13 @@
 ﻿using CalamityMod;
+using CalamityMod.NPCs.Providence;
+using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles;
 using SubworldLibrary;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,7 +29,7 @@ namespace NoxusBoss.Content.Subworlds
             private set;
         }
 
-        public override void PostUpdateEverything()
+        public override void PreUpdateEntities()
         {
             // Reset the text opacity when the game is being played. It will increase up to full opacity during subworld transition drawing.
             TextOpacity = 0f;
@@ -52,6 +56,9 @@ namespace NoxusBoss.Content.Subworlds
 
                     // Set the respawn point now that the player is at the the initial spawn point already.
                     EternalGardenWorldGen.SetPlayerRespawnPoint();
+
+                    // Create light flash teleport visuals on the player.
+                    CreatePlayerLightFlashEffects();
                 }
 
                 WasInSubworldLastUpdateFrame = inGarden;
@@ -108,6 +115,36 @@ namespace NoxusBoss.Content.Subworlds
             {
                 NPC.NewNPC(new EntitySource_WorldEvent(), Main.maxTilesX * 8, EternalGardenWorldGen.SurfaceTilePoint * 16 - 800, ModContent.NPCType<XerocBoss>(), 1);
                 TimeSpentInCenter = 0;
+            }
+        }
+
+        public static void CreatePlayerLightFlashEffects()
+        {
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                Player p = Main.player[i];
+                if (!p.active || p.dead)
+                    continue;
+
+                // Play the flash sound.
+                SoundEngine.PlaySound(Providence.NearBurnSound with
+                {
+                    Pitch = 0.5f,
+                    Volume = 1.56f,
+                    MaxInstances = 8
+                }, p.Center);
+
+                // Create the particle effects.
+                ExpandingGreyscaleCircleParticle circle = new(p.Center, Vector2.Zero, new(219, 194, 229), 10, 0.28f);
+                VerticalLightStreakParticle bigLightStreak = new(p.Center, Vector2.Zero, new(228, 215, 239), 10, new(2.4f, 3f));
+                MagicBurstParticle magicBurst = new(p.Center, Vector2.Zero, new(150, 109, 219), 12, 0.1f);
+
+                GeneralParticleHandler.SpawnParticle(circle);
+                GeneralParticleHandler.SpawnParticle(bigLightStreak);
+                GeneralParticleHandler.SpawnParticle(magicBurst);
+
+                // Shake the screen a little bit.
+                ShakeScreen(p.Center, 6f);
             }
         }
 
