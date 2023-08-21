@@ -79,7 +79,7 @@ namespace NoxusBoss.Core
             }
 
             // Create pale duckweed in the water if the player is in the eternal garden.
-            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is null && Main.rand.NextBool())
+            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is null && Main.rand.NextBool(3))
             {
                 for (int tries = 0; tries < 50; tries++)
                 {
@@ -88,7 +88,7 @@ namespace NoxusBoss.Core
                         continue;
 
                     Vector2 spawnVelocity = -Vector2.UnitY.RotatedByRandom(0.82f) * Main.rand.NextFloat(0.5f, 1.35f);
-                    Color duckweedColor = Color.Lerp(Color.Wheat, Color.IndianRed, Main.rand.NextFloat(0.55f));
+                    Color duckweedColor = Color.Lerp(Color.Wheat, Color.Red, Main.rand.NextFloat(0.52f));
                     PaleDuckweed duckweed = new(potentialSpawnPosition, spawnVelocity, duckweedColor, 540);
                     GeneralParticleHandler.SpawnParticle(duckweed);
                     break;
