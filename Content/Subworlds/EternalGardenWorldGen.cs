@@ -82,6 +82,11 @@ namespace NoxusBoss.Content.Subworlds
 
             // Generate plants atop the grass.
             GeneratePlants(topography, leftLakeArea.Right);
+
+            // Generate water decorations and grass.
+            GenerateWaterGrass();
+            GenerateWaterDecorations(leftLakeArea);
+            GenerateWaterDecorations(rightLakeArea);
         }
 
         public static void GenerateDirtBase()
@@ -413,6 +418,47 @@ namespace NoxusBoss.Content.Subworlds
                     plantID = (ushort)ModContent.TileType<EternalTallFlower>();
 
                 WorldGen.PlaceObject(x, y, plantID, true, frameVariant);
+            }
+        }
+
+        public static void GenerateWaterGrass()
+        {
+            for (int x = 1; x < Main.maxTilesX - 1; x++)
+            {
+                for (int y = 10; y < Main.maxTilesY - 10; y++)
+                {
+                    Tile t = CalamityUtils.ParanoidTileRetrieval(x, y);
+                    Tile above = CalamityUtils.ParanoidTileRetrieval(x, y - 1);
+                    if (t.HasTile && t.TileType == TileID.Dirt && !above.HasTile && above.LiquidAmount >= 127)
+                        Main.tile[x, y].TileType = TileID.Grass;
+                }
+            }
+        }
+
+        public static void GenerateWaterDecorations(Rectangle area)
+        {
+            // Adorn the lake with cattails and lily pads.
+            int cattailCount = (area.Right - area.Left) / 7;
+            int lilypadCount = (area.Right - area.Left) / 3;
+            for (int i = 0; i < cattailCount; i++)
+            {
+                int x = WorldGen.genRand.Next(area.Left + 9, area.Right - 9);
+                int y = area.Bottom + 4;
+                while (CalamityUtils.ParanoidTileRetrieval(x, y).HasTile)
+                    y--;
+
+                int cattailHeight = y - area.Top + WorldGen.genRand.NextBool().ToInt() + 1;
+                Main.tile[x, y].TileType = TileID.Cattail;
+                Main.tile[x, y].Get<TileWallWireStateData>().HasTile = true;
+
+                for (int j = 0; j < cattailHeight; j++)
+                    WorldGen.GrowCatTail(x, y);
+            }
+            for (int i = 0; i < lilypadCount; i++)
+            {
+                int x = WorldGen.genRand.Next(area.Left + 9, area.Right - 9);
+                int y = area.Top + 1;
+                WorldGen.PlaceTile(x, y, TileID.LilyPad);
             }
         }
     }
