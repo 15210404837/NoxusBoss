@@ -104,6 +104,11 @@ Mods: {
 				Tooltip: ""
 			}
 
+			Cattail: {
+				DisplayName: Cattail
+				Tooltip: ""
+			}
+
 			BossRushStarter: {
 				DisplayName: Terminal
 				Tooltip:
