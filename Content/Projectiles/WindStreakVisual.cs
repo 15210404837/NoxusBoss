@@ -41,7 +41,7 @@ namespace NoxusBoss.Content.Projectiles
         public override void AI()
         {
             // Fade in and out based on time.
-            Projectile.Opacity = GetLerpValue(0f, 32f, Time, true) * GetLerpValue(0f, 60f, Projectile.timeLeft, true) * 0.07f;
+            Projectile.Opacity = GetLerpValue(0f, 32f, Time, true) * GetLerpValue(0f, 60f, Projectile.timeLeft, true) * 0.09f;
 
             // Ensure that the wind quickly fades out if Xeroc is present or if the wind is inside of tiles.
             bool insideTile = Collision.SolidCollision(Projectile.Center, 1, 1);
