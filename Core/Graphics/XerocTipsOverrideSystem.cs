@@ -51,7 +51,7 @@ namespace NoxusBoss.Core.Graphics
                 if (PercentageExtractor.IsMatch(oldStatusText))
                 {
                     string percentage = PercentageExtractor.Match(oldStatusText).Value;
-                    Main.statusText = $"{Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocStatusPercentageText")}: {percentage}";
+                    Main.statusText = $"{Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocStatusPercentageText")} {percentage}";
                 }
 
                 // Otherwise simply use the regular ominous text about having "passed the test".
