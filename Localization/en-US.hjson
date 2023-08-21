@@ -167,6 +167,7 @@ Mods: {
 			TelegraphedStarLaserbeam.DisplayName: Solar Burst
 			TerminusProj.DisplayName: Terminus
 			GodRayVisual.DisplayName: God Ray Visual
+			WindStreakVisual.DisplayName: Wind
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box

@@ -10,6 +10,7 @@ using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static NoxusBoss.Content.Subworlds.EternalGarden;
@@ -116,6 +117,14 @@ namespace NoxusBoss.Content.Subworlds
             {
                 NPC.NewNPC(new EntitySource_WorldEvent(), Main.maxTilesX * 8, EternalGardenWorldGen.SurfaceTilePoint * 16 - 800, ModContent.NPCType<XerocBoss>(), 1);
                 TimeSpentInCenter = 0;
+            }
+
+            // Disable typical weather things.
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                if (Sandstorm.Happening)
+                    Sandstorm.StopSandstorm();
+                CalamityMod.CalamityMod.StopRain();
             }
         }
 

@@ -3,6 +3,7 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Content.Projectiles;
 using NoxusBoss.Content.Subworlds;
 using Terraria;
 using Terraria.DataStructures;
@@ -90,6 +91,21 @@ namespace NoxusBoss.Core
                     Color duckweedColor = Color.Lerp(Color.Wheat, Color.IndianRed, Main.rand.NextFloat(0.55f));
                     PaleDuckweed duckweed = new(potentialSpawnPosition, spawnVelocity, duckweedColor, 540);
                     GeneralParticleHandler.SpawnParticle(duckweed);
+                    break;
+                }
+            }
+
+            // Create wind if the player is in the eternal garden.
+            if (Main.myPlayer == Player.whoAmI && EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is null && Main.rand.NextBool(3))
+            {
+                Vector2 windVelocity = Vector2.UnitX * Main.windSpeedTarget * Main.rand.NextFloat(10f, 14f);
+                for (int tries = 0; tries < 50; tries++)
+                {
+                    Vector2 potentialSpawnPosition = Player.Center + new Vector2(Sign(windVelocity.X) * -Main.rand.NextFloat(950f, 1150f), Main.rand.NextFloatDirection() * 900f);
+                    if (Collision.SolidCollision(potentialSpawnPosition, 1, 120) || Collision.WetCollision(potentialSpawnPosition, 1, 120))
+                        continue;
+
+                    Projectile.NewProjectile(new EntitySource_WorldEvent(), potentialSpawnPosition, windVelocity, ModContent.ProjectileType<WindStreakVisual>(), 0, 0f, Player.whoAmI);
                     break;
                 }
             }
