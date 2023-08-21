@@ -61,7 +61,7 @@ namespace NoxusBoss.Content.Projectiles
             float movementDirection = Sign(Projectile.velocity.X);
             Vector2 horizontalVelocity = Vector2.UnitX * movementSpeed * movementDirection;
             Vector2 baseVelocity = horizontalVelocity + Vector2.UnitY * (Sin(Projectile.Center.X / 132f + Projectile.identity) * 2f - 1.2f);
-            Vector2 loopVelocity = (LoopInterpolant * TwoPi).ToRotationVector2() * loopSpeed;
+            Vector2 loopVelocity = (LoopInterpolant * TwoPi).ToRotationVector2() * new Vector2(1f, 0.6f) * loopSpeed;
 
             if (LoopInterpolant <= 0f)
             {
