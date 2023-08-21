@@ -216,7 +216,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Play wing flap sounds.
-            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0)
+            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0 && CurrentAttack != XerocAttackType.DeathAnimation)
             {
                 float volume = 1.5f;
                 if (ZPosition >= 0.01f)
