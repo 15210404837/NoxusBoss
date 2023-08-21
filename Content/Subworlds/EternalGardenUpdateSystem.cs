@@ -120,9 +120,6 @@ namespace NoxusBoss.Content.Subworlds
                 TimeSpentInCenter = 0;
             }
 
-            // Make the music fade out before Xeroc appears.
-            MusicVolumeChangeSystem.MusicVolumeFactor *= GetLerpValue(xerocWaitDelay - 8f, xerocWaitDelay - 120f, TimeSpentInCenter, true);
-
             // Disable typical weather things.
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
