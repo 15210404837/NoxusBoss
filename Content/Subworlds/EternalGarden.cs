@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 using ReLogic.Content;
 using CalamityMod.World;
 using static NoxusBoss.Core.WorldSaveSystem;
+using NoxusBoss.Assets.Fonts;
 
 namespace NoxusBoss.Content.Subworlds
 {
@@ -73,10 +74,12 @@ namespace NoxusBoss.Content.Subworlds
 
             // Give ominous text about how the player will "be tested" when entering the garden.
             // When exiting, the regular load details text is displayed.
+            var font = FontRegistry.Instance.XerocText;
             string text = EnterText;
             Color textColor = Color.LightCoral;
             if (!SubworldSystem.IsActive<EternalGarden>())
             {
+                font = FontAssets.MouseText.Value;
                 text = Main.statusText;
                 textColor = Color.Black;
             }
@@ -84,12 +87,12 @@ namespace NoxusBoss.Content.Subworlds
             // Draw a pure-white background. Immediate loading is used for the texture because without it there's a tiny, jarring delay before the white background appears where the regular
             // tile screen is revealed momentarily.
             Texture2D pixel = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Pixel", AssetRequestMode.ImmediateLoad).Value;
-            Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 1.5f / pixel.Size();
+            Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 1.45f / pixel.Size();
             Main.spriteBatch.Draw(pixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White, 0f, pixel.Size() * 0.5f, pixelScale, 0, 0f);
 
             // Draw the text.
-            Vector2 drawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - FontAssets.DeathText.Value.MeasureString(text) * 0.5f;
-            Main.spriteBatch.DrawString(FontAssets.DeathText.Value, text, drawPosition, textColor * TextOpacity);
+            Vector2 drawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - font.MeasureString(text) * 0.5f;
+            Main.spriteBatch.DrawString(font, text, drawPosition, textColor * TextOpacity);
         }
 
         public override void CopyMainWorldData()

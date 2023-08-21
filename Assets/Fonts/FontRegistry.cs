@@ -35,5 +35,16 @@ namespace NoxusBoss.Assets.Fonts
                 return FontAssets.MouseText.Value;
             }
         }
+
+        public DynamicSpriteFont XerocText
+        {
+            get
+            {
+                if (CanLoadFonts)
+                    return Mod.Assets.Request<DynamicSpriteFont>("Assets/Fonts/XerocText", AssetRequestMode.ImmediateLoad).Value;
+
+                return FontAssets.MouseText.Value;
+            }
+        }
     }
 }

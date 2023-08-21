@@ -6,6 +6,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Assets.Fonts;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -350,7 +351,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (DrawCongratulatoryText)
             {
                 string text = Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocEndScreenText");
-                DynamicSpriteFont font = FontAssets.DeathText.Value;
+                DynamicSpriteFont font = FontRegistry.Instance.XerocText;
                 float scale = 0.8f;
                 float maxHeight = 225f;
                 Vector2 textSize = font.MeasureString(text);

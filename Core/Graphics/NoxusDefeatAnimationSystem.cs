@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Assets.Fonts;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -74,13 +75,14 @@ namespace NoxusBoss.Core.Graphics
             Main.spriteBatch.Draw(pixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White * whiteOverlayOpacity, 0f, pixel.Size() * 0.5f, pixelScale, 0, 0f);
 
             // Draw the text that directs the player to seek the Terminus.
+            var font = FontRegistry.Instance.XerocText;
             for (int i = 0; i < TextLines.Length; i++)
             {
                 string line = TextLines[i];
                 float appearDelay = i * 0.255f;
                 float lineTextOpacity = GetLerpValue(appearDelay + 0.15f, appearDelay + 0.25f, animationCompletion, true) * GetLerpValue(0.95f, 0.85f, animationCompletion, true);
-                Vector2 drawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - FontAssets.DeathText.Value.MeasureString(line) * 0.5f + Vector2.UnitY * i * 50f;
-                Main.spriteBatch.DrawString(FontAssets.DeathText.Value, line, drawPosition, Color.LightCoral * lineTextOpacity);
+                Vector2 drawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - font.MeasureString(line) * 0.5f + Vector2.UnitY * i * 50f;
+                Main.spriteBatch.DrawString(font, line, drawPosition, Color.LightCoral * lineTextOpacity);
             }
 
             if (AnimationDelay < 480)
