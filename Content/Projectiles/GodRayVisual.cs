@@ -42,7 +42,7 @@ namespace NoxusBoss.Content.Projectiles
         {
             // Fade in or out depending on if Xeroc is present.
             bool fadeIn = XerocBoss.Myself is null;
-            Projectile.Opacity = Clamp(Projectile.Opacity + fadeIn.ToDirectionInt() * 0.004f, 0f, 1f);
+            Projectile.Opacity = Clamp(Projectile.Opacity + fadeIn.ToDirectionInt() * 0.0079f, 0f, 1f);
 
             if (Projectile.Opacity <= 0f && !fadeIn)
                 Projectile.Kill();
