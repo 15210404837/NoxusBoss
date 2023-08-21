@@ -214,6 +214,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 Wings[i].Update(WingsMotionState, animationCompletion, instanceRatio);
             }
+
+            // Play wing flap sounds.
+            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0)
+            {
+                float volume = 1.5f;
+                if (ZPosition >= 0.01f)
+                    volume /= ZPosition + 1f;
+
+                SoundEngine.PlaySound(WingFlapSound with { Volume = volume }, NPC.Center);
+                NPC.soundDelay = 10;
+            }
         }
 
         public void PerformTeethChomp(float animationCompletion, float chompAnimationDelay = 0.7f, int risePower = 4, int chompPower = 24)

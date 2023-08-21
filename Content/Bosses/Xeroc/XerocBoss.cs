@@ -480,6 +480,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle SupernovaSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSupernova") with { Volume = 0.8f, MaxInstances = 20 };
 
+        public static readonly SoundStyle WingFlapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocWingFlap", 4) with { Volume = 1.6f };
+
         public static int WingCount => 1;
 
         public static int BackgroundStarDamage => Main.expertMode ? 400 : 300;
