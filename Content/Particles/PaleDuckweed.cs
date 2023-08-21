@@ -65,13 +65,15 @@ namespace NoxusBoss.Content.Particles
         public override void CustomDraw(SpriteBatch spriteBatch)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            Texture2D backglow = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
             Rectangle frame = texture.Frame(1, FrameVariants, 0, Frame);
             Vector2 origin = frame.Size() * 0.5f;
             SpriteEffects spriteDirection = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             // Draw a weakly pulsating backglow behind the duckweed.
             float pulse = (Main.GlobalTimeWrappedHourly * 0.5f + UniqueID * 0.21586f) % 1f;
-            spriteBatch.Draw(texture, Position - Main.screenPosition, frame, Color * Opacity * (1f - pulse) * 0.35f, Rotation, origin, Scale * (pulse * 0.6f + 1f), spriteDirection, 0f);
+            spriteBatch.Draw(backglow, Position - Main.screenPosition, null, Color * Opacity * 0.32f, Rotation, backglow.Size() * 0.5f, Scale * 0.3f, 0, 0f);
+            spriteBatch.Draw(texture, Position - Main.screenPosition, frame, Color * Opacity * (1f - pulse) * 0.61f, Rotation, origin, Scale * (pulse * 1.1f + 1f), spriteDirection, 0f);
             spriteBatch.Draw(texture, Position - Main.screenPosition, frame, Color * Opacity, Rotation, origin, Scale, spriteDirection, 0f);
         }
     }
