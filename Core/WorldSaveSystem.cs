@@ -48,6 +48,12 @@ namespace NoxusBoss.Core
             set;
         }
 
+        public static bool HasPlacedCattail
+        {
+            get;
+            set;
+        }
+
         public static bool HasDefeatedXerocInAnyWorld
         {
             get
@@ -88,6 +94,7 @@ namespace NoxusBoss.Core
             HasDefeatedXeroc = false;
             HasMetXeroc = false;
             OgsculeRulesOverTheUniverse = false;
+            HasPlacedCattail = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
         }
 
@@ -101,6 +108,7 @@ namespace NoxusBoss.Core
             HasDefeatedXeroc = false;
             HasMetXeroc = false;
             OgsculeRulesOverTheUniverse = false;
+            HasPlacedCattail = false;
             NoxusEggCutsceneSystem.HasSummonedNoxus = false;
         }
 
@@ -117,7 +125,9 @@ namespace NoxusBoss.Core
             if (HasMetXeroc)
                 tag["HasMetXeroc"] = true;
             if (OgsculeRulesOverTheUniverse)
-                tag["OgsculeRulesOverTheUniverse"] = OgsculeRulesOverTheUniverse;
+                tag["OgsculeRulesOverTheUniverse"] = true;
+            if (HasPlacedCattail)
+                tag["HasPlacedCattail"] = true;
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -128,6 +138,7 @@ namespace NoxusBoss.Core
             NoxusEggCutsceneSystem.HasSummonedNoxus = tag.ContainsKey("HasSummonedNoxus");
             HasMetXeroc = tag.ContainsKey("HasMetXeroc");
             OgsculeRulesOverTheUniverse = tag.ContainsKey("OgsculeRulesOverTheUniverse");
+            HasPlacedCattail = tag.ContainsKey("HasPlacedCattail");
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -138,7 +149,8 @@ namespace NoxusBoss.Core
             b1[2] = HasDefeatedXeroc;
             b1[3] = HasMetXeroc;
             b1[4] = OgsculeRulesOverTheUniverse;
-            b1[5] = NoxusEggCutsceneSystem.HasSummonedNoxus;
+            b1[5] = HasPlacedCattail;
+            b1[6] = NoxusEggCutsceneSystem.HasSummonedNoxus;
 
             writer.Write(b1);
         }
@@ -151,7 +163,8 @@ namespace NoxusBoss.Core
             HasDefeatedXeroc = b1[2];
             HasMetXeroc = b1[3];
             OgsculeRulesOverTheUniverse = b1[4];
-            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[5];
+            HasPlacedCattail = b1[5];
+            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[6];
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CalamityMod.Rarities;
+using NoxusBoss.Core;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -18,8 +19,11 @@ namespace NoxusBoss.Content.Items
 
         private TileObject PlayAwesomeSoundForCattail(On_Player.orig_PlaceThing_Tiles_PlaceIt orig, Player self, bool newObjectType, TileObject data, int tileToCreate)
         {
-            if (tileToCreate == TileID.Cattail)
+            if (tileToCreate == TileID.Cattail && !WorldSaveSystem.HasPlacedCattail)
+            {
                 SoundEngine.PlaySound(CelebrationSound);
+                WorldSaveSystem.HasPlacedCattail = true;
+            }
             return orig(self, newObjectType, data, tileToCreate);
         }
 
