@@ -73,6 +73,7 @@ namespace NoxusBoss.Content.Projectiles.Pets
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D handTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Projectiles/Pets/BabyXerocHand").Value;
+            Texture2D censorTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocBoss").Value;
 
             float handRotationOffset = Sin(Main.GlobalTimeWrappedHourly * 2.9f) * 0.35f + PiOver4 + 0.6f;
             float leftHandRotation = (LeftHandPosition - Projectile.Center).ToRotation() + handRotationOffset;
@@ -82,6 +83,8 @@ namespace NoxusBoss.Content.Projectiles.Pets
             if (RightHandPosition.X < Projectile.Center.X)
                 rightHandRotation += Pi;
 
+            Vector2 censorDrawPosition = (Projectile.Center / new Vector2(4f, 0.01f)).Floor() * new Vector2(4f, 0.01f) - Main.screenPosition;
+            Main.EntitySpriteDraw(censorTexture, censorDrawPosition, null, Projectile.GetAlpha(Color.White), 0f, censorTexture.Size() * 0.5f, Projectile.scale * 0.18f, 0, 0);
             Main.EntitySpriteDraw(handTexture, LeftHandPosition - Main.screenPosition, null, Projectile.GetAlpha(Color.White) * 0.6f, leftHandRotation, handTexture.Size() * 0.5f, Projectile.scale, SpriteEffects.FlipHorizontally, 0);
             Main.EntitySpriteDraw(handTexture, RightHandPosition - Main.screenPosition, null, Projectile.GetAlpha(Color.White) * 0.6f, rightHandRotation, handTexture.Size() * 0.5f, Projectile.scale, 0, 0);
             return false;
