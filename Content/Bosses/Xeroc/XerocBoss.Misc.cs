@@ -105,11 +105,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ModContent.ItemType<Cattail>());
             npcLoot.Add(ModContent.ItemType<CheatPermissionSlip>());
             npcLoot.Add(ModContent.ItemType<DeificTouch>());
             npcLoot.Add(ModContent.ItemType<DivineWings>());
+
+            // Vanity and decorations.
+            npcLoot.Add(ModContent.ItemType<Cattail>());
             npcLoot.Add(ModContent.ItemType<Rock>());
+            npcLoot.Add(ModContent.ItemType<XerocMask>(), 7);
+            npcLoot.Add(ModContent.ItemType<XerocTrophy>(), 10);
         }
 
         // Ensure that Xeroc' contact damage adheres to the special boss-specific cooldown slot, to prevent things like lava cheese.

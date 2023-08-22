@@ -5,6 +5,7 @@ using CalamityMod.Items.SummonItems;
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Items;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
@@ -29,7 +30,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public List<int> Collectibles => new()
         {
-            ModContent.ItemType<Rock>()
+            ModContent.ItemType<Rock>(),
+            ModContent.ItemType<CheatPermissionSlip>(),
+            ModContent.ItemType<XerocMask>(),
+            ModContent.ItemType<XerocTrophy>(),
         };
 
         public int? SpawnItem => ModContent.ItemType<Terminus>();

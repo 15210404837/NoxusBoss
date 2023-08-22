@@ -47,6 +47,11 @@ Mods: {
 				Tooltip: ""
 			}
 
+			NoxusTrophy: {
+				DisplayName: Noxus Trophy
+				Tooltip: ""
+			}
+
 			NoxusRelic: {
 				DisplayName: Noxus Relic
 				Tooltip: ""
@@ -57,13 +62,8 @@ Mods: {
 				Tooltip:
 					'''
 					Shoots a stream of chaos mist that vaporizes everything it touches
-					Kills 99.99% of lesser beings guaranteed!
+					'Kills 99.99% of lesser beings guaranteed!'
 					'''
-			}
-
-			NoxusTrophy: {
-				DisplayName: Noxus Trophy
-				Tooltip: ""
 			}
 
 			OblivionRattle: {
@@ -84,7 +84,7 @@ Mods: {
 					Acceleration multiplier: 3.7
 					Sublime vertical speed
 					Flight time: ∞
-					You have passed the test
+					'You have passed the test'
 					'''
 			}
 
@@ -125,6 +125,24 @@ Mods: {
 				BaseTooltip: An impossibly old artifact, locked away at the bottom of the abyss in an act of protection
 				UnopenedTooltip: Its gaze is closed
 				OpenedTooltip: Its gaze is opened. You will be tested
+			}
+
+			XerocMask: {
+				DisplayName: Nameless Deity Mask
+				Tooltip:
+					'''
+					'Your face will be 1984'd'
+					'''
+			}
+
+			XerocTrophy: {
+				DisplayName: Nameless Deity Trophy
+				Tooltip: ""
+			}
+
+			XerocRelic: {
+				DisplayName: Nameless Deity Relic
+				Tooltip: ""
 			}
 		}
 
