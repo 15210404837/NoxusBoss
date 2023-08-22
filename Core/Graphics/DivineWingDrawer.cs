@@ -55,7 +55,7 @@ namespace NoxusBoss.Core.Graphics
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, DepthStencilState.None, camera.Rasterizer, null, camera.GameViewMatrix.TransformationMatrix);
 
                 // Optionally apply the wing shader. This will have some weird multiplayer oddities in terms of other's wings being affected by the client's shader but whatever.
-                // TODO -- Address that at some point potentially.
+                // The alternative of creating render targets for every player is not a pleasant thought.
                 if (Main.LocalPlayer.cWings != 0)
                     GameShaders.Armor.Apply(Main.LocalPlayer.cWings, Main.LocalPlayer);
 

@@ -162,7 +162,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             Main.spriteBatch.ExitShaderRegion();
 
-            // TODO -- Add sigil drawing to this.
             bool canDrawRobeArms = CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.DeathAnimation;
             Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPalm").Value;
             foreach (XerocHand hand in Hands)

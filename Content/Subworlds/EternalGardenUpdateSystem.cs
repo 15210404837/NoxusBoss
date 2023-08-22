@@ -36,8 +36,8 @@ namespace NoxusBoss.Content.Subworlds
             // Reset the text opacity when the game is being played. It will increase up to full opacity during subworld transition drawing.
             TextOpacity = 0f;
 
-            // Verify whether things are in the subworld.
-            // TODO -- This might need to be done in another hook. Need to check whether this one is serverside only.
+            // Verify whether things are in the subworld. This hook runs on both clients and the server. If for some reason this stuff needs to be determined in a different
+            // hook it is necessary to ensure that property is preserved wherever you put it.
             bool inGarden = SubworldSystem.IsActive<EternalGarden>();
             if (WasInSubworldLastUpdateFrame != inGarden)
             {
