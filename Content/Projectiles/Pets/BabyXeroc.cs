@@ -72,6 +72,9 @@ namespace NoxusBoss.Content.Projectiles.Pets
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if (Main.gameMenu)
+                return false;
+
             Texture2D handTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Projectiles/Pets/BabyXerocHand").Value;
             Texture2D censorTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocBoss").Value;
 

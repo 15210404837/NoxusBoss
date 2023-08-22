@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ID;
 
 namespace NoxusBoss.Core.Graphics
 {
@@ -34,6 +35,10 @@ namespace NoxusBoss.Core.Graphics
 
         public Metaball()
         {
+            // No render target creation on servers.
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
             Main.QueueMainThreadAction(() =>
             {
                 for (int i = 0; i < Layers.Count; i++)
