@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using CalamityMod;
+using CalamityMod.Items;
 using CalamityMod.Items.Potions;
+using CalamityMod.Items.SummonItems;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using CalamityMod.World;
@@ -13,6 +15,7 @@ using NoxusBoss.Content.Items;
 using NoxusBoss.Content.Items.Pets;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -35,7 +38,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
     //
     // And amusingly, with that paradigm shift, the object of the abandoned desire will be realized.
     [AutoloadBossHead]
-    public class EntropicGod : ModNPC
+    public class EntropicGod : ModNPC, IBossChecklistSupport
     {
         #region Custom Types and Enumerations
         public enum EntropicGodAttackType
@@ -404,6 +407,37 @@ namespace NoxusBoss.Content.Bosses.Noxus
             EntropicGodAttackType.MigraineAttack,
         };
         #endregion Attack Cycles
+
+        #region Boss Checklist Compatibility
+
+        public bool IsMiniboss => false;
+
+        public string ChecklistEntryName => "EntropicGodNoxus";
+
+        public bool IsDefeated => WorldSaveSystem.HasDefeatedNoxus;
+
+        public float ProgressionValue => 27f;
+
+        public List<int> Collectibles => new()
+        {
+            ModContent.ItemType<NoxusMask>(),
+            ModContent.ItemType<NoxusTrophy>(),
+            ModContent.ItemType<NoxusRelic>(),
+            ModContent.ItemType<OblivionRattle>(),
+        };
+
+        public int? SpawnItem => ModContent.ItemType<Genesis>();
+
+        public bool UsesCustomPortraitDrawing => true;
+
+        public void DrawCustomPortrait(SpriteBatch spriteBatch, Rectangle area, Color color)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>($"{Texture}_BossChecklist").Value;
+            Vector2 centered = area.Center.ToVector2() - texture.Size() * 0.5f;
+            spriteBatch.Draw(texture, centered, color);
+        }
+
+        #endregion Boss Checklist Compatibility
 
         #region Initialization
         public override void SetStaticDefaults()

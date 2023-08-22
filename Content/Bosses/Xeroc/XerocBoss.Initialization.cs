@@ -1,5 +1,12 @@
-﻿using CalamityMod;
+﻿using System.Collections.Generic;
+using CalamityMod;
+using CalamityMod.Items;
+using CalamityMod.Items.SummonItems;
 using CalamityMod.World;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
@@ -8,8 +15,36 @@ using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
-    public partial class XerocBoss : ModNPC
+    public partial class XerocBoss : ModNPC, IBossChecklistSupport
     {
+        #region Boss Checklist Compatibility
+
+        public bool IsMiniboss => false;
+
+        public string ChecklistEntryName => "NamelessDeity";
+
+        public bool IsDefeated => WorldSaveSystem.HasDefeatedXeroc;
+
+        public float ProgressionValue => 28f;
+
+        public List<int> Collectibles => new()
+        {
+            ModContent.ItemType<Rock>()
+        };
+
+        public int? SpawnItem => ModContent.ItemType<Terminus>();
+
+        public bool UsesCustomPortraitDrawing => true;
+
+        public void DrawCustomPortrait(SpriteBatch spriteBatch, Rectangle area, Color color)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>($"{Texture}_BossChecklist").Value;
+            Vector2 centered = area.Center.ToVector2() - texture.Size() * 0.5f;
+            spriteBatch.Draw(texture, centered, color);
+        }
+
+        #endregion Boss Checklist Compatibility
+
         #region Attack Cycles
 
         // These attack cycles for Xeroc are specifically designed to go in a repeated quick paced -> precise dance that gradually increases in speed across the different cycles.
