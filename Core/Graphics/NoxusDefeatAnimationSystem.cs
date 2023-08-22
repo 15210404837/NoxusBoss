@@ -4,8 +4,6 @@ using NoxusBoss.Assets.Fonts;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent;
-using Terraria.GameContent.Events;
 using Terraria.Localization;
 using Terraria.ModLoader;
 

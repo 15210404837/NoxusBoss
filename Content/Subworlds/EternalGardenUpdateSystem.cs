@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles;
-using NoxusBoss.Core;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;

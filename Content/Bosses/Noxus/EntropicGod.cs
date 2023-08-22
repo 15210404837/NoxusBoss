@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using CalamityMod;
-using CalamityMod.Items;
 using CalamityMod.Items.Potions;
-using CalamityMod.Items.SummonItems;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using CalamityMod.World;
