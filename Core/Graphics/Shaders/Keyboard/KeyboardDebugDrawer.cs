@@ -6,12 +6,6 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 {
     public class KeyboardDebugDrawer : ModSystem
     {
-        public static bool IsEnabled
-        {
-            get;
-            set;
-        }
-
         public override void OnModLoad()
         {
             Main.OnPostDraw += DrawDebugKeyboard;
@@ -24,7 +18,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 
         private void DrawDebugKeyboard(GameTime obj)
         {
-            if (!IsEnabled || Main.gameMenu)
+            if (!NoxusBoss.DebugFeaturesEnabled || Main.gameMenu)
                 return;
 
             Main.DebugDrawer.Begin(Main.GameViewMatrix.TransformationMatrix);

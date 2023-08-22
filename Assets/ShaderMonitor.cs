@@ -32,6 +32,10 @@ namespace NoxusBoss.Assets
 
         public override void OnModLoad()
         {
+            // Don't do anything development features are disabled.
+            if (!NoxusBoss.DebugFeaturesEnabled)
+                return;
+
             CompilingFiles = new();
             if (Main.netMode != NetmodeID.SinglePlayer)
                 return;
@@ -60,6 +64,10 @@ namespace NoxusBoss.Assets
 
         public override void PostUpdateEverything()
         {
+            // Don't do anything development features are disabled.
+            if (!NoxusBoss.DebugFeaturesEnabled)
+                return;
+
             bool shaderIsCompiling = false;
             List<string> compiledFiles = new();
             string compilerDirectory = EffectsPath + "\\Compiler\\";

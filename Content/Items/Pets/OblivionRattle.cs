@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Projectiles.Pets;
 using Terraria;
 using Terraria.DataStructures;
@@ -22,6 +23,11 @@ namespace NoxusBoss.Content.Items.Pets
             Item.rare = ItemRarityID.Master;
             Item.master = true;
             Item.value = Item.sellPrice(0, 5);
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            tooltips.Find(t => t.Name == "Master").Text += " or Revengeance";
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
