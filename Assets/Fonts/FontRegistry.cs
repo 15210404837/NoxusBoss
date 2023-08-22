@@ -14,28 +14,6 @@ namespace NoxusBoss.Assets.Fonts
 
         public static FontRegistry Instance => ModContent.GetInstance<FontRegistry>();
 
-        public DynamicSpriteFont CultistFont
-        {
-            get
-            {
-                if (CanLoadFonts)
-                    return Mod.Assets.Request<DynamicSpriteFont>("Assets/Fonts/CultistText", AssetRequestMode.ImmediateLoad).Value;
-
-                return FontAssets.MouseText.Value;
-            }
-        }
-
-        public DynamicSpriteFont CultistFontItalics
-        {
-            get
-            {
-                if (CanLoadFonts)
-                    return Mod.Assets.Request<DynamicSpriteFont>("Assets/Fonts/CultistTextItalics", AssetRequestMode.ImmediateLoad).Value;
-
-                return FontAssets.MouseText.Value;
-            }
-        }
-
         public DynamicSpriteFont XerocText
         {
             get
