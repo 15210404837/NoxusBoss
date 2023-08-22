@@ -35,13 +35,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        private void NoBackgroundDuringXerocFight(Terraria.On_Main.orig_DrawBackground orig, Main self)
+        private void NoBackgroundDuringXerocFight(On_Main.orig_DrawBackground orig, Main self)
         {
             if (XerocSky.HeavenlyBackgroundIntensity < 0.3f)
                 orig(self);
         }
 
-        private void NoBackgroundDuringXerocFight2(Terraria.On_Main.orig_DrawSurfaceBG orig, Main self)
+        private void NoBackgroundDuringXerocFight2(On_Main.orig_DrawSurfaceBG orig, Main self)
         {
             if (XerocSky.HeavenlyBackgroundIntensity < 0.3f)
                 orig(self);

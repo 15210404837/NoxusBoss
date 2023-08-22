@@ -53,7 +53,7 @@ namespace NoxusBoss.Core.Graphics
             gd.SetRenderTarget(null);
         }
 
-        private void DrawOverlayTarget(Terraria.On_Main.orig_DrawProjectiles orig, Main self)
+        private void DrawOverlayTarget(On_Main.orig_DrawProjectiles orig, Main self)
         {
             orig(self);
 

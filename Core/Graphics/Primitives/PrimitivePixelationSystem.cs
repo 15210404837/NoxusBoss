@@ -27,7 +27,7 @@ namespace NoxusBoss.Core.Graphics
             On_Main.DoDraw_DrawNPCsOverTiles += DrawPixelationTarget;
         }
 
-        private void PreparePixelationTarget(Terraria.On_Main.orig_CheckMonoliths orig)
+        private void PreparePixelationTarget(On_Main.orig_CheckMonoliths orig)
         {
             bool primsExist = false;
             for (int i = 0; i < Main.maxProjectiles; i++)
@@ -67,7 +67,7 @@ namespace NoxusBoss.Core.Graphics
             orig();
         }
 
-        private void DrawPixelationTarget(Terraria.On_Main.orig_DoDraw_DrawNPCsOverTiles orig, Main self)
+        private void DrawPixelationTarget(On_Main.orig_DoDraw_DrawNPCsOverTiles orig, Main self)
         {
             // Simply call orig if no prims were drawn as an optimization.
             if (!primsWereDrawnLastFrame)
