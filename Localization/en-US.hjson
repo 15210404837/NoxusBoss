@@ -23,6 +23,11 @@ Mods: {
 				DisplayName: Noxus
 				Description: He's a smol lad now
 			}
+
+			BabyXerocBuff: {
+				DisplayName: Nameless Deity
+				Description: Regardless of its disconcerting appearance, it's benevolent
+			}
 		}
 
 		Items: {
@@ -129,10 +134,7 @@ Mods: {
 
 			XerocMask: {
 				DisplayName: Nameless Deity Mask
-				Tooltip:
-					'''
-					'Your face will be 1984'd'
-					'''
+				Tooltip: "'Your face will be 1984'd'"
 			}
 
 			XerocTrophy: {
@@ -143,6 +145,11 @@ Mods: {
 			XerocRelic: {
 				DisplayName: Nameless Deity Relic
 				Tooltip: ""
+			}
+
+			EmpyreanEmberlet: {
+				DisplayName: Empyrean Emberlet
+				Tooltip: "'An infinitesimal fragment of something incomprehensible'"
 			}
 		}
 
@@ -191,6 +198,7 @@ Mods: {
 			TerminusProj.DisplayName: Terminus
 			GodRayVisual.DisplayName: God Ray Visual
 			WindStreakVisual.DisplayName: Wind
+			BabyXeroc.DisplayName: Baby Xeroc
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box

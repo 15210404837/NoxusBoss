@@ -6,6 +6,7 @@ using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Items;
+using NoxusBoss.Content.Items.Pets;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
@@ -34,6 +35,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             ModContent.ItemType<CheatPermissionSlip>(),
             ModContent.ItemType<XerocMask>(),
             ModContent.ItemType<XerocTrophy>(),
+            ModContent.ItemType<EmpyreanEmberlet>(),
         };
 
         public int? SpawnItem => ModContent.ItemType<Terminus>();

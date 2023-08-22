@@ -6,6 +6,7 @@ using CalamityMod.Items;
 using CalamityMod.Items.Potions;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Items;
+using NoxusBoss.Content.Items.Pets;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -114,6 +115,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             npcLoot.Add(ModContent.ItemType<Rock>());
             npcLoot.Add(ModContent.ItemType<XerocMask>(), 7);
             npcLoot.Add(ModContent.ItemType<XerocTrophy>(), 10);
+            npcLoot.DefineConditionalDropSet(DropHelper.RevAndMaster).Add(ModContent.ItemType<XerocRelic>());
+            npcLoot.DefineConditionalDropSet(DropHelper.RevAndMaster).Add(ModContent.ItemType<EmpyreanEmberlet>());
         }
 
         // Ensure that Xeroc' contact damage adheres to the special boss-specific cooldown slot, to prevent things like lava cheese.
