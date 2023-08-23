@@ -25,6 +25,16 @@ namespace NoxusBoss.Core
         {
             ILCursor cursor = new(il);
 
+            // Make the text offset higher up if Xeroc killed the player so that the player can better see the death vfx.
+            cursor.GotoNext(MoveType.Before, i => i.MatchStloc(out _));
+            cursor.EmitDelegate<Func<float, float>>(textOffset =>
+            {
+                if (Main.LocalPlayer.GetModPlayer<XerocPlayerDeathVisualsPlayer>().WasKilledByXeroc)
+                    textOffset -= 120f;
+
+                return textOffset;
+            });
+
             // Replace the "You were slain..." text with something special.
             cursor.GotoNext(i => i.MatchLdsfld<Lang>("inter"));
             cursor.GotoNext(MoveType.Before, i => i.MatchStloc(out _));

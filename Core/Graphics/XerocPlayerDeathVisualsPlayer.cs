@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,7 +14,6 @@ using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace NoxusBoss.Core.Graphics
 {
@@ -195,11 +193,9 @@ namespace NoxusBoss.Core.Graphics
             // Use custom death text and sounds if Xeroc killed the player.
             if (WasKilledByXeroc)
             {
-                MagicBurstParticle burst = new(Player.Center, Vector2.Zero, Color.Wheat, 24, 0.5f, 0.4f);
+                MagicBurstParticle burst = new(Player.Center, Vector2.Zero, Color.Wheat, 24, 1f, 0.6f);
                 GeneralParticleHandler.SpawnParticle(burst);
-
-                ExpandingGreyscaleCircleParticle burst2 = new(Player.Center, Vector2.Zero, Color.Goldenrod, 7, 0.3f);
-                GeneralParticleHandler.SpawnParticle(burst2);
+                RadialScreenShoveSystem.Start(Player.Center - Vector2.UnitY * 400f, 36);
 
                 // Create burst effects.
                 ScreenEffectSystem.SetFlashEffect(Player.Center - Vector2.UnitY * 500f, 0.8f, 60);
