@@ -291,6 +291,7 @@ Mods: {
 				The Desertification step from what I can tell boils down to a concerning amount of looping. First horizontally throughout the entire desert.
 				Then vertically from top to bottom. Then through all "clusters" throughout the desert, and then through all tiles inside of the cluster.
 				I attribute most of these inefficiencies to modders and not the vanilla game, however (and I'm also guilty of this).
+				An old, weird practice I used to do was using recursion (aka having a function that calls itself. It's a bit weird to explain) to calculate
 				all water in a given area for the Sulphurous Sea, and then doing that many, many times repeatedly. It's... a mess.
 				Anyway! I'd go on further but it's possible that your world is almost fully wiped. Wouldn't want to get abruptly cut off!
 				I'll give you this monologue again the next time you have worlds to reset. See you around!
