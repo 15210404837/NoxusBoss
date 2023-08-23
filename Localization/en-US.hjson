@@ -152,6 +152,7 @@ Mods: {
 				Tooltip: "'An infinitesimal fragment of something incomprehensible'"
 			}
 
+			# This weapon references the genesis bomb, a strong TNT-like block that had the same function as this, except in Minecraft. The 2012 pays respect to it.
 			ThePurifier: {
 				DisplayName: The Purifier
 				Tooltip:
@@ -235,7 +236,7 @@ Mods: {
 			GodRayVisual.DisplayName: God Ray Visual
 			WindStreakVisual.DisplayName: Wind
 			BabyXeroc.DisplayName: Baby Xeroc
-			ThePurifierProj.DisplayName: The Purifier Proj
+			ThePurifierProj.DisplayName: The Purifier
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box
@@ -269,6 +270,37 @@ Mods: {
 			XerocNoxusSprayerTip: Do not.
 			XerocStatusText: You have passed the test.
 			XerocStatusPercentageText: You have passed the test:
+			PurifierEntertainingRantText:
+				'''
+				Hi! This white background is natural. Your game is not broken. Please do not report the long wait as a bug. Please.
+				Just sit back, relax, and drink some water if you haven't done so in a while. Or just focus on something else. Your call.
+				Anyway, as you might've guessed, the world generation is being done all over again from scratch.
+				Let's talk about that, shall we? Why this process takes so long and is so strange, to be specific.
+				For starters, did you know that Terraria's worlds are just a giant 8401x2401 grid of tiles?
+				It's sized such that all worlds up to large can fit within it.
+				That grid exists in memory from the moment you start the game up until the moment you close it. Dozens of megabytes of memory, to be exact.
+				There is some form of "chunking", or splitting them up into subsections, but that's really only used in multiplayer, because
+				sending the entire world across the network to clients would be terrible and very likely cause crashes.
+				This is why when servers are about to die you can fall off the map. That's you walking outside of the bounds of one of these "chunks" because the server can't send you the other chunks.
+				Back to worldgen, everything has to operate with this grid. Unlike, say, Minecraft, the world generation isn't something that can be done on the fly.
+				It must be done all at once.
+				Furthermore, many of the worldgen steps are done synchronously, or one at a time, instead of having multiple happening at the same time.
+				Of course, you couldn't do the latter for everything, since in a lot of cases you'd run into conflicts. But as you can imagine, having
+				this run in parallel where possible would be a really desirable boon for performance.
+				In some cases, certain steps just aren't very efficient. Certain situations can result in Settling Liquids steps taking several seconds at a time.
+				The Desertification step from what I can tell boils down to a concerning amount of looping. First horizontally throughout the entire desert.
+				Then vertically from top to bottom. Then through all "clusters" throughout the desert, and then through all tiles inside of the cluster.
+				I attribute most of these inefficiencies to modders and not the vanilla game, however (and I'm also guilty of this).
+				all water in a given area for the Sulphurous Sea, and then doing that many, many times repeatedly. It's... a mess.
+				Anyway! I'd go on further but it's possible that your world is almost fully wiped. Wouldn't want to get abruptly cut off!
+				I'll give you this monologue again the next time you have worlds to reset. See you around!
+				'''
+			CelesteMusicCreditText:
+				'''
+				Now Playing:
+				'wavedash.ppt'
+				By Lena Raine
+				'''
 		}
 
 		PlayerDeathMessages: {
