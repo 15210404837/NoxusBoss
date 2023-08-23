@@ -151,6 +151,17 @@ Mods: {
 				DisplayName: Empyrean Emberlet
 				Tooltip: "'An infinitesimal fragment of something incomprehensible'"
 			}
+
+			ThePurifier: {
+				DisplayName: The Purifier
+				Tooltip:
+					'''
+					Resets the entire world to its original state
+					This process can take a while, so don't be alarmed if the game freezes for a bit
+					Once thrown, the bomb takes 15 seconds to detonate
+					If you accidentally throw it, you can save and quit to prevent it from exploding
+					'''
+			}
 		}
 
 		NPCs: {
@@ -223,6 +234,7 @@ Mods: {
 			GodRayVisual.DisplayName: God Ray Visual
 			WindStreakVisual.DisplayName: Wind
 			BabyXeroc.DisplayName: Baby Xeroc
+			ThePurifierProj.DisplayName: The Purifier Proj
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box

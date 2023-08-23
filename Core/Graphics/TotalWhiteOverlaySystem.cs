@@ -23,7 +23,14 @@ namespace NoxusBoss.Core.Graphics
             Main.OnPostDraw -= DrawWhite;
         }
 
-        public override void PreUpdateEntities() => WhiteInterpolant = Clamp(WhiteInterpolant - 0.075f, 0f, 1f);
+        public override void PreUpdateEntities()
+        {
+            WhiteInterpolant = Clamp(WhiteInterpolant - 0.075f, 0f, 1f);
+
+            // Edge case: If the world is being regenerated due to the Purifier, keep everything white.
+            if (WorldGen.generatingWorld)
+                WhiteInterpolant = 1f;
+        }
 
         private void DrawWhite(GameTime obj)
         {

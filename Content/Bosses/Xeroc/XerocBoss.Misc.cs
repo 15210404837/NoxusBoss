@@ -112,6 +112,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Vanity and decorations.
             npcLoot.Add(ModContent.ItemType<Cattail>());
+            npcLoot.Add(ModContent.ItemType<ThePurifier>());
             npcLoot.Add(ModContent.ItemType<Rock>());
             npcLoot.Add(ModContent.ItemType<XerocMask>(), 7);
             npcLoot.Add(ModContent.ItemType<XerocTrophy>(), 10);
