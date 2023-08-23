@@ -154,10 +154,34 @@ Mods: {
 		}
 
 		NPCs: {
-			EntropicGod.DisplayName: The Entropic God, Noxus
-			NoxusEgg.DisplayName: Godless Spawn, Noxus
 			NoxusEggCutscene.DisplayName: ???
-			XerocBoss.DisplayName: Nameless Deity
+
+			NoxusEgg: {
+				DisplayName: Godless Spawn, Noxus
+
+				BossChecklistIntegration: {
+					SpawnInfo: Use the [i:NoxusBoss/Genesis]
+					DespawnMessage: "[c/7D5CC4:Noxus vanishes in the blink of an eye.]"
+				}
+			}
+
+			EntropicGod: {
+				DisplayName: The Entropic God, Noxus
+
+				BossChecklistIntegration: {
+					SpawnInfo: Use the [i:NoxusBoss/Genesis]
+					DespawnMessage: "[c/7D5CC4:Noxus vanishes in the blink of an eye.]"
+				}
+			}
+
+			XerocBoss: {
+				DisplayName: Nameless Deity
+
+				BossChecklistIntegration: {
+					SpawnInfo: Use the [i:CalamityMod/Terminus] after its gaze has opened
+					DespawnMessage: "[c/FF463D:You have failed the test.]"
+				}
+			}
 		}
 
 		Projectiles: {

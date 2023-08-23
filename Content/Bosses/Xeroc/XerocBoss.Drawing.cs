@@ -26,7 +26,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         private static readonly FieldInfo particlesField = typeof(GeneralParticleHandler).GetField("particles", BindingFlags.NonPublic | BindingFlags.Static);
 
-        public static Vector3 WingColorShift => new Vector3(Cos(Main.GlobalTimeWrappedHourly * 5.8f) * 0.15f + 1.4f, 0.25f, 0.32f);
+        public static Vector3 WingColorShift => new(Cos(Main.GlobalTimeWrappedHourly * 5.8f) * 0.15f + 1.4f, 0.25f, 0.32f);
 
         public override void DrawBehind(int index)
         {
