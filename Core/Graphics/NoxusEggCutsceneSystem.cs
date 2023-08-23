@@ -4,6 +4,7 @@ using System.Linq;
 using NoxusBoss.Content.NPCs;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics
@@ -22,15 +23,24 @@ namespace NoxusBoss.Core.Graphics
             set;
         }
 
+        public static string PostWoFDefeatText => Language.GetTextValue($"Mods.NoxusBoss.Dialog.PostWoFDefeatNoxusIndicator");
+
+        public static string PostMLNightText => Language.GetTextValue($"Mods.NoxusBoss.Dialog.PostMLNightNoxusIndicator");
+
+        public static string FinalMainBossDefeatText
+        {
+            get
+            {
+                if (HasSummonedNoxus)
+                    return Language.GetTextValue($"Mods.NoxusBoss.Dialog.FinalBossDefeatNoxusIndicator_SeenNoxus");
+
+                return Language.GetTextValue($"Mods.NoxusBoss.Dialog.FinalBossDefeatNoxusIndicator");
+            }
+        }
+
         public static bool NoxusBeganOrbitingPlanet => Main.hardMode;
 
         public static bool NoxusCanCommitSkydivingFromSpace => NPC.downedMoonlord;
-
-        public static string PostWoFDefeatText => "A mysterious object has begun orbiting the planet...";
-
-        public static string PostMLNightText => "A dark presence approaches...";
-
-        public static string FinalMainBossDefeatText => $"{(HasSummonedNoxus ? "The" : "A")} dark presence is stirring...";
 
         public static List<Player> PlayersOnSurface
         {
