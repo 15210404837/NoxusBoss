@@ -204,6 +204,7 @@ namespace NoxusBoss.Core.Graphics
                 TakePlayerScreenshot = true;
                 damageSource = PlayerDeathReason.ByCustomReason(Language.GetText($"Mods.NoxusBoss.PlayerDeathMessages.Xeroc{Main.rand.Next(1, 18)}").Format(Player.name));
                 playSound = false;
+                genGore = false;
             }
 
             return true;
