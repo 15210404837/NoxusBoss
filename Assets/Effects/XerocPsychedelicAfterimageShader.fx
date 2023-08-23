@@ -15,7 +15,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     color.rgb *= 0.884;
     color.a *= 0.8;
     
-    return color;
+    return color * sampleColor;
 }
 
 technique Technique1

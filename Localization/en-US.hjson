@@ -253,5 +253,25 @@ Mods: {
 			XerocStatusText: You have passed the test.
 			XerocStatusPercentageText: You have passed the test:
 		}
+
+		PlayerDeathMessages: {
+			Xeroc1: "{0} failed the test."
+			Xeroc2: "{0}'s atomic structure was divided for the purpose of being absorbed by the garden."
+			Xeroc3: "{0} died in bliss as the divine light consumed them."
+			Xeroc4: "{0}'s form will soon be one with the stars."
+			Xeroc5: "{0}'s spirit will linger in the garden as their body disintegrates."
+			Xeroc6: "{0}'s purpose has been fulfilled."
+			Xeroc7: "{0} witnessed eternity, and then perished."
+			Xeroc8: "{0}'s fate has concluded."
+			Xeroc9: "{0} died in spite of their valiant efforts."
+			Xeroc10: "{0} calmly faces the light."
+			Xeroc11: "{0} became one with all."
+			Xeroc12: "{0} faded into the aether."
+			Xeroc13: "{0} dissolved into the cosmic tapestry."
+			Xeroc14: "{0} transcended mortality, becoming stardust."
+			Xeroc15: "{0}'s journey ended in the sacred embrace of the garden."
+			Xeroc16: "{0} merged with the symphony of the universe."
+			Xeroc17: "{0} dissolved into the infinite lattice of existence."
+		}
 	}
 }

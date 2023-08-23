@@ -1,7 +1,7 @@
 ﻿using System;
 using CalamityMod;
 using MonoMod.Cil;
-using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -10,18 +10,10 @@ namespace NoxusBoss.Core
 {
     public class XerocDeathVisualsSystem : ModSystem
     {
-        public static int DeathTimerOverride
+        public int DeathTimerOverride
         {
             get;
             set;
-        }
-
-        public static int DeathTimerMax => 360;
-
-        public static bool XerocWasAliveAtTimeOfDeath
-        {
-            get => Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GetValue<bool>("XerocAliveAtDeath");
-            set => Main.LocalPlayer.GetModPlayer<NoxusPlayer>().SetValue("XerocAliveAtDeath", value);
         }
 
         public override void OnModLoad()
@@ -38,7 +30,7 @@ namespace NoxusBoss.Core
             cursor.GotoNext(MoveType.Before, i => i.MatchStloc(out _));
             cursor.EmitDelegate<Func<string, string>>(originalText =>
             {
-                if (XerocWasAliveAtTimeOfDeath)
+                if (Main.LocalPlayer.GetModPlayer<XerocPlayerDeathVisualsPlayer>().WasKilledByXeroc)
                     return Language.GetTextValue("Mods.NoxusBoss.Dialog.XerocPlayerDeathText");
 
                 return originalText;
@@ -49,9 +41,10 @@ namespace NoxusBoss.Core
             cursor.GotoNext(MoveType.After, i => i.MatchCallOrCallvirt(typeof(Language), "GetTextValue"));
             cursor.EmitDelegate<Func<string, string>>(originalText =>
             {
-                if (XerocWasAliveAtTimeOfDeath)
+                var modPlayer = Main.LocalPlayer.GetModPlayer<XerocPlayerDeathVisualsPlayer>();
+                if (modPlayer.WasKilledByXeroc)
                 {
-                    float deathTimerInterpolant = DeathTimerOverride / (float)DeathTimerMax;
+                    float deathTimerInterpolant = modPlayer.DeathTimerOverride / (float)XerocPlayerDeathVisualsPlayer.DeathTimerMax;
                     ulong start = 5;
                     ulong end = int.MaxValue * 2uL;
                     float smoothInterpolant = CalamityUtils.PolyInOutEasing(deathTimerInterpolant, 20);
@@ -64,21 +57,6 @@ namespace NoxusBoss.Core
 
                 return originalText;
             });
-        }
-
-        public override void PostUpdateEverything()
-        {
-            if (!Main.LocalPlayer.dead)
-            {
-                XerocWasAliveAtTimeOfDeath = XerocBoss.Myself is not null;
-                DeathTimerOverride = 0;
-            }
-            else if (XerocWasAliveAtTimeOfDeath)
-            {
-                DeathTimerOverride = Clamp(DeathTimerOverride + 1, 0, DeathTimerMax);
-                if (DeathTimerOverride < DeathTimerMax)
-                    Main.LocalPlayer.respawnTimer = 8;
-            }
         }
     }
 }
