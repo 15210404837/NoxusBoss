@@ -72,8 +72,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            // Draw a premade texture if this is a bestiary dummy.
+            if (NPC.IsABestiaryIconDummy)
+            {
+                Texture2D texture = ModContent.Request<Texture2D>($"{Texture}_BossChecklist").Value;
+                Main.spriteBatch.Draw(texture, NPC.Center - screenPos, null, Color.White, 0f, texture.Size() * 0.5f, NPC.scale, 0, 0f);
+                return false;
+            }
+
             // Draw wings with afterimages.
-            if (!NPC.IsABestiaryIconDummy && CurrentAttack != XerocAttackType.Awaken)
+            if (CurrentAttack != XerocAttackType.Awaken)
                 Main.spriteBatch.Draw(XerocWingDrawer.AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, Color.White);
 
             // Draw all hands.
@@ -194,14 +202,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Draw the arm robe.
                 if (canDrawRobeArms && hand.UseRobe)
-                    DrawArmRobe(hand);
+                    DrawArmRobe(hand, screenPos);
 
                 // Draw hand trails if enabled.
                 if (hand.TrailOpacity >= 0.01f)
                 {
                     // Draw a flame trail.
                     GameShaders.Misc["CalamityMod:ImpFlameTrail"].SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/ScarletDevilStreak"));
-                    hand.HandTrailDrawer.Draw(hand.OldCenters.Take(25), -Main.screenPosition, 45);
+                    hand.HandTrailDrawer.Draw(hand.OldCenters.Take(25), -screenPos, 45);
                 }
 
                 // Draw hand afterimages.
@@ -219,7 +227,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        public void DrawArmRobe(XerocHand hand)
+        public void DrawArmRobe(XerocHand hand, Vector2 screenPos)
         {
             // Things get scuffed if this check isn't performed. Specifically, the ellipsoid doesn't play nice with the motion the attack
             // performs and causes the cloth to look unnaturally thin.
@@ -295,7 +303,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
 
             // Apply the cloth shader and draw the cloth.
-            Matrix worldToUV = Matrix.CreateTranslation(-Main.screenPosition.X, -Main.screenPosition.Y, 0f) * view * projection;
+            Matrix worldToUV = Matrix.CreateTranslation(-screenPos.X, -screenPos.Y, 0f) * view * projection;
             clothShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             clothShader.TrySetParameter("brightnessPower", 40f);
             clothShader.TrySetParameter("pixelationZoom", Vector2.One * 2f / clothTexture.Size());

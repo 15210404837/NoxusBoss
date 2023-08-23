@@ -71,6 +71,9 @@ namespace NoxusBoss.Core
                     dummyXeroc.position.Y++;
                 }
 
+                for (int i = 0; i < 100; i++)
+                    Main.BestiaryTracker.Kills.RegisterKill(dummyXeroc);
+
                 dummyXeroc.NPCLoot();
                 dummyXeroc.active = false;
 

@@ -637,6 +637,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
                 SoundEngine.PlaySound(ExplosionTeleportSound with { Volume = 3f });
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
+                    Main.BestiaryTracker.Kills.RegisterKill(NPC);
                     NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<EntropicGod>(), 1);
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
