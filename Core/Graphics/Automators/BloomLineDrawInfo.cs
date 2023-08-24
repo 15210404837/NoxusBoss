@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.Automators
 {
     public struct BloomLineDrawInfo
     {

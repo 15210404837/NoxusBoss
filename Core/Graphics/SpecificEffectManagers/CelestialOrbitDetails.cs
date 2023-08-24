@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     // Yes, this exists exclusively for the purpose of making Noxus appear in the sky in interesting ways.
     // Yes, this uses 3D orbital math to achieve this effect.

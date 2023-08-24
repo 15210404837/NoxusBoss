@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class ScreenEffectSystem : ModSystem
     {

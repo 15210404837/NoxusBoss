@@ -1,5 +1,5 @@
 ﻿using NoxusBoss.Content.Projectiles.Typeless;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ModLoader;
 

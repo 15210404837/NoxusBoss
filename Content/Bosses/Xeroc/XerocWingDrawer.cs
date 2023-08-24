@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics;
 using Terraria.ModLoader;
 using Terraria;
 using CalamityMod;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.Automators;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {

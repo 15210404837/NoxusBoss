@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

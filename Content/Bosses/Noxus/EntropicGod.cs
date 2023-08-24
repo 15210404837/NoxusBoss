@@ -20,6 +20,7 @@ using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -2821,9 +2822,9 @@ namespace NoxusBoss.Content.Bosses.Noxus
             if (NPC.hide && NPC.Opacity >= 0.02f)
             {
                 if (ZPosition < -0.1f)
-                    ScreenOverlaysSystem.DrawCacheAfterNoxusFog.Add(index);
+                    SpecialNPCLayeringSystem.DrawCacheAfterNoxusFog.Add(index);
                 else if (ShouldDrawBehindTiles)
-                    ScreenOverlaysSystem.DrawCacheBeforeBlack.Add(index);
+                    SpecialNPCLayeringSystem.DrawCacheBeforeBlack.Add(index);
                 else
                     Main.instance.DrawCacheNPCProjectiles.Add(index);
             }

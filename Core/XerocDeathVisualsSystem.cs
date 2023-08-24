@@ -1,7 +1,7 @@
 ﻿using System;
 using CalamityMod;
 using MonoMod.Cil;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;

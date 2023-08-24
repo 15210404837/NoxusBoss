@@ -3,7 +3,7 @@ using System.Reflection;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Chat;

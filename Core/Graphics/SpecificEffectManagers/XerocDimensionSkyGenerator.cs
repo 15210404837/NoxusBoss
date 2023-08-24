@@ -5,13 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items.Accessories.VanityEffects;
 using NoxusBoss.Content.MainMenuThemes;
+using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class XerocDimensionSkyGenerator : ModSystem
     {

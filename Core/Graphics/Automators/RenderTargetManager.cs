@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.Automators
 {
     public class RenderTargetManager : ModSystem
     {

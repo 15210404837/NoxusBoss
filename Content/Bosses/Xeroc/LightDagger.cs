@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

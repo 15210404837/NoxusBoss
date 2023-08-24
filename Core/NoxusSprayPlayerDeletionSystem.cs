@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ModLoader;
 

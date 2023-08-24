@@ -1,6 +1,6 @@
 ﻿using System;
 using CalamityMod.Rarities;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

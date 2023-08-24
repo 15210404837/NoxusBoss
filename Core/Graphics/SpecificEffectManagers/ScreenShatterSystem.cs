@@ -4,6 +4,7 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Core.Configuration;
 using Terraria;
@@ -12,7 +13,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class ScreenShatterSystem : ModSystem
     {

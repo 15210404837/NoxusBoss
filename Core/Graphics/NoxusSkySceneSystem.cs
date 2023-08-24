@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -46,7 +47,7 @@ namespace NoxusBoss.Core.Graphics
             DrawNoxusInBackground(sceneArea);
         }
 
-        public void DrawNoxusInBackground(Main.SceneArea sceneArea)
+        public static void DrawNoxusInBackground(Main.SceneArea sceneArea)
         {
             // Make the eclipse darkness effect naturally dissipate to ensure that it goes away even if the checks below are failed.
             EclipseDarknessInterpolant = Clamp(EclipseDarknessInterpolant - 0.04f, 0f, 1f);

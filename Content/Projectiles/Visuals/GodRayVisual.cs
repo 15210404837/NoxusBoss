@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Dusts;
 using NoxusBoss.Content.Subworlds;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ModLoader;

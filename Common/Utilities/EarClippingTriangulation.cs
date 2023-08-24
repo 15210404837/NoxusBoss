@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Common.Utilities
 {
     public static class EarClippingTriangulation
     {

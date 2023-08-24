@@ -7,7 +7,7 @@ using Terraria.Audio;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class NoxusDefeatAnimationScene : ModSceneEffect
     {

@@ -5,7 +5,7 @@ using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class LocalScreenSplitScene : ModSceneEffect
     {

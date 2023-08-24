@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.Shaders
 {
     public class TerminusShaderScene : ModSceneEffect
     {

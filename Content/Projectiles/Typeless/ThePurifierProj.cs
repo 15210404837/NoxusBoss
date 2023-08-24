@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;

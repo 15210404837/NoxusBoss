@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Bestiary;

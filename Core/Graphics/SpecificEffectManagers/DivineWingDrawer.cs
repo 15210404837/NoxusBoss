@@ -10,8 +10,9 @@ using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items.Accessories.Wings;
+using NoxusBoss.Core.Graphics.Automators;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class DivineWingDrawer : ModSystem
     {

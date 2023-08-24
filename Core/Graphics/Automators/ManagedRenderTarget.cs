@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.Automators
 {
     public class ManagedRenderTarget : IDisposable
     {

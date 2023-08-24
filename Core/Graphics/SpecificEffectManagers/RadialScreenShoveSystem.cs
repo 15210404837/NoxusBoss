@@ -4,7 +4,7 @@ using NoxusBoss.Core.Configuration;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class RadialScreenShoveScene : ModSceneEffect
     {

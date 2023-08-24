@@ -7,9 +7,9 @@ using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
-    public class ScreenOverlaysSystem : ModSystem
+    public class SpecialNPCLayeringSystem : ModSystem
     {
         public static List<int> DrawCacheBeforeBlack
         {

@@ -8,8 +8,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Assets.Fonts;
 using NoxusBoss.Common.Utilities;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -34,11 +34,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (NPC.hide && canDraw)
             {
                 if ((DrawCongratulatoryText || UniversalBlackOverlayInterpolant >= 0.02f) && ZPosition >= -0.5f)
-                    ScreenOverlaysSystem.DrawCacheAfterNoxusFog.Add(index);
+                    SpecialNPCLayeringSystem.DrawCacheAfterNoxusFog.Add(index);
                 else if (ZPosition < -0.1f)
-                    ScreenOverlaysSystem.DrawCacheAfterNoxusFog.Add(index);
+                    SpecialNPCLayeringSystem.DrawCacheAfterNoxusFog.Add(index);
                 else if (ShouldDrawBehindTiles)
-                    ScreenOverlaysSystem.DrawCacheBeforeBlack.Add(index);
+                    SpecialNPCLayeringSystem.DrawCacheBeforeBlack.Add(index);
                 else
                     Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
             }

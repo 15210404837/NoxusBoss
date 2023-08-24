@@ -4,6 +4,7 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ModLoader;

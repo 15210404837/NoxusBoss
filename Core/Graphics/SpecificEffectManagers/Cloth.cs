@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class Cloth
     {
@@ -94,7 +94,6 @@ namespace NoxusBoss.Core.Graphics
             }
 
             // Create sticks between the points.
-            // Add structural springs between adjacent points
             for (int y = 0; y < cellCountX; y++)
             {
                 for (int x = 0; x < cellCountY; x++)

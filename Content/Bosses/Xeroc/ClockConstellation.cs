@@ -2,8 +2,8 @@
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.ShapeCurves;
 using ReLogic.Content;
 using ReLogic.Utilities;

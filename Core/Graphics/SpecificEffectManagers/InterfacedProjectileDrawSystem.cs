@@ -2,11 +2,12 @@
 using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class InterfacedProjectileDrawSystem : ModSystem
     {

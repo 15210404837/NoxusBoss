@@ -5,10 +5,9 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
@@ -51,7 +50,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             }
             spriteBatch.ExitShaderRegion();
 
-            ScreenOverlaysSystem.EmptyDrawCache(ScreenOverlaysSystem.DrawCacheAfterNoxusFog);
+            SpecialNPCLayeringSystem.EmptyDrawCache(SpecialNPCLayeringSystem.DrawCacheAfterNoxusFog);
         }
 
         public override void SpecialVisuals(Player player, bool isActive)
