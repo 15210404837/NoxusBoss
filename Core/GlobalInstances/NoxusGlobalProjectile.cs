@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class NoxusGlobalProjectile : GlobalProjectile
     {

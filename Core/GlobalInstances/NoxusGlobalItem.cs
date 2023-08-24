@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class NoxusGlobalItem : GlobalItem
     {

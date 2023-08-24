@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class NoxusSprayPlayerDeletionSystem : ModSystem
     {

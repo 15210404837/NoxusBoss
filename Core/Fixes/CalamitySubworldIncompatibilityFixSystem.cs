@@ -6,7 +6,7 @@ using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.Fixes
 {
     public class CalamitySubworldIncompatibilityFixSystem : ModSystem
     {

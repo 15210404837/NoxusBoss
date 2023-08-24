@@ -1,7 +1,7 @@
 ﻿using NoxusBoss.Content.Subworlds;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class NoxusGlobalTile : GlobalTile
     {

@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NoxusSkySceneSystem : ModSystem
     {

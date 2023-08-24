@@ -10,7 +10,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class NoxusPlayer : ModPlayer
     {

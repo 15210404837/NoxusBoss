@@ -3,7 +3,7 @@ using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class DialogPlayer : ModPlayer
     {

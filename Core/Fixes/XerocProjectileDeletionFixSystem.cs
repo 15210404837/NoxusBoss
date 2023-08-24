@@ -5,7 +5,7 @@ using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.Fixes
 {
     public class XerocProjectileDeletionFixSystem : ModSystem
     {

@@ -5,7 +5,7 @@ using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class NoxusGlobalNPC : GlobalNPC
     {

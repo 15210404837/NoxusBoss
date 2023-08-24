@@ -1,8 +1,8 @@
-﻿using NoxusBoss.Core.Graphics;
+﻿using NoxusBoss.Content.Bosses.Noxus;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.MiscSceneManagers
 {
     public class NoxusEclipseMusicEffect : ModSceneEffect
     {

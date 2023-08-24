@@ -7,7 +7,7 @@ using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Content.Bosses.Noxus
 {
     public class NoxusEggCutsceneSystem : ModSystem
     {

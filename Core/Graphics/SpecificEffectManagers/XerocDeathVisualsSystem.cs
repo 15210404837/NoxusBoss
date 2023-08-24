@@ -1,12 +1,11 @@
 ﻿using System;
 using CalamityMod;
 using MonoMod.Cil;
-using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class XerocDeathVisualsSystem : ModSystem
     {

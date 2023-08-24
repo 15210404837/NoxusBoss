@@ -1,7 +1,7 @@
 ﻿using CalamityMod.Items;
 using CalamityMod.Rarities;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Core;
+using NoxusBoss.Core.GlobalItems;
 using Terraria;
 using Terraria.ModLoader;
 

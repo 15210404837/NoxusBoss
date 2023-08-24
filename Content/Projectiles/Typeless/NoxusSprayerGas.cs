@@ -2,8 +2,8 @@
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Items.MiscOPTools;
-using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;

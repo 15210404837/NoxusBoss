@@ -3,7 +3,7 @@ using MonoMod.Cil;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core.Graphics
+namespace NoxusBoss.Core.Fixes
 {
     public class ScreenShaderFixerSystem : ModSystem
     {

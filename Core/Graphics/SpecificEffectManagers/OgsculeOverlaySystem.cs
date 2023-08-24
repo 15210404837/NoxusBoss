@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class OgsculeOverlaySystem : ModSystem
     {

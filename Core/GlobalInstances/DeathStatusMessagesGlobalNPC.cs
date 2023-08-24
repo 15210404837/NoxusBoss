@@ -4,12 +4,12 @@ using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.NPCs.SupremeCalamitas;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Content.Bosses.Noxus;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Core
+namespace NoxusBoss.Core.GlobalItems
 {
     public class DeathStatusMessagesGlobalNPC : GlobalNPC
     {

@@ -9,6 +9,7 @@ using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
+using NoxusBoss.Core.GlobalItems;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using SubworldLibrary;

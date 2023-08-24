@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using SubworldLibrary;
 using Terraria;
