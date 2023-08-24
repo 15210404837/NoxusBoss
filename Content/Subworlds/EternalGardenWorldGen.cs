@@ -1,7 +1,9 @@
-﻿using CalamityMod;
+﻿using System.Collections.Generic;
+using CalamityMod;
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Tiles;
+using NoxusBoss.Core;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -335,6 +337,20 @@ namespace NoxusBoss.Content.Subworlds
             plantSelector.Add((ushort)ModContent.TileType<BrimstoneRose>(), 0.09);
             plantSelector.Add((ushort)ModContent.TileType<ElysianRose>(), 0.4);
 
+            // Separately place Starbearers based on how many times players have been killed by Xeroc.
+            // This has a hard limit so that nohitters don't litter the subworld with them.
+            int starbearerCount = Clamp(WorldSaveSystem.XerocDeathCount, 0, 200);
+            List<int> starbearerPositions = new();
+            for (int i = 0; i < starbearerCount; i++)
+            {
+                int potentialX;
+                do
+                    potentialX = WorldGen.genRand.Next(topography.Length - 16) + left + 8;
+                while (starbearerPositions.Contains(potentialX));
+
+                starbearerPositions.Add(potentialX);
+            }
+
             // Loop through the mound's tiles and replace the dirt with grass if it's exposed to air.
             int surfaceY = SurfaceTilePoint;
             ushort previousPlantID = 0;
@@ -362,6 +378,10 @@ namespace NoxusBoss.Content.Subworlds
                 // In the center special plants are always replaced with First Flowers.
                 if (inCenter && (plantID != TileID.Plants || plantID != TileID.Plants2))
                     plantID = WorldGen.genRand.NextBool(4) ? (ushort)ModContent.TileType<FirstFlower>() : TileID.Plants2;
+
+                // Plant starbearers if in one of the locations they should appear.
+                if (starbearerPositions.Contains(x))
+                    plantID = (ushort)ModContent.TileType<Starbearer>();
 
                 previousPlantID = plantID;
 

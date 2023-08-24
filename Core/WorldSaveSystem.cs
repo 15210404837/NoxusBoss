@@ -15,6 +15,12 @@ namespace NoxusBoss.Core
 
         private static bool hasDefeatedNoxus;
 
+        public static int XerocDeathCount
+        {
+            get;
+            set;
+        }
+
         public static bool HasDefeatedEgg
         {
             get;
@@ -89,6 +95,7 @@ namespace NoxusBoss.Core
             if (SubworldSystem.AnyActive())
                 return;
 
+            XerocDeathCount = 0;
             HasDefeatedEgg = false;
             hasDefeatedNoxus = false;
             HasDefeatedXeroc = false;
@@ -103,6 +110,7 @@ namespace NoxusBoss.Core
             if (SubworldSystem.AnyActive())
                 return;
 
+            XerocDeathCount = 0;
             HasDefeatedEgg = false;
             hasDefeatedNoxus = false;
             HasDefeatedXeroc = false;
@@ -128,6 +136,8 @@ namespace NoxusBoss.Core
                 tag["OgsculeRulesOverTheUniverse"] = true;
             if (HasPlacedCattail)
                 tag["HasPlacedCattail"] = true;
+
+            tag["XerocDeathCount"] = XerocDeathCount;
         }
 
         public override void LoadWorldData(TagCompound tag)
@@ -139,6 +149,8 @@ namespace NoxusBoss.Core
             HasMetXeroc = tag.ContainsKey("HasMetXeroc");
             OgsculeRulesOverTheUniverse = tag.ContainsKey("OgsculeRulesOverTheUniverse");
             HasPlacedCattail = tag.ContainsKey("HasPlacedCattail");
+
+            XerocDeathCount = tag.GetInt("XerocDeathCount");
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -153,6 +165,7 @@ namespace NoxusBoss.Core
             b1[6] = NoxusEggCutsceneSystem.HasSummonedNoxus;
 
             writer.Write(b1);
+            writer.Write(XerocDeathCount);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -165,6 +178,8 @@ namespace NoxusBoss.Core
             OgsculeRulesOverTheUniverse = b1[4];
             HasPlacedCattail = b1[5];
             NoxusEggCutsceneSystem.HasSummonedNoxus = b1[6];
+
+            XerocDeathCount = reader.ReadInt32();
         }
     }
 }

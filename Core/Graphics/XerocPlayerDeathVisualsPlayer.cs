@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -205,6 +206,9 @@ namespace NoxusBoss.Core.Graphics
                 damageSource = PlayerDeathReason.ByCustomReason(Language.GetText($"Mods.NoxusBoss.PlayerDeathMessages.Xeroc{Main.rand.Next(1, 18)}").Format(Player.name));
                 playSound = false;
                 genGore = false;
+
+                WorldSaveSystem.XerocDeathCount++;
+                CalamityNetcode.SyncWorld();
             }
 
             return true;

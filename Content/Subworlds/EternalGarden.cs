@@ -79,7 +79,7 @@ namespace NoxusBoss.Content.Subworlds
             Color textColor = Color.LightCoral;
             if (!SubworldSystem.IsActive<EternalGarden>())
             {
-                font = FontAssets.MouseText.Value;
+                font = FontAssets.DeathText.Value;
                 text = Main.statusText;
                 textColor = Color.Black;
             }
@@ -109,12 +109,17 @@ namespace NoxusBoss.Content.Subworlds
                 savedWorldData["HasDefeatedNoxus"] = true;
             if (HasDefeatedXeroc)
                 savedWorldData["HasDefeatedXeroc"] = true;
+            if (HasMetXeroc)
+                savedWorldData["HasMetXeroc"] = true;
 
             // Save difficulty data. This is self-explanatory.
             if (CalamityWorld.revenge)
                 savedWorldData["RevengeanceMode"] = CalamityWorld.revenge;
             if (CalamityWorld.death)
                 savedWorldData["DeathMode"] = CalamityWorld.death;
+
+            // Save death data. When the player returns to the subworld this will decide how many Starbearers will appear in the garden.
+            savedWorldData["XerocDeathCount"] = XerocDeathCount;
         }
 
         public static void LoadWorldDataFromTag()
@@ -122,9 +127,12 @@ namespace NoxusBoss.Content.Subworlds
             HasDefeatedEgg = savedWorldData.ContainsKey("HasDefeatedEgg");
             HasDefeatedNoxus = savedWorldData.ContainsKey("HasDefeatedNoxus");
             HasDefeatedXeroc = savedWorldData.ContainsKey("HasDefeatedXeroc");
+            HasMetXeroc = savedWorldData.ContainsKey("HasMetXeroc");
 
             CalamityWorld.revenge = savedWorldData.ContainsKey("RevengeanceMode");
             CalamityWorld.death = savedWorldData.ContainsKey("DeathMode");
+
+            XerocDeathCount = savedWorldData.GetInt("XerocDeathCount");
         }
 
         public override void ReadCopiedMainWorldData() => LoadWorldDataFromTag();

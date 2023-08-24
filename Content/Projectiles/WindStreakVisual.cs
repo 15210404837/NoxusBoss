@@ -105,7 +105,7 @@ namespace NoxusBoss.Content.Projectiles
             streakShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"));
 
             WindStreakDrawer ??= new(WindWidthFunction, WindColorFunction, null, streakShader);
-            WindStreakDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 39);
+            WindStreakDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
         }
     }
 }
