@@ -4,6 +4,7 @@ using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.MainMenuThemes
@@ -21,7 +22,7 @@ namespace NoxusBoss.Content.MainMenuThemes
             Instance = this;
         }
 
-        public override string DisplayName => "Light Dimension";
+        public override string DisplayName => Language.GetTextValue($"Mods.{Mod.Name}.XerocDimensionMainMenu.DisplayName");
 
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/EternalGarden");
 

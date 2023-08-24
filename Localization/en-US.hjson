@@ -240,6 +240,7 @@ Mods: {
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box
+		XerocDimensionMainMenu.DisplayName: Light Dimension
 
 		Configs: {
 			NoxusBossConfig: {
@@ -264,6 +265,7 @@ Mods: {
 			FinalBossDefeatNoxusIndicator_SeenNoxus: The dark presence is stirring...
 			TerminusHintLine1: You have done well.
 			TerminusHintLine2: Now, seek the Terminus. Your final test is at hand.
+			XerocEnterGardenText: Your final test begins.
 			XerocEndScreenText: You have passed the test.
 			XerocPlayerDeathText: You have failed the test.
 			XerocEndScreenMainMenuTip: You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test. You have passed the test.

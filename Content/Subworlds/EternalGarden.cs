@@ -13,6 +13,7 @@ using ReLogic.Content;
 using CalamityMod.World;
 using static NoxusBoss.Core.WorldSaveSystem;
 using NoxusBoss.Assets.Fonts;
+using Terraria.Localization;
 
 namespace NoxusBoss.Content.Subworlds
 {
@@ -44,8 +45,6 @@ namespace NoxusBoss.Content.Subworlds
             set;
         }
 
-        public const string EnterText = "Your final test begins.";
-
         public override int Width => 1200;
 
         public override int Height => 350;
@@ -75,7 +74,7 @@ namespace NoxusBoss.Content.Subworlds
             // Give ominous text about how the player will "be tested" when entering the garden.
             // When exiting, the regular load details text is displayed.
             var font = FontRegistry.Instance.XerocText;
-            string text = EnterText;
+            string text = Language.GetTextValue($"Mods.{Mod.Name}.Dialog.XerocEnterGardenText");
             Color textColor = Color.LightCoral;
             if (!SubworldSystem.IsActive<EternalGarden>())
             {
