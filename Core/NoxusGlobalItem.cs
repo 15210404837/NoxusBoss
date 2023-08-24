@@ -70,7 +70,7 @@ namespace NoxusBoss.Core
             // Let Terminus use its closed eye form if Noxus is not yet defeated.
             if (item.type == ModContent.ItemType<Terminus>() && !WorldSaveSystem.HasDefeatedNoxus && !Main.zenithWorld)
             {
-                Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/TerminusClosedEye").Value;
+                Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/SummonItems/TerminusClosedEye").Value;
                 spriteBatch.Draw(texture, position, null, Color.White, 0f, origin, scale, 0, 0);
                 return false;
             }
@@ -83,7 +83,7 @@ namespace NoxusBoss.Core
             // Let Terminus use its closed eye form if Noxus is not yet defeated.
             if (item.type == ModContent.ItemType<Terminus>() && !WorldSaveSystem.HasDefeatedNoxus && !Main.zenithWorld)
             {
-                Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/TerminusClosedEye").Value;
+                Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/SummonItems/TerminusClosedEye").Value;
                 spriteBatch.Draw(texture, item.position - Main.screenPosition, null, lightColor, 0f, Vector2.Zero, 1f, 0, 0);
                 return false;
             }

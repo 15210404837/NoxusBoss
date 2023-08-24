@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Content.Items;
+using NoxusBoss.Content.Items.Accessories.VanityEffects;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;

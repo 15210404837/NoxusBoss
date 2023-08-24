@@ -8,7 +8,7 @@ using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Projectiles
+namespace NoxusBoss.Content.Projectiles.Visuals
 {
     public class GodRayVisual : ModProjectile, IDrawsWithShader
     {

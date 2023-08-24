@@ -4,7 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.DataStructures;
-using NoxusBoss.Content.Items.MusicBoxes;
+using NoxusBoss.Content.Items.Placeable.MusicBoxes;
 
 namespace NoxusBoss.Content.Tiles
 {

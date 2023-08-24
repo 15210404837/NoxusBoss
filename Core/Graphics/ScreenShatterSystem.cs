@@ -5,6 +5,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Core.Configuration;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;

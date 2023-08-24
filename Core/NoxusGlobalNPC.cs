@@ -1,6 +1,6 @@
 ﻿using CalamityMod;
 using CalamityMod.NPCs.PrimordialWyrm;
-using NoxusBoss.Content.Items;
+using NoxusBoss.Content.Items.SummonItems;
 using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ModLoader;

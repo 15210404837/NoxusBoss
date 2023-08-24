@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items.MusicBoxes
+namespace NoxusBoss.Content.Items.Placeable.MusicBoxes
 {
     public class XerocMusicBoxItem : ModItem
     {

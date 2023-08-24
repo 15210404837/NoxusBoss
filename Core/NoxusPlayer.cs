@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles;
+using NoxusBoss.Content.Projectiles.Visuals;
 using NoxusBoss.Content.Subworlds;
 using Terraria;
 using Terraria.DataStructures;

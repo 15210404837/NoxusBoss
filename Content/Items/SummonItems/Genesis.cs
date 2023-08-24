@@ -4,13 +4,14 @@ using CalamityMod.Rarities;
 using CalamityMod.Tiles.Furniture.CraftingStations;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.NPCs;
+using NoxusBoss.Content.Subworlds;
 using NoxusBoss.Core;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.SummonItems
 {
     public class Genesis : ModItem
     {
@@ -35,7 +36,7 @@ namespace NoxusBoss.Content.Items
         }
 
         public override bool CanUseItem(Player player) =>
-            !NPC.AnyNPCs(ModContent.NPCType<NoxusEgg>()) && !NPC.AnyNPCs(ModContent.NPCType<EntropicGod>()) && !NPC.AnyNPCs(ModContent.NPCType<NoxusEggCutscene>());
+            !NPC.AnyNPCs(ModContent.NPCType<NoxusEgg>()) && !NPC.AnyNPCs(ModContent.NPCType<EntropicGod>()) && !NPC.AnyNPCs(ModContent.NPCType<NoxusEggCutscene>()) && !EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame;
 
         public override bool? UseItem(Player player)
         {

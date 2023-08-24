@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Configuration;
 using Terraria;
 using Terraria.Graphics.Shaders;
 

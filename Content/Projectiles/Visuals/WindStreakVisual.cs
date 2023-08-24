@@ -9,7 +9,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Projectiles
+namespace NoxusBoss.Content.Projectiles.Visuals
 {
     public class WindStreakVisual : ModProjectile, IDrawPixelatedPrims
     {

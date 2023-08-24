@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
+using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;

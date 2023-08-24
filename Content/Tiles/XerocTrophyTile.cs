@@ -1,4 +1,4 @@
-﻿using NoxusBoss.Content.Items;
+﻿using NoxusBoss.Content.Items.Placeable.Trophies;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;

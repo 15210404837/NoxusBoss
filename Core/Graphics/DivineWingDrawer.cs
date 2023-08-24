@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria;
 using NoxusBoss.Core.Graphics.Shaders;
-using NoxusBoss.Content.Items;
 using Terraria.DataStructures;
 using System.Collections.Generic;
 using Terraria.Graphics.Renderers;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Content.Items.Accessories.Wings;
 
 namespace NoxusBoss.Core.Graphics
 {
@@ -76,7 +76,7 @@ namespace NoxusBoss.Core.Graphics
                 // Calculate various draw data for the outline.
                 Vector2 playerPosition = drawinfo.Position - Main.screenPosition + new Vector2(drawinfo.drawPlayer.width / 2, drawinfo.drawPlayer.height - drawinfo.drawPlayer.bodyFrame.Height / 2) + Vector2.UnitY * 7f;
                 Vector2 wingDrawPosition = (playerPosition + new Vector2(-9f, 2f) * drawinfo.drawPlayer.Directions).Floor();
-                Texture2D outlineTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/DivineWings_WingsOutline").Value;
+                Texture2D outlineTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/Accessories/Wings/DivineWings_WingsOutline").Value;
                 Rectangle outlineFrame = outlineTexture.Frame(1, 4, 0, drawinfo.drawPlayer.wingFrame);
                 Color outlineColor = Color.White * Pow(drawinfo.stealth * (1f - drawinfo.shadow), 3f);
                 Vector2 outlineOrigin = outlineFrame.Size() * 0.5f;

@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.SummonItems
 {
     public class BossRushStarter : ModItem
     {

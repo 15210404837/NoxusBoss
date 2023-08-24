@@ -2,10 +2,10 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.Armor.Vanity.Masks
 {
     [AutoloadEquip(EquipType.Head)]
-    public class XerocMask : ModItem
+    public class NoxusMask : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -17,10 +17,11 @@ namespace NoxusBoss.Content.Items
 
         public override void SetDefaults()
         {
-            Item.width = 20;
-            Item.height = 18;
+            Item.width = 28;
+            Item.height = 20;
             Item.rare = ItemRarityID.Blue;
             Item.vanity = true;
         }
     }
 }
+

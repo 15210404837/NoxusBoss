@@ -5,7 +5,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.Placeable
 {
     public class Cattail : ModItem
     {

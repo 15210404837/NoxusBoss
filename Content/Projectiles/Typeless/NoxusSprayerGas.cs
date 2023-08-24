@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using SubworldLibrary;
@@ -8,7 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Projectiles.Typeless
 {
     public class NoxusSprayerGas : ModProjectile
     {

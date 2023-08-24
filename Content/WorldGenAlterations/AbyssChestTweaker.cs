@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CalamityMod.World;
-using NoxusBoss.Content.Items;
+using NoxusBoss.Content.Items.SummonItems;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.IO;
@@ -31,8 +31,7 @@ namespace NoxusBoss.Content.WorldGenAlterations
                 }
             }
 
-            LeaveLoop:
-
+LeaveLoop:
             if (chestID >= 0)
             {
                 Chest terminusChest = Main.chest[chestID];

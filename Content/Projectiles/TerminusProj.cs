@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Content.Projectiles.Visuals;
 using NoxusBoss.Content.Subworlds;
 using NoxusBoss.Core.Graphics;
 using SubworldLibrary;

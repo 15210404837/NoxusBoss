@@ -5,7 +5,7 @@ using NoxusBoss.Core;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.Accessories.VanityEffects
 {
     public class DeificTouch : ModItem
     {

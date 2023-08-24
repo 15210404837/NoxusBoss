@@ -1,5 +1,6 @@
 ﻿using CalamityMod;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Core.Configuration;
 using Terraria;
 using Terraria.ModLoader;
 

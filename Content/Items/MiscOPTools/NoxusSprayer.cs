@@ -5,11 +5,12 @@ using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.NPCs;
+using NoxusBoss.Content.Projectiles.Typeless;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.MiscOPTools
 {
     public class NoxusSprayer : ModItem
     {

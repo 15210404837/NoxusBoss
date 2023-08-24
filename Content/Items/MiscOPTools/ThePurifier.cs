@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using CalamityMod.Rarities;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Projectiles;
+using NoxusBoss.Content.Projectiles.Typeless;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.MiscOPTools
 {
     public class ThePurifier : ModItem
     {

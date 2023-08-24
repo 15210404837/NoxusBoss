@@ -1,6 +1,7 @@
 ﻿using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Effects;

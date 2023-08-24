@@ -6,7 +6,7 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Content.Items;
+using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -15,7 +15,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
-namespace NoxusBoss.Content.Projectiles
+namespace NoxusBoss.Content.Projectiles.Typeless
 {
     public class ThePurifierProj : ModProjectile, IDrawAdditive, IDrawPixelatedPrims
     {
@@ -78,7 +78,7 @@ namespace NoxusBoss.Content.Projectiles
 
         public const int Lifetime = 900;
 
-        public override string Texture => "NoxusBoss/Content/Items/ThePurifier";
+        public override string Texture => "NoxusBoss/Content/Items/MiscOPTools/ThePurifier";
 
         public override void SetDefaults()
         {

@@ -1,4 +1,4 @@
-﻿using NoxusBoss.Content.Projectiles;
+﻿using NoxusBoss.Content.Projectiles.Typeless;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.ModLoader;

@@ -5,7 +5,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.Accessories.Wings
 {
     [AutoloadEquip(EquipType.Wings)]
     public class DivineWings : ModItem

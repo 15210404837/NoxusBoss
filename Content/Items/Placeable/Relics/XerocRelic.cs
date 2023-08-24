@@ -4,9 +4,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Items
+namespace NoxusBoss.Content.Items.Placeable.Relics
 {
-    public class NoxusRelic : ModItem
+    public class XerocRelic : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -15,7 +15,7 @@ namespace NoxusBoss.Content.Items
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<NoxusRelicTile>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<XerocRelicTile>());
             Item.width = 30;
             Item.height = 40;
             Item.rare = ItemRarityID.Master;
@@ -29,4 +29,3 @@ namespace NoxusBoss.Content.Items
         }
     }
 }
-
