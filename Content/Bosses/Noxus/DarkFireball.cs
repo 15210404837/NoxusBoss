@@ -96,7 +96,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         public override bool PreDraw(ref Color lightColor)
         {
             float explosionInterpolant = Pow(GetLerpValue(60f, 0f, Projectile.timeLeft, true), 0.48f);
-            float explosionPulse = Cos(Main.GlobalTimeWrappedHourly * 18f + Projectile.identity) * 0.5f + 0.5f;
+            float explosionPulse = Cos01(Main.GlobalTimeWrappedHourly * 18f + Projectile.identity);
             float alphaFactor = Lerp(0.25f, 1f, explosionPulse * explosionInterpolant);
 
             Color drawColor = Color.White;

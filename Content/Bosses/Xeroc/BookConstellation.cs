@@ -147,7 +147,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Make the stars individually twinkle.
             float scaleFactorPhaseShift = index * 5.853567f * (index % 2 == 0).ToDirectionInt();
-            float scaleFactor = Lerp(0.75f, 1.25f, Cos(Main.GlobalTimeWrappedHourly * 6f + scaleFactorPhaseShift) * 0.5f + 0.5f);
+            float scaleFactor = Lerp(0.75f, 1.25f, Cos01(Main.GlobalTimeWrappedHourly * 6f + scaleFactorPhaseShift));
             scale *= scaleFactor;
 
             Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor1 with { A = 0 } * Projectile.Opacity * 0.33f, bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.11f, 0, 0f);

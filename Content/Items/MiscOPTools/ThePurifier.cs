@@ -50,7 +50,7 @@ namespace NoxusBoss.Content.Items.MiscOPTools
                 if (!tooltip.Name.Contains("Tooltip"))
                     continue;
 
-                tooltip.OverrideColor = Color.Lerp(Color.OrangeRed, Color.Red, Cos(Main.GlobalTimeWrappedHourly * 5f) * 0.5f + 0.5f);
+                tooltip.OverrideColor = Color.Lerp(Color.OrangeRed, Color.Red, Cos01(Main.GlobalTimeWrappedHourly * 5f));
             }
         }
     }

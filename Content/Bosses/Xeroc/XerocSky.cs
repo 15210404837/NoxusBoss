@@ -299,7 +299,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             Texture2D spiresTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/XerocSpires").Value;
             Vector2 origin = backglowTexture.Size() * 0.5f;
-            Vector2 baseScale = Vector2.One * SkyEyeOpacity * Lerp(1.9f, 2f, Cos(Main.GlobalTimeWrappedHourly * 4f) * 0.5f + 0.5f) * SkyEyeScale;
+            Vector2 baseScale = Vector2.One * SkyEyeOpacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * SkyEyeScale;
 
             // Make everything "blink" at first.
             baseScale.Y *= 1f - CalamityUtils.Convert01To010(GetLerpValue(0.25f, 0.75f, SkyEyeOpacity, true));

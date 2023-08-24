@@ -29,5 +29,9 @@ namespace NoxusBoss.Common.Utilities
             float angle = Acos(Clamp((C * C + A * A - B * B) / (C * A * 2f), -1f, 1)) * flip.ToDirectionInt();
             return start + (angle + start.AngleTo(end)).ToRotationVector2() * A;
         }
+
+        public static float Sin01(float x) => Sin(x) * 0.5f + 0.5f;
+
+        public static float Cos01(float x) => Cos(x) * 0.5f + 0.5f;
     }
 }

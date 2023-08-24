@@ -166,7 +166,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                     {
                         Dust light = Dust.NewDustPerfect(Player.Center + Main.rand.NextVector2Square(-25f, 25f), 264);
                         light.velocity = -Vector2.UnitY * Main.rand.NextFloat(1.2f, 2.5f);
-                        light.color = Color.Lerp(Color.Wheat, Color.Gold, Sin(Main.GlobalTimeWrappedHourly * 10f + i * 0.2f) * 0.5f + 0.5f) * particleAppearInterpolant * (1f - deathFadeOut);
+                        light.color = Color.Lerp(Color.Wheat, Color.Gold, Sin01(Main.GlobalTimeWrappedHourly * 10f + i * 0.2f)) * particleAppearInterpolant * (1f - deathFadeOut);
                         light.scale = Main.rand.NextFloat(0.1f, 1.8f) * Lerp(1f, 0.1f, deathAnimationCompletion);
                         light.noGravity = true;
                     }

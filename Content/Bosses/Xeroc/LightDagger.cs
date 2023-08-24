@@ -83,8 +83,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 c2 = Color.White;
             }
 
-            Color mainColor = Color.Lerp(c1, c2, Sin(TwoPi * HueInterpolant + Main.GlobalTimeWrappedHourly * 2f) * 0.5f + 0.5f) * bloomOpacity;
-            Color secondaryColor = Color.Lerp(c1, c2, Sin(TwoPi * (1f - HueInterpolant) + Main.GlobalTimeWrappedHourly * 2f) * 0.5f + 0.5f) * bloomOpacity;
+            Color mainColor = Color.Lerp(c1, c2, Sin01(TwoPi * HueInterpolant + Main.GlobalTimeWrappedHourly * 2f)) * bloomOpacity;
+            Color secondaryColor = Color.Lerp(c1, c2, Sin01(TwoPi * (1f - HueInterpolant) + Main.GlobalTimeWrappedHourly * 2f)) * bloomOpacity;
 
             Main.EntitySpriteDraw(bloom, Projectile.oldPos[1] + Projectile.Size * 0.5f - Main.screenPosition, null, mainColor, 0f, bloom.Size() * 0.5f, Projectile.scale * 1.32f, 0, 0);
             Main.EntitySpriteDraw(bloom, Projectile.oldPos[2] + Projectile.Size * 0.5f - Main.screenPosition, null, secondaryColor, 0f, bloom.Size() * 0.5f, Projectile.scale * 0.34f, 0, 0);

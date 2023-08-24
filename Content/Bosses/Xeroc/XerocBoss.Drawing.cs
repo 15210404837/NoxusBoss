@@ -429,7 +429,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             Texture2D spiresTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/XerocSpires").Value;
             Vector2 origin = backglowTexture.Size() * 0.5f;
-            Vector2 baseScale = Vector2.One * NPC.Opacity * Lerp(1.9f, 2f, Cos(Main.GlobalTimeWrappedHourly * 4f) * 0.5f + 0.5f) * 0.6f;
+            Vector2 baseScale = Vector2.One * NPC.Opacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * 0.6f;
             baseScale *= MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y);
 
             Main.spriteBatch.Draw(backglowTexture, EyePosition - screenPos, null, Color.White * glowDissipateFactor * universalOpacity, 0f, origin, baseScale * 0.7f, 0, 0f);

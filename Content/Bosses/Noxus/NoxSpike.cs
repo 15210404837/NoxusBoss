@@ -84,7 +84,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
             // Draw a pulsating overlay if moving very slowly.
             float overlayOpacity = GetLerpValue(2.4f, 0.01f, Projectile.velocity.Length(), true) * 0.3f;
-            float pulsationInterpolant = Cos(TwoPi * Index / 12f + Main.GlobalTimeWrappedHourly * 15f) * 0.5f + 0.5f;
+            float pulsationInterpolant = Cos01(TwoPi * Index / 12f + Main.GlobalTimeWrappedHourly * 15f);
             float scalePulsation = Lerp(1f, 1.3f, pulsationInterpolant);
             if (overlayOpacity > 0f)
             {
