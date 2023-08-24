@@ -177,7 +177,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             new Thread(context =>
             {
                 WorldGen.worldGenCallback(context);
-                WorldGen.SaveAndQuitCallBack(() => { });
+                TotalWhiteOverlaySystem.TimeSinceWorldgenFinished = 1;
             }).Start(dummy);
         }
 

@@ -281,20 +281,17 @@ Mods: {
 				For starters, did you know that Terraria's worlds are just a giant 8401x2401 grid of tiles?
 				It's sized such that all worlds up to large can fit within it.
 				That grid exists in memory from the moment you start the game up until the moment you close it. Dozens of megabytes of memory, to be exact.
-				There is some form of "chunking", or splitting them up into subsections, but that's really only used in multiplayer, because
-				sending the entire world across the network to clients would be terrible and very likely cause crashes.
+				There is some form of "chunking", or splitting them up into subsections, but that's really only used in multiplayer, because sending the entire world across the network to clients would be terrible and very likely cause crashes.
 				This is why when servers are about to die you can fall off the map. That's you walking outside of the bounds of one of these "chunks" because the server can't send you the other chunks.
-				Back to worldgen, everything has to operate with this grid. Unlike, say, Minecraft, the world generation isn't something that can be done on the fly.
-				It must be done all at once.
+				Back to worldgen, everything has to operate with this grid. Unlike, say, Minecraft, the world generation isn't something that can be done on the fly. It must be done all at once.
 				Furthermore, many of the worldgen steps are done synchronously, or one at a time, instead of having multiple happening at the same time.
-				Of course, you couldn't do the latter for everything, since in a lot of cases you'd run into conflicts. But as you can imagine, having
-				this run in parallel where possible would be a really desirable boon for performance.
+				Of course, you couldn't do the latter for everything, since in a lot of cases you'd run into conflicts. But as you can imagine, having this run in parallel where possible would be a really desirable boon for performance.
 				In some cases, certain steps just aren't very efficient. Certain situations can result in Settling Liquids steps taking several seconds at a time.
 				The Desertification step from what I can tell boils down to a concerning amount of looping. First horizontally throughout the entire desert.
 				Then vertically from top to bottom. Then through all "clusters" throughout the desert, and then through all tiles inside of the cluster.
 				I attribute most of these inefficiencies to modders and not the vanilla game, however (and I'm also guilty of this).
-				An old, weird practice I used to do was using recursion (aka having a function that calls itself. It's a bit weird to explain) to calculate
-				all water in a given area for the Sulphurous Sea, and then doing that many, many times repeatedly. It's... a mess.
+				An old, weird practice I used to do was using recursion (aka having a function that calls itself. It's a bit weird to explain) to calculate all water in a given area for the Sulphurous Sea, and then doing that many, many times repeatedly.
+				It's... a mess.
 				Anyway! I'd go on further but it's possible that your world is almost fully wiped. Wouldn't want to get abruptly cut off!
 				I'll give you this monologue again the next time you have worlds to reset. See you around!
 				'''

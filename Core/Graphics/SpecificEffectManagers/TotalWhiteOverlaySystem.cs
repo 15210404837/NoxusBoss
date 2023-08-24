@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -16,6 +18,12 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             set;
         }
 
+        public static int TimeSinceWorldgenFinished
+        {
+            get;
+            set;
+        }
+
         public static float WhiteInterpolant
         {
             get;
@@ -25,6 +33,15 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public override void OnModLoad()
         {
             Main.OnPostDraw += DrawWhite;
+            On_SoundEngine.PlaySound_int_int_int_int_float_float += DisableSoundsDuringMonologue;
+        }
+
+        private SoundEffectInstance DisableSoundsDuringMonologue(On_SoundEngine.orig_PlaySound_int_int_int_int_float_float orig, int type, int x, int y, int Style, float volumeScale, float pitchOffset)
+        {
+            if (Main.gameMenu || TimeSinceMonologueBegan <= 60)
+                return orig(type, x, y, Style, volumeScale, pitchOffset);
+
+            return null;
         }
 
         public override void OnModUnload()
@@ -43,6 +60,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private void DrawWhite(GameTime obj)
         {
+            if (TimeSinceWorldgenFinished >= 1)
+                WorldGen.generatingWorld = true;
+
             if (WhiteInterpolant <= 0f || Main.gameMenu)
             {
                 TimeSinceMonologueBegan = 0;
@@ -70,17 +90,28 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Increment the monologue timer.
             TimeSinceMonologueBegan++;
 
+            // Increment the post-worldgen timer if it's been activated.
+            if (TimeSinceWorldgenFinished >= 1)
+                TimeSinceWorldgenFinished++;
+            if (TimeSinceWorldgenFinished >= 240)
+            {
+                WorldGen.generatingWorld = false;
+                WorldGen.SaveAndQuit();
+                WhiteInterpolant = 0f;
+                TimeSinceWorldgenFinished = 0;
+            }
+
             // Draw credits on the bottom right of the screen.
             var font = FontAssets.MouseText.Value;
             int textLineCounter = 0;
             float creditTextScale = 1.2f;
             string creditText = Language.GetTextValue($"Mods.{Mod.Name}.Dialog.CelesteMusicCreditText");
-            Color creditTextColor = Color.Black * GetLerpValue(210f, 450f, TimeSinceMonologueBegan, true);
+            Color textColor = Color.Black * GetLerpValue(210f, 450f, TimeSinceMonologueBegan, true) * GetLerpValue(210f, 60f, TimeSinceWorldgenFinished, true);
             foreach (string creditLine in creditText.Split('\n'))
             {
                 Vector2 creditTextSize = font.MeasureString(creditLine);
                 Vector2 creditDrawPosition = new Vector2(Main.screenWidth - 110f, Main.screenHeight - 90f) - Vector2.UnitX * creditTextSize * 0.5f + Vector2.UnitY * textLineCounter * creditTextScale * 32f;
-                Main.spriteBatch.DrawString(font, creditLine, creditDrawPosition, creditTextColor, 0f, Vector2.UnitY * creditTextSize * 0.5f, creditTextScale, 0, 0f);
+                Main.spriteBatch.DrawString(font, creditLine, creditDrawPosition, textColor, 0f, Vector2.UnitY * creditTextSize * 0.5f, creditTextScale, 0, 0f);
                 textLineCounter++;
             }
             textLineCounter = 0;
@@ -96,7 +127,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 Vector2 rantDrawPosition = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight - 50f) - Vector2.UnitX * rantTextSize * 0.5f + Vector2.UnitY * textLineCounter * creditTextScale * 32f;
                 rantDrawPosition.Y -= TimeSinceMonologueBegan * 0.45f - 150f;
 
-                Main.spriteBatch.DrawString(font, rantLine, rantDrawPosition, creditTextColor, 0f, Vector2.UnitY * rantTextSize * 0.5f, creditTextScale, 0, 0f);
+                Main.spriteBatch.DrawString(font, rantLine, rantDrawPosition, textColor, 0f, Vector2.UnitY * rantTextSize * 0.5f, creditTextScale, 0, 0f);
                 textLineCounter++;
             }
         }
