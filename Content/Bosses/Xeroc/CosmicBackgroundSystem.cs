@@ -14,6 +14,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public class CosmicBackgroundSystem : ModSystem
     {
+        public static bool HasLoaded
+        {
+            get;
+            private set;
+        }
+
         public static ManagedRenderTarget KalisetFractal
         {
             get;
@@ -95,6 +101,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 Main.QueueMainThreadAction(() => KalisetFractal.Target.SetData(kalisetData));
+                HasLoaded = true;
             }).Start();
         }
 

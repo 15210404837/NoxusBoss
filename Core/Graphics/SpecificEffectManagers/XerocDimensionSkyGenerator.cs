@@ -48,8 +48,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private void PrepareDimensionTarget(GameTime obj)
         {
-            if (XerocDimensionTarget is null)
+            if (XerocDimensionTarget is null || !CosmicBackgroundSystem.HasLoaded)
                 return;
+
             if (HeavenlyBackgroundIntensity > 0f && !IsEffectActive)
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
 
