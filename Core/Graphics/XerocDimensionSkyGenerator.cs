@@ -64,7 +64,7 @@ namespace NoxusBoss.Core.Graphics
                 intensity = 1.5f;
             if (Main.gameMenu && MenuLoader.CurrentMenu == XerocDimensionMainMenu.Instance)
             {
-                intensity = 0.85f;
+                intensity = 1.5f;
                 Main.time = 24000;
                 Main.dayTime = true;
             }
