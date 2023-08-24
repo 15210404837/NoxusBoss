@@ -53,7 +53,7 @@ namespace NoxusBoss.Content.Tiles
             // Draw lights over the flower.
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 0.4f + (i * 0.9444f + j * 0.3768f) % TwoPi;
             Color glowColor = Color.Lerp(Color.BlueViolet, Color.IndianRed, (i * 0.1455f + j * 0.7484f) % 0.75f) with { A = 0 };
-            Vector2 glowDrawPosition = drawPosition + new Vector2(8f, 8f);
+            Vector2 glowDrawPosition = drawPosition + new Vector2(7f, 8f);
             Texture2D backglow = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
             Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             spriteBatch.Draw(bloomFlare, glowDrawPosition, null, Color.Gold with { A = 0 } * 0.3f, bloomFlareRotation, bloomFlare.Size() * 0.5f, 0.05f, 0, 0f);

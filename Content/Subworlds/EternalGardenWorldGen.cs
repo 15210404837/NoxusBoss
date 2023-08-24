@@ -381,7 +381,10 @@ namespace NoxusBoss.Content.Subworlds
 
                 // Plant starbearers if in one of the locations they should appear.
                 if (starbearerPositions.Contains(x))
+                {
+                    WorldGen.KillTile(x, y);
                     plantID = (ushort)ModContent.TileType<Starbearer>();
+                }
 
                 previousPlantID = plantID;
 
