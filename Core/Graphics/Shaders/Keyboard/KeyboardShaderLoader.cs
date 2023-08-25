@@ -39,6 +39,13 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
             On_NPC.UpdateRGBPeriheralProbe += TrackCustomBosses;
         }
 
+        public override void OnModUnload()
+        {
+            // Manually remove all shaders from the central registry.
+            foreach (ChromaShader loadedShader in loadedShaders)
+                Main.Chroma.UnregisterShader(loadedShader);
+        }
+
         public override void PostUpdateWorld()
         {
             if (HasLoaded || Main.netMode == NetmodeID.Server)
@@ -50,13 +57,6 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
             RegisterShader(new XerocKeyboardShader(), XerocKeyboardShader.IsActive, ShaderLayer.Boss);
 
             HasLoaded = true;
-        }
-
-        public override void OnWorldLoad()
-        {
-            // Manually remove all shaders from the central registry.
-            foreach (ChromaShader loadedShader in loadedShaders)
-                Main.Chroma.UnregisterShader(loadedShader);
         }
 
         private void TrackCustomBosses(On_NPC.orig_UpdateRGBPeriheralProbe orig)

@@ -1,8 +1,10 @@
 ﻿using System;
 using CalamityMod.Rarities;
+using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items
@@ -56,7 +58,15 @@ namespace NoxusBoss.Content.Items
                     string startingTimeText = $"{startingHour}:{startingMinute:00} {(startingInAM ? "AM" : "PM")}";
                     string endingTimeText = $"{endingHour}:{endingMinute:00} {(endingInAM ? "AM" : "PM")}";
                     bool partialEclipse = eclipseCloseness >= 20f;
-                    Main.NewText($"A Noxus Eclipse will occur in approximately {daysUntilEclipse} days, starting at {startingTimeText} and ending at {endingTimeText}. It will be a {(partialEclipse ? "partial" : "total")} eclipse.");
+                    string eclipseText = Language.GetText($"Mods.{Mod.Name}.Items.{Name}.InfoText{(partialEclipse ? "Partial" : "Total")}").Format(daysUntilEclipse, startingTimeText, endingTimeText);
+                    if (NoxusWorldManager.Enabled)
+                        eclipseText = Language.GetTextValue($"Mods.{Mod.Name}.Items.{Name}.InfoTextNoxusWorld");
+
+                    Main.NewText(eclipseText);
+
+                    // The text only needs to be said once in the Noxus world.
+                    if (NoxusWorldManager.Enabled)
+                        break;
                 }
             }
 

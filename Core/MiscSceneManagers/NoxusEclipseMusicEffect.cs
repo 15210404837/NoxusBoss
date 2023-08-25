@@ -6,7 +6,7 @@ namespace NoxusBoss.Core.MiscSceneManagers
 {
     public class NoxusEclipseMusicEffect : ModSceneEffect
     {
-        public override bool IsSceneEffectActive(Player player) => NoxusSkySceneSystem.EclipseDarknessInterpolant >= 0.01f && player.ZoneOverworldHeight;
+        public override bool IsSceneEffectActive(Player player) => NoxusSkySceneSystem.EclipseDarknessInterpolant >= 0.01f && player.ZoneOverworldHeight && !Main.eclipse;
 
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
 

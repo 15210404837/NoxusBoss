@@ -4,6 +4,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -128,8 +129,16 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public override void Update(GameTime gameTime)
         {
+            // Keep the effect active when generating a Noxus World.
+            float maxIntensity = 1f;
+            if (WorldGen.generatingWorld && Main.gameMenu && NoxusWorldManager.Enabled)
+            {
+                maxIntensity = 0.88f;
+                isActive = true;
+            }
+
             // Make the intensity go up or down based on whether the sky is in use.
-            intensity = Clamp(intensity + isActive.ToDirectionInt() * 0.01f, 0f, 1f);
+            intensity = Clamp(intensity + isActive.ToDirectionInt() * 0.01f, 0f, maxIntensity);
 
             // Make the fog intensity go down if the sky is not in use. It does not go up by default, however.
             FogIntensity = Clamp(FogIntensity - (!isActive).ToInt(), 0f, 1f);
@@ -142,7 +151,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             FlashIntensity *= 0.86f;
 
             // Randomly create flashes.
-            int flashCreationChance = 90;
+            int flashCreationChance = 540;
             int noxusIndex = NPC.FindFirstNPC(ModContent.NPCType<EntropicGod>());
             float flashIntensity = NoxusBossConfig.Instance.VisualOverlayIntensity * 71f;
             if (noxusIndex != -1)
@@ -212,7 +221,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             DrawRubble(minDepth, maxDepth);
         }
 
-        public void DrawBackground(Color color, float localIntensity = 1f, float scrollSpeed = 1f, float noiseZoom = 1f, Asset<Texture2D> texture = null)
+        public static void DrawBackground(Color color, float localIntensity = 1f, float scrollSpeed = 1f, float noiseZoom = 1f, Asset<Texture2D> texture = null)
         {
             // Make the background colors more muted based on how strong the fog is.
             if (EntropicGod.Myself is not null)

@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Noxus
@@ -53,23 +55,32 @@ namespace NoxusBoss.Content.Bosses.Noxus
             // Make the eclipse darkness effect naturally dissipate to ensure that it goes away even if the checks below are failed.
             EclipseDarknessInterpolant = Clamp(EclipseDarknessInterpolant - 0.04f, 0f, 1f);
 
-            // Don't draw Noxus if he's fucking dead, has fallen from space already, or hasn't started orbiting the planet yet.
-            if (WorldSaveSystem.HasDefeatedEgg || NoxusEggCutsceneSystem.HasSummonedNoxus || !NoxusEggCutsceneSystem.NoxusBeganOrbitingPlanet)
-                return;
+            // The eliminative checks below don't apply if in the Noxus World.
+            bool inGameMenuNotGeneratingWorld = Main.gameMenu && !WorldGen.generatingWorld;
+            if (inGameMenuNotGeneratingWorld || !NoxusWorldManager.Enabled || !Main.dayTime)
+            {
+                // Don't draw Noxus if he's fucking dead, has fallen from space already, or hasn't started orbiting the planet yet.
+                if (WorldSaveSystem.HasDefeatedEgg || NoxusEggCutsceneSystem.HasSummonedNoxus || !NoxusEggCutsceneSystem.NoxusBeganOrbitingPlanet)
+                    return;
 
-            // Don't draw Noxus if he's behind the view position or if on the title screen.
-            if (CelestialOrbitDetails.NoxusOrbitOffset.Z < 0f || Main.gameMenu)
-                return;
+                // Don't draw Noxus if he's behind the view position or if on the title screen.
+                if (CelestialOrbitDetails.NoxusOrbitOffset.Z < 0f || Main.gameMenu)
+                    return;
+            }
 
             // Calculate draw values for Noxus.
             Texture2D noxusEggTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEgg").Value;
             Color noxusDrawColor = Color.Lerp(Color.Black * 0.035f, new(64, 64, 64), Pow(EclipseDarknessInterpolant, 0.54f));
 
+            Vector2 sunPosition = GetSunPosition(sceneArea, (float)(Main.time / Main.dayLength));
             Vector2 noxusDrawPosition = new Vector2(CelestialOrbitDetails.NoxusHorizontalOffset, CelestialOrbitDetails.NoxusVerticalOffset) + sceneArea.SceneLocalScreenPositionOffset;
             noxusDrawPosition.Y += sceneArea.bgTopY;
 
+            // In the Noxus World, Noxus is always on top of the sun.
+            if (NoxusWorldManager.Enabled)
+                noxusDrawPosition = sunPosition - Vector2.UnitY * 0.5f;
+
             // Make Noxus darker as an indication that he's becoming a silhouette if close to the sun.
-            Vector2 sunPosition = GetSunPosition(sceneArea, (float)(Main.time / Main.dayLength));
             float distanceFromSun = sunPosition.Distance(noxusDrawPosition);
             float silhouetteInterpolant = GetLerpValue(85f, 21f, distanceFromSun, true);
             noxusDrawColor = Color.Lerp(noxusDrawColor, Color.Black, Pow(silhouetteInterpolant, 0.6f) * 0.85f);
