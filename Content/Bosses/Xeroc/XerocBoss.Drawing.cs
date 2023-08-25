@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Assets.Fonts;
 using NoxusBoss.Common.Utilities;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Graphics;
@@ -55,6 +56,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             typeName = string.Empty;
             for (int i = 0; i < 8; i++)
                 typeName += (char)Main.rand.Next(700);
+
+            // Add a cheeky suffix if the player has died many, many times.
+            if (WorldSaveSystem.XerocDeathCount >= 2000)
+                typeName += Language.GetTextValue($"Mods.{Mod.Name}.NPCs.{Name}.SillyDeathCountSuffix");
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)

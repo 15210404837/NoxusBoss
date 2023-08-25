@@ -1,5 +1,6 @@
 ﻿using System;
 using CalamityMod.Rarities;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -59,10 +60,14 @@ namespace NoxusBoss.Content.Items
                     string endingTimeText = $"{endingHour}:{endingMinute:00} {(endingInAM ? "AM" : "PM")}";
                     bool partialEclipse = eclipseCloseness >= 20f;
                     string eclipseText = Language.GetText($"Mods.{Mod.Name}.Items.{Name}.InfoText{(partialEclipse ? "Partial" : "Total")}").Format(daysUntilEclipse, startingTimeText, endingTimeText);
+                    Color textColor = Color.White;
                     if (NoxusWorldManager.Enabled)
+                    {
                         eclipseText = Language.GetTextValue($"Mods.{Mod.Name}.Items.{Name}.InfoTextNoxusWorld");
+                        textColor = Color.DarkViolet;
+                    }
 
-                    Main.NewText(eclipseText);
+                    Main.NewText(eclipseText, textColor);
 
                     // The text only needs to be said once in the Noxus world.
                     if (NoxusWorldManager.Enabled)

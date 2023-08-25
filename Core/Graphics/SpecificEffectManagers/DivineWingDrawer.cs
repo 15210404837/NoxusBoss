@@ -72,6 +72,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (drawinfo.hideEntirePlayer || drawinfo.drawPlayer.dead)
                 return;
 
+            if (Main.gameMenu)
+                disallowSpecialWingDrawing = false;
+
             if (drawinfo.drawPlayer.wings == DivineWings.WingSlotID && disallowSpecialWingDrawing)
             {
                 // Calculate various draw data for the outline.

@@ -192,6 +192,7 @@ Mods: {
 
 			XerocBoss: {
 				DisplayName: Nameless Deity
+				SillyDeathCountSuffix: ", Tormentor of Nohitters"
 
 				BossChecklistIntegration: {
 					SpawnInfo: Use the [i:CalamityMod/Terminus] after its gaze has opened

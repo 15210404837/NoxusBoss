@@ -427,10 +427,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             UpdateWings(AttackTimer / 42f % 1f);
 
             // Get rid of Xeroc's ingame name.
-            string name = string.Empty;
-            for (int i = 0; i < 8; i++)
-                name += (char)Main.rand.Next(700);
-            NPC.GivenName = name;
+            NPC.GivenName = string.Empty;
+
+            // Close the HP bar.
+            NPC.Calamity().ShouldCloseHPBar = true;
 
             Vector2 hoverDestinationForHand(int handIndex)
             {
