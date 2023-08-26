@@ -11,6 +11,7 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 
 namespace NoxusBoss.Core.Graphics.Shaders
 {

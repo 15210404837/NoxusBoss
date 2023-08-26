@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
+using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 {

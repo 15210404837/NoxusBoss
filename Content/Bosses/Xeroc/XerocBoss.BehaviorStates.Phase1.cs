@@ -7,6 +7,7 @@ using CalamityMod.Items.Weapons.Melee;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -14,7 +15,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
-using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
+using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {

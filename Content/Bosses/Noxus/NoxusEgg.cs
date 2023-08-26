@@ -6,6 +6,7 @@ using CalamityMod.Tiles.Furniture.CraftingStations;
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;

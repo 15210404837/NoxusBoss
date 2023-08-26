@@ -9,6 +9,7 @@ using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
+using NoxusBoss.Content.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.Items.Accessories.VanityEffects;
 using NoxusBoss.Content.Items.Armor.Vanity.Masks;
 using NoxusBoss.Content.Items.MiscOPTools;

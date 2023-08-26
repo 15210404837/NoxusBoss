@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Assets.Fonts;
 using NoxusBoss.Common.Utilities;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -124,9 +125,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DrawWing(Vector2 drawPosition, float wingRotation, float rotationDifferenceMovingAverage, float generalRotation, float fadeInterpolant, bool glow)
         {
-            Texture2D wingsTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWing").Value;
+            Texture2D wingsTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWing").Value;
             if (glow)
-                wingsTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingGlow").Value;
+                wingsTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingGlow").Value;
 
             Vector2 leftWingOrigin = wingsTexture.Size() * new Vector2(1f, 0.86f);
             Vector2 rightWingOrigin = leftWingOrigin;
@@ -152,7 +153,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Prepare the wing psychedelic shader.
-            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap").Value;
+            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap").Value;
             var wingShader = ShaderManager.GetShader("XerocPsychedelicWingShader");
             wingShader.TrySetParameter("colorShift", WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
@@ -176,10 +177,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.spriteBatch.ExitShaderRegion();
 
             bool canDrawRobeArms = CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.DeathAnimation;
-            Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPalm").Value;
+            Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocPalm").Value;
             foreach (XerocHand hand in Hands)
             {
-                Texture2D handTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocHand").Value;
+                Texture2D handTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocHand").Value;
                 Vector2 drawPosition = hand.Center - screenPos;
                 Rectangle frame = handTexture.Frame(1, 3, 0, hand.Frame);
                 Vector2 handScale = TeleportVisualsAdjustedScale * hand.ScaleFactor * 0.75f;
@@ -331,7 +332,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             // Collect textures.
             Texture2D pixel = TextureAssets.MagicPixel.Value;
-            Texture2D backlightTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocBacklight").Value;
+            Texture2D backlightTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocBacklight").Value;
             Texture2D overlayTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Draw the bright backlight.
@@ -449,8 +450,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.spriteBatch.Draw(spiresTexture, EyePosition - screenPos, null, Color.White * glowDissipateFactor * universalOpacity, 0f, spiresTexture.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
 
             // Draw the eye.
-            Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocEye").Value;
-            Texture2D pupilTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPupil").Value;
+            Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocEye").Value;
+            Texture2D pupilTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocPupil").Value;
             Vector2 eyeScale = baseScale * 0.4f;
             Main.spriteBatch.Draw(eyeTexture, EyePosition - screenPos, null, Color.White * universalOpacity, 0f, eyeTexture.Size() * 0.5f, eyeScale, 0, 0f);
             Main.spriteBatch.Draw(pupilTexture, EyePosition - screenPos + PupilOffset * TeleportVisualsAdjustedScale, null, Color.White * universalOpacity, 0f, pupilTexture.Size() * 0.5f, eyeScale * PupilScale, 0, 0f);

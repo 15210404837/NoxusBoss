@@ -285,7 +285,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public static void DrawFists(Vector2 center, float left, float right)
         {
-            Texture2D fistTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocHandFist").Value;
+            Texture2D fistTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocHandFist").Value;
 
             Color fistColor = Color.White * FistOpacity;
             float scale = Main.UIScale * 0.67f;

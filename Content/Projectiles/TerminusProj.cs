@@ -458,8 +458,8 @@ namespace NoxusBoss.Content.Projectiles
             Main.spriteBatch.Draw(spiresTexture, eyePosition, null, Color.White * glowDissipateFactor, 0f, spiresTexture.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
 
             // Draw the eye.
-            Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocEye").Value;
-            Texture2D pupilTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocPupil").Value;
+            Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocEye").Value;
+            Texture2D pupilTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocPupil").Value;
             Vector2 eyeScale = baseScale * 0.4f;
             Main.spriteBatch.Draw(eyeTexture, eyePosition, null, Color.White * EyeOpacity, 0f, eyeTexture.Size() * 0.5f, eyeScale, 0, 0f);
             Main.spriteBatch.Draw(pupilTexture, eyePosition + (Vector2.UnitX * 6f + EyePupilOffset) * eyeScale, null, Color.White * EyeOpacity, 0f, pupilTexture.Size() * 0.5f, eyeScale, 0, 0f);

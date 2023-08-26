@@ -137,7 +137,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public static void DrawPlayerWingsToTarget()
         {
             // Prepare the wing psychedelic shader.
-            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocWingNormalMap").Value;
+            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap").Value;
             var wingShader = ShaderManager.GetShader("XerocPsychedelicWingShader");
             wingShader.TrySetParameter("colorShift", XerocBoss.WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);

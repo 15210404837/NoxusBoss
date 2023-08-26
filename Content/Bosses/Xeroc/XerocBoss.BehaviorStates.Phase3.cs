@@ -4,6 +4,7 @@ using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -13,7 +14,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
+using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {

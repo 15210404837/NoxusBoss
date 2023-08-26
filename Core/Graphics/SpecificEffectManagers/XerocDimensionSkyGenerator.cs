@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Items.Accessories.VanityEffects;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Core.Graphics.Automators;
@@ -10,7 +11,7 @@ using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static NoxusBoss.Content.Bosses.Xeroc.XerocSky;
+using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
@@ -107,7 +108,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             // Draw the sky overlay.
             Rectangle screenArea = new(0, 210, Main.screenWidth, Main.screenHeight - 120);
-            Texture2D skyTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/XerocSky").Value;
+            Texture2D skyTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/SpecificEffectManagers/XerocSky").Value;
 
             Main.spriteBatch.Draw(skyTexture, screenArea, Color.White * backgroundIntensity * Intensity * 0.76f);
         }
@@ -200,7 +201,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             // Draw the pattern.
             Rectangle screenArea = new(0, -170, 1920, 1250);
-            Texture2D patternTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/BackgroundPattern").Value;
+            Texture2D patternTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/SpecificEffectManagers/BackgroundPattern").Value;
 
             Main.spriteBatch.Draw(patternTexture, screenArea, Color.White * backgroundIntensity);
         }
