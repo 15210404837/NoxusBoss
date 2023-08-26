@@ -22,11 +22,5 @@ namespace NoxusBoss.Content.Tiles
             AddMapEntry(new(120, 85, 60), Language.GetText("MapObject.Trophy"));
             DustType = 7;
         }
-
-        public override void KillMultiTile(int i, int j, int frameX, int frameY)
-        {
-            if (frameX == 0 && frameY == 0)
-                Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<XerocTrophy>());
-        }
     }
 }
