@@ -12,6 +12,7 @@ using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.Items.Accessories.VanityEffects;
 using NoxusBoss.Content.Items.Armor.Vanity.Masks;
+using NoxusBoss.Content.Items.Dyes;
 using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Content.Items.Pets;
 using NoxusBoss.Content.Items.Placeable.Relics;
@@ -3070,6 +3071,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
             npcLoot.Add(ModContent.ItemType<NoxusSprayer>());
 
             // Vanity and decorations.
+            npcLoot.Add(ModContent.ItemType<EntropicDye>(), 1, 3, 5);
             npcLoot.Add(ModContent.ItemType<NoxusMask>(), 7);
             npcLoot.Add(ModContent.ItemType<NoxusTrophy>(), 10);
             npcLoot.DefineConditionalDropSet(DropHelper.RevAndMaster).Add(ModContent.ItemType<NoxusRelic>());

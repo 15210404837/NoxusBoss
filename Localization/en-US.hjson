@@ -167,6 +167,11 @@ Mods: {
 					2012
 					'''
 			}
+
+			EntropicDye: {
+				DisplayName: Entropic Dye
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
