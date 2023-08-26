@@ -25,7 +25,8 @@ namespace NoxusBoss.Content.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<NoxusTrophy>());
+            if (frameX == 0 && frameY == 0)
+                Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, ModContent.ItemType<NoxusTrophy>());
         }
     }
 }

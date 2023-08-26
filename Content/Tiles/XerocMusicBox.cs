@@ -25,7 +25,8 @@ namespace NoxusBoss.Content.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(new EntitySource_TileBreak(i * 16, j * 16), i * 16, j * 16, 16, 48, ModContent.ItemType<XerocMusicBoxItem>());
+            if (frameX == 0 && frameY == 0)
+                Item.NewItem(new EntitySource_TileBreak(i * 16, j * 16), i * 16, j * 16, 16, 48, ModContent.ItemType<XerocMusicBoxItem>());
         }
 
         public override void MouseOver(int i, int j)
