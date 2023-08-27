@@ -10,6 +10,13 @@ namespace NoxusBoss.Core.GlobalItems
     {
         public override bool PreAI(Projectile projectile)
         {
+            // This apparently causes shader issues in the garden.
+            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && projectile.type == ProjectileID.DD2ElderWins)
+            {
+                projectile.active = false;
+                return false;
+            }
+
             // Prevent tombs from cluttering things up in the eternal garden.
             if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
             {
