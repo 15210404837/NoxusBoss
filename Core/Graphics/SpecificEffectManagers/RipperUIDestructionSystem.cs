@@ -169,6 +169,12 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (IsUIDestroyed)
                 return;
 
+            if (XerocBoss.Myself is null)
+            {
+                orig(spriteBatch, player);
+                return;
+            }
+
             // Move the bar positions temporarily in accordance with the draw position override. Afterwards they are reset, to prevent the changes from altering the config file.
             Vector2 oldRagePosition = new(CalamityConfig.Instance.RageMeterPosX, CalamityConfig.Instance.RageMeterPosY);
             Vector2 oldAdrenalinePosition = new(CalamityConfig.Instance.AdrenalineMeterPosX, CalamityConfig.Instance.AdrenalineMeterPosY);
