@@ -809,9 +809,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 return;
             }
 
-            // Conjure hands on the first frame.
+            // Conjure hands and destroy leftover starbursts on the first frame.
             if (AttackTimer == 1f)
             {
+                int arcingStarburstID = ModContent.ProjectileType<ArcingStarburst>();
+                int starburstID = ModContent.ProjectileType<Starburst>();
+                for (int i = 0; i < Main.maxProjectiles; i++)
+                {
+                    Projectile p = Main.projectile[i];
+                    if (!p.active || (p.type != arcingStarburstID && p.type != starburstID))
+                        continue;
+
+                    p.Kill();
+                }
+
                 for (int i = 0; i < pressureArmsCount; i++)
                     ConjureHandsAtPosition(star.Center, Vector2.Zero, false);
                 return;
