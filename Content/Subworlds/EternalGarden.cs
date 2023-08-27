@@ -49,6 +49,9 @@ namespace NoxusBoss.Content.Subworlds
 
         public override int Height => 350;
 
+        // This is mainly so that map data is saved across attempts.
+        public override bool ShouldSave => true;
+
         public override List<GenPass> Tasks => new()
         {
             new EternalGardenPass()
