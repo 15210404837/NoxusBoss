@@ -287,6 +287,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int daggerShootCount = 14;
             int blackHoleSummonDelay = 60;
             int ripperDestructionAnimationTime = 80;
+            bool useBlackHole = false;
             ref float daggerShootTimer = ref NPC.ai[2];
             ref float daggerShootCounter = ref NPC.ai[3];
 
@@ -355,7 +356,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 AttackTimer = backgroundEnterTime + cooldownTime;
 
             // Summon two black holes above the target after the dagger patterns have passed.
-            if (AttackTimer == backgroundEnterTime + cooldownTime + blackHoleSummonDelay)
+            if (AttackTimer == backgroundEnterTime + cooldownTime + blackHoleSummonDelay && useBlackHole)
             {
                 Vector2 blackHoleSpawnPoint = Target.Center - Vector2.UnitY * 240f;
                 SoundEngine.PlaySound(ExplosionTeleportSound);
@@ -371,7 +372,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
             }
 
-            if (AttackTimer >= backgroundEnterTime + cooldownTime + blackHoleSummonDelay + Supernova.Lifetime)
+            if (AttackTimer >= backgroundEnterTime + cooldownTime + blackHoleSummonDelay + (useBlackHole ? Supernova.Lifetime : 0))
             {
                 KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant - 0.006f, 0.37f, 1f);
                 if (KaleidoscopeInterpolant <= 0.37f)

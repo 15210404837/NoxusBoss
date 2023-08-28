@@ -49,7 +49,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             set;
         }
 
-        public static float MoveToCenterOfScreenInterpolant => Pow(FistOpacity, 2f);
+        public static float MoveToCenterOfScreenInterpolant => XerocBoss.Myself is null || Main.gameMenu ? 0f : Pow(FistOpacity, 2f);
 
         public static Vector2 RageScreenPosition
         {
