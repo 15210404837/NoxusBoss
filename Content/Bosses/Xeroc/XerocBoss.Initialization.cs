@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CalamityMod;
+using CalamityMod.Buffs.DamageOverTime;
 using CalamityMod.Items;
 using CalamityMod.Items.SummonItems;
 using CalamityMod.World;
@@ -163,6 +164,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPCID.Sets.NPCBestiaryDrawOffset[Type] = value;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
             NPCID.Sets.MPAllowedEnemies[Type] = true;
+
+            // This debuff makes this boss look ugly.
+            NPCID.Sets.DebuffImmunitySets[Type] = new()
+            {
+                SpecificallyImmuneTo = new int[] { ModContent.BuffType<MiracleBlight>() }
+            };
 
             On_NPC.GetMeleeCollisionData += ExpandEffectiveHitboxForHands;
         }

@@ -1,4 +1,5 @@
 ﻿using CalamityMod;
+using CalamityMod.Buffs.DamageOverTime;
 using CalamityMod.Items.Potions;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
@@ -75,6 +76,12 @@ namespace NoxusBoss.Content.Bosses.Noxus
             NPCID.Sets.NPCBestiaryDrawOffset[Type] = value;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
             NPCID.Sets.MPAllowedEnemies[Type] = true;
+
+            // This debuff makes this boss look ugly.
+            NPCID.Sets.DebuffImmunitySets[Type] = new()
+            {
+                SpecificallyImmuneTo = new int[] { ModContent.BuffType<MiracleBlight>() }
+            };
 
             On_NPC.DoDeathEvents_DropBossPotionsAndHearts += DisableNoxusEggBossDeathEffects;
         }
