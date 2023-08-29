@@ -450,6 +450,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Slow down and make the background go pitch black again while screaming at first.
             if (AttackTimer <= blackDelay)
             {
+                // Teleport in front of the target on the first frame.
                 if (AttackTimer == 1f)
                     TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 500f);
 
@@ -590,6 +591,51 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 DefaultHandDrift(Hands[i], hoverDestinationForHand(i), 5.6f);
                 Hands[i].UsePalmForm = true;
+            }
+        }
+
+        public void DoBehavior_DeathAnimation_GFB()
+        {
+            // Stay at 1 HP.
+            NPC.life = 1;
+            NPC.dontTakeDamage = true;
+
+            // Flap wings.
+            UpdateWings(AttackTimer / 72f % 1f);
+
+            // Get rid of Xeroc's ingame name.
+            NPC.GivenName = string.Empty;
+
+            // Close the HP bar.
+            NPC.Calamity().ShouldCloseHPBar = true;
+
+            // Make hands invisible.
+            foreach (var hand in Hands)
+                hand.Opacity = 0f;
+
+            // Teleport in front of the target on the first frame and create a funny death sound.
+            if (AttackTimer == 1f)
+            {
+                TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 500f);
+                SoundEngine.PlaySound(GFBDeathSound);
+            }
+
+            // Turn off the music.
+            Music = 0;
+
+            // Die and create a Deltarune explosion.
+            if (AttackTimer >= 274f)
+            {
+                SoundEngine.PlaySound(ComicalExplosionDeathSound);
+                DeltaruneExplosionParticle explosion = new(NPC.Center, Vector2.Zero, Color.White, 60, 1.9f);
+                GeneralParticleHandler.SpawnParticle(explosion);
+
+                Myself = null;
+                NPC.life = 0;
+                NPC.HitEffect();
+                NPC.NPCLoot();
+                Main.BestiaryTracker.Kills.RegisterKill(NPC);
+                NPC.active = false;
             }
         }
     }

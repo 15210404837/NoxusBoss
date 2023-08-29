@@ -225,8 +225,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             EnterPhase2,
             EnterPhase3,
 
-            // Death animation.
-            DeathAnimation
+            // Death animation variants.
+            DeathAnimation,
+            DeathAnimation_GFB
         }
 
         #endregion Custom Types and Enumerations
@@ -452,6 +453,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle ClockTickSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocClockTick") with { Volume = 1.1f, IsLooped = true };
 
+        public static readonly SoundStyle ComicalExplosionDeathSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCKilled/DeltaruneExplosion") with { Volume = 1.4f };
+
         public static readonly SoundStyle CosmicLaserSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocCosmicLaser") with { Volume = 0.8f };
 
         public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocExplosion") with { Volume = 1.3f, PitchVariance = 0.15f };
@@ -461,6 +464,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public static readonly SoundStyle FingerSnapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocFingerSnap") with { Volume = 1.4f };
 
         public static readonly SoundStyle GameBreakSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocGameBreak") with { Volume = 1.1f };
+
+        public static readonly SoundStyle GFBDeathSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCKilled/XerocFuckingDies_GFB") with { Volume = 1.5f };
 
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocHumm") with { Volume = 1.1f, IsLooped = true };
 
@@ -658,6 +663,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     break;
                 case XerocAttackType.DeathAnimation:
                     DoBehavior_DeathAnimation();
+                    break;
+                case XerocAttackType.DeathAnimation_GFB:
+                    DoBehavior_DeathAnimation_GFB();
                     break;
             }
 

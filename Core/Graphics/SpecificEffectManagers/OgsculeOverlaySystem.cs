@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Xeroc;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -25,7 +26,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public override void OnModUnload() => Main.OnPostDraw -= DrawOgscule;
 
-        public static bool OgsculeRulesOverTheUniverse => Main.zenithWorld && WorldSaveSystem.OgsculeRulesOverTheUniverse;
+        public static bool OgsculeRulesOverTheUniverse => Main.zenithWorld && WorldSaveSystem.OgsculeRulesOverTheUniverse && XerocBoss.Myself is null;
 
         private void DrawOgscule(GameTime obj)
         {

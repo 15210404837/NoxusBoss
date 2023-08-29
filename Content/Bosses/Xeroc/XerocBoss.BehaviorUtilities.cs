@@ -49,7 +49,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void UpdateIdleSound()
         {
             // Start the loop sound on the first frame.
-            bool canPlaySound = NPC.active && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.DeathAnimation;
+            bool canPlaySound = NPC.active && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.DeathAnimation && CurrentAttack != XerocAttackType.DeathAnimation_GFB;
             if (canPlaySound && (!SoundEngine.TryGetActiveSound(IdleSoundSlot, out ActiveSound s) || !s.IsPlaying))
             {
                 s?.Stop();
@@ -85,7 +85,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void HandlePhaseTransitions()
         {
-            if (CurrentAttack == XerocAttackType.DeathAnimation)
+            if (CurrentAttack == XerocAttackType.DeathAnimation || CurrentAttack == XerocAttackType.DeathAnimation_GFB)
                 return;
 
             // Enter phase 2.
@@ -218,7 +218,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Play wing flap sounds.
-            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0 && CurrentAttack != XerocAttackType.DeathAnimation)
+            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0 && CurrentAttack != XerocAttackType.DeathAnimation && CurrentAttack != XerocAttackType.DeathAnimation_GFB)
             {
                 float volume = 1.5f;
                 if (ZPosition >= 0.01f)
@@ -321,7 +321,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             SelectNextAttack();
             ClearAllProjectiles();
             NPC.dontTakeDamage = true;
-            CurrentAttack = XerocAttackType.DeathAnimation;
+            CurrentAttack = Main.zenithWorld ? XerocAttackType.DeathAnimation_GFB : XerocAttackType.DeathAnimation;
             NPC.netUpdate = true;
         }
 

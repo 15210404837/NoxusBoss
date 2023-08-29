@@ -364,7 +364,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Main.spriteBatch.ResetBlendState();
 
             // Draw the stars that compose the clock's outline.
-            for (int i = 0; i < ClockShape.ShapePoints.Count; i++)
+            for (int i = 0; i < ClockShape.ShapePoints.Count; i += 2)
             {
                 float colorInterpolant = Sqrt(RandomFloat(ref starSeed));
                 float scale = StarScaleFactor * Lerp(0.3f, 0.95f, RandomFloat(ref starSeed)) * Projectile.scale;

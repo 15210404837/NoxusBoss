@@ -15,7 +15,7 @@ namespace NoxusBoss.Core.GlobalItems
         public override void SetDefaults(Item item)
         {
             // Replace Terminus' projectile with a custom one that has nothing to do with Boss Rush.
-            if (item.type == ModContent.ItemType<Terminus>() && !Main.zenithWorld)
+            if (item.type == ModContent.ItemType<Terminus>())
             {
                 item.shoot = ModContent.ProjectileType<TerminusProj>();
                 item.channel = false;

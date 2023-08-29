@@ -177,7 +177,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public override void SetDefaults()
         {
             NPC.npcSlots = 100f;
-            NPC.damage = 375;
+            NPC.damage = 300;
             NPC.width = 400;
             NPC.height = 500;
             NPC.defense = 150;
@@ -189,7 +189,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.lifeMax = 13767256;
 
             if (Main.expertMode)
-                NPC.damage = 415;
+                NPC.damage = 400;
 
             double HPBoost = CalamityConfig.Instance.BossHealthBoost * 0.01;
             NPC.lifeMax += (int)(NPC.lifeMax * HPBoost);

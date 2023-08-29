@@ -176,7 +176,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             Main.spriteBatch.ExitShaderRegion();
 
-            bool canDrawRobeArms = CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.DeathAnimation;
+            bool canDrawRobeArms = CurrentAttack != XerocAttackType.OpenScreenTear && CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.DeathAnimation && CurrentAttack != XerocAttackType.DeathAnimation_GFB;
             Texture2D palmTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocPalm").Value;
             foreach (XerocHand hand in Hands)
             {
