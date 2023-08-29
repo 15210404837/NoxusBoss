@@ -7,6 +7,7 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
@@ -65,6 +66,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Make the stars recede away in fear.
             StarRecedeInterpolant = GetLerpValue(starRecedeDelay, starRecedeDelay + starRecedeTime, AttackTimer, true);
+
+            // Perform some camera effects.
+            float zoomOutInterpolant = GetLerpValue(starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 17f, starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 4f, AttackTimer, true);
+            CameraPanSystem.CameraFocusPoint = CameraPanSystem.UnmodifiedCameraPosition + EyeDrawPosition - Vector2.UnitY * 200f;
+            CameraPanSystem.CameraPanInterpolant = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.17f);
+            CameraPanSystem.Zoom = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.4f) * 0.6f;
+
+            // Inputs are disabled and UIs are hidden during the camera effects. This is safely undone in the RoarAnimation attack state.
+            if (CameraPanSystem.CameraPanInterpolant >= 0.01f)
+            {
+                Main.hideUI = true;
+                Main.blockInput = true;
+            }
+
+            // All code beyond this point only executes once all the stars have left.
             if (StarRecedeInterpolant < 1f)
                 return;
 
@@ -78,8 +94,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Make the eye look at the player.
             SkyEyeDirection = (Target.Center - Main.screenPosition - EyeDrawPosition).ToRotation();
-
-            SkyPupilOffset = Vector2.Lerp(SkyPupilOffset, SkyEyeDirection.ToRotationVector2() * (pupilContractInterpolant * 28f + 50f), 0.3f);
+            SkyPupilOffset = Vector2.Lerp(SkyPupilOffset, SkyEyeDirection.ToRotationVector2() * (pupilContractInterpolant * 28f + 35f), 0.3f);
             SkyPupilScale = Pow(pupilScaleInterpolant, 1.7f) - pupilContractInterpolant * 0.5f;
 
             // Make the eye disappear before the seam appears.
@@ -231,10 +246,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             int screamTime = 210;
 
+            // Ensure that players can move and view their UIs again.
+            Main.hideUI = false;
+            Main.blockInput = false;
+
             // Appear on the foreground.
             if (AttackTimer == 1f)
             {
-                NPC.Center = Target.Center - Vector2.UnitX * 300f;
+                NPC.Center = Target.Center + new Vector2(-300f, -270f);
                 NPC.velocity = Vector2.Zero;
                 NPC.netUpdate = true;
 

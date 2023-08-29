@@ -31,7 +31,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             if (XerocSky.SkyEyeOpacity > 0f)
             {
                 Vector2 eyeDrawPosition = new Vector2(sceneArea.totalWidth * 0.5f, Main.moonModY + 230f) + sceneArea.SceneLocalScreenPositionOffset;
-                XerocSky.ReplaceMoonWithXerocEye(eyeDrawPosition);
+                XerocSky.ReplaceMoonWithXerocEye(eyeDrawPosition + Vector2.UnitY * 190f);
             }
         }
 

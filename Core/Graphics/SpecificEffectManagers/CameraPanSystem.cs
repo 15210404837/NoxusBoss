@@ -13,6 +13,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             set;
         }
 
+        public static Vector2 UnmodifiedCameraPosition =>
+            Main.LocalPlayer.TopLeft + new Vector2(Main.LocalPlayer.width * 0.5f, Main.LocalPlayer.height - 21f) - new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Vector2.UnitY * Main.LocalPlayer.gfxOffY;
+
         public static float CameraPanInterpolant
         {
             get;
@@ -27,7 +30,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public override void ModifyScreenPosition()
         {
-            if (Main.LocalPlayer.dead)
+            if (Main.LocalPlayer.dead && !Main.gamePaused)
             {
                 Zoom = Lerp(Zoom, 0f, 0.13f);
                 CameraPanInterpolant = 0f;
@@ -43,7 +46,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             if (!Main.gamePaused)
             {
-                CameraPanInterpolant = Clamp(CameraPanInterpolant - 0.15f, 0f, 1f);
+                CameraPanInterpolant = Clamp(CameraPanInterpolant - 0.06f, 0f, 1f);
                 Zoom = Lerp(Zoom, 0f, 0.09f);
             }
         }
