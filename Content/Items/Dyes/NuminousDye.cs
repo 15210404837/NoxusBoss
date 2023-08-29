@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Dyes
 {
-    public class EntropicDye : ModItem
+    public class NuminousDye : ModItem
     {
         public static int DyeID
         {
@@ -23,8 +23,8 @@ namespace NoxusBoss.Content.Items.Dyes
 
             if (!Main.dedServ)
             {
-                Effect shader = ModContent.Request<Effect>("NoxusBoss/Assets/Effects/EntropicDyeShader", AssetRequestMode.ImmediateLoad).Value;
-                Asset<Texture2D> dyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/EntropicDyeTexture", AssetRequestMode.ImmediateLoad);
+                Effect shader = ModContent.Request<Effect>("NoxusBoss/Assets/Effects/NuminousDyeShader", AssetRequestMode.ImmediateLoad).Value;
+                Asset<Texture2D> dyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/NuminousDyeTexture", AssetRequestMode.ImmediateLoad);
                 GameShaders.Armor.BindShader(Type, new ArmorShaderData(new Ref<Effect>(shader), ManagedShader.DefaultPassName)).UseImage(dyeTexture);
             }
         }
@@ -37,8 +37,8 @@ namespace NoxusBoss.Content.Items.Dyes
             DyeID = Item.dye;
             Item.CloneDefaults(ItemID.AcidDye);
             Item.dye = DyeID;
-            Item.rare = ModContent.RarityType<Violet>();
-            Item.value = Item.sellPrice(0, 12, 0, 0);
+            Item.rare = ModContent.RarityType<CalamityRed>();
+            Item.value = Item.sellPrice(0, 15, 0, 0);
         }
     }
 }

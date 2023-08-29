@@ -172,6 +172,11 @@ Mods: {
 				DisplayName: Entropic Dye
 				Tooltip: ""
 			}
+
+			NuminousDye: {
+				DisplayName: Numinous Dye
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
