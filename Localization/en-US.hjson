@@ -251,6 +251,7 @@ Mods: {
 			WindStreakVisual.DisplayName: Wind
 			BabyXeroc.DisplayName: Baby Xeroc
 			ThePurifierProj.DisplayName: The Purifier
+			SwordConstellationSlashVisual.DisplayName: Good Visual Design
 		}
 
 		Tiles.XerocMusicBox.MapEntry: Music Box

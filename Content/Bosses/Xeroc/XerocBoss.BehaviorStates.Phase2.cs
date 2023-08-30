@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
 using CalamityMod.Particles;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -924,7 +926,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Easing time!
             CurveSegment slowStart = new(PolyOutEasing, 0f, Pi, -Pi, 2);
             CurveSegment swingFast = new(PolyOutEasing, 0.5f, slowStart.EndingHeight, Pi + 0.54f, 5);
-            CurveSegment endSwing = new(PolyInEasing, 0.8f, swingFast.EndingHeight, Pi - swingFast.EndingHeight, 5);
+            CurveSegment endSwing = new(PolyInEasing, 0.8f, swingFast.EndingHeight, Pi - swingFast.EndingHeight, 3);
 
             // Summon the sword constellation, along with a single hand to wield it on the first frame.
             // Also teleport above the target.
@@ -1042,6 +1044,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         sword.oldRot = new float[sword.oldRot.Length];
                         sword.oldPos = new Vector2[sword.oldPos.Length];
+                        sword.ai[2] = 0f;
+                        sword.netUpdate = true;
                     }
                 }
 
@@ -1062,6 +1066,28 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 bool doingEndSwing = SwordAnimationTimer >= animationTime * 0.65f;
                 slashOpacity = Clamp(slashOpacity - doingEndSwing.ToDirectionInt() * 0.5f, 0f, 1f);
+
+                // Make the slash fly out.
+                if (SwordAnimationTimer == (int)(animationTime * 0.66f) - 1f && AttackTimer >= constellationConvergeTime + 1f)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
+                        foreach (Projectile sword in swords)
+                        {
+                            sword.ai[2] = 1f; // Disable natural slash drawing effects for the sword itself.
+
+                            Vector2 slashDirection = NPC.velocity.SafeNormalize(Vector2.UnitY);
+
+                            ProjectileSpawnManagementSystem.PrepareProjectileForSpawning(slash =>
+                            {
+                                slash.ModProjectile<SwordConstellationSlashVisual>().TrailCache = (Vector2[])sword.oldPos.Clone();
+                                slash.scale = sword.scale;
+                            });
+                            NewProjectileBetter(sword.Center, slashDirection * 45f, ModContent.ProjectileType<SwordConstellationSlashVisual>(), 0, 0f, -1, sword.ai[0], sword.ai[1]);
+                        }
+                    }
+                }
             }
 
             // Calculate sword direction values.
