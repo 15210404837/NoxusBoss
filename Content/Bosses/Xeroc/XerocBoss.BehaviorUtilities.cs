@@ -302,7 +302,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     }
 
                     CurrentAttack = phaseCycle[PhaseCycleIndex % phaseCycle.Length];
-                    CurrentAttack = XerocAttackType.SwordConstellation2;
                     PhaseCycleIndex++;
                     break;
             }
