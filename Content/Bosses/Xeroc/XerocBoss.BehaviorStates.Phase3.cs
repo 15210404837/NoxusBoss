@@ -162,7 +162,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Periodically create screen pulse effects.
             if (AttackTimer >= attackDelay && AttackTimer % 30f == 0f)
             {
-                ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1f, 20);
+                ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 0.2f, 15);
                 RadialScreenShoveSystem.Start(Vector2.Lerp(laserStart, Target.Center, 0.9f), 20);
             }
 

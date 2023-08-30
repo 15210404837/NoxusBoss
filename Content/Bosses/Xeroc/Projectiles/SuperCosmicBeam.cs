@@ -102,10 +102,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
             laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
-            laserShader.TrySetParameter("scrollSpeedFactor", 0.8f);
+            laserShader.TrySetParameter("scrollSpeedFactor", 1.3f);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"), 1);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 3);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 2);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/BurnNoise"), 3);
             LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
         }
 
