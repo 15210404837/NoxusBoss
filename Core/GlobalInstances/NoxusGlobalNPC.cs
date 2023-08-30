@@ -81,10 +81,12 @@ namespace NoxusBoss.Core.GlobalItems
         {
             if (NoxusWorldManager.Enabled)
             {
-                if (spawnRate >= 3 && spawnRate <= 1000000)
-                    spawnRate = (int)(spawnRate * 0.6f);
+                bool playerAtSurface = player.Center.Y / 16f <= Main.worldSurface && player.Center.Y / 16f >= Main.worldSurface * 0.35f;
+                bool aLotMoreSpawns = Main.hardMode && playerAtSurface && !Main.eclipse;
+                if (spawnRate >= 10 && spawnRate <= 1000000)
+                    spawnRate = (int)(spawnRate * (aLotMoreSpawns ? 0.33333f : 0.6f));
                 if (maxSpawns >= 1)
-                    maxSpawns += 3;
+                    maxSpawns += aLotMoreSpawns ? 8 : 3;
             }
         }
     }
