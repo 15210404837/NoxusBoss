@@ -123,7 +123,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawBloom()
         {
-            Color bloomCircleColor = Projectile.GetAlpha(Color.Orange) * 0.4f;
+            Color bloomCircleColor = Projectile.GetAlpha(Color.Bisque) * 0.5f;
             Vector2 bloomDrawPosition = Projectile.Center - Main.screenPosition;
 
             // Draw the bloom circle.
@@ -131,7 +131,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             // Draw bloom flares that go in opposite rotations.
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * -0.4f;
-            Color bloomFlareColor = Projectile.GetAlpha(Color.LightCoral) * 0.75f;
+            Color bloomFlareColor = Projectile.GetAlpha(new(75, 33, 164)) * 0.75f;
             Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
             Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation * -0.7f, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
         }
@@ -139,8 +139,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public void DrawBloomFlare(Vector2 drawPosition, float colorInterpolant, float scale, int index)
         {
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
-            Color bloomFlareColor1 = Color.Lerp(Color.Red, Color.Yellow, Pow(colorInterpolant, 2f));
-            Color bloomFlareColor2 = Color.Lerp(Color.Orange, Color.White, colorInterpolant);
+            Color bloomFlareColor1 = Color.Lerp(Color.Cyan, Color.Yellow, Pow(colorInterpolant, 2f) * 0.5f);
+            Color bloomFlareColor2 = Color.Lerp(Color.Wheat, Color.White, colorInterpolant);
 
             bloomFlareColor1 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
             bloomFlareColor2 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
@@ -212,7 +212,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Determine draw values.
             Vector2 circleDrawPosition = Projectile.Center + Projectile.velocity * 200f - Main.screenPosition;
             Vector2 circleScale = Vector2.One * Projectile.scale * Projectile.Opacity * 1.5f;
-            Color circleColor = Projectile.GetAlpha(Color.Coral) * CircleOpacity;
+            Color circleColor = Projectile.GetAlpha(new(92, 40, 204)) * CircleOpacity;
 
             // Apply the shader.
             var magicCircleShader = ShaderManager.GetShader("MagicCircleShader");

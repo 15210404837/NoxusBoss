@@ -4,6 +4,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -24,7 +25,7 @@ namespace NoxusBoss.Core.Graphics
 
         public override MetaballDrawLayerType DrawContext => MetaballDrawLayerType.BeforeBlack;
 
-        public override Color EdgeColor => Color.LightCoral;
+        public override Color EdgeColor => Color.Lerp(Color.LightCoral, Color.MediumPurple, XerocSky.DifferentStarsInterpolant);
 
         public override List<Texture2D> Layers => new()
         {
