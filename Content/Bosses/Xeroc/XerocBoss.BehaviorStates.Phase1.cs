@@ -554,6 +554,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer <= closeRedirectTime)
             {
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 350f, 300f);
+
+                // Teleport to the hover destination on the first frame.
+                if (AttackTimer == 1f)
+                {
+                    TeleportTo(hoverDestination);
+                    ShakeScreen(NPC.Center, 8f);
+                }
+
+                // Fade in.
+                NPC.Opacity = GetLerpValue(3f, 10f, AttackTimer, true);
+
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.39f);
                 NPC.velocity *= 0.85f;
                 return;
