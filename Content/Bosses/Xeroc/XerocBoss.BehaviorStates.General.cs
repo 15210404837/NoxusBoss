@@ -68,7 +68,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Perform some camera effects.
             float zoomOutInterpolant = GetLerpValue(starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 17f, starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 4f, AttackTimer, true);
-            CameraPanSystem.CameraFocusPoint = CameraPanSystem.UnmodifiedCameraPosition + EyeDrawPosition - Vector2.UnitY * 200f;
+            CameraPanSystem.CameraFocusPoint = (CameraPanSystem.UnmodifiedCameraPosition + EyeDrawPosition - Vector2.UnitY * 200f) with { X = Main.LocalPlayer.Center.X };
             CameraPanSystem.CameraPanInterpolant = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.17f);
             CameraPanSystem.Zoom = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.4f) * 0.6f;
 

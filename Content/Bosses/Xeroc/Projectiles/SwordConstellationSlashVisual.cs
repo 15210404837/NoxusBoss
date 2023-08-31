@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,7 +12,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
     public class SwordConstellationSlashVisual : ModProjectile
     {
-        public PrimitiveTrailCopy SlashDrawer
+        public PrimitiveTrail SlashDrawer
         {
             get;
             private set;
@@ -97,8 +99,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var slashShader = ShaderManager.GetShader("XerocSwordSlash");
-            SlashDrawer ??= new(SlashWidthFunction, SlashColorFunction, null, true, slashShader);
+            SlashDrawer ??= new(SlashWidthFunction, SlashColorFunction, null, GameShaders.Misc["CalamityMod:ExobladeSlash"]);
             SwordConstellation.DrawAfterimageTrail(SlashDrawer, Projectile, TrailCache, 1f, SwordSide, UsePositionCacheForTrail);
 
             return false;

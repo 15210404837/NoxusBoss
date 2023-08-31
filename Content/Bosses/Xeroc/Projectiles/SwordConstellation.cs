@@ -7,6 +7,7 @@ using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
 using Terraria;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -40,7 +41,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         // many times per frame, due to looping.
         public ShapeCurve SwordShape;
 
-        public PrimitiveTrailCopy SlashDrawer
+        public PrimitiveTrail SlashDrawer
         {
             get;
             private set;
@@ -203,7 +204,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public Color SlashColorFunction(float completionRatio) => Color.Orange * GetLerpValue(0.9f, 0.7f, completionRatio, true) * Projectile.Opacity * SlashOpacity;
 
-        public static void DrawAfterimageTrail(PrimitiveTrailCopy slashDrawer, Projectile projectile, Vector2[] oldPos, float slashOpacity, float swordSide, bool usePositionCacheForTrail)
+        public static void DrawAfterimageTrail(PrimitiveTrail slashDrawer, Projectile projectile, Vector2[] oldPos, float slashOpacity, float swordSide, bool usePositionCacheForTrail)
         {
             if (slashOpacity <= 0f)
                 return;
@@ -257,13 +258,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                     slashPoints.Add(projectile.Center + slashOffset);
             }
 
-            var slashShader = ShaderManager.GetShader("XerocSwordSlash");
-            slashShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"), 1);
-            slashShader.TrySetParameter("primaryColor", Color.DeepSkyBlue.ToVector3());
-            slashShader.TrySetParameter("secondaryColor", Color.Transparent.ToVector3());
-            slashShader.TrySetParameter("fireColor", Color.White.ToVector3());
-            slashShader.TrySetParameter("flipped", swordSide == 1f);
+            var slashShader = GameShaders.Misc["CalamityMod:ExobladeSlash"];
+            slashShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"));
+            slashShader.UseColor(Color.DeepSkyBlue);
+            slashShader.UseSecondaryColor(Color.Transparent);
+            slashShader.Shader.Parameters["fireColor"].SetValue(Color.White.ToVector3());
+            slashShader.Shader.Parameters["flipped"].SetValue(swordSide == 1f);
 
+            slashDrawer.DegreeOfBezierCurveCornerSmoothening = 8;
             for (int i = 0; i < 2; i++)
                 slashDrawer.Draw(slashPoints, generalOffset, 70);
         }
@@ -275,8 +277,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Draw the slash.
             Main.spriteBatch.EnterShaderRegion();
 
-            var slashShader = ShaderManager.GetShader("OrionsSwordSlash");
-            SlashDrawer ??= new(SlashWidthFunction, SlashColorFunction, null, true, slashShader);
+            var slashShader = GameShaders.Misc["CalamityMod:ExobladeSlash"];
+            SlashDrawer ??= new(SlashWidthFunction, SlashColorFunction, null, slashShader);
             DrawAfterimageTrail(SlashDrawer, Projectile, Projectile.oldPos, SlashOpacity, SwordSide, UsePositionCacheForTrail);
 
             // Draw the bloom behind the blade.
