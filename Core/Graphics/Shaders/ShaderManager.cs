@@ -45,31 +45,31 @@ namespace NoxusBoss.Core.Graphics.Shaders
 
             // This is kind of hideous but I'm not sure how to best handle these screen shaders. Perhaps some marker in the file name or a dedicated folder?
             Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/Effects/LocalizedDistortionShader", AssetRequestMode.ImmediateLoad).Value);
-            Filters.Scene["NoxusBoss:NoxusEggSky"] = new Filter(new NoxusEggScreenShaderData(s, "AutoloadPass"), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:NoxusEggSky"] = new Filter(new NoxusEggScreenShaderData(s, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Filters.Scene["NoxusBoss:NoxusSky"] = new Filter(new GenericScreenShaderData("FilterMiniTower").UseColor(Color.Transparent).UseOpacity(0f), EffectPriority.VeryHigh);
             SkyManager.Instance["NoxusBoss:NoxusSky"] = new NoxusSky();
 
             Ref<Effect> s2 = new(Mod.Assets.Request<Effect>("Assets/Effects/XerocScreenTearShader", AssetRequestMode.ImmediateLoad).Value);
             SkyManager.Instance["NoxusBoss:XerocSky"] = new XerocSky();
-            Filters.Scene["NoxusBoss:XerocSky"] = new Filter(new XerocScreenShaderData(s2, "AutoloadPass"), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:XerocSky"] = new Filter(new XerocScreenShaderData(s2, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Ref<Effect> s3 = new(Mod.Assets.Request<Effect>("Assets/Effects/RadialScreenShoveShader", AssetRequestMode.ImmediateLoad).Value);
-            Filters.Scene["NoxusBoss:LightWaveScreenShove"] = new Filter(new RadialScreenShoveShaderData(s3, "AutoloadPass"), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:LightWaveScreenShove"] = new Filter(new RadialScreenShoveShaderData(s3, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Ref<Effect> s4 = new(Mod.Assets.Request<Effect>("Assets/Effects/ScreenSplitShader", AssetRequestMode.ImmediateLoad).Value);
-            Filters.Scene["NoxusBoss:LocalScreenSplit"] = new Filter(new LocalScreenSplitShaderData(s4, "AutoloadPass"), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:LocalScreenSplit"] = new Filter(new LocalScreenSplitShaderData(s4, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Ref<Effect> s5 = new(Mod.Assets.Request<Effect>("Assets/Effects/XerocClockDeathZoneShader", AssetRequestMode.ImmediateLoad).Value);
-            Filters.Scene["NoxusBoss:XerocClockDeathDeathSky"] = new Filter(new XerocClockDeathDeathScreenShaderData(s5, "AutoloadPass"), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:XerocClockDeathDeathSky"] = new Filter(new XerocClockDeathDeathScreenShaderData(s5, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Ref<Effect> s6 = new(Mod.Assets.Request<Effect>("Assets/Effects/SpreadTelegraphInvertedShader", AssetRequestMode.ImmediateLoad).Value);
-            ScreenShaderData telegraphShader = new(s6, "AutoloadPass");
+            ScreenShaderData telegraphShader = new(s6, ManagedShader.DefaultPassName);
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"] = new Filter(telegraphShader, EffectPriority.VeryHigh);
             Filters.Scene["NoxusBoss:SpreadTelegraphInverted"].Load();
 
             Ref<Effect> s7 = new(Mod.Assets.Request<Effect>("Assets/Effects/TerminusScreenOverlayShader", AssetRequestMode.ImmediateLoad).Value);
-            Filters.Scene["NoxusBoss:Terminus"] = new Filter(new TerminusScreenShaderData(s7, "AutoloadPass"), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:Terminus"] = new Filter(new TerminusScreenShaderData(s7, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Filters.Scene["NoxusBoss:TerminusVortex"] = new Filter(new ScreenShaderData("FilterCrystalDestructionVortex").UseImage("Images/Misc/noise"), EffectPriority.VeryHigh);
 

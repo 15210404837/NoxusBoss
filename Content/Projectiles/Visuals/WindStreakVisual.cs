@@ -1,11 +1,10 @@
-﻿using CalamityMod;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Core.Graphics.Automators;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,7 +12,11 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 {
     public class WindStreakVisual : ModProjectile, IDrawPixelated
     {
-        public PrimitiveTrail WindStreakDrawer;
+        public PrimitiveTrailCopy WindStreakDrawer
+        {
+            get;
+            private set;
+        }
 
         public ref float Time => ref Projectile.ai[0];
 
@@ -101,10 +104,10 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public void DrawWithPixelation()
         {
-            var streakShader = GameShaders.Misc["CalamityMod:TrailStreak"];
-            streakShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"));
+            var streakShader = ShaderManager.GetShader("GenericTrailStreak");
+            streakShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
 
-            WindStreakDrawer ??= new(WindWidthFunction, WindColorFunction, null, streakShader);
+            WindStreakDrawer ??= new(WindWidthFunction, WindColorFunction, null, true, streakShader);
             WindStreakDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
         }
     }

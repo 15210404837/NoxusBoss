@@ -8,10 +8,11 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Core.Graphics.Automators;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
@@ -34,7 +35,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
 
             public Vector2 StartingOffset;
 
-            public PrimitiveTrail EnergyStreakDrawer;
+            public PrimitiveTrailCopy EnergyStreakDrawer;
 
             public ChargingEnergyStreak(float speedInterpolant, float baseWidth, Color generalColor, Vector2 startingOffset)
             {
@@ -50,8 +51,8 @@ namespace NoxusBoss.Content.Projectiles.Typeless
                     return;
 
                 // Initialize the streak drawer.
-                var streakShader = GameShaders.Misc["CalamityMod:TrailStreak"];
-                EnergyStreakDrawer ??= new(EnergyWidthFunction, EnergyColorFunction, null, streakShader);
+                var streakShader = ShaderManager.GetShader("GenericTrailStreak");
+                EnergyStreakDrawer ??= new(EnergyWidthFunction, EnergyColorFunction, null, true, ShaderManager.GetShader("GenericTrailStreak"));
             }
 
             public void Update()
@@ -200,8 +201,8 @@ namespace NoxusBoss.Content.Projectiles.Typeless
         public void DrawWithPixelation()
         {
             // Configure the streak shader's texture.
-            var streakShader = GameShaders.Misc["CalamityMod:TrailStreak"];
-            streakShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"));
+            var streakShader = ShaderManager.GetShader("GenericTrailStreak");
+            streakShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
 
             // Draw energy streaks as primitives.
             Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f - Main.screenPosition;

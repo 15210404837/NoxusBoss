@@ -3,8 +3,9 @@ using CalamityMod.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,7 +13,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
     public class ArcingStarburst : ModProjectile, IDrawPixelated, IAdditiveDrawer
     {
-        public PrimitiveTrail TrailDrawer
+        public PrimitiveTrailCopy TrailDrawer
         {
             get;
             private set;
@@ -155,10 +156,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawWithPixelation()
         {
-            TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
+            var fireTrailShader = ShaderManager.GetShader("GenericFlameTrail");
+            TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
 
             // Draw a flame trail.
-            GameShaders.Misc["CalamityMod:ImpFlameTrail"].SetShaderTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"));
+            fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
             TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
         }
     }

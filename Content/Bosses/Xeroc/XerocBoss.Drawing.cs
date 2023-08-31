@@ -16,7 +16,6 @@ using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
@@ -224,7 +223,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (hand.TrailOpacity >= 0.01f)
                 {
                     // Draw a flame trail.
-                    GameShaders.Misc["CalamityMod:ImpFlameTrail"].SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/ScarletDevilStreak"));
+                    ShaderManager.GetShader("GenericFlameTrail").SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/ScarletDevilStreak"), 1);
                     hand.HandTrailDrawer.Draw(hand.OldCenters.Take(25), -screenPos, 45);
                 }
 

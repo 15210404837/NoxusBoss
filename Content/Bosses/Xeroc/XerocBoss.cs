@@ -4,6 +4,8 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Primitives;
+using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Utilities;
@@ -11,7 +13,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
@@ -61,7 +62,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             public Cloth RobeCloth;
 
-            public PrimitiveTrail HandTrailDrawer;
+            public PrimitiveTrailCopy HandTrailDrawer;
 
             public XerocHand(Vector2 spawnPosition, bool useRobe, int robeDirection = 0)
             {
@@ -69,7 +70,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     return;
 
                 Center = spawnPosition;
-                HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
+                HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, ShaderManager.GetShader("GenericFlameTrail"));
 
                 // Create the robe cloth.
                 UseRobe = useRobe;
