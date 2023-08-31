@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items.MiscOPTools;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -19,7 +18,7 @@ using Terraria.WorldBuilding;
 
 namespace NoxusBoss.Content.Projectiles.Typeless
 {
-    public class ThePurifierProj : ModProjectile, IDrawAdditive, IDrawPixelatedPrims
+    public class ThePurifierProj : ModProjectile, IDrawAdditive, IDrawPixelated
     {
         public class ChargingEnergyStreak
         {
@@ -198,7 +197,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             spriteBatch.Draw(suckTexture, Projectile.Center - Main.screenPosition, null, suckColor, suckRotation, suckTexture.Size() * 0.5f, Vector2.One * suckPulse * 2.6f, 0, 0f);
         }
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             // Configure the streak shader's texture.
             var streakShader = GameShaders.Misc["CalamityMod:TrailStreak"];

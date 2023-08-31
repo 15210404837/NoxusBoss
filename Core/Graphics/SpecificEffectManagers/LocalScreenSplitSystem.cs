@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using Terraria;
 using Terraria.ModLoader;

@@ -9,7 +9,6 @@ using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles.Visuals;
 using NoxusBoss.Content.Subworlds;
-using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -24,7 +23,7 @@ using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Projectiles
 {
-    public class TerminusProj : ModProjectile, IDrawPixelatedPrims, IDrawAdditive
+    public class TerminusProj : ModProjectile, IDrawPixelated, IDrawAdditive
     {
         public class ChargingEnergyStreak
         {
@@ -398,7 +397,7 @@ namespace NoxusBoss.Content.Projectiles
             }
         }
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             // Configure the streak shader's texture.
             var streakShader = GameShaders.Misc["CalamityMod:TrailStreak"];

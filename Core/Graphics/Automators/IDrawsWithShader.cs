@@ -8,6 +8,6 @@ namespace NoxusBoss.Core.Graphics.Automators
 
         public bool DrawAdditiveShader => false;
 
-        public void Draw(SpriteBatch spriteBatch);
+        public void DrawWithShader(SpriteBatch spriteBatch);
     }
 }

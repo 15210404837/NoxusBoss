@@ -75,7 +75,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             light.scale = 0.75f;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawWithShader(SpriteBatch spriteBatch)
         {
             // Collect the shader and draw data for later.
             var godRayShader = ShaderManager.GetShader("GodRayShader");

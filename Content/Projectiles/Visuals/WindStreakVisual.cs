@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Projectiles.Visuals
 {
-    public class WindStreakVisual : ModProjectile, IDrawPixelatedPrims
+    public class WindStreakVisual : ModProjectile, IDrawPixelated
     {
         public PrimitiveTrail WindStreakDrawer;
 
@@ -99,7 +99,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public override bool PreDraw(ref Color lightColor) => false;
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             var streakShader = GameShaders.Misc["CalamityMod:TrailStreak"];
             streakShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"));

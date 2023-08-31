@@ -47,7 +47,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             {
                 Projectile p = Main.projectile[i];
                 if (p.active && p.ModProjectile is IDrawsOverTiles drawer)
-                    drawer.Draw(Main.spriteBatch);
+                    drawer.DrawOverTiles(Main.spriteBatch);
             }
 
             Main.spriteBatch.End();

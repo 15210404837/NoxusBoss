@@ -159,7 +159,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.Opacity * Projectile.width * 0.9f, ref _);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawWithShader(SpriteBatch spriteBatch)
         {
             // Initialize primitive drawers.
             var telegraphShader = ShaderManager.GetShader("SideStreakShader");

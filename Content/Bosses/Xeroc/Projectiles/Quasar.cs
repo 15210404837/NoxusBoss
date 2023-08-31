@@ -171,7 +171,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Time++;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawWithShader(SpriteBatch spriteBatch)
         {
             Main.spriteBatch.EnterShaderRegion();
 

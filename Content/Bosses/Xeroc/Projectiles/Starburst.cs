@@ -2,7 +2,7 @@
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class Starburst : ModProjectile, IDrawPixelatedPrims
+    public class Starburst : ModProjectile, IDrawPixelated
     {
         public PrimitiveTrail TrailDrawer
         {
@@ -177,7 +177,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             return false;
         }
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             if (Big)
                 return;

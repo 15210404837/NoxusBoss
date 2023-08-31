@@ -7,7 +7,6 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
-using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;

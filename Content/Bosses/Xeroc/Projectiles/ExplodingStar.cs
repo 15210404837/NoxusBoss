@@ -109,7 +109,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawWithShader(SpriteBatch spriteBatch)
         {
             Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise").Value;

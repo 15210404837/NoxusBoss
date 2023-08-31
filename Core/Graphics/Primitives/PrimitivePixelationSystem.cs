@@ -34,7 +34,7 @@ namespace NoxusBoss.Core.Graphics
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
-                if (!p.active || p.ModProjectile is not IDrawPixelatedPrims)
+                if (!p.active || p.ModProjectile is not IDrawPixelated)
                     continue;
 
                 primsExist = true;
@@ -96,10 +96,10 @@ namespace NoxusBoss.Core.Graphics
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
-                if (!p.active || p.ModProjectile is not IDrawPixelatedPrims primDrawer)
+                if (!p.active || p.ModProjectile is not IDrawPixelated primDrawer)
                     continue;
 
-                primDrawer.Draw();
+                primDrawer.DrawWithPixelation();
                 primsWereDrawnLastFrame = true;
             }
         }

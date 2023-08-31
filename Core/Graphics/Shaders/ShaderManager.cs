@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
-using NoxusBoss.Content.Bosses.Xeroc;
 using ReLogic.Content;
 using System.IO;
 using System.Linq;

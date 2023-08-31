@@ -4,6 +4,6 @@ namespace NoxusBoss.Core.Graphics.Automators
 {
     public interface IDrawsOverTiles
     {
-        public void Draw(SpriteBatch spriteBatch);
+        public void DrawOverTiles(SpriteBatch spriteBatch);
     }
 }

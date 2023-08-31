@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Items.Placeable.Relics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;

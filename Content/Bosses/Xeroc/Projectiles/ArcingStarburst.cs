@@ -2,7 +2,7 @@
 using CalamityMod.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class ArcingStarburst : ModProjectile, IDrawPixelatedPrims, IAdditiveDrawer
+    public class ArcingStarburst : ModProjectile, IDrawPixelated, IAdditiveDrawer
     {
         public PrimitiveTrail TrailDrawer
         {
@@ -153,7 +153,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, Projectile.scale * 1f, 0, 0f);
         }
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
 

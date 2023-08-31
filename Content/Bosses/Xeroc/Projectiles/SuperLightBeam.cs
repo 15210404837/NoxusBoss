@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class SuperLightBeam : ModProjectile, IDrawPixelatedPrims
+    public class SuperLightBeam : ModProjectile, IDrawPixelated
     {
         public PrimitiveTrailCopy LaserDrawer
         {
@@ -84,7 +84,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             // Initialize the laser drawer.
             var laserShader = ShaderManager.GetShader("XerocStarLaserShader");

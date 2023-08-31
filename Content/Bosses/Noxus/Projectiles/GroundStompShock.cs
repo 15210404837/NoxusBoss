@@ -28,7 +28,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             Projectile.scale = Projectile.Opacity * 1.8f;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawOverTiles(SpriteBatch spriteBatch)
         {
             spriteBatch.SetBlendState(BlendState.Additive);
 

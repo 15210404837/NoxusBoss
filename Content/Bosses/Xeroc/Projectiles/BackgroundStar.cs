@@ -4,7 +4,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics;
+using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Graphics.Shaders;
@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class BackgroundStar : ModProjectile, IDrawPixelatedPrims
+    public class BackgroundStar : ModProjectile, IDrawPixelated
     {
         public PrimitiveTrail TrailDrawer
         {
@@ -169,7 +169,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             behindNPCsAndTiles.Add(index);
         }
 
-        public void Draw()
+        public void DrawWithPixelation()
         {
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, GameShaders.Misc["CalamityMod:ImpFlameTrail"]);
 

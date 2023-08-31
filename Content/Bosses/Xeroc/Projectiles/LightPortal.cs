@@ -52,7 +52,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawWithShader(SpriteBatch spriteBatch)
         {
             var portalShader = ShaderManager.GetShader("PortalShader");
             portalShader.TrySetParameter("generalColor", Color.White.ToVector3());
