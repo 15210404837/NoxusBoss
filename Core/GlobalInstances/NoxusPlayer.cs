@@ -103,7 +103,7 @@ namespace NoxusBoss.Core.GlobalItems
                 Vector2 windVelocity = Vector2.UnitX * Main.windSpeedTarget * Main.rand.NextFloat(10f, 14f);
                 for (int tries = 0; tries < 50; tries++)
                 {
-                    Vector2 potentialSpawnPosition = Player.Center + new Vector2(Sign(windVelocity.X) * -Main.rand.NextFloat(950f, 1150f), Main.rand.NextFloatDirection() * 900f);
+                    Vector2 potentialSpawnPosition = Player.Center + new Vector2(Sign(windVelocity.X) * -Main.rand.NextFloat(1050f, 1250f), Main.rand.NextFloatDirection() * 900f);
                     if (Collision.SolidCollision(potentialSpawnPosition, 1, 120) || Collision.WetCollision(potentialSpawnPosition, 1, 120))
                         continue;
 

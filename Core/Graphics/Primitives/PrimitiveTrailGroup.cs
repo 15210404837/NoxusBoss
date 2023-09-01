@@ -120,13 +120,7 @@ namespace NoxusBoss.Core.Graphics
                 return;
 
             // Calculate projection matrix data.
-            Matrix projection;
-            Matrix view;
-
-            if (pixelated)
-                PrimitiveTrailCopy.UpdatePixelatedBaseEffect(out projection, out view);
-            else
-                PrimitiveTrailCopy.UpdateBaseEffect(out projection, out view);
+            PrimitiveTrailCopy.UpdateBaseEffect(out Matrix projection, out Matrix view);
 
             // Apply screen scissor effects, for efficiency reasons.
             var gd = Main.instance.GraphicsDevice;
