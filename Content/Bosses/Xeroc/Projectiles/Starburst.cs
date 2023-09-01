@@ -50,7 +50,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public override void AI()
         {
             // Accelerate over time.
-            if (Projectile.velocity.Length() <= 33f && !ClockConstellation.TimeIsStopped)
+            float maxSpeed = 33f;
+            if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarManagement)
+                maxSpeed = 22.5f;
+
+            if (Projectile.velocity.Length() <= maxSpeed && !ClockConstellation.TimeIsStopped)
                 Projectile.velocity *= Big ? 1.0284f : 1.04f;
 
             // Keep the projectile in stasis if time is stopped.

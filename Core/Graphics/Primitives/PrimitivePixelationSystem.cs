@@ -37,7 +37,7 @@ namespace NoxusBoss.Core.Graphics
                 if (!p.active)
                     continue;
 
-                bool modProjectileHasInterface = p.ModProjectile is not IDrawPixelated;
+                bool modProjectileHasInterface = p.ModProjectile is IDrawPixelated;
                 bool modProjectileUsesGroupWithPixelation = p.ModProjectile is IDrawGroupedPrimitives primGroup && primGroup.DrawContext.HasFlag(PrimitiveGroupDrawContext.Pixelated);
                 if (!modProjectileHasInterface && !modProjectileUsesGroupWithPixelation)
                     continue;

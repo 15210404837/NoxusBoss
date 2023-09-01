@@ -69,7 +69,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    float daggerSpacing = clockExists ? 160f : 200f;
+                    float daggerSpacing = clockExists ? 160f : 192f;
                     if (cosmicLaserExists)
                         daggerSpacing = 230f;
 
