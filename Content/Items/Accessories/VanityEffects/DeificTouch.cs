@@ -1,15 +1,18 @@
 ﻿using CalamityMod.Items;
 using CalamityMod.Rarities;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.GlobalItems;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Accessories.VanityEffects
 {
-    public class DeificTouch : ModItem
+    public class DeificTouch : ModItem, IToastyQoLChecklistSupport
     {
         public static bool UsingEffect => !Main.gameMenu && Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GetValue<bool>("DeificTouch") && XerocBoss.Myself is null;
+
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 
         public override void SetStaticDefaults()
         {

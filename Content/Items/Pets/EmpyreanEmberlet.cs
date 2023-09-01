@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Projectiles.Pets;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -8,8 +9,10 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Pets
 {
-    public class EmpyreanEmberlet : ModItem
+    public class EmpyreanEmberlet : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;

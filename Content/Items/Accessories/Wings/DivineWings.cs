@@ -1,5 +1,6 @@
 ﻿using CalamityMod.Items;
 using CalamityMod.Rarities;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -8,8 +9,10 @@ using Terraria.ModLoader;
 namespace NoxusBoss.Content.Items.Accessories.Wings
 {
     [AutoloadEquip(EquipType.Wings)]
-    public class DivineWings : ModItem
+    public class DivineWings : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public static int WingSlotID
         {
             get;

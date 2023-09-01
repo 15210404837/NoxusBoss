@@ -1,12 +1,15 @@
 ﻿using NoxusBoss.Content.Tiles;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.Trophies
 {
-    public class NoxusTrophy : ModItem
+    public class NoxusTrophy : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;

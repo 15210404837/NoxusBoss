@@ -1,12 +1,15 @@
-﻿using Terraria;
+﻿using NoxusBoss.Core.CrossCompatibility;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Armor.Vanity.Masks
 {
     [AutoloadEquip(EquipType.Head)]
-    public class NoxusMask : ModItem
+    public class NoxusMask : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;

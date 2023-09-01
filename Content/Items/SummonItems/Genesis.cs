@@ -6,6 +6,7 @@ using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.NPCs;
 using NoxusBoss.Content.Subworlds;
 using NoxusBoss.Core;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -13,8 +14,10 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.SummonItems
 {
-    public class Genesis : ModItem
+    public class Genesis : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostDraedonAndCal;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;

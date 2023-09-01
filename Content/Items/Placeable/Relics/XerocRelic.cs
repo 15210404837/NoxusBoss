@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using NoxusBoss.Content.Tiles;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.Relics
 {
-    public class XerocRelic : ModItem
+    public class XerocRelic : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;

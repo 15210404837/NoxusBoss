@@ -2,6 +2,7 @@
 using CalamityMod.Rarities;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Projectiles.Typeless;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -9,8 +10,10 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.MiscOPTools
 {
-    public class ThePurifier : ModItem
+    public class ThePurifier : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public static readonly SoundStyle BuildupSound = new("NoxusBoss/Assets/Sounds/Custom/PurifierBuildup");
 
         public override void SetStaticDefaults()

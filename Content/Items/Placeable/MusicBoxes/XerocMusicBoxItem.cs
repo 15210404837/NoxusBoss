@@ -1,12 +1,15 @@
 ﻿using NoxusBoss.Content.Tiles;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.MusicBoxes
 {
-    public class XerocMusicBoxItem : ModItem
+    public class XerocMusicBoxItem : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public override void SetStaticDefaults()
         {
             // Music boxes can't get prefixes in vanilla.

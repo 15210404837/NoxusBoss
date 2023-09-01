@@ -1,5 +1,6 @@
 ﻿using CalamityMod.Rarities;
 using NoxusBoss.Core;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -7,8 +8,10 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable
 {
-    public class Cattail : ModItem
+    public class Cattail : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public static readonly SoundStyle CelebrationSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Cattail") with { SoundLimitBehavior = SoundLimitBehavior.IgnoreNew };
 
         public override void SetStaticDefaults()

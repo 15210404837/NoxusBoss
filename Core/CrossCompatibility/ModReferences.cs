@@ -16,6 +16,12 @@ namespace NoxusBoss.Core.CrossCompatibility
             private set;
         }
 
+        public static Mod ToastyQoL
+        {
+            get;
+            private set;
+        }
+
         public override void Load()
         {
             // Check for relevant mods.
@@ -23,6 +29,8 @@ namespace NoxusBoss.Core.CrossCompatibility
                 BossChecklist = bcl;
             if (ModLoader.TryGetMod("InfernumMode", out Mod inf))
                 Infernum = inf;
+            if (ModLoader.TryGetMod("ToastyQoL", out Mod tQoL))
+                ToastyQoL = tQoL;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CalamityMod.Rarities;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
@@ -9,8 +10,10 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Dyes
 {
-    public class NuminousDye : ModItem
+    public class NuminousDye : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public static int DyeID
         {
             get;

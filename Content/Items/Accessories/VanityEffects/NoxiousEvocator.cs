@@ -1,13 +1,16 @@
 ﻿using CalamityMod.Items;
 using CalamityMod.Rarities;
 using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Accessories.VanityEffects
 {
-    public class NoxiousEvocator : ModItem
+    public class NoxiousEvocator : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;

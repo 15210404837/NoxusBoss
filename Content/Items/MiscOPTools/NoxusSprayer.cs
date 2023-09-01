@@ -6,14 +6,17 @@ using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.NPCs;
 using NoxusBoss.Content.Projectiles.Typeless;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.MiscOPTools
 {
-    public class NoxusSprayer : ModItem
+    public class NoxusSprayer : ModItem, IToastyQoLChecklistSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
+
         public static List<int> NPCsToNotDelete => new()
         {
             NPCID.CultistTablet,
