@@ -115,10 +115,16 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public static void DrawSmoke(float backgroundIntensity)
         {
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Matrix.Identity);
+
             // Draw all active smoke particles in the background.
             Texture2D smokeTexture = ModContent.Request<Texture2D>("CalamityMod/Projectiles/Magic/RancorFog").Value;
             foreach (BackgroundSmoke smoke in SmokeParticles)
                 Main.spriteBatch.Draw(smokeTexture, smoke.DrawPosition, null, smoke.SmokeColor * GetLerpValue(1f, 15f, smoke.Lifetime - smoke.Time, true) * backgroundIntensity * 0.44f, smoke.Rotation, smokeTexture.Size() * 0.5f, 1.56f, 0, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Matrix.Identity);
         }
 
         public static void DrawGalaxies(float backgroundIntensity)
