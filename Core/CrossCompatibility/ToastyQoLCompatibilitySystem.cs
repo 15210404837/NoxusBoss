@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using static NoxusBoss.Core.CrossCompatibility.ModReferences;
@@ -10,7 +8,7 @@ namespace NoxusBoss.Core.CrossCompatibility
 {
     public class ToastyQoLCompatibilitySystem : ModSystem
     {
-        public override void Load()
+        public override void PostSetupContent()
         {
             // Don't load anything if Toasty's QoL mod is not enabled.
             if (ToastyQoL is null)
@@ -49,7 +47,6 @@ namespace NoxusBoss.Core.CrossCompatibility
                 ToastyQoL.Call("AddNewBossLockInformation", requirement.Requirement, requirement.RequirementName, requirementItems[requirement], false);
         }
 
-        // TODO -- This seems to have some problems in the visiblity of the UI of the addon mod. Awaiting insight from Toasty before fixing this.
         public void LoadBossSupport()
         {
             // Collect all bosses that should adhere to Toasty's QoL.

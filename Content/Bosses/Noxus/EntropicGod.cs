@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using CalamityMod;
 using CalamityMod.Buffs.DamageOverTime;
 using CalamityMod.Items.Potions;
@@ -45,7 +46,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
     //
     // And amusingly, with that paradigm shift, the object of the abandoned desire will be realized.
     [AutoloadBossHead]
-    public class EntropicGod : ModNPC, IBossChecklistSupport
+    public class EntropicGod : ModNPC, IBossChecklistSupport, IToastyQoLChecklistBossSupport
     {
         #region Custom Types and Enumerations
         public enum EntropicGodAttackType
@@ -422,6 +423,8 @@ namespace NoxusBoss.Content.Bosses.Noxus
         public string ChecklistEntryName => "EntropicGodNoxus";
 
         public bool IsDefeated => WorldSaveSystem.HasDefeatedNoxus;
+
+        public FieldInfo IsDefeatedField => typeof(WorldSaveSystem).GetField("hasDefeatedNoxus", BindingFlags.Static | BindingFlags.NonPublic);
 
         public float ProgressionValue => 27f;
 
