@@ -1,11 +1,14 @@
 ﻿using CalamityMod.Rarities;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items
 {
-    public class CheatPermissionSlip : ModItem
+    public class CheatPermissionSlip : ModItem, IToastyQoLChecklistItemSupport
     {
+        public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
