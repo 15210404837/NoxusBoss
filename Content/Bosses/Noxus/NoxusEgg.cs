@@ -160,6 +160,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
             // Grant the target infinite flight.
             Target.wingTime = Target.wingTimeMax;
+            Target.Calamity().infiniteFlight = true;
 
             // Disable rain.
             CalamityMod.CalamityMod.StopRain();

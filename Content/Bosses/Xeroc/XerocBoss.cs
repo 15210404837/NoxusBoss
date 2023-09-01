@@ -549,6 +549,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Grant the target infinite flight.
             Target.wingTime = Target.wingTimeMax;
+            Target.Calamity().infiniteFlight = true;
 
             // Disable rain.
             CalamityMod.CalamityMod.StopRain();
