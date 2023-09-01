@@ -34,7 +34,12 @@ namespace NoxusBoss.Core.Graphics
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
-                if (!p.active || p.ModProjectile is not IDrawPixelated)
+                if (!p.active)
+                    continue;
+
+                bool modProjectileHasInterface = p.ModProjectile is not IDrawPixelated;
+                bool modProjectileUsesGroupWithPixelation = p.ModProjectile is IDrawGroupedPrimitives primGroup && primGroup.DrawContext.HasFlag(PrimitiveGroupDrawContext.Pixelated);
+                if (!modProjectileHasInterface && !modProjectileUsesGroupWithPixelation)
                     continue;
 
                 primsExist = true;
@@ -48,7 +53,7 @@ namespace NoxusBoss.Core.Graphics
                 return;
             }
 
-            // Start a spritebatch, as one does not exist before the method we're detouring.
+            // Start a spritebatch, as a Begin call does not exist before the method that's being detoured.
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null);
 
             // Go to the pixelation target.
@@ -57,7 +62,9 @@ namespace NoxusBoss.Core.Graphics
             gd.Clear(Color.Transparent);
 
             // Draw prims to the render target.
-            DrawPixelatedPrimitives();
+            primsWereDrawnLastFrame = false;
+            DrawPixelatedProjectiles();
+            DrawPrimitiveGroups();
 
             // Return to the backbuffer.
             gd.SetRenderTarget(null);
@@ -90,9 +97,8 @@ namespace NoxusBoss.Core.Graphics
             orig(self);
         }
 
-        private static void DrawPixelatedPrimitives()
+        private static void DrawPixelatedProjectiles()
         {
-            primsWereDrawnLastFrame = false;
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
@@ -102,6 +108,12 @@ namespace NoxusBoss.Core.Graphics
                 primDrawer.DrawWithPixelation();
                 primsWereDrawnLastFrame = true;
             }
+        }
+
+        private static void DrawPrimitiveGroups()
+        {
+            if (PrimitiveTrailGroupingSystem.DrawGroupWithDrawContext(PrimitiveGroupDrawContext.Pixelated))
+                primsWereDrawnLastFrame = true;
         }
     }
 }

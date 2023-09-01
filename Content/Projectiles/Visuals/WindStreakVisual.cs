@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
+using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
@@ -10,13 +11,21 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Projectiles.Visuals
 {
-    public class WindStreakVisual : ModProjectile, IDrawPixelated
+    public class WindStreakVisual : ModProjectile, IDrawGroupedPrimitives
     {
-        public PrimitiveTrailCopy WindStreakDrawer
+        public int MaxVertices => 3072; // 1024 + 2048
+
+        public int MaxIndices => 8192;
+
+        public PrimitiveTrailInstance PrimitiveInstance
         {
             get;
             private set;
         }
+
+        public PrimitiveGroupDrawContext DrawContext => PrimitiveGroupDrawContext.Pixelated;
+
+        public ManagedShader Shader => ShaderManager.GetShader("GenericTrailStreak");
 
         public ref float Time => ref Projectile.ai[0];
 
@@ -28,6 +37,10 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
+
+            // This is done to ensure that the streak doesn't immediately disappear once the tip alone has left the screen.
+            // The default is 480.
+            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 640;
         }
 
         public override void SetDefaults()
@@ -39,6 +52,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             Projectile.Opacity = 0f;
             Projectile.tileCollide = false;
             Projectile.netImportant = true;
+            PrimitiveInstance = (this as IDrawGroupedPrimitives).GenerateInstance();
         }
 
         public override void AI()
@@ -100,15 +114,19 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public Color WindColorFunction(float completionRatio) => Projectile.GetAlpha(Color.White) with { A = 0 } * (1f - completionRatio) * Projectile.Opacity;
 
-        public override bool PreDraw(ref Color lightColor) => false;
-
-        public void DrawWithPixelation()
+        public void PrepareShader()
         {
-            var streakShader = ShaderManager.GetShader("GenericTrailStreak");
-            streakShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
-
-            WindStreakDrawer ??= new(WindWidthFunction, WindColorFunction, null, true, streakShader);
-            WindStreakDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
+            Shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
         }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            // Queue index and vertex data to the group.
+            PrimitiveInstance.PrimitiveDrawer ??= new(WindWidthFunction, WindColorFunction, null, true, Shader);
+            PrimitiveInstance.UpdateBuffers(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 9);
+            return false;
+        }
+
+        public override void Kill(int timeLeft) => PrimitiveInstance.Destroy();
     }
 }

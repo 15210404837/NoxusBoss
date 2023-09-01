@@ -13,16 +13,20 @@ namespace NoxusBoss.Core.Graphics.Primitives
         public struct VertexPosition2DColor : IVertexType
         {
             public Vector2 Position;
-            public Color Color;
-            public Vector2 TextureCoordinates;
-            public VertexDeclaration VertexDeclaration => _vertexDeclaration;
 
-            private static readonly VertexDeclaration _vertexDeclaration = new(new VertexElement[]
+            public Color Color;
+
+            public Vector2 TextureCoordinates;
+
+            public VertexDeclaration VertexDeclaration => StaticVertexDeclaration;
+
+            public static readonly VertexDeclaration StaticVertexDeclaration = new(new VertexElement[]
             {
                 new VertexElement(0, VertexElementFormat.Vector2, VertexElementUsage.Position, 0),
                 new VertexElement(8, VertexElementFormat.Color, VertexElementUsage.Color, 0),
                 new VertexElement(12, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
             });
+
             public VertexPosition2DColor(Vector2 position, Color color, Vector2 textureCoordinates)
             {
                 Position = position;
@@ -30,8 +34,6 @@ namespace NoxusBoss.Core.Graphics.Primitives
                 TextureCoordinates = textureCoordinates;
             }
         }
-
-        internal Matrix? PerspectiveMatrixOverride;
 
         public delegate float VertexWidthFunction(float completionRatio);
 
@@ -195,9 +197,9 @@ namespace NoxusBoss.Core.Graphics.Primitives
             return points;
         }
 
-        public List<VertexPosition2DColor> GetVerticesFromTrailPoints(List<Vector2> trailPoints, float? directionOverride = null)
+        public VertexPosition2DColor[] GetVerticesFromTrailPoints(List<Vector2> trailPoints, float? directionOverride = null)
         {
-            List<VertexPosition2DColor> vertices = new();
+            VertexPosition2DColor[] vertices = new VertexPosition2DColor[(trailPoints.Count - 1) * 2];
 
             for (int i = 0; i < trailPoints.Count - 1; i++)
             {
@@ -221,14 +223,14 @@ namespace NoxusBoss.Core.Graphics.Primitives
                 // What this is doing, at its core, is defining a rectangle based on two triangles.
                 // These triangles are defined based on the width of the strip at that point.
                 // The resulting rectangles combined are what make the trail itself.
-                vertices.Add(new VertexPosition2DColor(currentPosition - sideDirection * widthAtVertex, vertexColor, leftCurrentTextureCoord));
-                vertices.Add(new VertexPosition2DColor(currentPosition + sideDirection * widthAtVertex, vertexColor, rightCurrentTextureCoord));
+                vertices[i * 2] = new(currentPosition - sideDirection * widthAtVertex, vertexColor, leftCurrentTextureCoord);
+                vertices[i * 2 + 1] = new(currentPosition + sideDirection * widthAtVertex, vertexColor, rightCurrentTextureCoord);
             }
 
             return vertices;
         }
 
-        public static List<short> GetIndicesFromTrailPoints(int pointCount)
+        public static short[] GetIndicesFromTrailPoints(int pointCount)
         {
             // What this is doing is basically representing each point on the vertices list as
             // indices. These indices should come together to create a tiny rectangle that acts
@@ -250,10 +252,8 @@ namespace NoxusBoss.Core.Graphics.Primitives
                 indices[startingTriangleIndex + 5] = (short)(connectToIndex + 3);
             }
 
-            return indices.ToList();
+            return indices;
         }
-
-        public void SpecifyPerspectiveMatrix(Matrix m) => PerspectiveMatrixOverride = m;
 
         /// <summary>
         /// Call this to draw primitives to the base RenderTarget.
@@ -287,9 +287,9 @@ namespace NoxusBoss.Core.Graphics.Primitives
             DrawPrimsFromVertexData(GetVerticesFromTrailPoints(trailPoints, directionOverride), GetIndicesFromTrailPoints(trailPoints.Count), pixelated);
         }
 
-        internal void DrawPrimsFromVertexData(List<VertexPosition2DColor> vertices, List<short> triangleIndices, bool pixelated)
+        internal void DrawPrimsFromVertexData(VertexPosition2DColor[] vertices, short[] triangleIndices, bool pixelated)
         {
-            if (triangleIndices.Count % 6 != 0 || vertices.Count <= 3)
+            if (triangleIndices.Length % 6 != 0 || vertices.Length <= 3)
                 return;
 
             Matrix projection;
@@ -306,14 +306,13 @@ namespace NoxusBoss.Core.Graphics.Primitives
 
             if (SpecialShader != null)
             {
-                SpecialShader.TrySetParameter("uWorldViewProjection", PerspectiveMatrixOverride ?? view * projection);
+                SpecialShader.TrySetParameter("uWorldViewProjection", view * projection);
                 SpecialShader.Apply();
-                PerspectiveMatrixOverride = null;
             }
             else
                 BaseEffect.CurrentTechnique.Passes[0].Apply();
 
-            Main.instance.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices.ToArray(), 0, vertices.Count, triangleIndices.ToArray(), 0, triangleIndices.Count / 3);
+            Main.instance.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertices.ToArray(), 0, vertices.Length, triangleIndices, 0, triangleIndices.Length / 3);
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
         }
     }
