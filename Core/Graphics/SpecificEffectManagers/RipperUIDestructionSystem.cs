@@ -6,6 +6,8 @@ using CalamityMod.Particles;
 using CalamityMod.UI.Rippers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
@@ -88,7 +90,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public override void Load()
         {
             MethodInfo ripperUIDrawMethod = typeof(RipperUI).GetMethod("Draw", BindingFlags.Public | BindingFlags.Static);
-            MonoModHooks.Add(ripperUIDrawMethod, (hook_RipperDrawMethod)DisableRipperUI);
+            MonoModHooks.Modify(ripperUIDrawMethod, DisableRipperUI);
         }
 
         public override void OnWorldLoad()
@@ -164,32 +166,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             }
         }
 
-        public static void DisableRipperUI(orig_RipperDrawMethod orig, SpriteBatch spriteBatch, Player player)
+        public static void DrawFists(Player player)
         {
-            if (IsUIDestroyed)
-                return;
-
-            if (XerocBoss.Myself is null)
-            {
-                orig(spriteBatch, player);
-                return;
-            }
-
-            // Move the bar positions temporarily in accordance with the draw position override. Afterwards they are reset, to prevent the changes from altering the config file.
-            Vector2 oldRagePosition = new(CalamityConfig.Instance.RageMeterPosX, CalamityConfig.Instance.RageMeterPosY);
-            Vector2 oldAdrenalinePosition = new(CalamityConfig.Instance.AdrenalineMeterPosX, CalamityConfig.Instance.AdrenalineMeterPosY);
-            CalamityConfig.Instance.RageMeterPosX = RageScreenPosition.X / Main.screenWidth * 100f;
-            CalamityConfig.Instance.RageMeterPosY = RageScreenPosition.Y / Main.screenHeight * 100f;
-            CalamityConfig.Instance.AdrenalineMeterPosX = AdrenalineScreenPosition.X / Main.screenWidth * 100f;
-            CalamityConfig.Instance.AdrenalineMeterPosY = AdrenalineScreenPosition.Y / Main.screenHeight * 100f;
-
-            orig(spriteBatch, player);
-
-            CalamityConfig.Instance.RageMeterPosX = oldRagePosition.X;
-            CalamityConfig.Instance.RageMeterPosY = oldRagePosition.Y;
-            CalamityConfig.Instance.AdrenalineMeterPosX = oldAdrenalinePosition.X;
-            CalamityConfig.Instance.AdrenalineMeterPosY = oldAdrenalinePosition.Y;
-
             // Don't bother wasting resources drawing if the fists are invisible.
             if (FistOpacity <= 0f)
                 return;
@@ -219,6 +197,35 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (player.Calamity().AdrenalineEnabled)
                     DrawFists(AdrenalineScreenPosition, AdrenalineScreenPosition.X - adrenalineBarWidth * 0.5f, AdrenalineScreenPosition.X + adrenalineBarWidth * 0.5f);
             }
+        }
+
+        public static void DisableRipperUI(ILContext il)
+        {
+            ILCursor cursor = new(il);
+
+            // Store the rage position index.
+            int rageDrawPosIndex = 0;
+            int adrenalineDrawPosIndex = 0;
+            ConstructorInfo vector2Constructor = typeof(Vector2).GetConstructor(new Type[] { typeof(float), typeof(float) });
+            cursor.GotoNext(MoveType.Before, i => i.MatchCallOrCallvirt(vector2Constructor));
+            cursor.GotoNext(MoveType.Before, i => i.MatchLdloc(out rageDrawPosIndex));
+
+            // Store the adrenaline position index.
+            cursor.GotoNext(MoveType.Before, i => i.MatchCallOrCallvirt(vector2Constructor));
+            cursor.GotoNext(MoveType.Before, i => i.MatchLdloc(out adrenalineDrawPosIndex));
+
+            // Go before the player load.
+            cursor.GotoNext(MoveType.Before, i => i.MatchLdarg1());
+
+            // Manipulate the rage and adrenaline position variables.
+            cursor.EmitDelegate(() => RageScreenPosition);
+            cursor.Emit(OpCodes.Stloc, rageDrawPosIndex);
+            cursor.EmitDelegate(() =>
+            {
+                DrawFists(Main.LocalPlayer);
+                return AdrenalineScreenPosition;
+            });
+            cursor.Emit(OpCodes.Stloc, adrenalineDrawPosIndex);
         }
 
         public static void CreateBarDestructionEffects()
