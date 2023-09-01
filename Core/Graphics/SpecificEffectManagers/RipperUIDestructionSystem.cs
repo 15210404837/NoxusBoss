@@ -6,8 +6,6 @@ using CalamityMod.Particles;
 using CalamityMod.UI.Rippers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
@@ -87,10 +85,18 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public delegate void hook_RipperDrawMethod(orig_RipperDrawMethod orig, SpriteBatch spriteBatch, Player player);
 
+        public delegate void orig_SpecificRipperDrawMethod(SpriteBatch spriteBatch, ModPlayer player, Vector2 drawPosition);
+
+        public delegate void hook_SpecificRipperDrawMethod(orig_SpecificRipperDrawMethod orig, SpriteBatch spriteBatch, ModPlayer player, Vector2 drawPosition);
+
         public override void Load()
         {
             MethodInfo ripperUIDrawMethod = typeof(RipperUI).GetMethod("Draw", BindingFlags.Public | BindingFlags.Static);
-            MonoModHooks.Modify(ripperUIDrawMethod, DisableRipperUI);
+            MethodInfo rageDrawMethod = typeof(RipperUI).GetMethod("DrawRageBar", BindingFlags.NonPublic | BindingFlags.Static);
+            MethodInfo adrenalineDrawMethod = typeof(RipperUI).GetMethod("DrawAdrenalineBar", BindingFlags.NonPublic | BindingFlags.Static);
+            MonoModHooks.Add(ripperUIDrawMethod, (hook_RipperDrawMethod)DisableRipperUI);
+            MonoModHooks.Add(rageDrawMethod, (hook_SpecificRipperDrawMethod)ChangeRagePosition);
+            MonoModHooks.Add(adrenalineDrawMethod, (hook_SpecificRipperDrawMethod)ChangeAdrenalinePosition);
         }
 
         public override void OnWorldLoad()
@@ -166,8 +172,19 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             }
         }
 
-        public static void DrawFists(Player player)
+        public static void DisableRipperUI(orig_RipperDrawMethod orig, SpriteBatch spriteBatch, Player player)
         {
+            if (IsUIDestroyed)
+                return;
+
+            if (XerocBoss.Myself is null)
+            {
+                orig(spriteBatch, player);
+                return;
+            }
+
+            orig(spriteBatch, player);
+
             // Don't bother wasting resources drawing if the fists are invisible.
             if (FistOpacity <= 0f)
                 return;
@@ -199,33 +216,14 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             }
         }
 
-        public static void DisableRipperUI(ILContext il)
+        public static void ChangeRagePosition(orig_SpecificRipperDrawMethod orig, SpriteBatch spriteBatch, ModPlayer player, Vector2 drawPosition)
         {
-            ILCursor cursor = new(il);
+            orig(spriteBatch, player, RageScreenPosition);
+        }
 
-            // Store the rage position index.
-            int rageDrawPosIndex = 0;
-            int adrenalineDrawPosIndex = 0;
-            ConstructorInfo vector2Constructor = typeof(Vector2).GetConstructor(new Type[] { typeof(float), typeof(float) });
-            cursor.GotoNext(MoveType.Before, i => i.MatchCallOrCallvirt(vector2Constructor));
-            cursor.GotoNext(MoveType.Before, i => i.MatchLdloc(out rageDrawPosIndex));
-
-            // Store the adrenaline position index.
-            cursor.GotoNext(MoveType.Before, i => i.MatchCallOrCallvirt(vector2Constructor));
-            cursor.GotoNext(MoveType.Before, i => i.MatchLdloc(out adrenalineDrawPosIndex));
-
-            // Go before the player load.
-            cursor.GotoNext(MoveType.Before, i => i.MatchLdarg1());
-
-            // Manipulate the rage and adrenaline position variables.
-            cursor.EmitDelegate(() => RageScreenPosition);
-            cursor.Emit(OpCodes.Stloc, rageDrawPosIndex);
-            cursor.EmitDelegate(() =>
-            {
-                DrawFists(Main.LocalPlayer);
-                return AdrenalineScreenPosition;
-            });
-            cursor.Emit(OpCodes.Stloc, adrenalineDrawPosIndex);
+        public static void ChangeAdrenalinePosition(orig_SpecificRipperDrawMethod orig, SpriteBatch spriteBatch, ModPlayer player, Vector2 drawPosition)
+        {
+            orig(spriteBatch, player, AdrenalineScreenPosition);
         }
 
         public static void CreateBarDestructionEffects()
