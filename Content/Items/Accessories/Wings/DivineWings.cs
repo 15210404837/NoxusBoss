@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 namespace NoxusBoss.Content.Items.Accessories.Wings
 {
     [AutoloadEquip(EquipType.Wings)]
-    public class DivineWings : ModItem, IToastyQoLChecklistSupport
+    public class DivineWings : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

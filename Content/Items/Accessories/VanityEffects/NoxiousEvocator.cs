@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Accessories.VanityEffects
 {
-    public class NoxiousEvocator : ModItem, IToastyQoLChecklistSupport
+    public class NoxiousEvocator : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

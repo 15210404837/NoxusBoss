@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.Relics
 {
-    public class XerocRelic : ModItem, IToastyQoLChecklistSupport
+    public class XerocRelic : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace NoxusBoss.Content.Items.Armor.Vanity.Masks
 {
     [AutoloadEquip(EquipType.Head)]
-    public class NoxusMask : ModItem, IToastyQoLChecklistSupport
+    public class NoxusMask : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
 

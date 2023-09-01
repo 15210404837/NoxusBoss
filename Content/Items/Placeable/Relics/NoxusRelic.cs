@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.Relics
 {
-    public class NoxusRelic : ModItem, IToastyQoLChecklistSupport
+    public class NoxusRelic : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
 

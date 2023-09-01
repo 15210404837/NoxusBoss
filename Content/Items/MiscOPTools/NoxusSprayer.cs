@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.MiscOPTools
 {
-    public class NoxusSprayer : ModItem, IToastyQoLChecklistSupport
+    public class NoxusSprayer : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
 

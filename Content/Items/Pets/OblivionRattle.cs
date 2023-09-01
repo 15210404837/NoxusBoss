@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Pets
 {
-    public class OblivionRattle : ModItem, IToastyQoLChecklistSupport
+    public class OblivionRattle : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostNoxus;
 

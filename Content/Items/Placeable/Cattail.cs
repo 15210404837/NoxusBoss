@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable
 {
-    public class Cattail : ModItem, IToastyQoLChecklistSupport
+    public class Cattail : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

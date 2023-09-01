@@ -184,6 +184,7 @@ Mods: {
 
 			NoxusEgg: {
 				DisplayName: Godless Spawn, Noxus
+				DisplayNameSingular: Godless Spawn, Noxus
 
 				BossChecklistIntegration: {
 					SpawnInfo: Use the [i:NoxusBoss/Genesis]
@@ -193,6 +194,7 @@ Mods: {
 
 			EntropicGod: {
 				DisplayName: The Entropic God, Noxus
+				DisplayNameSingular: The Entropic God, Noxus
 
 				BossChecklistIntegration: {
 					SpawnInfo: Use the [i:NoxusBoss/Genesis]
@@ -202,6 +204,7 @@ Mods: {
 
 			XerocBoss: {
 				DisplayName: Nameless Deity
+				DisplayNameSingular: Nameless Deity
 				SillyDeathCountSuffix: ", Tormentor of Nohitters"
 
 				BossChecklistIntegration: {

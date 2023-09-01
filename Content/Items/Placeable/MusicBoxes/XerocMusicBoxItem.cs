@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.MusicBoxes
 {
-    public class XerocMusicBoxItem : ModItem, IToastyQoLChecklistSupport
+    public class XerocMusicBoxItem : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Placeable.Trophies
 {
-    public class XerocTrophy : ModItem, IToastyQoLChecklistSupport
+    public class XerocTrophy : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

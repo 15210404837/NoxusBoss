@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Pets
 {
-    public class EmpyreanEmberlet : ModItem, IToastyQoLChecklistSupport
+    public class EmpyreanEmberlet : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

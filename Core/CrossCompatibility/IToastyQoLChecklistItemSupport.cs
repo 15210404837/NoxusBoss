@@ -1,6 +1,6 @@
 ﻿namespace NoxusBoss.Core.CrossCompatibility
 {
-    public interface IToastyQoLChecklistSupport
+    public interface IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement
         {

@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Accessories.VanityEffects
 {
-    public class DeificTouch : ModItem, IToastyQoLChecklistSupport
+    public class DeificTouch : ModItem, IToastyQoLChecklistItemSupport
     {
         public static bool UsingEffect => !Main.gameMenu && Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GetValue<bool>("DeificTouch") && XerocBoss.Myself is null;
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using CalamityMod;
 using CalamityMod.Buffs.DamageOverTime;
 using CalamityMod.Items;
@@ -20,7 +21,7 @@ using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
-    public partial class XerocBoss : ModNPC, IBossChecklistSupport
+    public partial class XerocBoss : ModNPC, IBossChecklistSupport, IToastyQoLChecklistBossSupport
     {
         #region Boss Checklist Compatibility
 
@@ -29,6 +30,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public string ChecklistEntryName => "NamelessDeity";
 
         public bool IsDefeated => WorldSaveSystem.HasDefeatedXeroc;
+
+        public FieldInfo IsDefeatedField => typeof(WorldSaveSystem).GetField("hasDefeatedXeroc", BindingFlags.Static | BindingFlags.NonPublic);
 
         public float ProgressionValue => 28f;
 

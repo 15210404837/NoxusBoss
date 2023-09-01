@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.SummonItems
 {
-    public class Genesis : ModItem, IToastyQoLChecklistSupport
+    public class Genesis : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostDraedonAndCal;
 

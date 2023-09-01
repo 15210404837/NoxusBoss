@@ -14,6 +14,10 @@ namespace NoxusBoss.Core
         // This field is used for performance reasons, since it could be a bit unideal to be doing file existence checks many times every frame.
         private static bool? hasDefeatedXerocInAnyWorldField;
 
+        // Toasty's QoL mod needs fields to access things. TECHNICALLY it's possible to attempt to get the compiler-generated backer field with hardcoded
+        // strings and wacky reflection, but that's kind of unpleasant and something I'd rather not do.
+        private static bool hasDefeatedXeroc;
+
         private static bool hasDefeatedNoxus;
 
         public static int XerocDeathCount
@@ -45,8 +49,8 @@ namespace NoxusBoss.Core
 
         public static bool HasDefeatedXeroc
         {
-            get;
-            set;
+            get => hasDefeatedXeroc;
+            set => hasDefeatedXeroc = value;
         }
 
         public static bool HasMetXeroc

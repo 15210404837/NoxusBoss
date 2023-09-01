@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.MiscOPTools
 {
-    public class ThePurifier : ModItem, IToastyQoLChecklistSupport
+    public class ThePurifier : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 

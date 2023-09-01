@@ -2,6 +2,7 @@
 using System.Linq;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using static NoxusBoss.Core.CrossCompatibility.ModReferences;
 
@@ -9,27 +10,33 @@ namespace NoxusBoss.Core.CrossCompatibility
 {
     public class ToastyQoLCompatibilitySystem : ModSystem
     {
-        public override void PostSetupContent()
+        public override void Load()
         {
-            if (Main.netMode == NetmodeID.Server)
-                return;
-
             // Don't load anything if Toasty's QoL mod is not enabled.
             if (ToastyQoL is null)
                 return;
 
+            // Load item support.
+            LoadItemSupport();
+
+            // Load boss support.
+            LoadBossSupport();
+        }
+
+        public void LoadItemSupport()
+        {
             // Collect all items that should adhere to Toasty's QoL.
-            var modItemsWithBossChecklistSupport = Mod.GetContent().Where(c =>
+            var modItemsWithQoLSupport = Mod.GetContent().Where(c =>
             {
-                return c is ModItem and IToastyQoLChecklistSupport;
+                return c is ModItem and IToastyQoLChecklistItemSupport;
             }).Select(c => c as ModItem);
 
             Dictionary<ToastyQoLRequirement, List<int>> requirementItems = new();
 
             // Load information into the list.
-            foreach (var modItem in modItemsWithBossChecklistSupport)
+            foreach (var modItem in modItemsWithQoLSupport)
             {
-                IToastyQoLChecklistSupport qolInfo = modItem as IToastyQoLChecklistSupport;
+                IToastyQoLChecklistItemSupport qolInfo = modItem as IToastyQoLChecklistItemSupport;
 
                 if (!requirementItems.ContainsKey(qolInfo.Requirement))
                     requirementItems[qolInfo.Requirement] = new();
@@ -40,6 +47,24 @@ namespace NoxusBoss.Core.CrossCompatibility
             // Use the mod call.
             foreach (var requirement in requirementItems.Keys)
                 ToastyQoL.Call("AddNewBossLockInformation", requirement.Requirement, requirement.RequirementName, requirementItems[requirement], false);
+        }
+
+        // TODO -- This seems to have some problems in the visiblity of the UI of the addon mod. Awaiting insight from Toasty before fixing this.
+        public void LoadBossSupport()
+        {
+            // Collect all bosses that should adhere to Toasty's QoL.
+            var modNPCsWithQoLSupport = Mod.GetContent().Where(c =>
+            {
+                return c is ModNPC and IToastyQoLChecklistBossSupport;
+            }).Select(c => c as ModNPC);
+
+            // Use the mod call.
+            foreach (var modNPC in modNPCsWithQoLSupport)
+            {
+                IToastyQoLChecklistBossSupport qolInfo = modNPC as IToastyQoLChecklistBossSupport;
+                string singularName = Language.GetTextValue($"Mods.{Mod.Name}.NPCs.{modNPC.Name}.DisplayNameSingular");
+                ToastyQoL.Call("AddBossToggle", modNPC.BossHeadTexture, singularName, qolInfo.IsDefeatedField, qolInfo.ProgressionValue + 6f, 1f);
+            }
         }
     }
 }

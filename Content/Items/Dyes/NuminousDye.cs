@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.Dyes
 {
-    public class NuminousDye : ModItem, IToastyQoLChecklistSupport
+    public class NuminousDye : ModItem, IToastyQoLChecklistItemSupport
     {
         public ToastyQoLRequirement Requirement => ToastyQoLRequirementRegistry.PostXeroc;
 
