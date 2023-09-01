@@ -1,5 +1,6 @@
 ﻿using CalamityMod.Items;
 using CalamityMod.Rarities;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.DataStructures;
@@ -36,7 +37,11 @@ namespace NoxusBoss.Content.Items.Accessories.Wings
             Item.accessory = true;
         }
 
-        public override void UpdateAccessory(Player player, bool hideVisual) => player.noFallDmg = true;
+        public override void UpdateAccessory(Player player, bool hideVisual)
+        {
+            player.noFallDmg = true;
+            Lighting.AddLight(player.Center, Vector3.One);
+        }
 
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
         {
