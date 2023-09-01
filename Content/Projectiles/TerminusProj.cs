@@ -5,6 +5,7 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles.Visuals;
 using NoxusBoss.Content.Subworlds;
@@ -134,10 +135,11 @@ namespace NoxusBoss.Content.Projectiles
 
         public override void AI()
         {
-            if (Main.zenithWorld)
+            // The Terminus refuses to exist if Xeroc is around.
+            if (XerocBoss.Myself is not null)
             {
+                VortexIntensity = 0f;
                 Projectile.active = false;
-                return;
             }
 
             // Perform initialization effects on the first frame.
