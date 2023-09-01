@@ -22,6 +22,12 @@ namespace NoxusBoss.Core.CrossCompatibility
             private set;
         }
 
+        public static Mod Wikithis
+        {
+            get;
+            private set;
+        }
+
         public override void Load()
         {
             // Check for relevant mods.
@@ -31,6 +37,8 @@ namespace NoxusBoss.Core.CrossCompatibility
                 Infernum = inf;
             if (ModLoader.TryGetMod("ToastyQoL", out Mod tQoL))
                 ToastyQoL = tQoL;
+            if (ModLoader.TryGetMod("Wikithis", out Mod wikithis))
+                Wikithis = wikithis;
         }
     }
 }
