@@ -6,6 +6,7 @@ using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles.Visuals;
+using NoxusBoss.Core.Music;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;
@@ -30,6 +31,8 @@ namespace NoxusBoss.Content.Subworlds
             get;
             private set;
         }
+
+        public const int XerocWaitDelay = 240;
 
         public override void PreUpdateEntities()
         {
@@ -112,13 +115,15 @@ namespace NoxusBoss.Content.Subworlds
             }
 
             // Spawn Xeroc if a player has spent a sufficient quantity of time in the center of the garden.
-            int xerocWaitDelay = 240;
             TimeSpentInCenter = Clamp(TimeSpentInCenter + (anyoneInCenter && XerocBoss.Myself is null).ToDirectionInt(), 0, 600);
-            if (Main.netMode != NetmodeID.MultiplayerClient && TimeSpentInCenter >= xerocWaitDelay && XerocBoss.Myself is null)
+            if (Main.netMode != NetmodeID.MultiplayerClient && TimeSpentInCenter >= XerocWaitDelay && XerocBoss.Myself is null)
             {
                 NPC.NewNPC(new EntitySource_WorldEvent(), Main.maxTilesX * 8, EternalGardenWorldGen.SurfaceTilePoint * 16 - 800, ModContent.NPCType<XerocBoss>(), 1);
                 TimeSpentInCenter = 0;
             }
+
+            // Make the music dissipate in accordance with how long the player has been in the center.
+            MusicVolumeManipulationSystem.MusicMuffleFactor = GetLerpValue(30f, XerocWaitDelay * 0.5f, TimeSpentInCenter, true);
 
             // Disable typical weather things.
             if (Main.netMode != NetmodeID.MultiplayerClient)

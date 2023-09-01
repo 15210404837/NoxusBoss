@@ -2,11 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Dusts;
-using NoxusBoss.Content.Subworlds;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using static NoxusBoss.Content.Subworlds.EternalGardenUpdateSystem;
 
 namespace NoxusBoss.Content.Projectiles.Visuals
 {
@@ -23,11 +24,13 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public override string Texture => "NoxusBoss/Assets/ExtraTextures/Pixel";
 
+        public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 3200;
+
         public override void SetDefaults()
         {
             // Using the Height constant here has a habit of causing vanilla's out-of-world projectile deletion to kill this, due to how large it is.
             Projectile.width = Width;
-            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
+            if (WasInSubworldLastUpdateFrame)
                 Projectile.width = (int)(Projectile.width * 3.2f);
 
             Projectile.height = 1;
@@ -79,8 +82,8 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         {
             // Collect the shader and draw data for later.
             var godRayShader = ShaderManager.GetShader("GodRayShader");
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Vector2 scale = new Vector2(Projectile.width, Height) / texture.Size();
+            Texture2D pixel = ModContent.Request<Texture2D>(Texture).Value;
+            Vector2 textureArea = new Vector2(Projectile.width, Height) / pixel.Size();
 
             // Apply the god ray shader.
             godRayShader.TrySetParameter("noise1Zoom", 0.18f);
@@ -96,8 +99,34 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
             // Draw a large white rectangle based on the hitbox of the ray.
             // The shader will transform the rectangle into the ray.
+            float brightnessFadeIn = GetLerpValue(15f, XerocWaitDelay * 0.67f, TimeSpentInCenter, true);
+            float brightnessFadeOut = GetLerpValue(XerocWaitDelay - 4f, XerocWaitDelay - 16f, TimeSpentInCenter, true);
+            float brightnessInterpolant = brightnessFadeIn * brightnessFadeOut;
+            float brightness = Lerp(0.2f, 0.5f, brightnessInterpolant);
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Main.spriteBatch.Draw(texture, drawPosition, null, Projectile.GetAlpha(MainColor) * 0.2f, Projectile.rotation, texture.Size() * new Vector2(0.5f, 1f), scale, 0, 0f);
+            Main.spriteBatch.Draw(pixel, drawPosition, null, Projectile.GetAlpha(MainColor) * brightness, Projectile.rotation, pixel.Size() * new Vector2(0.5f, 1f), textureArea, 0, 0f);
+
+            // Draw the vignette over the player's screen.
+            DrawVignette(brightnessInterpolant);
+        }
+
+        public void DrawVignette(float brightnessInterpolant)
+        {
+            // Draw a pixel over the player's screen and then draw the vignette over it.
+            var vignetteShader = ShaderManager.GetShader("CrackedVignetteShader");
+            vignetteShader.TrySetParameter("animationSpeed", 0.05f);
+            vignetteShader.TrySetParameter("vignettePower", Lerp(5f, 3.4f, brightnessInterpolant));
+            vignetteShader.TrySetParameter("vignetteBrightness", Lerp(3f, 20f, brightnessInterpolant));
+            vignetteShader.TrySetParameter("primaryColor", Color.Lerp(Color.Red, Color.Orange, 0.25f).ToVector4() * 1.2f);
+            vignetteShader.TrySetParameter("secondaryColor", Color.White.ToVector4() * 0.54f);
+            vignetteShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/CrackedNoise"), 1);
+            vignetteShader.Apply();
+
+            Texture2D pixel = ModContent.Request<Texture2D>(Texture).Value;
+            Color vignetteColor = Projectile.GetAlpha(Color.White) * brightnessInterpolant * GetLerpValue(800f, 308f, Distance(Projectile.Center.X, Main.LocalPlayer.Center.X)) * 0.67f;
+            Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
+            Vector2 textureArea = screenArea / pixel.Size();
+            Main.spriteBatch.Draw(pixel, screenArea * 0.5f, null, vignetteColor, 0f, pixel.Size() * 0.5f, textureArea, 0, 0f);
         }
 
         // Manual drawing is not necessary.

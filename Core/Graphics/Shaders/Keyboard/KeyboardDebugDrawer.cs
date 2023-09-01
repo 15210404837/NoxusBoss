@@ -1,6 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 {
@@ -18,7 +19,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 
         private void DrawDebugKeyboard(GameTime obj)
         {
-            if (!NoxusBoss.DebugFeaturesEnabled || Main.gameMenu)
+            if (!NoxusBoss.DebugFeaturesEnabled || Main.gameMenu || !Main.keyState.IsKeyDown(Keys.K))
                 return;
 
             Main.DebugDrawer.Begin(Main.GameViewMatrix.TransformationMatrix);
