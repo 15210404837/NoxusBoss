@@ -10,7 +10,7 @@ namespace NoxusBoss.Core.CrossCompatibility
             get;
         }
 
-        // Toasty's QoL mod uses a FieldInfo instead of a delegate for some reason.
+        // Toasty's QoL mod uses a FieldInfo instead of a delegate.
         // This is because somewhere it needs to set its value, and not just retrieve it.
         public FieldInfo IsDefeatedField
         {
