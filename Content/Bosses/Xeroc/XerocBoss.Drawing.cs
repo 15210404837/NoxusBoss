@@ -57,6 +57,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public override void ModifyTypeName(ref string typeName)
         {
+            // Don't change the name if not actually present. Nycro's nohit mod gets fucked otherwise.
+            if (!NPC.active)
+                return;
+
             if (CurrentAttack == XerocAttackType.DeathAnimation)
             {
                 typeName = string.Empty;
