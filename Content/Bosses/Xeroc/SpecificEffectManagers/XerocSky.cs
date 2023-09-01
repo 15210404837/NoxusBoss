@@ -243,10 +243,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
         public static void UpdateSmokeParticles()
         {
             // Randomly emit smoke.
-            int smokeReleaseChance = 3;
+            int smokeReleaseChance = 2;
             if (Main.rand.NextBool(smokeReleaseChance))
             {
-                for (int i = 0; i < 15; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     SmokeParticles.Add(new()
                     {
