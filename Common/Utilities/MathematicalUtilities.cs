@@ -26,7 +26,7 @@ namespace NoxusBoss.Common.Utilities
         public static Vector2 IKSolve2(Vector2 start, Vector2 end, float A, float B, bool flip)
         {
             float C = Vector2.Distance(start, end);
-            float angle = Acos(Clamp((C * C + A * A - B * B) / (C * A * 2f), -1f, 1)) * flip.ToDirectionInt();
+            float angle = Acos(Clamp((C * C + A * A - B * B) / (C * A * 2f), -1f, 1f)) * flip.ToDirectionInt();
             return start + (angle + start.AngleTo(end)).ToRotationVector2() * A;
         }
 

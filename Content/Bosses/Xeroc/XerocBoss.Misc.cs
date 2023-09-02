@@ -16,6 +16,7 @@ using NoxusBoss.Content.Items.Placeable;
 using NoxusBoss.Content.Items.Placeable.Relics;
 using NoxusBoss.Content.Items.Placeable.Trophies;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -91,8 +92,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (NPC.soundDelay >= 1)
                 return;
 
-            NPC.soundDelay = 9;
-            //SoundEngine.PlaySound(HitSound, NPC.Center);
+            NPC.soundDelay = 12;
+            SoundEngine.PlaySound(HitSound, NPC.Center);
         }
 
         public override bool CheckDead()

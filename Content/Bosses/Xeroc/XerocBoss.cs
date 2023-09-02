@@ -468,6 +468,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle GFBDeathSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCKilled/XerocFuckingDies_GFB") with { Volume = 1.5f };
 
+        public static readonly SoundStyle HitSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCHit/XerocHurt") with { PitchVariance = 0.32f, Volume = 0.67f };
+
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocHumm") with { Volume = 1.1f, IsLooped = true };
 
         public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocMumble", 5) with { Volume = 0.89f };
