@@ -10,6 +10,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class TileOverlaysSystem : ModSystem
     {
+        private static bool overlayDrewLastFrame;
+
         public static ManagedRenderTarget OverlayableTarget
         {
             get;
@@ -43,11 +45,15 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 
             // Draw all projectiles that have the relevant interface.
+            overlayDrewLastFrame = false;
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
                 if (p.active && p.ModProjectile is IDrawsOverTiles drawer)
+                {
                     drawer.DrawOverTiles(Main.spriteBatch);
+                    overlayDrewLastFrame = true;
+                }
             }
 
             Main.spriteBatch.End();
@@ -57,6 +63,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         private void DrawOverlayTarget(On_Main.orig_DrawProjectiles orig, Main self)
         {
             orig(self);
+
+            if (!overlayDrewLastFrame)
+                return;
 
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 

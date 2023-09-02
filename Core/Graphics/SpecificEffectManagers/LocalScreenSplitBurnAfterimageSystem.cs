@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
@@ -11,6 +12,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
     public class LocalScreenSplitBurnAfterimageSystem : ModSystem
     {
         private static bool takeSnapshotNextFrame;
+
+        public static bool EffectIsActive => NoxusBossConfig.Instance.VisualOverlayIntensity >= 0.01f;
 
         public static int BurnTimer
         {
@@ -44,7 +47,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private void PrepareBurnSnapshotShader(GameTime obj)
         {
-            if (!takeSnapshotNextFrame)
+            if (!takeSnapshotNextFrame || !EffectIsActive)
                 return;
 
             var gd = Main.instance.GraphicsDevice;
@@ -68,12 +71,15 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private void DrawBurnEffect(GameTime obj)
         {
-            if (BurnTimer >= BurnLifetime)
+            if (BurnTimer >= BurnLifetime || !EffectIsActive)
                 return;
 
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, Main.Rasterizer, null, Matrix.Identity);
 
-            float opacity = GetLerpValue(BurnLifetime, BurnLifetime * 0.65f, BurnTimer, true) * GetLerpValue(0f, 9f, BurnTimer, true) * 0.132f;
+            float configurationOpacity = GetLerpValue(0.4f, 0.01f, NoxusBossConfig.Instance.VisualOverlayIntensity, true);
+            float opacityFadeIn = GetLerpValue(0f, 9f, BurnTimer, true);
+            float opacityFadeOut = GetLerpValue(BurnLifetime, BurnLifetime * 0.65f, BurnTimer, true);
+            float opacity = opacityFadeIn * opacityFadeOut * configurationOpacity * 0.132f;
             Main.spriteBatch.Draw(BurnTarget.Target, Vector2.Zero, Color.RosyBrown * opacity);
             Main.spriteBatch.Draw(BurnTarget.Target, Vector2.Zero, Color.Orange with { A = 0 } * opacity * 0.3f);
             Main.spriteBatch.End();

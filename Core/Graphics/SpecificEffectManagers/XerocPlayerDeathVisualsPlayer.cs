@@ -124,6 +124,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 gd.SetRenderTarget(screenshotTarget);
                 gd.Clear(Color.Transparent);
 
+                // Draw the player to the screenshot target.
                 Vector2 oldPlayerPosition = player.Player.position;
                 player.Player.Center = player.PlayerAtTimeOfDeath.Target.Size() * 0.5f + Main.Camera.UnscaledPosition;
                 Lighting.AddLight(player.Player.Center, Vector3.One);

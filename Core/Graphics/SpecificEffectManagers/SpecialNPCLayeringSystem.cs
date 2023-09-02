@@ -68,7 +68,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             });
         }
 
-        public override void Unload()
+        public override void OnModUnload()
         {
             Main.QueueMainThreadAction(() =>
             {
