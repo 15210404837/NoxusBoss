@@ -14,6 +14,17 @@ namespace NoxusBoss.Assets.Fonts
 
         public static FontRegistry Instance => ModContent.GetInstance<FontRegistry>();
 
+        public DynamicSpriteFont CattailText
+        {
+            get
+            {
+                if (CanLoadFonts)
+                    return Mod.Assets.Request<DynamicSpriteFont>("Assets/Fonts/CattailText", AssetRequestMode.ImmediateLoad).Value;
+
+                return FontAssets.MouseText.Value;
+            }
+        }
+
         public DynamicSpriteFont XerocText
         {
             get

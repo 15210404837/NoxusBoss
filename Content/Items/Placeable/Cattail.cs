@@ -1,6 +1,9 @@
 ﻿using CalamityMod.Rarities;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -17,17 +20,25 @@ namespace NoxusBoss.Content.Items.Placeable
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 50;
-            On_Player.PlaceThing_Tiles_PlaceIt += PlayAwesomeSoundForCattail;
+            IL_Player.PlaceThing_Tiles_PlaceIt += PlayAwesomeSoundForCattail;
         }
 
-        private TileObject PlayAwesomeSoundForCattail(On_Player.orig_PlaceThing_Tiles_PlaceIt orig, Player self, bool newObjectType, TileObject data, int tileToCreate)
+        private void PlayAwesomeSoundForCattail(ILContext il)
         {
-            if (tileToCreate == TileID.Cattail && !WorldSaveSystem.HasPlacedCattail)
+            ILCursor cursor = new(il);
+
+            cursor.GotoNext(i => i.MatchCallOrCallvirt<Player>("PlaceThing_Tiles_PlaceIt_KillGrassForSolids"));
+
+            cursor.Emit(OpCodes.Ldarg_3);
+            cursor.EmitDelegate((int tileType) =>
             {
-                SoundEngine.PlaySound(CelebrationSound);
-                WorldSaveSystem.HasPlacedCattail = true;
-            }
-            return orig(self, newObjectType, data, tileToCreate);
+                if (tileType == TileID.Cattail && !WorldSaveSystem.HasPlacedCattail)
+                {
+                    SoundEngine.PlaySound(CelebrationSound);
+                    CattailAnimationSystem.StartAnimation();
+                    WorldSaveSystem.HasPlacedCattail = true;
+                }
+            });
         }
 
         public override void SetDefaults()

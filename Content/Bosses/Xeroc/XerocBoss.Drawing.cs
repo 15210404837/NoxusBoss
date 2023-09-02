@@ -383,9 +383,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Vector2 textSize = font.MeasureString(text);
                 if (textSize.Y > maxHeight)
                     scale = maxHeight / textSize.Y;
-                Vector2 vector2 = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - textSize * scale * 0.5f;
+                Vector2 textDrawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - textSize * scale * 0.5f;
 
-                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, text, vector2, Color.White, 0f, Vector2.Zero, new(scale), -1f, 2f);
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, text, textDrawPosition, Color.White, 0f, Vector2.Zero, new(scale), -1f, 2f);
             }
         }
 
