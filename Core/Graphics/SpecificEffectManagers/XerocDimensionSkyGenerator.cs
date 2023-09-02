@@ -42,8 +42,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Create Xeroc Dimension metaballs over the mouse cursor if the special accessory is being used.
             if (DeificTouch.UsingEffect)
             {
-                for (int i = 0; i < 3; i++)
-                    XerocDimensionMetaball.CreateParticle(Main.MouseWorld, Main.rand.NextVector2Circular(4f, 4f), 32f);
+                for (int i = 0; i < 2; i++)
+                    XerocDimensionMetaball.CreateParticle(Main.MouseWorld, Main.rand.NextVector2Circular(4f, 4f), 28f);
             }
         }
 
