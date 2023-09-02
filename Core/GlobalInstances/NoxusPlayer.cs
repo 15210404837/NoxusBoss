@@ -98,7 +98,7 @@ namespace NoxusBoss.Core.GlobalItems
             }
 
             // Create wind if the player is in the eternal garden.
-            if (Main.myPlayer == Player.whoAmI && EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is null && Main.rand.NextBool(3))
+            if (Main.myPlayer == Player.whoAmI && EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is null && Main.rand.NextBool(4))
             {
                 Vector2 windVelocity = Vector2.UnitX * Main.windSpeedTarget * Main.rand.NextFloat(10f, 14f);
                 for (int tries = 0; tries < 50; tries++)

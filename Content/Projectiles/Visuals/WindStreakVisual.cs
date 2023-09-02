@@ -36,7 +36,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;
 
             // This is done to ensure that the streak doesn't immediately disappear once the tip alone has left the screen.
             // The default is 480.
@@ -123,7 +123,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         {
             // Queue index and vertex data to the group.
             PrimitiveInstance.PrimitiveDrawer ??= new(WindWidthFunction, WindColorFunction, null, true, Shader);
-            PrimitiveInstance.UpdateBuffers(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 9);
+            PrimitiveInstance.UpdateBuffers(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 7);
             return false;
         }
 
