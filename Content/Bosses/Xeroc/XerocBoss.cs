@@ -591,6 +591,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Set the global NPC instance.
             Myself = NPC;
 
+            // Disable lifesteal for all players.
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                Player p = Main.player[i];
+                if (!p.active || p.dead)
+                    continue;
+
+                p.moonLeech = true;
+            }
+
             // Perform behaviors.
             switch (CurrentAttack)
             {
