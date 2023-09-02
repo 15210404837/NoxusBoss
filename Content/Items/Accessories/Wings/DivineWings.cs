@@ -1,4 +1,5 @@
-﻿using CalamityMod.Items;
+﻿using CalamityMod;
+using CalamityMod.Items;
 using CalamityMod.Rarities;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core.CrossCompatibility;
@@ -40,6 +41,7 @@ namespace NoxusBoss.Content.Items.Accessories.Wings
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.noFallDmg = true;
+            player.Calamity().infiniteFlight = true;
             Lighting.AddLight(player.Center, Vector3.One);
         }
 
