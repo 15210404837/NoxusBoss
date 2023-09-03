@@ -412,7 +412,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_EnterPhase3()
         {
-            // TODO -- Implement this.
             if (AttackTimer == 1f)
             {
                 TeleportTo(Target.Center - Vector2.UnitY * 350f);
