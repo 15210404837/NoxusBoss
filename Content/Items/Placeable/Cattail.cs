@@ -47,7 +47,7 @@ namespace NoxusBoss.Content.Items.Placeable
             Item.width = 16;
             Item.height = 10;
             Item.rare = ModContent.RarityType<CalamityRed>();
-            Item.value = Item.buyPrice(100, 0, 0, 0);
+            Item.value = Item.sellPrice(100, 0, 0, 0);
             Item.consumable = true;
         }
     }
