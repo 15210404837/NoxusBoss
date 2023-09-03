@@ -12,9 +12,9 @@ namespace NoxusBoss.Content.Biomes
 
         public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("NoxusBoss/EternalGardenWater");
 
-        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("NoxusBoss/LostColosseumSurfaceBGStyle");
+        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("NoxusBoss/EternalGardenSurfaceBGStyle");
 
-        public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.Find<ModUndergroundBackgroundStyle>("NoxusBoss/LostColosseumBGStyle");
+        public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.Find<ModUndergroundBackgroundStyle>("NoxusBoss/EternalGardenBGStyle");
 
         public override SceneEffectPriority Priority => SceneEffectPriority.BossMedium;
 

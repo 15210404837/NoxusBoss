@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Backgrounds
 {
-    public class LostColosseumBGStyle : ModUndergroundBackgroundStyle
+    public class EternalGardenBGStyle : ModUndergroundBackgroundStyle
     {
         // The player will never naturally see this.
         public override void FillTextureArray(int[] textureSlots)
@@ -13,7 +13,7 @@ namespace NoxusBoss.Content.Backgrounds
         }
     }
 
-    public class LostColosseumSurfaceBGStyle : ModSurfaceBackgroundStyle
+    public class EternalGardenSurfaceBGStyle : ModSurfaceBackgroundStyle
     {
         public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
         {
