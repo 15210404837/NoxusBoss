@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using NoxusBoss.Core.Graphics.Automators;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
@@ -22,6 +24,9 @@ namespace NoxusBoss.Core.Graphics
 
         public override void PostSetupContent()
         {
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
             // Load all primitive groups. This is done in PostSetupContent instead of OnModLoad because if the shader system isn't loaded this will fail.
             foreach (Type type in AssemblyManager.GetLoadableTypes(Mod.Code))
             {
