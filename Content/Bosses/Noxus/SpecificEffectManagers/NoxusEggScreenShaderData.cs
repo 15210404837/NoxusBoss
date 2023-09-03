@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses.Noxus
+namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
 {
     public class NoxusEggSkyScene : ModSceneEffect
     {

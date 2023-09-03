@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Core.Graphics;
 using Terraria;
 using Terraria.ID;

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using ReLogic.Content;
 using ReLogic.Peripherals.RGB;
 using Terraria;
 using Terraria.GameContent.RGB;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static NoxusBoss.Content.Bosses.Noxus.NoxusSky;
+using static NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers.NoxusSky;
 
 namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 {

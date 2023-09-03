@@ -1,7 +1,7 @@
 ﻿using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -64,9 +64,10 @@ namespace NoxusBoss.Content.Particles
             if (Variant == 3)
                 texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Particles/NoxusFumesLaRugaIllusion").Value;
 
+            int instanceCount = EntropicGod.Myself is null ? 1 : 2;
             Vector2 scale = new(Cbrt(Sin(Main.GlobalTimeWrappedHourly * 6.2f + Direction + Variant)) * 0.07f + Scale, Scale);
 
-            for (int i = 0; i < (NPC.AnyNPCs(ModContent.NPCType<EntropicGod>()) ? 1 : 2); i++)
+            for (int i = 0; i < instanceCount; i++)
                 spriteBatch.Draw(texture, Position - Main.screenPosition, null, Color * Opacity, Rotation, texture.Size() * 0.5f, scale, Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
     }

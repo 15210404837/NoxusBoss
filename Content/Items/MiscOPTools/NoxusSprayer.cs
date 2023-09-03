@@ -2,9 +2,10 @@
 using CalamityMod.Items;
 using CalamityMod.Rarities;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
+using NoxusBoss.Content.Bosses.Noxus.PreFightForm;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc;
-using NoxusBoss.Content.NPCs;
 using NoxusBoss.Content.Projectiles.Typeless;
 using NoxusBoss.Core.CrossCompatibility;
 using Terraria;

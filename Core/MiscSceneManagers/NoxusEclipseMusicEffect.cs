@@ -1,4 +1,4 @@
-﻿using NoxusBoss.Content.Bosses.Noxus;
+﻿using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using Terraria;
 using Terraria.ModLoader;
 

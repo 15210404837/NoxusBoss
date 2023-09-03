@@ -1,6 +1,7 @@
 ﻿using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

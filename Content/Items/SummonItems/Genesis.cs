@@ -2,8 +2,9 @@
 using CalamityMod.Items.Materials;
 using CalamityMod.Rarities;
 using CalamityMod.Tiles.Furniture.CraftingStations;
-using NoxusBoss.Content.Bosses.Noxus;
-using NoxusBoss.Content.NPCs;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
+using NoxusBoss.Content.Bosses.Noxus.PreFightForm;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Subworlds;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility;

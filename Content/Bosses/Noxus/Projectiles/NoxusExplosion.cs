@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

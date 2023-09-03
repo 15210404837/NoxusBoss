@@ -2,7 +2,7 @@
 using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;

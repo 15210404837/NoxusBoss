@@ -8,6 +8,8 @@ using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
+using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
@@ -17,9 +19,9 @@ using Terraria.Audio;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static NoxusBoss.Content.Bosses.Noxus.EntropicGod;
+using static NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm.EntropicGod;
 
-namespace NoxusBoss.Content.Bosses.Noxus
+namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
 {
     [AutoloadBossHead]
     public class NoxusEgg : ModNPC
@@ -840,10 +842,10 @@ namespace NoxusBoss.Content.Bosses.Noxus
 
         public void DrawSplitEggShell(Vector2 screenPos)
         {
-            Texture2D backTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusBack").Value;
-            Texture2D shellPiece1Texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEggShell1").Value;
-            Texture2D shellPiece2Texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEggShell2").Value;
-            Texture2D shellPiece3Texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/NoxusEggShell3").Value;
+            Texture2D backTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/FirstPhaseForm/NoxusBack").Value;
+            Texture2D shellPiece1Texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/FirstPhaseForm/NoxusEggShell1").Value;
+            Texture2D shellPiece2Texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/FirstPhaseForm/NoxusEggShell2").Value;
+            Texture2D shellPiece3Texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/FirstPhaseForm/NoxusEggShell3").Value;
             Vector2 shell1DrawPosition = NPC.Center - screenPos + new Vector2(-84f, 0f).RotatedBy(NPC.rotation) * NPC.scale;
             Vector2 shell2DrawPosition = NPC.Center - screenPos + new Vector2(40f, 66f).RotatedBy(NPC.rotation) * NPC.scale;
             Vector2 shell3DrawPosition = NPC.Center - screenPos + new Vector2(40f, -50f).RotatedBy(NPC.rotation) * NPC.scale;

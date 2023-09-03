@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NoxusBoss.Content.NPCs;
+using NoxusBoss.Content.Bosses.Noxus.PreFightForm;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses.Noxus
+namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
 {
     public class NoxusEggCutsceneSystem : ModSystem
     {

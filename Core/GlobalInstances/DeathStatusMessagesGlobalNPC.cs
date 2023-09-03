@@ -4,7 +4,7 @@ using CalamityMod.NPCs.ExoMechs.Ares;
 using CalamityMod.NPCs.ExoMechs.Thanatos;
 using CalamityMod.NPCs.SupremeCalamitas;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

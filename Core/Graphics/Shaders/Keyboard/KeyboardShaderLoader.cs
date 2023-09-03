@@ -3,11 +3,12 @@ using ReLogic.Peripherals.RGB;
 using Terraria.GameContent.RGB;
 using Terraria;
 using Terraria.ModLoader;
-using NoxusBoss.Content.Bosses.Noxus;
 using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria.ID;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 
 namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 {

@@ -4,6 +4,7 @@ using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;

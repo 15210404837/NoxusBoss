@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using SubworldLibrary;

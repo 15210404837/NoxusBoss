@@ -2,8 +2,10 @@
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
+using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -12,7 +14,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.NPCs
+namespace NoxusBoss.Content.Bosses.Noxus.PreFightForm
 {
     public class NoxusEggCutscene : ModNPC
     {
@@ -48,7 +50,7 @@ namespace NoxusBoss.Content.NPCs
 
         public ref float BurnIntensity => ref NPC.localAI[0];
 
-        public override string Texture => "NoxusBoss/Content/Bosses/Noxus/NoxusEgg";
+        public override string Texture => "NoxusBoss/Content/Bosses/Noxus/FirstPhaseForm/NoxusEgg";
 
         #endregion Fields and Properties
 

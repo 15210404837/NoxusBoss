@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Content.Bosses.Noxus;
 using ReLogic.Content;
 using System.IO;
 using System.Linq;
@@ -11,6 +10,7 @@ using Terraria.Graphics.Shaders;
 using Microsoft.Xna.Framework;
 using Terraria.ID;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
+using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 
 namespace NoxusBoss.Core.Graphics.Shaders
 {

@@ -5,7 +5,7 @@ using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.MainMenuThemes;
 using NoxusBoss.Content.Particles;

@@ -4,7 +4,7 @@ using System.Linq;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Content.Bosses.Noxus;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;

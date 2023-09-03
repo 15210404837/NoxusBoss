@@ -4,6 +4,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Configuration;
@@ -15,7 +16,7 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
-namespace NoxusBoss.Content.Bosses.Noxus
+namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
 {
     public class NoxusSkyScene : ModSceneEffect
     {
@@ -272,7 +273,7 @@ namespace NoxusBoss.Content.Bosses.Noxus
         {
             Vector2 screenCenter = Main.screenPosition + new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.5f);
             Rectangle cutoffArea = new(-1000, -1000, 4000, 4000);
-            Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/BackgroundRubble").Value;
+            Texture2D texture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Noxus/SpecificEffectManagers/BackgroundRubble").Value;
 
             for (int i = 0; i < rubble.Count; i++)
             {
