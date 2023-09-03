@@ -23,7 +23,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC, IBossChecklistSupport, IToastyQoLChecklistBossSupport
     {
-        #region Boss Checklist Compatibility
+        #region Crossmod Compatibility
 
         public bool IsMiniboss => false;
 
@@ -55,7 +55,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             spriteBatch.Draw(texture, centered, color);
         }
 
-        #endregion Boss Checklist Compatibility
+        #endregion Crossmod Compatibility
 
         #region Attack Cycles
 

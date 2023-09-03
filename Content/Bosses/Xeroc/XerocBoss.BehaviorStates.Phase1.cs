@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
-using CalamityMod.Events;
 using CalamityMod.Items.Weapons.Melee;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -14,7 +13,6 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
-using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -364,6 +362,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int starburstReleaseRate = 35;
             int starburstCount = 16;
             float starburstStartingSpeed = 0.6f;
+            ref float flareShootCounter = ref NPC.ai[2];
 
             // Make things faster in successive phases.
             if (CurrentPhase >= 1)
@@ -372,8 +371,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 flareShootCount--;
                 shootTime -= 90;
             }
-
-            ref float flareShootCounter = ref NPC.ai[2];
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);

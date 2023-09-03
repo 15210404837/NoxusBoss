@@ -69,12 +69,14 @@ namespace NoxusBoss.Core.GlobalItems
 
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            // The Primordial Wyrm drops the Terminus in Infernum instead of being in an abyss chest.
+            // The Primordial Wyrm drops the Terminus in Infernum instead of being in an abyss chest, since there is no abyss chest in Infernum.
             // For compatibility reasons, the Wyrm drops the boss rush starter item as well with this mod.
             // This item is only shown in the bestiary if Infernum is active, because in all other contexts it's unobtainable.
-            bool showInBestiary = ModReferences.Infernum is not null;
             if (npc.type == ModContent.NPCType<PrimordialWyrmHead>())
-                npcLoot.AddIf(() => InfernumCompatibilitySystem.InfernumModeIsActive, ModContent.ItemType<BossRushStarter>(), 1, 1, 1, showInBestiary);
+            {
+                bool showBRStarterItemInBestiary = ModReferences.Infernum is not null;
+                npcLoot.AddIf(() => InfernumCompatibilitySystem.InfernumModeIsActive, ModContent.ItemType<BossRushStarter>(), 1, 1, 1, showBRStarterItemInBestiary);
+            }
         }
 
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)

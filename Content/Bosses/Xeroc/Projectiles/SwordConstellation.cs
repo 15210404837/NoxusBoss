@@ -3,8 +3,6 @@ using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
 using Terraria;
 using Terraria.Graphics.Shaders;
