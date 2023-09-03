@@ -1,11 +1,11 @@
 sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
 sampler uImage2 : register(s2);
+sampler uImage3 : register(s3);
+sampler uImage4 : register(s4);
+sampler uImage5 : register(s5);
 
-float3 electricityBaseColor;
-float scrollSpeed;
 float globalTime;
-float uStretchReverseFactor;
 float2 uCorrectionOffset;
 matrix uWorldViewProjection;
 
@@ -41,38 +41,60 @@ float InverseLerp(float from, float to, float x)
     return saturate((x - from) / (to - from));
 }
 
+float4 ScreenBlend(float4 a, float4 b)
+{
+    return 1 - (1 - a) * (1 - b);
+}
+
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     float4 color = input.Color;
     float2 coords = input.TextureCoordinates;
-    float stretchReverseFactor = uStretchReverseFactor;
-    if (stretchReverseFactor <= 0)
-        stretchReverseFactor = 1;
-    float adjustedCompletionRatio = coords.x * stretchReverseFactor;
     
-    // Read the fade map as a streak.
-    float time = globalTime * (scrollSpeed + 1);
-    float bloomFadeout = pow(sin(coords.y * 3.141), 4);
-    float4 fadeMapColor = tex2D(uImage1, float2(frac(adjustedCompletionRatio * 20 - time * 1.6), coords.y));
-    float opacity = (0.5 + fadeMapColor.g) * bloomFadeout;
+    float startingFade = InverseLerp(0.059, 0.017, coords.x);
     
-    // Calculate electricity colors.
-    float electricityFade = tex2D(uImage2, float2(frac(adjustedCompletionRatio * 6 - time * 0.9), coords.y)).r;
-    float4 electricityColor = InverseLerp(0.4, 0.5, electricityFade * bloomFadeout) * float4(electricityBaseColor, 1);
+    float widthCutoffInterpolant = 1 - pow(coords.x, 0.45);
+
+    // Calculate the edge fade of the pixel. The closer it is to the left or right side of the laser, the more translucent it is.
+    // The intensity of this effect depends on two major factors:
+    // 1. It's significantly stronger at the start of the laser, so that the start feels more gradual and connected to the energy orb the laser is casted from.
+    // 2. The position of the pixel relative to the length of the laser, along with time. This gives a bit of a sinusoidal "waving" motion that makes the laser feel less rectangular.
+    float edgeFade = pow(sin(coords.y * 3.141), startingFade * 11 + sin(globalTime * 10 + coords.x * 16) * 1.1 + 2.3 + widthCutoffInterpolant * 20);
+    float4 baseMask = tex2D(uImage1, coords * float2(2, 1) + float2(globalTime * -3, 0)) * edgeFade;
     
-    // Fade out at the ends of the streak.
-    if (coords.x < 0.023)
-        opacity *= pow(coords.x / 0.023, 6);
-    if (coords.x > 0.95)
-        opacity *= pow(1 - (coords.x - 0.95) / 0.05, 6);
-    return color * opacity * 2 + electricityColor * opacity;
+    // Calculate the laser's noise texture. This starts with a grainy scrolling texture that's screen blended with the laser's base color.
+    // From there, its red and green components are sifted away based on another, more "blotchy" noise texture, to give color variance, in this case towards
+    // blues and cyans. This effect is weak enough to leave plenty of purple, however.
+    float4 thing1 = ScreenBlend(tex2D(uImage4, coords * float2(3.5, 1) + float2(globalTime * -2, 0)), color) * color.a;
+    thing1.rg -= tex2D(uImage5, coords * float2(2, 1) + float2(globalTime * -1.4, 0)).r * 0.17;
+    
+    // Calculate the overlay color. This effect serves as a subtractive effect, leaving black streaks wherever it's activated.
+    // The coordinates are calculated such that the overlay moves in a "swirl", as though it's spinning around a 3D effect.
+    float2 overlayCoords = float2(coords.x * 3 - globalTime * 8, coords.y + coords.x * 3 - globalTime * 2.1);
+    float overlay = tex2D(uImage3, overlayCoords).r * (1 - startingFade) * 0.65;
+    
+    // Calculate lightning overlays. Combined, these make purple/magneta lightning overlays on the texture.
+    float lightning1 = tex2D(uImage2, coords * float2(2.67, 0.81) + float2(globalTime * -5.11, 0) + float2(-0.66, 0) * coords.x) * (1 - startingFade);
+    float lightning2 = tex2D(uImage2, float2(coords.x, 1 - coords.y) * float2(3, 0.93) + globalTime * float2(-3.99, 0) + float2(0.89, 0) * coords.x) * (1 - startingFade);
+    float lightning = lightning1 + lightning2;
+    float4 result = baseMask * thing1 * 1.6;    
+    result.r *= lerp(1, 1.5 - lightning2 * 1.2, lightning);
+    result.g *= lerp(1, -0.2, lightning);
+    
+    // Add a little bit more pink-ness the color based on the lightning intensity.
+    result += color.a * lightning.r * 0.3;
+    
+    // Incorporate the subtractive overlay.
+    result.rgb -= overlay * pow(color.a, 0.1) * edgeFade;
+    
+    return result * (1 - startingFade);
 }
 
 technique Technique1
 {
     pass AutoloadPass
     {
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
+        PixelShader = compile ps_3_0 PixelShaderFunction();
     }
 }

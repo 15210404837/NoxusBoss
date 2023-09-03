@@ -235,7 +235,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             int moveIntoBackgroundTime = 90;
             int spinTime = 169;
             int aimUpwardsTime = 60;
-            int aimDownwardsTime = 15;
+            int aimDownwardsTime = 11;
             int laserShootCount = 1;
             int secondarySlamTime = 0;
             float handSpeedFactor = 2f;
@@ -320,7 +320,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
 
             // Orient the laser direction in 3D space.
             // It begins by spinning around, before orienting itself upward and slicing downward, releasing countless spikes.
-            float generalSpin = TwoPi * (wrappedAttackTimer - moveIntoBackgroundTime) * GetLerpValue(moveIntoBackgroundTime, moveIntoBackgroundTime + 30f, wrappedAttackTimer, true) / 105f;
+            float spinInterpolant = CalamityUtils.PolyInEasing(GetLerpValue(moveIntoBackgroundTime, moveIntoBackgroundTime + 30f, wrappedAttackTimer, true), 3);
+            float generalSpin = TwoPi * (wrappedAttackTimer - moveIntoBackgroundTime) * spinInterpolant / 90f;
             if (LaserSpinDirection == -1f)
                 generalSpin = -generalSpin - Pi;
 

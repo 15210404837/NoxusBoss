@@ -48,7 +48,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
         public ref float Lifetime => ref Projectile.ai[1];
 
-        public static float SquishFactor => 1.98f;
+        public static float SquishFactor => 1.18f;
 
         public const float MaxLaserLength = 4600f;
 
@@ -155,8 +155,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             if (EntropicGod.Myself is null)
                 return 0f;
 
-            float squeezeInterpolant = GetLerpValue(1f, 0.92f, completionRatio, true);
-            return MathHelper.SmoothStep(2f, Projectile.width, squeezeInterpolant) * Pow(completionRatio, 0.3f) * EntropicGod.Myself.ModNPC<EntropicGod>().LaserSquishFactor * 1.36f;
+            return Projectile.width * EntropicGod.Myself.ModNPC<EntropicGod>().LaserSquishFactor * 1.36f + completionRatio * 170f;
         }
 
         public Color ColorFunction(float completionRatio)
@@ -165,17 +164,20 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             color = Color.Lerp(color, Color.DeepSkyBlue, 0.12f);
 
             // Make the color a bit darker when pointing downward.
-            color = Color.Lerp(color, Color.Black, DarknessInterpolant * 0.4f + 0.16f);
+            color = Color.Lerp(color, Color.Black, DarknessInterpolant * 0.2f + 0.04f);
 
-            return color * Projectile.Opacity * GetLerpValue(1f, 0.8f, completionRatio, true) * Projectile.scale * 1.15f;
+            float opacity = Projectile.Opacity * GetLerpValue(1f, 0.91f, completionRatio, true) * Projectile.scale * 1.15f;
+            return color * opacity;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
+            DrawLaser();
+
             Main.spriteBatch.SetBlendState(BlendState.Additive);
             DrawFrontGlow();
             DrawBloomFlare();
-            DrawLaser();
+
             Main.spriteBatch.ResetBlendState();
 
             return false;
@@ -187,7 +189,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
             Vector2 origin = backglowTexture.Size() * 0.5f;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.scale * 20f;
-            Vector2 baseScale = new Vector2(1f + pulse * 0.05f, 1f) * Projectile.scale * 0.5f;
+            Vector2 baseScale = new Vector2(1f + pulse * 0.05f, 1f) * Projectile.scale * 0.7f;
             Main.spriteBatch.Draw(backglowTexture, drawPosition, null, Color.White, 0f, origin, baseScale * 0.7f, 0, 0f);
             Main.spriteBatch.Draw(backglowTexture, drawPosition, null, Color.Violet * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);
             Main.spriteBatch.Draw(backglowTexture, drawPosition, null, Color.Blue * 0.3f, 0f, origin, baseScale * 1.7f, 0, 0f);
@@ -199,11 +201,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             Vector2 drawPosition = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.scale * 20f;
             Color bloomFlareColor = Color.Lerp(Color.Wheat, Color.Blue, 0.7f);
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.76f;
-            float bloomFlareScale = Projectile.scale * 0.33f;
+            float bloomFlareScale = Projectile.scale * 0.4f;
             Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor, -bloomFlareRotation, bloomFlare.Size() * 0.5f, bloomFlareScale, 0, 0f);
 
             bloomFlareColor = Color.Lerp(Color.Wheat, Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.2f + 0.5f) % 1f, 1f, 0.55f), 0.7f);
-            bloomFlareColor = Color.Lerp(bloomFlareColor, Color.DarkBlue, 0.63f);
+            bloomFlareColor = Color.Lerp(bloomFlareColor, Color.Magenta, 0.63f);
             Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor, bloomFlareRotation, bloomFlare.Size() * 0.5f, bloomFlareScale, 0, 0f);
         }
 
@@ -212,10 +214,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             var laserShader = ShaderManager.GetShader("NoxusLaserShader");
             BeamDrawer ??= new PrimitiveTrail3D(WidthFunction, ColorFunction, null, true, laserShader);
 
-            laserShader.TrySetParameter("scrollSpeed", 0.5f);
-            laserShader.TrySetParameter("uStretchReverseFactor", 0.3f);
-            laserShader.TrySetParameter("electricityBaseColor", (Color.Lerp(Color.White, Color.Black, DarknessInterpolant * 0.4f + 0.16f) * Pow(Projectile.scale, 1.8f)).ToVector3());
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/MoltenNoise"), 1);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakNightmareDeathray"), 1);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakNightmareDeathrayLightning"), 2);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakNightmareDeathrayOverlay"), 3, SamplerState.LinearWrap);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons"), 4);
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/ViscousNoise"), 5);
 
             List<Vector2> points = new();
             for (int i = 0; i <= 32; i++)
@@ -224,7 +227,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             if (Time >= 2f)
             {
                 BeamDrawer.SpecifyPerspectiveMatrixMultiplier(CreateRotationMatrix(Rotation) * Matrix.CreateScale(1f, 1f / SquishFactor, 1f));
-                BeamDrawer.Draw(points, Projectile.Center, 59);
+                BeamDrawer.Draw(points, Projectile.Center, 70);
             }
         }
 
