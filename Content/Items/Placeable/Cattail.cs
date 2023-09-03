@@ -32,7 +32,7 @@ namespace NoxusBoss.Content.Items.Placeable
             cursor.Emit(OpCodes.Ldarg_3);
             cursor.EmitDelegate((int tileType) =>
             {
-                if (tileType == TileID.Cattail && !WorldSaveSystem.HasPlacedCattail)
+                if (tileType == TileID.Cattail)
                 {
                     SoundEngine.PlaySound(CelebrationSound);
                     CattailAnimationSystem.StartAnimation();
