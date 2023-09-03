@@ -51,7 +51,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
             // Shoot projectiles if Noxus' egg is present or the Entropic God is using its dedicated portal attack.
             bool canShootGas = NPC.AnyNPCs(ModContent.NPCType<NoxusEgg>());
-            bool canShootComet = EntropicGod.Myself is not null && EntropicGod.Myself.ModNPC<EntropicGod>().CurrentAttack == EntropicGod.EntropicGodAttackType.OrganizedPortalGasBursts;
+            bool canShootComet = EntropicGod.Myself is not null && EntropicGod.Myself.ModNPC<EntropicGod>().CurrentAttack == EntropicGod.EntropicGodAttackType.OrganizedPortalCometBursts;
             if (Time == (int)(Lifetime * MaxUpdates * 0.5f) - 10f && (canShootGas || canShootComet))
             {
                 SoundEngine.PlaySound(SoundID.Item103, Projectile.Center);

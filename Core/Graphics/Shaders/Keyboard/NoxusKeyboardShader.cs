@@ -21,7 +21,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 
         public readonly float[,] EyeBrightnessIntensity;
 
-        public static float BrightnessIntensity
+        public static float KeyboardBrightnessIntensity
         {
             get;
             set;
@@ -63,7 +63,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 
         public override void Update(float elapsedTime)
         {
-            BrightnessIntensity = Clamp(BrightnessIntensity * 0.96f - 0.005f, 0f, 1f);
+            KeyboardBrightnessIntensity = Clamp(KeyboardBrightnessIntensity * 0.96f - 0.005f, 0f, 1f);
         }
 
         private Color GetBaseBackgroundColor(int index)
@@ -100,7 +100,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
                 gridColor = gridColor * (1f + flash) + Vector4.One * flash * 0.02f;
 
                 // Apply flash effects.
-                gridColor += Vector4.One * BrightnessIntensity;
+                gridColor += Vector4.One * KeyboardBrightnessIntensity;
 
                 // Draw the eye.
                 if (EyeBrightness > 0f)
