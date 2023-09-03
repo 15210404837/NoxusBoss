@@ -65,8 +65,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     // Calculate the laser's noise texture. This starts with a grainy scrolling texture that's screen blended with the laser's base color.
     // From there, its red and green components are sifted away based on another, more "blotchy" noise texture, to give color variance, in this case towards
     // blues and cyans. This effect is weak enough to leave plenty of purple, however.
-    float4 thing1 = ScreenBlend(tex2D(uImage4, coords * float2(3.5, 1) + float2(globalTime * -2, 0)), color) * color.a;
-    thing1.rg -= tex2D(uImage5, coords * float2(2, 1) + float2(globalTime * -1.4, 0)).r * 0.17;
+    float4 noiseTexture = ScreenBlend(tex2D(uImage4, coords * float2(0.7, 0.2) + float2(globalTime * -2, 0)), color) * color.a;
+    noiseTexture.rg -= tex2D(uImage5, coords * float2(2, 1) + float2(globalTime * -1.4, 0)).r * 0.17;
     
     // Calculate the overlay color. This effect serves as a subtractive effect, leaving black streaks wherever it's activated.
     // The coordinates are calculated such that the overlay moves in a "swirl", as though it's spinning around a 3D effect.
@@ -77,9 +77,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float lightning1 = tex2D(uImage2, coords * float2(2.67, 0.81) + float2(globalTime * -5.11, 0) + float2(-0.66, 0) * coords.x) * (1 - startingFade);
     float lightning2 = tex2D(uImage2, float2(coords.x, 1 - coords.y) * float2(3, 0.93) + globalTime * float2(-3.99, 0) + float2(0.89, 0) * coords.x) * (1 - startingFade);
     float lightning = lightning1 + lightning2;
-    float4 result = baseMask * thing1 * 1.6;    
-    result.r *= lerp(1, 1.5 - lightning2 * 1.2, lightning);
-    result.g *= lerp(1, -0.2, lightning);
+    float4 result = baseMask * noiseTexture * 1.6;
+    result.r *= lerp(1, 1.3 - lightning2 * 0.95, lightning);
+    result.g *= lerp(1, 0.2, lightning);
     
     // Add a little bit more pink-ness the color based on the lightning intensity.
     result += color.a * lightning.r * 0.3;
