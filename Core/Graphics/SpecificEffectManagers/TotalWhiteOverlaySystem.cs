@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core.Fixes;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -63,7 +64,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (TimeSinceWorldgenFinished >= 1)
                 WorldGen.generatingWorld = true;
 
-            if (WhiteInterpolant <= 0f || Main.gameMenu)
+            if (WhiteInterpolant <= 0f || (Main.gameMenu && !EternalGardenIntroBackgroundFix.ShouldDrawWhite))
             {
                 TimeSinceMonologueBegan = 0;
                 return;
