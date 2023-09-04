@@ -175,7 +175,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         {
             Main.spriteBatch.EnterShaderRegion();
 
-            Vector2 scale = Vector2.One * Projectile.width * Projectile.scale * 0.2f;
+            Vector2 scale = Vector2.One * Projectile.width * Projectile.scale * 0.24f;
             Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
             var blackHoleShader = ShaderManager.GetShader("BlackHoleShader");
