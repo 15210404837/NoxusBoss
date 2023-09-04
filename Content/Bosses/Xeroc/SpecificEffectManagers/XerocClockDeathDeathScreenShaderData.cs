@@ -45,6 +45,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 ClockCenter = clocks.First().Center;
                 OutlineIntensity = clocks.First().Opacity;
             }
+            else
+                OutlineIntensity = Clamp(OutlineIntensity - 0.08f, 0f, 1f);
         }
 
         public override void Apply()
