@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CalamityMod;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
@@ -39,6 +40,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.hostile = true;
             Projectile.timeLeft = 60000;
             Projectile.Opacity = 0f;
+            Projectile.Calamity().DealsDefenseDamage = true;
         }
 
         public override void AI()

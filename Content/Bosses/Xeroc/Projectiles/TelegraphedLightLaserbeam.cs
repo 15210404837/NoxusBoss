@@ -53,6 +53,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = 60000;
+            Projectile.Calamity().DealsDefenseDamage = true;
         }
 
         public override void SendExtraAI(BinaryWriter writer)

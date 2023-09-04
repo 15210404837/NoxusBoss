@@ -79,6 +79,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.hostile = true;
             Projectile.netImportant = true;
             Projectile.timeLeft = 60000;
+            Projectile.Calamity().DealsDefenseDamage = true;
         }
 
         public override void SendExtraAI(BinaryWriter writer) => writer.Write(ZPosition);
