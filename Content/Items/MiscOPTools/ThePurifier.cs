@@ -40,10 +40,7 @@ namespace NoxusBoss.Content.Items.MiscOPTools
             Item.consumable = true;
         }
 
-        // This only works on singleplayer because:
-        // 1. Holy fuck this would be terrible if a single guy decided to throw this to cause maximal chaos.
-        // 2. I don't want to get into the headache that would be accounting for world/tile syncs during worldgen when a player is in the world.
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0 && Main.netMode == NetmodeID.SinglePlayer;
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

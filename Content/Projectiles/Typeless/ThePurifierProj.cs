@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using CalamityMod;
 using CalamityMod.Events;
@@ -14,6 +15,7 @@ using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -95,8 +97,11 @@ namespace NoxusBoss.Content.Projectiles.Typeless
         public override void AI()
         {
             // Play the buildup sound on the first frame.
+            // If in multiplayer, broadcast a warning as well.
             if (Projectile.localAI[0] == 0f)
             {
+                if (Main.netMode == NetmodeID.Server)
+                    CreateDeploymentAlert();
                 SoundEngine.PlaySound(ThePurifier.BuildupSound);
                 Projectile.localAI[0] = 1f;
             }
@@ -168,17 +173,38 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             Time++;
         }
 
+        public void CreateDeploymentAlert()
+        {
+            string playerWhoWillBeBlamed = Main.player[Projectile.owner].name;
+
+            // Blame a random player if there are more than three people present.
+            List<Player> activePlayers = Main.player.Where(p => p.active && !p.dead).ToList();
+            if (Main.rand.NextBool() && activePlayers.Count >= 3)
+                playerWhoWillBeBlamed = Main.rand.Next(activePlayers).name;
+
+            string text = Language.GetText($"Mods.NoxusBoss.Dialog.PurifierMultiplayerUseAlertText").Format(playerWhoWillBeBlamed);
+            BroadcastText(text, Color.Red);
+        }
+
         public override void Kill(int timeLeft)
         {
             WorldGen.generatingWorld = true;
             SoundEngine.PlaySound(XerocBoss.ScreamSoundLong);
 
-            GenerationProgress dummy = new();
+            // Kick clients out.
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                WorldGen.generatingWorld = false;
+                Netplay.Disconnect = true;
+                Main.netMode = NetmodeID.SinglePlayer;
+            }
+
+            GenerationProgress _ = new();
             new Thread(context =>
             {
                 WorldGen.worldGenCallback(context);
                 TotalWhiteOverlaySystem.TimeSinceWorldgenFinished = 1;
-            }).Start(dummy);
+            }).Start(_);
         }
 
         public override Color? GetAlpha(Color lightColor)

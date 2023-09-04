@@ -291,6 +291,7 @@ Mods: {
 			XerocStatusText: You have passed the test.
 			XerocStatusPercentageText: You have passed the test:
 			CattailText: CATTAIL PLACED!
+			PurifierMultiplayerUseAlertText: The Purifier has been deployed by {0}. The world will be reset in 15 seconds.
 			PurifierEntertainingRantText:
 				'''
 				Hi! This white background is natural. Your game is not broken. Please do not report the long wait as a bug. Please.
