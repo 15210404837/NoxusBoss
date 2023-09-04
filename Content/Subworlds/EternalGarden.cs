@@ -14,6 +14,7 @@ using CalamityMod.World;
 using static NoxusBoss.Core.WorldSaveSystem;
 using NoxusBoss.Assets.Fonts;
 using Terraria.Localization;
+using NoxusBoss.Core.Fixes;
 
 namespace NoxusBoss.Content.Subworlds
 {
@@ -95,6 +96,8 @@ namespace NoxusBoss.Content.Subworlds
             // Draw the text.
             Vector2 drawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - font.MeasureString(text) * 0.5f;
             Main.spriteBatch.DrawString(font, text, drawPosition, textColor * TextOpacity);
+
+            EternalGardenIntroBackgroundFix.ShouldDrawWhite = false;
         }
 
         public override void CopyMainWorldData()

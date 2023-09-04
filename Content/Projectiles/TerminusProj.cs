@@ -9,6 +9,7 @@ using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles.Visuals;
 using NoxusBoss.Content.Subworlds;
+using NoxusBoss.Core.Fixes;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -387,6 +388,7 @@ namespace NoxusBoss.Content.Projectiles
                 // Send the user to the eternal garden.
                 if (Main.myPlayer == Projectile.owner)
                 {
+                    EternalGardenIntroBackgroundFix.ShouldDrawWhite = true;
                     if (SubworldSystem.IsActive<EternalGarden>())
                         SubworldSystem.Exit();
                     else
