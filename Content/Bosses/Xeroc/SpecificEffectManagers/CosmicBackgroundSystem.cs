@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,7 +27,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             internal set;
         }
 
-        public override void OnModLoad()
+        // Load is used instead of OnModLoad to ensure that the texture generation happens as soon as possible.
+        public override void Load()
         {
             if (Main.netMode == NetmodeID.Server)
                 return;
@@ -34,16 +36,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             Main.QueueMainThreadAction(PrepareTarget);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         internal static void PrepareTarget()
         {
-            int width = 2048;
-            int height = 2048;
-            if (Main.gfxQuality >= 0.5f)
-            {
-                width *= 2;
-                height *= 2;
-            }
-
+            int width = 3072;
+            int height = 3072;
             int iterations = 14;
 
             // This is stored as a render target and not a PNG in the mod's source because the fractal needs to contain information that exceeds the traditional range of 0-1 color values.
