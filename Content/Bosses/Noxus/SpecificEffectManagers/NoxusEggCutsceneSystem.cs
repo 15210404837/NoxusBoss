@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NoxusBoss.Content.Bosses.Noxus.PreFightForm;
+using NoxusBoss.Content.CustomWorldSeeds;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;
@@ -38,9 +39,9 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             }
         }
 
-        public static bool NoxusBeganOrbitingPlanet => Main.hardMode;
+        public static bool NoxusBeganOrbitingPlanet => Main.hardMode || NoxusWorldManager.Enabled;
 
-        public static bool NoxusCanCommitSkydivingFromSpace => NPC.downedMoonlord;
+        public static bool NoxusCanCommitSkydivingFromSpace => NPC.downedMoonlord && !NoxusWorldManager.Enabled;
 
         public static List<Player> PlayersOnSurface
         {
