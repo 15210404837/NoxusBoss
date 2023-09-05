@@ -98,7 +98,7 @@ namespace NoxusBoss.Content.Tiles
             // Draw the main tile texture.
             Texture2D mainTexture = TextureAssets.Tile[Type].Value;
             Vector2 drawOffset = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
-            Vector2 drawPosition = new Vector2(i * 16 - Main.screenPosition.X, j * 16 - Main.screenPosition.Y + 2f) + drawOffset;
+            Vector2 drawPosition = new Vector2(i * 16 - Main.screenPosition.X, j * 16 - Main.screenPosition.Y) + drawOffset;
             Color lightColor = Lighting.GetColor(i, j);
             if (frameY <= 16)
                 lightColor = Color.White;
