@@ -177,6 +177,11 @@ Mods: {
 				DisplayName: Numinous Dye
 				Tooltip: ""
 			}
+
+			DivineMonolith: {
+				DisplayName: Divine Monolith
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {

@@ -1,4 +1,5 @@
-﻿using CalamityMod;
+﻿using System;
+using CalamityMod;
 using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -166,21 +167,24 @@ namespace NoxusBoss.Content.Subworlds
 
         public override void ModifySunLightColor(ref Color tileColor, ref Color backgroundColor)
         {
-            if (!WasInSubworldLastUpdateFrame)
+            if (!WasInSubworldLastUpdateFrame && XerocSky.SkyIntensityOverride <= 0f)
                 return;
 
             tileColor = Color.Wheat * 0.3f;
-            backgroundColor = new(4, 6, 14);
+
+            if (WasInSubworldLastUpdateFrame)
+                backgroundColor = new(4, 6, 14);
 
             // Make the background brighter the closer the camera is to the center of the world.
             float centerOfWorld = Main.maxTilesX * 8f;
             float distanceToCenterOfWorld = Distance(Main.screenPosition.X + Main.screenWidth * 0.5f, centerOfWorld);
             float brightnessInterpolant = GetLerpValue(3200f, 1400f, distanceToCenterOfWorld, true);
-            backgroundColor = Color.Lerp(backgroundColor, Color.LightCoral, brightnessInterpolant * 0.27f);
+            if (WasInSubworldLastUpdateFrame)
+                backgroundColor = Color.Lerp(backgroundColor, Color.LightCoral, brightnessInterpolant * 0.27f);
             tileColor = Color.Lerp(tileColor, Color.LightPink, brightnessInterpolant * 0.4f);
 
             // Make everything bright if Xeroc is present.
-            tileColor = Color.Lerp(tileColor, Color.White, XerocSky.HeavenlyBackgroundIntensity);
+            tileColor = Color.Lerp(tileColor, Color.White, MathF.Max(XerocSky.HeavenlyBackgroundIntensity, XerocSky.SkyIntensityOverride));
         }
     }
 }

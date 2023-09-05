@@ -13,6 +13,7 @@ using NoxusBoss.Content.Items.Dyes;
 using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Content.Items.Pets;
 using NoxusBoss.Content.Items.Placeable;
+using NoxusBoss.Content.Items.Placeable.Monoliths;
 using NoxusBoss.Content.Items.Placeable.Relics;
 using NoxusBoss.Content.Items.Placeable.Trophies;
 using Terraria;
@@ -123,6 +124,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             npcLoot.Add(ModContent.ItemType<Cattail>());
             npcLoot.Add(ModContent.ItemType<ThePurifier>());
             npcLoot.Add(ModContent.ItemType<Rock>());
+            npcLoot.Add(ModContent.ItemType<DivineMonolith>());
             npcLoot.Add(ModContent.ItemType<NuminousDye>(), 1, 3, 5);
             npcLoot.Add(ModContent.ItemType<XerocMask>(), 7);
             npcLoot.Add(ModContent.ItemType<XerocTrophy>(), 10);

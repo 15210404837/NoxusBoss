@@ -196,7 +196,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Use custom death text and sounds if Xeroc killed the player.
             if (WasKilledByXeroc)
             {
-                MagicBurstParticle burst = new(Player.Center, Vector2.Zero, Color.Wheat, 24, 1f, 0.6f);
+                MagicBurstParticle burst = new(Player.Center, Vector2.Zero, Color.Wheat, 24, 1f);
                 GeneralParticleHandler.SpawnParticle(burst);
                 RadialScreenShoveSystem.Start(Player.Center - Vector2.UnitY * 400f, 36);
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,26 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
     public class XerocDimensionSkyGenerator : ModSystem
     {
+        public static bool InProximityOfDivineMonolith
+        {
+            get;
+            set;
+        }
+
+        // Ideally it'd be possible to just turn InProximityOfDivineMonolith back to false if it was already on and its effects were registered, but since NearbyEffects hooks
+        // don't run on the same update cycle as the PrepareDimensionTarget method this delay exists.
+        public static int TimeSinceCloseToDivineMonolith
+        {
+            get;
+            set;
+        }
+
+        public static float DivineMonolithIntensity
+        {
+            get;
+            set;
+        }
+
         public static ManagedRenderTarget XerocDimensionTarget
         {
             get;
@@ -61,6 +82,10 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (XerocDimensionTarget.Width != width || XerocDimensionTarget.Height != height)
                 XerocDimensionTarget.Recreate(width, height);
 
+            // Increase the divine monolith proximity timer.
+            if (!Main.gamePaused && Main.instance.IsActive)
+                TimeSinceCloseToDivineMonolith++;
+
             // Evaluate the intensity of the effect. If it is not in use, don't waste resources attempting to update it.
             float intensity = HeavenlyBackgroundIntensity * Remap(ManualSunScale, 1f, 12f, 1f, 0.45f);
             if (!IsEffectActive && DeificTouch.UsingEffect && HeavenlyBackgroundIntensity <= 0f && Intensity <= 0f)
@@ -71,6 +96,15 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 Main.time = 24000;
                 Main.dayTime = true;
             }
+            if (!Main.gameMenu && (InProximityOfDivineMonolith || DivineMonolithIntensity > 0f))
+            {
+                DivineMonolithIntensity = Clamp(DivineMonolithIntensity + InProximityOfDivineMonolith.ToDirectionInt() * 0.075f, 0f, 1f);
+                intensity = MathF.Max(intensity, DivineMonolithIntensity);
+                SkyIntensityOverride = intensity;
+            }
+
+            if (TimeSinceCloseToDivineMonolith >= 10)
+                InProximityOfDivineMonolith = false;
 
             if (intensity <= 0.001f && XerocBoss.Myself is null)
                 return;

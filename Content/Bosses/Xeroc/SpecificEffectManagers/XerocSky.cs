@@ -214,7 +214,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             if (IsEffectActive)
                 SkyManager.Instance["Ambience"].Deactivate();
 
-            SkyIntensityOverride = Clamp(SkyIntensityOverride - 0.07f, 0f, 1f);
+            if (!XerocDimensionSkyGenerator.InProximityOfDivineMonolith)
+                SkyIntensityOverride = Clamp(SkyIntensityOverride - 0.07f, 0f, 1f);
             if (Intensity < 1f)
                 SkyEyeOpacity = Clamp(SkyEyeOpacity - 0.02f, 0f, Intensity + 0.001f);
 

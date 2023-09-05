@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Items;
 using NoxusBoss.Content.Items.Armor.Vanity.Masks;
 using NoxusBoss.Content.Items.Pets;
+using NoxusBoss.Content.Items.Placeable.Monoliths;
 using NoxusBoss.Content.Items.Placeable.Trophies;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility;
@@ -38,6 +39,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public List<int> Collectibles => new()
         {
             ModContent.ItemType<Rock>(),
+            ModContent.ItemType<DivineMonolith>(),
             ModContent.ItemType<CheatPermissionSlip>(),
             ModContent.ItemType<XerocMask>(),
             ModContent.ItemType<XerocTrophy>(),
