@@ -116,9 +116,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             cosmicShader.TrySetParameter("scrollSpeedFactor", 0.0015f);
             cosmicShader.TrySetParameter("frontStarColor", Color.Lerp(Color.Coral, Color.White, DifferentStarsInterpolant).ToVector3() * 0.5f);
             cosmicShader.TrySetParameter("backStarColor", Color.Lerp(Color.Yellow, Color.Pink, DifferentStarsInterpolant).ToVector3() * 0.4f);
-            cosmicShader.TrySetParameter("colorChangeInfluence1", new Vector3(-2.1f, 0.4f, 1.75f)); // Adds cyan.
+            cosmicShader.TrySetParameter("colorChangeInfluence1", new Vector3(-2.1f, 0.5f, 2.15f)); // Adds cyan.
             cosmicShader.TrySetParameter("colorChangeInfluence2", new Vector3(2.4f, -0.9f, 5.8f)); // Adds violets.
-            cosmicShader.TrySetParameter("colorChangeStrength1", 0.68f);
+            cosmicShader.TrySetParameter("colorChangeStrength1", 0.6f);
             cosmicShader.TrySetParameter("colorChangeStrength2", 0.81f);
             cosmicShader.SetTexture(KalisetFractal.Target, 1, SamplerState.AnisotropicWrap);
             cosmicShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2, SamplerState.AnisotropicWrap);

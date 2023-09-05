@@ -51,8 +51,8 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     }
     
     // Apply color change interpolants. This will be used later.
-    float colorChangeBrightness1 = tex2D(uImage2, coords * 0.5);
-    float colorChangeBrightness2 = tex2D(uImage2, coords * 0.85 + globalTime * scrollSpeedFactor);
+    float colorChangeBrightness1 = tex2D(uImage2, coords * 1.5);
+    float colorChangeBrightness2 = tex2D(uImage2, coords * 1.65 + globalTime * scrollSpeedFactor);
     float totalColorChange = colorChangeBrightness1 + colorChangeBrightness2;
 
     // Account for the accumulated scale from the fractal noise.
