@@ -31,9 +31,10 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
 {
     float4 result = 0;
     float volumetricLayerFade = 1.0;
-    for (int i = 0; i < 12; i++)
+    float distanceFromBottom = distance(coords.y, 1);
+    for (int i = 0; i < 13; i++)
     {
-        float time = globalTime / volumetricLayerFade;
+        float time = globalTime * pow(volumetricLayerFade, 2) * 3;
         float2 p = coords * zoom;
         p.y += 1.5;
 
@@ -42,7 +43,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
         p /= volumetricLayerFade;
 
         float totalChange = tex2D(uImage1, p);
-        float4 layerColor = float4(lerp(frontStarColor, backStarColor, i / 12.0), 1.0);
+        float4 layerColor = float4(lerp(frontStarColor, backStarColor, i / 13.0), 1.0);
         result += layerColor * totalChange * volumetricLayerFade;
 
         // Make the next layer exponentially weaker in intensity.
@@ -55,7 +56,6 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float totalColorChange = colorChangeBrightness1 + colorChangeBrightness2;
 
     // Account for the accumulated scale from the fractal noise.
-    float distanceFromBottom = distance(coords.y, 1);
     result.rgb = pow(result.rgb * 0.010714, 2.64 - totalColorChange * 1.4 + pow(distanceFromBottom, 3) * 3.9) * brightness;
     
     // Apply color changing accents to the result, to keep it less homogenous.
