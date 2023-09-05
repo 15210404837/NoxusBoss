@@ -110,17 +110,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             Vector2 screenArea = new(Main.instance.GraphicsDevice.DisplayMode.Width, Main.instance.GraphicsDevice.DisplayMode.Width);
             Vector2 scale = screenArea / TextureAssets.MagicPixel.Value.Size();
 
-            Main.instance.GraphicsDevice.Textures[1] = KalisetFractal.Target;
-
             var cosmicShader = ShaderManager.GetShader("CosmicBackgroundShader");
-            cosmicShader.TrySetParameter("zoom", 0.11f);
+            cosmicShader.TrySetParameter("zoom", 0.12f);
             cosmicShader.TrySetParameter("brightness", intensity);
             cosmicShader.TrySetParameter("scrollSpeedFactor", 0.0015f);
             cosmicShader.TrySetParameter("frontStarColor", Color.Lerp(Color.Coral, Color.White, DifferentStarsInterpolant).ToVector3() * 0.5f);
             cosmicShader.TrySetParameter("backStarColor", Color.Lerp(Color.Yellow, Color.Pink, DifferentStarsInterpolant).ToVector3() * 0.4f);
+            cosmicShader.TrySetParameter("colorChangeInfluence1", new Vector3(-2.1f, 0.4f, 1.75f)); // Adds cyan.
+            cosmicShader.TrySetParameter("colorChangeInfluence2", new Vector3(2.4f, -0.9f, 5.8f)); // Adds violets.
+            cosmicShader.TrySetParameter("colorChangeStrength1", 0.68f);
+            cosmicShader.TrySetParameter("colorChangeStrength2", 0.81f);
+            cosmicShader.SetTexture(KalisetFractal.Target, 1, SamplerState.AnisotropicWrap);
+            cosmicShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2, SamplerState.AnisotropicWrap);
             cosmicShader.Apply();
 
-            Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Vector2.Zero, null, Color.White * 0.25f, 0f, Vector2.Zero, scale, 0, 0f);
+            Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Vector2.Zero, null, Color.White * 0.35f, 0f, Vector2.Zero, scale, 0, 0f);
             Main.pixelShader.CurrentTechnique.Passes[0].Apply();
         }
     }

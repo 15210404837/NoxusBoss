@@ -250,7 +250,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 {
                     SmokeParticles.Add(new()
                     {
-                        DrawPosition = new Vector2(Main.rand.NextFloat(-400f, Main.screenWidth + 400f), Main.screenHeight + 250f),
+                        DrawPosition = new Vector2(Main.rand.NextFloat(-400f, Main.screenWidth + 400f), Main.screenHeight + 372f),
                         Velocity = -Vector2.UnitY * Main.rand.NextFloat(5f, 23f) + Main.rand.NextVector2Circular(3f, 3f),
                         SmokeColor = Color.Lerp(Color.Coral, Color.Wheat, Main.rand.NextFloat(0.5f, 0.85f)) * 0.9f,
                         Rotation = Main.rand.NextFloat(TwoPi),

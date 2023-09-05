@@ -1,5 +1,6 @@
 sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
+sampler uImage2 : register(s2);
 
 float zoom;
 float scrollSpeedFactor;
@@ -7,6 +8,10 @@ float brightness;
 float globalTime;
 float3 frontStarColor;
 float3 backStarColor;
+float3 colorChangeInfluence1;
+float3 colorChangeInfluence2;
+float colorChangeStrength1;
+float colorChangeStrength2;
 
 struct VertexShaderInput
 {
@@ -41,11 +46,22 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
         result += layerColor * totalChange * volumetricLayerFade;
 
         // Make the next layer exponentially weaker in intensity.
-        volumetricLayerFade *= 0.9;
+        volumetricLayerFade *= 0.91;
     }
+    
+    // Apply color change interpolants. This will be used later.
+    float colorChangeBrightness1 = tex2D(uImage2, coords * 0.5);
+    float colorChangeBrightness2 = tex2D(uImage2, coords * 0.85 + globalTime * scrollSpeedFactor);
+    float totalColorChange = colorChangeBrightness1 + colorChangeBrightness2;
 
     // Account for the accumulated scale from the fractal noise.
-    result.rgb = pow(result.rgb * 0.010714, 1.6) * brightness;
+    float distanceFromBottom = distance(coords.y, 1);
+    result.rgb = pow(result.rgb * 0.010714, 2.64 - totalColorChange * 1.4 + pow(distanceFromBottom, 3) * 3.9) * brightness;
+    
+    // Apply color changing accents to the result, to keep it less homogenous.
+    result.rgb += colorChangeInfluence1 * (result.r + result.g + result.b) / 3 * colorChangeBrightness1 * colorChangeStrength1;    
+    result.rgb += colorChangeInfluence2 * (result.r + result.g + result.b) / 3 * pow(colorChangeBrightness2, 4) * colorChangeStrength2;
+    
     return result * sampleColor;
 }
 

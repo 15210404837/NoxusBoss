@@ -109,8 +109,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Draw the sky overlay.
             Rectangle screenArea = new(0, 210, Main.screenWidth, Main.screenHeight - 120);
             Texture2D skyTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/SpecificEffectManagers/XerocSky").Value;
-
-            Main.spriteBatch.Draw(skyTexture, screenArea, Color.White * backgroundIntensity * Intensity * 0.76f);
+            Main.spriteBatch.Draw(skyTexture, screenArea, new Color(88, 88, 88) * backgroundIntensity * (Main.gameMenu ? 1f : Intensity) * 0.76f);
         }
 
         public static void DrawSmoke(float backgroundIntensity)
