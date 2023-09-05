@@ -57,7 +57,7 @@ namespace NoxusBoss.Core.Graphics
             private set;
         }
 
-        // This needs to be in the trail instance in case and not the group itself you want local data to be included in the trail's drawing.
+        // This needs to be in the trail instance and not the group itself if you want local data to be included in the trail's drawing.
         // For example, if you want a trail that fades out based on an individual projectile's Opacity value then you can't have
         // a single trail that manages all projectiles because some projectiles may have different opacity values.
         public PrimitiveTrailCopy PrimitiveDrawer
