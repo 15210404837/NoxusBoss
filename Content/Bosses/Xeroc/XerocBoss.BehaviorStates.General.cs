@@ -249,6 +249,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Main.hideUI = false;
             Main.blockInput = false;
 
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
+
             // Appear on the foreground.
             if (AttackTimer == 1f)
             {

@@ -5,6 +5,8 @@ using Terraria;
 using System.Collections.Generic;
 using System.Linq;
 using NoxusBoss.Core.Graphics.Automators;
+using Terraria.ID;
+using CalamityMod;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 {
@@ -32,6 +34,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         private void PreparePatternTarget(GameTime obj)
         {
+            if (XerocBoss.Myself is null)
+                return;
+
             var gd = Main.instance.GraphicsDevice;
 
             // Prepare the render target for drawing.
@@ -72,12 +77,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 float eyeRotation = RandomFloat(ref eyeSeed) * TwoPi;
                 float eyeScale = Lerp(1.5f, 4.1f, RandomFloat(ref eyeSeed));
 
-                if (existingEyePositions.Any(e => eyeDrawPosition.WithinRange(e, 350f)))
+                if (existingEyePositions.Any(e => eyeDrawPosition.WithinRange(e, 372f)))
                     continue;
 
                 // Calculate texture and frame information from the aforementioned stuff.
                 int eyeFrameCount;
+                float widthCorrectionFactor = 1f;
+                if (XerocBoss.Myself.ModNPC<XerocBoss>().Hands.Any())
+                    widthCorrectionFactor = Abs(XerocBoss.Myself.ModNPC<XerocBoss>().Hands[0].Center.X - XerocBoss.Myself.Center.X) / 200f;
+
                 Texture2D eyeTexture;
+                Vector2 xerocScale = XerocBoss.Myself.ModNPC<XerocBoss>().TeleportVisualsAdjustedScale;
+                Vector2 worldPosition = XerocBoss.Myself.TopLeft + (eyeDrawPosition / new Vector2(widthCorrectionFactor * 5f, 9.5f) + new Vector2(-170f, 500f) / widthCorrectionFactor) * xerocScale;
+
+                // Calculate the angle of the eyes to Xeroc's target.
+                bool lookAtTarget = XerocBoss.Myself.ModNPC<XerocBoss>().RobeEyesShouldStareAtTarget;
+                float angleToTarget = Main.player[XerocBoss.Myself.target].AngleFrom(worldPosition) + Pow(CalamityUtils.PerlinNoise2D(Main.GlobalTimeWrappedHourly * 0.2f, 0.3137f, 3, i), 2f) * 2.3f;
                 switch (eyeVariant)
                 {
                     case 0:
@@ -96,8 +111,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 }
 
                 // Draw the eye.
-                Rectangle eyeFrame = eyeTexture.Frame(1, eyeFrameCount, 0, (int)(Main.GlobalTimeWrappedHourly * 15f + eyeFrameOffset) % eyeFrameCount);
-                Main.spriteBatch.Draw(eyeTexture, eyeDrawPosition, eyeFrame, Color.White with { A = 20 }, eyeRotation, eyeFrame.Size() * 0.5f, eyeScale, 0, 0f);
+                if (!lookAtTarget)
+                {
+                    Rectangle eyeFrame = eyeTexture.Frame(1, eyeFrameCount, 0, (int)(Main.GlobalTimeWrappedHourly * 15f + eyeFrameOffset) % eyeFrameCount);
+                    Main.spriteBatch.Draw(eyeTexture, eyeDrawPosition, eyeFrame, Color.White with { A = 20 }, eyeRotation, eyeFrame.Size() * 0.5f, eyeScale, 0, 0f);
+                }
+                else
+                {
+                    eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/EyeAnimationEmptyBottom").Value;
+                    Main.spriteBatch.Draw(eyeTexture, eyeDrawPosition, null, Color.White with { A = 20 }, eyeRotation, eyeTexture.Size() * 0.5f, eyeScale, 0, 0f);
+
+                    Texture2D pupilTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/EyeAnimationEmptyPupil").Value;
+                    Vector2 pupilOffset = (angleToTarget.ToRotationVector2() * (Main.player[XerocBoss.Myself.target].Distance(worldPosition) * 0.2f + 15f)).ClampMagnitude(0f, 70f) * eyeScale * xerocScale * 0.3f;
+                    Main.spriteBatch.Draw(pupilTexture, eyeDrawPosition + pupilOffset, null, Color.White, eyeRotation, pupilTexture.Size() * 0.5f, eyeScale, 0, 0f);
+
+                    Texture2D overlayTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/EyeAnimationEmptyOverlay").Value;
+                    Main.spriteBatch.Draw(overlayTexture, eyeDrawPosition, null, Color.White with { A = 120 }, eyeRotation, overlayTexture.Size() * 0.5f, eyeScale, 0, 0f);
+                }
 
                 // Store the eye position in a list so that other eyes know to avoid getting too close to it and causing overlap.
                 existingEyePositions.Add(eyeDrawPosition);

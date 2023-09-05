@@ -45,6 +45,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update universal hands.
             DefaultUniversalHandMotion();
 
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
+
             if (AttackTimer <= sliceShootDelay)
             {
                 // Play mumble sounds.
@@ -923,6 +926,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
 
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
+
             // Easing time!
             CurveSegment slowStart = new(PolyOutEasing, 0f, Pi, -Pi, 2);
             CurveSegment swingFast = new(PolyOutEasing, 0.5f, slowStart.EndingHeight, Pi + 0.54f, 5);
@@ -1157,6 +1163,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Update teeth.
             TopTeethOffset *= 0.9f;
+
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
 
             // Look at the player.
             PupilOffset = Vector2.Lerp(PupilOffset, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 50f, 0.2f);

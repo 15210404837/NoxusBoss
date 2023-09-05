@@ -404,6 +404,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update teeth.
             PerformTeethChomp(AttackTimer / 45f % 1f);
 
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
+
             // Hover near the target at first.
             if (AttackTimer <= redirectTime)
             {

@@ -1,5 +1,6 @@
 sampler uImage0 : register(s0);
 
+bool flipHorizontally;
 float brightnessPower;
 float3 lightDirection;
 float2 pixelationZoom;
@@ -34,7 +35,8 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float3 baseColor = tex2D(uImage0, round(input.TextureCoordinates / pixelationZoom) * pixelationZoom);
+    float2 adjustedCoords = float2(abs(flipHorizontally - input.TextureCoordinates.x), input.TextureCoordinates.y);
+    float3 baseColor = tex2D(uImage0, round(adjustedCoords / pixelationZoom) * pixelationZoom);
     float brightness = pow(saturate(dot(lightDirection, normalize(input.Normal))), brightnessPower);
     return float4(baseColor * brightness, 1);
 }

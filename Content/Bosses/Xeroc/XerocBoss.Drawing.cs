@@ -325,6 +325,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Matrix worldToUV = Matrix.CreateTranslation(-screenPos.X, -screenPos.Y, 0f) * view * projection;
             clothShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             clothShader.TrySetParameter("brightnessPower", 40f);
+            clothShader.TrySetParameter("flipHorizontally", false);
             clothShader.TrySetParameter("pixelationZoom", Vector2.One * 2f / clothTexture.Size());
             clothShader.TrySetParameter("uWorldViewProjection", worldToUV);
             clothShader.Apply();
@@ -353,7 +354,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Vector2 backlightScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(400f, 448f) / backlightTexture.Size();
             Vector2 idealCensorDrawPosition = IdealCensorPosition - screenPos + Vector2.UnitY * censorScale * 80f;
             Vector2 censorDrawPosition = CensorPosition - screenPos + Vector2.UnitY * censorScale * 80f;
-            censorDrawPosition = Vector2.Lerp(censorDrawPosition, idealCensorDrawPosition, GetLerpValue(1f, 2.1f, ZPosition, true) * 0.8f);
+            censorDrawPosition = Vector2.Lerp(censorDrawPosition, idealCensorDrawPosition, GetLerpValue(1f, 2.1f, ZPosition, true) * 0.45f + 0.42f);
 
             for (float offsetInterpolant = -1f; offsetInterpolant < 1f; offsetInterpolant += 0.4f)
             {

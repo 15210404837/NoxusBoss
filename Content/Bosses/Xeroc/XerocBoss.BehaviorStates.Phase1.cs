@@ -40,7 +40,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f + overshootOffset, redirectInterpolant);
             }
             else
+            {
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f, 0.5f);
+
+                // Make the robe's eyes stare at the target while hovering.
+                RobeEyesShouldStareAtTarget = true;
+            }
 
             // Flap wings.
             UpdateWings(AttackTimer / 54f % 1f);
@@ -122,6 +127,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Update teeth.
             TopTeethOffset *= 0.9f;
+
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
 
             // Teleport above the target at first.
             if (AttackTimer <= teleportDelay * 2f)
@@ -372,9 +380,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 shootTime -= 90;
             }
 
+            // Make the robe's eyes stare at the target.
+            RobeEyesShouldStareAtTarget = true;
+
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
 
+            // Update teeth.
             PerformTeethChomp(AttackTimer / 45f % 1f);
 
             // Create a suitable star and two hands on the first frame.

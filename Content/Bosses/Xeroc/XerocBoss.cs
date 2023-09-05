@@ -272,6 +272,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public bool RobeEyesShouldStareAtTarget
+        {
+            get;
+            set;
+        }
+
         public float PupilScale
         {
             get;
@@ -571,6 +577,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             PupilScale = Lerp(PupilScale, 1f, 0.072f);
             PupilTelegraphOpacity = Clamp(PupilTelegraphOpacity - 0.02f, 0f, 1f);
             PupilTelegraphArc *= 0.96f;
+            RobeEyesShouldStareAtTarget = false;
 
             // Ensure that the player receives the boss effects buff.
             NPC.Calamity().KillTime = 1800;
