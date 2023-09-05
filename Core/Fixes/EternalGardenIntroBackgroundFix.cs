@@ -31,10 +31,16 @@ namespace NoxusBoss.Core.Fixes
             orig(self, gameTime);
             if (ShouldDrawWhite)
             {
+                Main.spriteBatch.Begin();
+
                 Texture2D pixel = TextureAssets.MagicPixel.Value;
                 Vector2 screenArea = new(Main.instance.GraphicsDevice.DisplayMode.Width, Main.instance.GraphicsDevice.DisplayMode.Width);
                 Vector2 scale = screenArea / pixel.Size();
                 Main.spriteBatch.Draw(pixel, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, 0, 0f);
+
+                Main.DrawCursor(Main.DrawThickCursor());
+
+                Main.spriteBatch.End();
             }
         }
     }
