@@ -66,7 +66,8 @@ namespace NoxusBoss.Content.Tiles
             Vector2 drawOffset = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
             Vector2 drawPosition = new Vector2(i * 16 - Main.screenPosition.X, j * 16 - Main.screenPosition.Y) + drawOffset;
             Color lightColor = Lighting.GetColor(i + 1, j + 1);
-            spriteBatch.Draw(mainTexture, drawPosition, null, lightColor, 0f, Vector2.Zero, 1f, 0, 0f);
+            if (!Main.tile[i, j].IsTileInvisible)
+                spriteBatch.Draw(mainTexture, drawPosition, null, lightColor, 0f, Vector2.Zero, 1f, 0, 0f);
 
             // Calculate the direction to the player, to determine how the pupil should be oriented.
             // This does not look at the nearest player, it explicitly looks at the current client at all times.
