@@ -33,7 +33,13 @@ namespace NoxusBoss.Content.Subworlds
             private set;
         }
 
-        public const int XerocWaitDelay = 240;
+        public static bool LifeFruitDroppedFromTree
+        {
+            get;
+            set;
+        }
+
+        public const int XerocWaitDelay = 300;
 
         public override void PreUpdateEntities()
         {
@@ -69,6 +75,8 @@ namespace NoxusBoss.Content.Subworlds
 
                 WasInSubworldLastUpdateFrame = inGarden;
             }
+            if (!WasInSubworldLastUpdateFrame)
+                LifeFruitDroppedFromTree = false;
 
             // Everything beyond this point applies solely to the subworld.
             if (!WasInSubworldLastUpdateFrame)

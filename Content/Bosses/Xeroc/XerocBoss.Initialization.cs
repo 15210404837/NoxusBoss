@@ -7,6 +7,7 @@ using CalamityMod.Items.SummonItems;
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Biomes;
 using NoxusBoss.Content.Items;
 using NoxusBoss.Content.Items.Armor.Vanity.Masks;
 using NoxusBoss.Content.Items.Pets;
@@ -213,6 +214,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPC.Opacity = 0f;
             NPC.Calamity().ShouldCloseHPBar = true;
 
+            SpawnModBiomes = new int[]
+            {
+                ModContent.GetInstance<EternalGardenBiome>().Type
+            };
             Wings = new XerocWing[WingCount];
         }
 

@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Particles
 {
-    public class PaleDuckweed : Particle
+    public class PaleDuckweedParticle : Particle
     {
         public int UniqueID;
 
@@ -24,9 +24,9 @@ namespace NoxusBoss.Content.Particles
 
         public override bool UseCustomDraw => true;
 
-        public override string Texture => "NoxusBoss/Content/Particles/PaleDuckweed";
+        public override string Texture => "NoxusBoss/Content/Particles/PaleDuckweedParticle";
 
-        public PaleDuckweed(Vector2 position, Vector2 velocity, Color color, int lifetime)
+        public PaleDuckweedParticle(Vector2 position, Vector2 velocity, Color color, int lifetime)
         {
             Frame = Main.rand.Next(FrameVariants);
             Position = position;

@@ -3,6 +3,7 @@ using CalamityMod.Dusts;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Items.Placeable.Monoliths;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -45,7 +46,7 @@ namespace NoxusBoss.Content.Tiles
 
                 Vector2 startingPoint = new Point(i, j).ToWorldCoordinates() + new Vector2(17f, 6f);
                 Player nearestPlayer = Main.player[Player.FindClosest(startingPoint, 0, 0)];
-                if (Main.rand.NextBool(14) && !Main.gamePaused && !nearestPlayer.WithinRange(startingPoint, 100f))
+                if (Main.rand.NextBool(14) && !Main.gamePaused && !nearestPlayer.WithinRange(startingPoint, 100f) && XerocSky.SkyIntensityOverride >= 0.99f)
                 {
                     Vector2 directionToPlayer = (nearestPlayer.Center - startingPoint).SafeNormalize(-Vector2.UnitY);
                     Vector2 galaxyVelocity = directionToPlayer.RotatedByRandom(1.87f) * Main.rand.NextFloat(9.5f, 28f) + Main.rand.NextVector2Circular(9f, 9f);

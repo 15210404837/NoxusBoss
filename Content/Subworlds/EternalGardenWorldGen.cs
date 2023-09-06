@@ -337,6 +337,10 @@ namespace NoxusBoss.Content.Subworlds
             plantSelector.Add((ushort)ModContent.TileType<BrimstoneRose>(), 0.09);
             plantSelector.Add((ushort)ModContent.TileType<ElysianRose>(), 0.4);
 
+            // Generate a special tree in the very center of the garden.
+            int surfaceY = SurfaceTilePoint;
+            WorldGen.PlaceObject(Main.maxTilesX / 2, surfaceY - topography[Main.maxTilesX / 2], ModContent.TileType<TreeOfLife>());
+
             // Separately place Starbearers based on how many times players have been killed by Xeroc.
             // This has a hard limit so that nohitters don't litter the subworld with them.
             int starbearerCount = Clamp(WorldSaveSystem.XerocDeathCount, 0, 200);
@@ -352,7 +356,6 @@ namespace NoxusBoss.Content.Subworlds
             }
 
             // Loop through the mound's tiles and replace the dirt with grass if it's exposed to air.
-            int surfaceY = SurfaceTilePoint;
             ushort previousPlantID = 0;
             for (int i = 0; i < topography.Length; i++)
             {
@@ -360,7 +363,12 @@ namespace NoxusBoss.Content.Subworlds
                 int x = i + left;
                 int y = surfaceY - height;
                 bool inCenter = Distance(x, Main.maxTilesX * 0.5f) <= TotalFlatTilesAtCenter + 24f;
+                bool veryCloseToCenter = Distance(x, Main.maxTilesX * 0.5f) <= 5f;
                 ushort plantID = plantSelector.Get();
+
+                // Don't place tiles at the very center, due to that being where the tree should be.
+                if (veryCloseToCenter)
+                    continue;
 
                 // Prevent placing special plants twice in succession.
                 if (previousPlantID != TileID.Plants && previousPlantID != TileID.Plants2)

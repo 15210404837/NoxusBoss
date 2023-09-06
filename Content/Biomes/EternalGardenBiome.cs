@@ -1,4 +1,5 @@
-﻿using NoxusBoss.Content.Subworlds;
+﻿using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -17,6 +18,8 @@ namespace NoxusBoss.Content.Biomes
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.Find<ModUndergroundBackgroundStyle>("NoxusBoss/EternalGardenBGStyle");
 
         public override SceneEffectPriority Priority => SceneEffectPriority.BossMedium;
+
+        public override Color? BackgroundColor => Color.Coral;
 
         public override string BestiaryIcon => "NoxusBoss/Content/Biomes/EternalGardenIcon";
 

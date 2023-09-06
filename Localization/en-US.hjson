@@ -182,6 +182,11 @@ Mods: {
 				DisplayName: Divine Monolith
 				Tooltip: ""
 			}
+
+			GoodApple: {
+				DisplayName: Good Apple
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {

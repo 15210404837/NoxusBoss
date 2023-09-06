@@ -93,7 +93,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             godRayShader.TrySetParameter("animationSpeed", 0.1f);
             godRayShader.TrySetParameter("noiseOpacityPower", 2f);
             godRayShader.TrySetParameter("bottomBrightnessIntensity", 0.2f);
-            godRayShader.TrySetParameter("colorAccent", ColorAccent.ToVector4() * Projectile.Opacity * 0.215f);
+            godRayShader.TrySetParameter("colorAccent", ColorAccent.ToVector4() * Projectile.Opacity * 0.14f);
             godRayShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/Perlin"), 1);
             godRayShader.Apply();
 
@@ -102,7 +102,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             float brightnessFadeIn = GetLerpValue(15f, XerocWaitDelay * 0.67f, TimeSpentInCenter, true);
             float brightnessFadeOut = GetLerpValue(XerocWaitDelay - 4f, XerocWaitDelay - 16f, TimeSpentInCenter, true);
             float brightnessInterpolant = brightnessFadeIn * brightnessFadeOut;
-            float brightness = Lerp(0.2f, 0.5f, brightnessInterpolant);
+            float brightness = Lerp(0.003f, 0.5f, brightnessInterpolant);
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(pixel, drawPosition, null, Projectile.GetAlpha(MainColor) * brightness, Projectile.rotation, pixel.Size() * new Vector2(0.5f, 1f), textureArea, 0, 0f);
 

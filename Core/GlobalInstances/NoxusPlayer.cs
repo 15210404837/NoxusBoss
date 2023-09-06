@@ -91,7 +91,7 @@ namespace NoxusBoss.Core.GlobalItems
 
                     Vector2 spawnVelocity = -Vector2.UnitY.RotatedByRandom(0.82f) * Main.rand.NextFloat(0.5f, 1.35f);
                     Color duckweedColor = Color.Lerp(Color.Wheat, Color.Red, Main.rand.NextFloat(0.52f));
-                    PaleDuckweed duckweed = new(potentialSpawnPosition, spawnVelocity, duckweedColor, 540);
+                    PaleDuckweedParticle duckweed = new(potentialSpawnPosition, spawnVelocity, duckweedColor, 540);
                     GeneralParticleHandler.SpawnParticle(duckweed);
                     break;
                 }
