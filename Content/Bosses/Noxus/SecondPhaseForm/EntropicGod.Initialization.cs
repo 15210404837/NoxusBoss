@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Items.Armor.Vanity.Masks;
 using NoxusBoss.Content.Items.Pets;
+using NoxusBoss.Content.Items.Placeable.Monoliths;
 using NoxusBoss.Content.Items.Placeable.Relics;
 using NoxusBoss.Content.Items.Placeable.Trophies;
 using NoxusBoss.Content.Items.SummonItems;
@@ -35,6 +36,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
 
         public List<int> Collectibles => new()
         {
+            ModContent.ItemType<MidnightMonolith>(),
             ModContent.ItemType<NoxusMask>(),
             ModContent.ItemType<NoxusTrophy>(),
             ModContent.ItemType<NoxusRelic>(),

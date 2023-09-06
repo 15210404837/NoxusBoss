@@ -7,6 +7,7 @@ using NoxusBoss.Content.Items.Armor.Vanity.Masks;
 using NoxusBoss.Content.Items.Dyes;
 using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Content.Items.Pets;
+using NoxusBoss.Content.Items.Placeable.Monoliths;
 using NoxusBoss.Content.Items.Placeable.Relics;
 using NoxusBoss.Content.Items.Placeable.Trophies;
 using NoxusBoss.Core;
@@ -107,6 +108,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             npcLoot.Add(ModContent.ItemType<NoxusSprayer>());
 
             // Vanity and decorations.
+            npcLoot.Add(ModContent.ItemType<MidnightMonolith>());
             npcLoot.Add(ModContent.ItemType<EntropicDye>(), 1, 3, 5);
             npcLoot.Add(ModContent.ItemType<NoxusMask>(), 7);
             npcLoot.Add(ModContent.ItemType<NoxusTrophy>(), 10);

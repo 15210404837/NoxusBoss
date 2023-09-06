@@ -187,6 +187,11 @@ Mods: {
 				DisplayName: Good Apple
 				Tooltip: ""
 			}
+
+			MidnightMonolith: {
+				DisplayName: Midnight Monolith
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {

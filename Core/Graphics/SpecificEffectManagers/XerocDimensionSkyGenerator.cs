@@ -85,6 +85,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Increase the divine monolith proximity timer.
             if (!Main.gamePaused && Main.instance.IsActive)
                 TimeSinceCloseToDivineMonolith++;
+            if (TimeSinceCloseToDivineMonolith >= 10)
+                InProximityOfDivineMonolith = false;
 
             // Evaluate the intensity of the effect. If it is not in use, don't waste resources attempting to update it.
             float intensity = HeavenlyBackgroundIntensity * Remap(ManualSunScale, 1f, 12f, 1f, 0.45f);
@@ -102,9 +104,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 intensity = MathF.Max(intensity, DivineMonolithIntensity);
                 SkyIntensityOverride = intensity;
             }
-
-            if (TimeSinceCloseToDivineMonolith >= 10)
-                InProximityOfDivineMonolith = false;
 
             if (intensity <= 0.001f && XerocBoss.Myself is null)
                 return;

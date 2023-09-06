@@ -22,7 +22,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
     {
         private static readonly FieldInfo particlesField = typeof(GeneralParticleHandler).GetField("particles", BindingFlags.NonPublic | BindingFlags.Static);
 
-        public override bool IsSceneEffectActive(Player player) => NoxusSky.SkyIntensityOverride > 0f || NPC.AnyNPCs(ModContent.NPCType<EntropicGod>());
+        public override bool IsSceneEffectActive(Player player) => NoxusSky.SkyIntensityOverride > 0f || NPC.AnyNPCs(ModContent.NPCType<EntropicGod>()) || NoxusSky.InProximityOfMidnightMonolith;
 
         public override void Load()
         {
@@ -124,6 +124,20 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             private set;
         }
 
+        public static bool InProximityOfMidnightMonolith
+        {
+            get;
+            set;
+        }
+
+        // Ideally it'd be possible to just turn InProximityOfMidnightMonolith back to false if it was already on and its effects were registered, but since NearbyEffects hooks
+        // don't run on the same update cycle as the PrepareDimensionTarget method this delay exists.
+        public static int TimeSinceCloseToMidnightMonolith
+        {
+            get;
+            set;
+        }
+
         public static Color FogColor => new(49, 40, 70);
 
         public static readonly SoundStyle ThunderSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/ThunderRumble", 3) with { Volume = 0.32f, PitchVariance = 0.35f };
@@ -137,6 +151,12 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
                 maxIntensity = 0.88f;
                 isActive = true;
             }
+
+            // Increase the Midnight monolith proximity timer.
+            if (!Main.gamePaused && Main.instance.IsActive)
+                TimeSinceCloseToMidnightMonolith++;
+            if (TimeSinceCloseToMidnightMonolith >= 10)
+                InProximityOfMidnightMonolith = false;
 
             // Make the intensity go up or down based on whether the sky is in use.
             intensity = Clamp(intensity + isActive.ToDirectionInt() * 0.01f, 0f, maxIntensity);
@@ -160,6 +180,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
                 NPC noxus = Main.npc[noxusIndex];
                 flashCreationChance = (int)Lerp(210, 36, 1f - noxus.life / (float)noxus.lifeMax);
                 flashIntensity = Lerp(35f, 90f, 1f - noxus.life / (float)noxus.lifeMax);
+            }
+            if (InProximityOfMidnightMonolith)
+            {
+                flashCreationChance = 50;
+                flashIntensity = 80f;
             }
 
             if (FlashIntensity <= 2f && FogIntensity < 1f && Main.rand.NextBool(flashCreationChance))
@@ -196,7 +221,13 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             rubble.RemoveAll(r => r.Time >= r.Lifetime);
             rubble.ForEach(r => r.Update());
 
-            SkyIntensityOverride = Clamp(SkyIntensityOverride - 0.07f, 0f, 1f);
+            if (InProximityOfMidnightMonolith)
+            {
+                SkyIntensityOverride = Clamp(SkyIntensityOverride + 0.08f, 0f, 1f);
+                intensity = SkyIntensityOverride;
+            }
+            else
+                SkyIntensityOverride = Clamp(SkyIntensityOverride - 0.07f, 0f, 1f);
         }
 
         public override Color OnTileColor(Color inColor)
