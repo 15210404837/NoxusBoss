@@ -142,7 +142,7 @@ Mods: {
 
 			XerocTrophy: {
 				DisplayName: Nameless Deity Trophy
-				Tooltip: ""
+				Tooltip: When given a signal by wiring, the eye will remain closed by default until a player gets close
 			}
 
 			XerocRelic: {
