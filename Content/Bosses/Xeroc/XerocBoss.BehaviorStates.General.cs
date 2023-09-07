@@ -497,7 +497,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Target.Calamity().GeneralScreenShakePower = 15f;
             }
             if (AttackTimer >= blackDelay + riseDelay - 75f)
+            {
                 Main.hideUI = true;
+                Main.blockInput = true;
+            }
 
             // Move into the background.
             if (AttackTimer <= blackDelay + riseDelay + riseTime && !Hands.Any())
@@ -566,6 +569,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     Music = 0;
                     Main.hideUI = true;
+                    Main.blockInput = true;
                     XerocKeyboardShader.RandomColorsTimer = 5;
                 }
 
@@ -582,6 +586,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Main.menuMode = 0;
                         Main.gameMenu = true;
                         Main.hideUI = false;
+                        Main.blockInput = false;
                         Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GiveXerocLootUponReenteringWorld = true;
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
                         WorldSaveSystem.HasDefeatedXeroc = true;
