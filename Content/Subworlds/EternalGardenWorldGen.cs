@@ -339,7 +339,9 @@ namespace NoxusBoss.Content.Subworlds
 
             // Generate a special tree in the very center of the garden.
             int surfaceY = SurfaceTilePoint;
-            WorldGen.PlaceObject(Main.maxTilesX / 2, surfaceY - topography[Main.maxTilesX / 2], ModContent.TileType<TreeOfLife>());
+            Point treePosition = new(Main.maxTilesX / 2, surfaceY - topography[Main.maxTilesX / 2]);
+            Main.tile[treePosition].TileType = (ushort)ModContent.TileType<TreeOfLife>();
+            Main.tile[treePosition].Get<TileWallWireStateData>().HasTile = true;
 
             // Separately place Starbearers based on how many times players have been killed by Xeroc.
             // This has a hard limit so that nohitters don't litter the subworld with them.
