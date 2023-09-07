@@ -10,6 +10,13 @@ namespace NoxusBoss.Core.CrossCompatibility
             private set;
         }
 
+        // Goozma mod.
+        public static Mod CalamityHunt
+        {
+            get;
+            private set;
+        }
+
         public static Mod Infernum
         {
             get;
@@ -33,6 +40,8 @@ namespace NoxusBoss.Core.CrossCompatibility
             // Check for relevant mods.
             if (ModLoader.TryGetMod("BossChecklist", out Mod bcl))
                 BossChecklist = bcl;
+            if (ModLoader.TryGetMod("CalamityHunt", out Mod calHunt))
+                CalamityHunt = calHunt;
             if (ModLoader.TryGetMod("InfernumMode", out Mod inf))
                 Infernum = inf;
             if (ModLoader.TryGetMod("ToastyQoL", out Mod tQoL))
