@@ -11,6 +11,12 @@ namespace NoxusBoss.Core.Music
             set;
         }
 
+        public static bool MusicIsPaused
+        {
+            get;
+            private set;
+        }
+
         public override void OnModLoad()
         {
             On_Main.UpdateAudio += MakeMusicShutUp;
@@ -48,7 +54,20 @@ namespace NoxusBoss.Core.Music
                 Main.audioSystem.UpdateAudioEngine();
 
                 // Make the music muffle factor naturally dissipate.
-                MusicMuffleFactor = Clamp(MusicMuffleFactor * 0.93f - 0.03f, 0f, 1f);
+                if (Main.instance.IsActive && !Main.gamePaused)
+                    MusicMuffleFactor = Clamp(MusicMuffleFactor * 0.93f - 0.03f, 0f, 1f);
+
+                if (MusicIsPaused)
+                {
+                    Main.audioSystem.ResumeAll();
+                    MusicIsPaused = false;
+                }
+            }
+
+            if (MusicMuffleFactor >= 0.89f)
+            {
+                Main.audioSystem.PauseAll();
+                MusicIsPaused = true;
             }
         }
     }

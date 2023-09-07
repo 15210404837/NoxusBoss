@@ -8,6 +8,7 @@ using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Core;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -79,7 +80,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (ZPosition < 0f)
                 backgroundSoundFade = 1f;
 
-            idleSound.Volume = NPC.Opacity * backgroundSoundFade * 0.32f;
+            idleSound.Volume = NPC.Opacity * backgroundSoundFade * SoundMufflingSystem.MuffleFactor * 0.32f;
             idleSound.Position = NPC.Center;
         }
 

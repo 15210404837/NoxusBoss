@@ -6,8 +6,10 @@ using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
+using NoxusBoss.Core.Music;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -109,7 +111,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             DefaultUniversalHandMotion();
         }
 
-        public void DoBehavior_LightMagicCircle()
+        public void DoBehavior_SuperCosmicLaserbeam()
         {
             int attackDelay = BookConstellation.ConvergeTime + 150;
             int shootTime = SuperCosmicBeam.LaserLifetime;
@@ -173,13 +175,32 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Create the super laser.
             if (AttackTimer == attackDelay)
             {
-                SoundEngine.PlaySound(CosmicLaserSound);
+                CosmicLaserSound?.Stop();
+                CosmicLaserSound = LoopedSoundManager.CreateNew(CosmicLaserStartSound, CosmicLaserLoopSound, () => !NPC.active || CurrentAttack != XerocAttackType.SuperCosmicLaserbeam);
+
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 30);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                 }
+            }
+
+            // Update the laser sound.
+            if (AttackTimer >= attackDelay)
+            {
+                // Make all other sounds rapidly fade out.
+                float muffleInterpolant = GetLerpValue(attackDelay, attackDelay + 9f, AttackTimer, true) * GetLerpValue(attackDelay + shootTime + 32f, attackDelay + shootTime - 40f, AttackTimer, true);
+                SoundMufflingSystem.MuffleFactor = Lerp(1f, 0.025f, muffleInterpolant);
+                MusicVolumeManipulationSystem.MusicMuffleFactor = muffleInterpolant;
+
+                CosmicLaserSound.Update(Main.LocalPlayer.Center, sound =>
+                {
+                    var captureThisPlease = this;
+                    sound.Volume = Lerp(0.05f, 1.5f, muffleInterpolant);
+                });
+                if (AttackTimer >= attackDelay + shootTime + 32f)
+                    CosmicLaserSound.Stop();
             }
 
             // Keep the shader brightness at its maximum.

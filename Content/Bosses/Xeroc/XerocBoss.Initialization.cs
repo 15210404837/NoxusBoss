@@ -146,7 +146,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             XerocAttackType.VergilScreenSlices,
             
             // Perform the cosmic laserbeam attack.
-            XerocAttackType.LightMagicCircle,
+            XerocAttackType.SuperCosmicLaserbeam,
         };
 
         public static XerocAttackType[] TestCycle => new[]

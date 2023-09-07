@@ -3,6 +3,7 @@ using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -201,7 +202,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             ShootArcingStarburstsFromEye,
             RealityTearDaggers,
             LightBeamTransformation,
-            LightMagicCircle,
+            SuperCosmicLaserbeam,
 
             // Fire attacks.
             StarManagement,
@@ -241,6 +242,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public List<XerocHand> Hands = new();
 
         public List<Vector2> StarSpawnOffsets = new();
+
+        public LoopedSoundInstance CosmicLaserSound;
+
+        public int MumbleTimer
+        {
+            get;
+            set;
+        }
 
         public int CurrentPhase
         {
@@ -368,8 +377,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
-        public int MumbleTimer;
-
         public bool ShouldDrawBehindTiles => ZPosition >= 0.2f;
 
         public float LifeRatio => NPC.life / (float)NPC.lifeMax;
@@ -461,7 +468,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle ComicalExplosionDeathSound = new SoundStyle("NoxusBoss/Assets/Sounds/NPCKilled/DeltaruneExplosion") with { Volume = 1.4f };
 
-        public static readonly SoundStyle CosmicLaserSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocCosmicLaser") with { Volume = 0.8f };
+        public static readonly SoundStyle CosmicLaserStartSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocCosmicLaserStart") with { Volume = 1.2f };
+
+        public static readonly SoundStyle CosmicLaserLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocCosmicLaserLoop") with { Volume = 1.2f };
 
         public static readonly SoundStyle DoNotVoiceActedSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocDoNot", 2) with { Volume = 1.32f };
 
@@ -635,8 +644,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.LightBeamTransformation:
                     DoBehavior_LightBeamTransformation();
                     break;
-                case XerocAttackType.LightMagicCircle:
-                    DoBehavior_LightMagicCircle();
+                case XerocAttackType.SuperCosmicLaserbeam:
+                    DoBehavior_SuperCosmicLaserbeam();
                     break;
                 case XerocAttackType.StarManagement:
                     DoBehavior_StarManagement();
