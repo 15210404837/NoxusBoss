@@ -106,7 +106,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public void DrawWithPixelation()
         {
             // Initialize the laser drawer.
-            var gd = Main.instance.GraphicsDevice;
             var laserShader = ShaderManager.GetShader("XerocCosmicLaserShader");
             LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
 
