@@ -16,10 +16,17 @@ namespace NoxusBoss.Core
             set;
         } = 1f;
 
+        public static float EarRingingIntensity
+        {
+            get;
+            set;
+        }
+
         public static List<SoundStyle> ExemptedSoundStyles => new()
         {
             XerocBoss.CosmicLaserStartSound,
             XerocBoss.CosmicLaserLoopSound,
+            XerocBoss.EarRingingSound
         };
 
         public override void OnModLoad()

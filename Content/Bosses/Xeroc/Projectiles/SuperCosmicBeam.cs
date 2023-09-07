@@ -1,10 +1,13 @@
 ﻿using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -70,10 +73,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Time++;
         }
 
-        public float LaserWidthFunction(float completionRatio) => Projectile.scale * Projectile.width;
-
-        public Color LaserColorFunction(float completionRatio) => new Color(53, 18, 100) * GetLerpValue(0f, 0.12f, completionRatio, true) * Projectile.Opacity;
-
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             // Give a short time window before the laser starts doing damage, to prevent cheap hits.
@@ -85,6 +84,24 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Vector2 end = Projectile.Center + Projectile.velocity * LaserLengthFactor * MaxLaserLength;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Main.myPlayer == target.whoAmI)
+            {
+                if (SoundMufflingSystem.EarRingingIntensity <= 0.06f)
+                {
+                    SoundMufflingSystem.EarRingingIntensity = 1f;
+                    SoundEngine.PlaySound(XerocBoss.EarRingingSound with { Volume = 0.6f });
+                }
+                ScreenEffectSystem.AberrationTime = 0;
+                ScreenEffectSystem.SetChromaticAberrationEffect(target.Center, 0.8f, 96);
+            }
+        }
+
+        public float LaserWidthFunction(float completionRatio) => Projectile.scale * Projectile.width;
+
+        public Color LaserColorFunction(float completionRatio) => new Color(53, 18, 100) * GetLerpValue(0f, 0.12f, completionRatio, true) * Projectile.Opacity;
 
         public void DrawWithPixelation()
         {

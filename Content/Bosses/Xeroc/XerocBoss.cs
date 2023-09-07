@@ -474,6 +474,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle DoNotVoiceActedSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocDoNot", 2) with { Volume = 1.32f };
 
+        public static readonly SoundStyle EarRingingSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/EarRinging") with { Volume = 0.95f, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew, MaxInstances = 1 };
+
         public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocExplosion") with { Volume = 1.3f, PitchVariance = 0.15f };
 
         public static readonly SoundStyle FastHandMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocFastHandMovement") with { Volume = 1.25f };

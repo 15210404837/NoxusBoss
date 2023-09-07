@@ -195,8 +195,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 CosmicLaserSound.Update(Main.LocalPlayer.Center, sound =>
                 {
                     var captureThisPlease = this;
-                    sound.Volume = Lerp(0.05f, 1.5f, muffleInterpolant);
+                    float ringingInterpolant = GetLerpValue(0.98f, 0.93f, SoundMufflingSystem.EarRingingIntensity, true) * GetLerpValue(0.12f, 0.4f, SoundMufflingSystem.EarRingingIntensity, true);
+                    sound.Sound.Volume = Main.soundVolume * Lerp(0.05f, 1.5f, muffleInterpolant) * Lerp(1f, 0.04f, ringingInterpolant);
                 });
+                SoundMufflingSystem.EarRingingIntensity *= 0.995f;
                 if (AttackTimer >= attackDelay + shootTime + 32f)
                     CosmicLaserSound.Stop();
             }

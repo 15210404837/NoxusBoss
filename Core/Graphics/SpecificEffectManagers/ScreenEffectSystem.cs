@@ -92,7 +92,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private static int AberrationLifeTime;
 
-        private static int AberrationTime;
+        internal static int AberrationTime;
 
         private static float AberrationLifetimeRatio => (float)AberrationTime / AberrationLifeTime;
 
