@@ -192,6 +192,11 @@ Mods: {
 				DisplayName: Midnight Monolith
 				Tooltip: ""
 			}
+
+			EternalGardenMusicBoxItem: {
+				DisplayName: Music Box (Eternal Garden)
+				Tooltip: ""
+			}
 		}
 
 		NPCs: {
@@ -272,6 +277,7 @@ Mods: {
 			SwordConstellationSlashVisual.DisplayName: Good Visual Design
 		}
 
+		Tiles.EternalGardenMusicBox.MapEntry: Music Box
 		Tiles.XerocMusicBox.MapEntry: Music Box
 		XerocDimensionMainMenu.DisplayName: Light Dimension
 
