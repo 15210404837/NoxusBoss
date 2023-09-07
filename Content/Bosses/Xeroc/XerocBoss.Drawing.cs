@@ -51,7 +51,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 else if (ShouldDrawBehindTiles)
                     SpecialNPCLayeringSystem.DrawCacheBeforeBlack.Add(index);
                 else
-                    Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
+                    Main.instance.DrawCacheNPCsMoonMoon.Add(index);
             }
         }
 
