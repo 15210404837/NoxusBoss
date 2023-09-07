@@ -189,7 +189,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 // Make all other sounds rapidly fade out.
                 float muffleInterpolant = GetLerpValue(attackDelay, attackDelay + 9f, AttackTimer, true) * GetLerpValue(attackDelay + shootTime + 32f, attackDelay + shootTime - 40f, AttackTimer, true);
-                SoundMufflingSystem.MuffleFactor = Lerp(1f, 0.025f, muffleInterpolant);
+                SoundMufflingSystem.MuffleFactor = Lerp(1f, 0.009f, muffleInterpolant);
                 MusicVolumeManipulationSystem.MusicMuffleFactor = muffleInterpolant;
 
                 CosmicLaserSound.Update(Main.LocalPlayer.Center, sound =>

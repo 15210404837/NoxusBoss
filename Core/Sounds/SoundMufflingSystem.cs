@@ -33,7 +33,10 @@ namespace NoxusBoss.Core
             if (MuffleFactor < 0.999f && !ExemptedSoundStyles.Any(s => s.IsTheSameAs(copy)))
                 style.Volume *= MuffleFactor;
 
-            return orig(self, ref style, position, updateCallback);
+            SlotId result = orig(self, ref style, position, updateCallback);
+            style.Volume = copy.Volume;
+
+            return result;
         }
     }
 }
