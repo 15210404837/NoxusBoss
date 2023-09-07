@@ -1,6 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Threading;
+using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Xeroc;
 using Terraria;
+using Terraria.Audio;
+using Terraria.Graphics.Capture;
+using Terraria.IO;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
@@ -19,6 +25,12 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         }
 
         public static int DeletionTimer
+        {
+            get;
+            set;
+        }
+
+        public static int MainMenuReturnDelay
         {
             get;
             set;
@@ -50,7 +62,39 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                     Main.gameMenu = true;
                     Main.hideUI = false;
                     XerocTipsOverrideSystem.UseSprayText = true;
-                    WorldGen.SaveAndQuit();
+
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(context =>
+                    {
+                        int netMode = Main.netMode;
+                        if (netMode == NetmodeID.SinglePlayer)
+                            WorldFile.CacheSaveTime();
+
+                        Main.invasionProgress = -1;
+                        Main.invasionProgressDisplayLeft = 0;
+                        Main.invasionProgressAlpha = 0f;
+                        Main.invasionProgressIcon = 0;
+                        Main.menuMode = 10;
+                        Main.gameMenu = true;
+                        SoundEngine.StopTrackedSounds();
+                        SoundEngine.PlaySound(XerocBoss.DoNotVoiceActedSound);
+                        MainMenuReturnDelay = 1;
+
+                        CaptureInterface.ResetFocus();
+                        Main.ActivePlayerFileData.StopPlayTimer();
+                        Player.SavePlayer(Main.ActivePlayerFileData, false);
+                        Player.ClearPlayerTempInfo();
+                        Rain.ClearRain();
+                        if (netMode == NetmodeID.SinglePlayer)
+                            WorldFile.SaveWorld();
+                        else
+                        {
+                            Netplay.Disconnect = true;
+                            Main.netMode = NetmodeID.SinglePlayer;
+                        }
+                        Main.fastForwardTimeToDawn = false;
+                        Main.fastForwardTimeToDusk = false;
+                        Main.UpdateTimeRate();
+                    }));
 
                     DeletionTimer = 0;
                     PlayerWasDeleted = false;

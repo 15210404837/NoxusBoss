@@ -277,8 +277,11 @@ Mods: {
 			SwordConstellationSlashVisual.DisplayName: Good Visual Design
 		}
 
-		Tiles.EternalGardenMusicBox.MapEntry: Music Box
-		Tiles.XerocMusicBox.MapEntry: Music Box
+		Tiles: {
+			EternalGardenMusicBox.MapEntry: Music Box
+			XerocMusicBox.MapEntry: Music Box
+		}
+
 		XerocDimensionMainMenu.DisplayName: Light Dimension
 
 		Configs: {

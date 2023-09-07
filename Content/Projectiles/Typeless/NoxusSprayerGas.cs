@@ -55,7 +55,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             if (PlayerHasMadeIncalculableMistake && Projectile.Hitbox.Intersects(Main.player[Projectile.owner].Hitbox) && Main.netMode == NetmodeID.SinglePlayer && Time >= 20f)
             {
                 Player player = Main.player[Projectile.owner];
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     float gasSize = player.width * Main.rand.NextFloat(0.1f, 0.8f);
                     NoxusGasMetaball.CreateParticle(player.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);

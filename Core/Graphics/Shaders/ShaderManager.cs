@@ -73,6 +73,9 @@ namespace NoxusBoss.Core.Graphics.Shaders
 
             Filters.Scene["NoxusBoss:TerminusVortex"] = new Filter(new ScreenShaderData("FilterCrystalDestructionVortex").UseImage("Images/Misc/noise"), EffectPriority.VeryHigh);
 
+            Ref<Effect> s8 = new(Mod.Assets.Request<Effect>("Assets/Effects/MainMenuScreenShakeShader", AssetRequestMode.ImmediateLoad).Value);
+            Filters.Scene["NoxusBoss:MainMenuShake"] = new Filter(new MainMenuScreenShakeShaderData(s8, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
+
             HasFinishedLoading = true;
         }
 

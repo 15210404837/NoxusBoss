@@ -2,9 +2,12 @@
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
+using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
+using Terraria.Graphics.CameraModifiers;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using static NoxusBoss.Core.Graphics.SpecificEffectManagers.NoxusSprayPlayerDeletionSystem;
 
 namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
@@ -36,10 +39,30 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private void ChangeStatusText(On_Main.orig_DrawMenu orig, Main self, GameTime gameTime)
         {
+            // Handle screen shake visuals.
+            MainMenuScreenShakeShaderData.ToggleActivityIfNecessary();
+
             if (UseSprayText)
             {
                 Main.statusText = string.Empty;
                 orig(self, gameTime);
+
+                if (MainMenuReturnDelay >= 1)
+                {
+                    Main.menuMode = 10;
+                    MainMenuReturnDelay++;
+
+                    // Make the screen shake when Xeroc says "NOT".
+                    if (MainMenuReturnDelay == 44)
+                        MainMenuScreenShakeShaderData.ScreenShakeIntensity = 12f;
+
+                    if (MainMenuReturnDelay >= 330)
+                    {
+                        Main.menuMode = 0;
+                        MainMenuReturnDelay = 0;
+                    }
+                }
+
                 return;
             }
 
