@@ -25,7 +25,17 @@ namespace NoxusBoss.Core.Graphics
 
         public override MetaballDrawLayerType DrawContext => MetaballDrawLayerType.BeforeBlack;
 
-        public override Color EdgeColor => Color.Lerp(Color.LightCoral, Color.MediumPurple, XerocSky.DifferentStarsInterpolant);
+        public override Color EdgeColor
+        {
+            get
+            {
+                Color c = Color.Lerp(Color.LightCoral, Color.MediumPurple, XerocSky.DifferentStarsInterpolant);
+                if (XerocBoss.Myself is not null)
+                    c = Color.Lerp(c, Color.Black, GetLerpValue(1f, 4f, XerocBoss.Myself.ModNPC<XerocBoss>().ZPosition, true) * 0.5f);
+
+                return c;
+            }
+        }
 
         public override List<Texture2D> Layers => new()
         {

@@ -474,7 +474,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle DoNotVoiceActedSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocDoNot", 2) with { Volume = 1.32f };
 
-        public static readonly SoundStyle EarRingingSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/EarRinging") with { Volume = 0.95f, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew, MaxInstances = 1 };
+        public static readonly SoundStyle EarRingingSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/EarRinging") with { Volume = 0.56f, SoundLimitBehavior = SoundLimitBehavior.IgnoreNew, MaxInstances = 1 };
 
         public static readonly SoundStyle ExplosionTeleportSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocExplosion") with { Volume = 1.3f, PitchVariance = 0.15f };
 
@@ -532,7 +532,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static int QuasarDamage => Main.expertMode ? 700 : 500;
 
-        public static int SuperLaserbeamDamage => Main.expertMode ? 720 : 560;
+        // Hits several times per second, resulting in a shredding effect.
+        public static int SuperLaserbeamDamage => Main.expertMode ? 175 : 140;
 
         public static int IdealFightDuration => SecondsToFrames(270f);
 
@@ -796,7 +797,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Rotate based on horizontal speed.
-            NPC.rotation = NPC.velocity.X * 0.001f;
+            float idealRotation = Clamp(NPC.velocity.X * 0.0064f, -0.3f, 0.3f);
+            NPC.rotation = NPC.rotation.AngleLerp(idealRotation, 0.3f).AngleTowards(idealRotation, 0.045f);
         }
 
         #endregion AI

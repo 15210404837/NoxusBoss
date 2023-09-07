@@ -178,8 +178,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 CosmicLaserSound?.Stop();
                 CosmicLaserSound = LoopedSoundManager.CreateNew(CosmicLaserStartSound, CosmicLaserLoopSound, () => !NPC.active || CurrentAttack != XerocAttackType.SuperCosmicLaserbeam);
 
-                ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 30);
-                RadialScreenShoveSystem.Start(NPC.Center, 42);
+                ShakeScreen(NPC.Center, 15f);
+                ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 60);
+                RadialScreenShoveSystem.Start(NPC.Center, 54);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
             }
@@ -188,22 +189,27 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer >= attackDelay)
             {
                 // Make all other sounds rapidly fade out.
+                float attackCompletion = GetLerpValue(0f, shootTime - 30f, AttackTimer - attackDelay, true);
                 float muffleInterpolant = GetLerpValue(attackDelay, attackDelay + 9f, AttackTimer, true) * GetLerpValue(attackDelay + shootTime + 32f, attackDelay + shootTime - 40f, AttackTimer, true);
                 SoundMufflingSystem.MuffleFactor = Lerp(1f, 0.009f, muffleInterpolant);
                 MusicVolumeManipulationSystem.MusicMuffleFactor = muffleInterpolant;
 
-                CosmicLaserSound.Update(Main.LocalPlayer.Center, sound =>
+                if (AttackTimer % 5f == 0f)
                 {
-                    var captureThisPlease = this;
-                    float ringingInterpolant = GetLerpValue(0.98f, 0.93f, SoundMufflingSystem.EarRingingIntensity, true) * GetLerpValue(0.12f, 0.4f, SoundMufflingSystem.EarRingingIntensity, true);
-                    sound.Sound.Volume = Main.soundVolume * Lerp(0.05f, 1.5f, muffleInterpolant) * Lerp(1f, 0.04f, ringingInterpolant);
-                });
+                    CosmicLaserSound.Update(Main.LocalPlayer.Center, sound =>
+                    {
+                        float fadeOut = GetLerpValue(0.98f, 0.93f, attackCompletion, true);
+                        float ringingInterpolant = GetLerpValue(0.98f, 0.93f, SoundMufflingSystem.EarRingingIntensity, true) * GetLerpValue(0.12f, 0.4f, SoundMufflingSystem.EarRingingIntensity, true);
+                        sound.Sound.Volume = Main.soundVolume * Lerp(0.05f, 1.5f, muffleInterpolant) * Lerp(1f, 0.04f, ringingInterpolant);
+                        sound.Sound.Pitch = Lerp(0.01f, 0.6f, Pow(attackCompletion, 1.4f));
+                    });
+                }
                 SoundMufflingSystem.EarRingingIntensity *= 0.995f;
                 if (AttackTimer >= attackDelay + shootTime + 32f)
                     CosmicLaserSound.Stop();
             }
 
-            // Keep the shader brightness at its maximum.
+            // Keep the keyboard shader brightness at its maximum.
             if (AttackTimer >= attackDelay && AttackTimer < attackDelay + shootTime)
                 XerocKeyboardShader.BrightnessIntensity = 1f;
 
