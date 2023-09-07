@@ -179,11 +179,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 CosmicLaserSound = LoopedSoundManager.CreateNew(CosmicLaserStartSound, CosmicLaserLoopSound, () => !NPC.active || CurrentAttack != XerocAttackType.SuperCosmicLaserbeam);
 
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 30);
+                RadialScreenShoveSystem.Start(NPC.Center, 42);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
                     NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-                }
             }
 
             // Update the laser sound.
