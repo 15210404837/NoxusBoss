@@ -14,6 +14,8 @@ namespace NoxusBoss.Core.GlobalItems
 {
     public class NoxusPlayer : ModPlayer
     {
+        public int ImmuneTimeOverride;
+
         public bool GiveXerocLootUponReenteringWorld;
 
         private readonly Dictionary<string, object> localValues = new();
@@ -78,6 +80,12 @@ namespace NoxusBoss.Core.GlobalItems
 
                 GiveXerocLootUponReenteringWorld = false;
                 WorldSaveSystem.HasDefeatedXeroc = true;
+            }
+
+            if (ImmuneTimeOverride != 0)
+            {
+                Player.immuneTime = ImmuneTimeOverride;
+                ImmuneTimeOverride = 0;
             }
 
             // Create pale duckweed in the water if the player is in the eternal garden.

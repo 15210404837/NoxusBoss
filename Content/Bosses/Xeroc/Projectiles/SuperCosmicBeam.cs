@@ -1,13 +1,13 @@
 ﻿using CalamityMod;
+using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core;
+using NoxusBoss.Content.Particles;
+using NoxusBoss.Core.GlobalItems;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
-using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -27,7 +27,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public static int LaserLifetime => 540;
 
-        public static float MaxLaserLength => 7200f;
+        public static float MaxLaserLength => 9400f;
 
         public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
@@ -87,16 +87,29 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (Main.myPlayer == target.whoAmI)
+            target.GetModPlayer<NoxusPlayer>().ImmuneTimeOverride = 7;
+
+            // Release on-hit particles.
+            float particleIntensity = 1f - target.statLife / (float)target.statLifeMax2;
+            float particleAppearInterpolant = GetLerpValue(0.02f, 0.1f, particleIntensity, true);
+            float deathFadeOut = GetLerpValue(0.49f, 0.95f, particleIntensity, true);
+            for (int i = 0; i < particleAppearInterpolant * (1f - deathFadeOut) * 11f + 4f; i++)
             {
-                if (SoundMufflingSystem.EarRingingIntensity <= 0.06f)
-                {
-                    SoundMufflingSystem.EarRingingIntensity = 1f;
-                    SoundEngine.PlaySound(XerocBoss.EarRingingSound with { Volume = 0.6f });
-                }
-                ScreenEffectSystem.AberrationTime = 0;
-                ScreenEffectSystem.SetChromaticAberrationEffect(target.Center, 0.8f, 96);
+                if (Main.rand.NextFloat() < deathFadeOut - 0.3f)
+                    continue;
+
+                Dust light = Dust.NewDustPerfect(target.Center + Main.rand.NextVector2Square(-25f, 25f), 264);
+                light.velocity = Projectile.SafeDirectionTo(target.Center).RotatedByRandom(0.72f) * Main.rand.NextFloat(1.2f, 8f);
+                light.color = Color.Lerp(Color.Cyan, Color.Fuchsia, Sin01(Main.GlobalTimeWrappedHourly * 10f + i * 0.2f)) * particleAppearInterpolant * (1f - deathFadeOut);
+                light.scale = Main.rand.NextFloat(0.5f, 1.8f) * Lerp(1f, 0.1f, particleIntensity);
+                light.fadeIn = 0.7f;
+                light.noGravity = true;
             }
+
+            target.immuneAlpha = (int)(particleIntensity * 255);
+
+            ExpandingGreyscaleCircleParticle circle = new(target.Center, Vector2.Zero, new Color(219, 194, 229) * 0.3f, 8, 0.04f);
+            GeneralParticleHandler.SpawnParticle(circle);
         }
 
         public float LaserWidthFunction(float completionRatio) => Projectile.scale * Projectile.width;
