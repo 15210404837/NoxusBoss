@@ -3,6 +3,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -13,13 +14,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
     public class LightWave : ModProjectile
     {
-        public static int Lifetime => 25;
+        public static int Lifetime => 30;
 
         public ref float Radius => ref Projectile.ai[0];
 
         public static float DetermineScreenShakePower(float lifetimeCompletionRatio, float distanceFromPlayer) => GetLerpValue(2400f, 1000f, distanceFromPlayer, true) * (1f - lifetimeCompletionRatio) * 5.5f;
 
-        public static Color DetermineExplosionColor() => Color.Lerp(Color.IndianRed, Color.Wheat, 0.24f) with { A = 80 };
+        public static Color DetermineExplosionColor()
+        {
+            Color c = Color.Lerp(Color.IndianRed, Color.Wheat, 0.24f);
+            c = Color.Lerp(c, Color.Cyan, XerocSky.DifferentStarsInterpolant * 0.85f);
+            return c with { A = 80 };
+        }
 
         public static Texture2D ExplosionNoiseTexture => ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons").Value;
 

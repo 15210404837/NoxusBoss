@@ -76,11 +76,19 @@ namespace NoxusBoss.Core.Graphics.Shaders
             Ref<Effect> s8 = new(Mod.Assets.Request<Effect>("Assets/Effects/MainMenuScreenShakeShader", AssetRequestMode.ImmediateLoad).Value);
             Filters.Scene["NoxusBoss:MainMenuShake"] = new Filter(new MainMenuScreenShakeShaderData(s8, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
+            Ref<Effect> s9 = new(Mod.Assets.Request<Effect>("Assets/Effects/HighContrastScreenShader", AssetRequestMode.ImmediateLoad).Value);
+            Filters.Scene["NoxusBoss:HighContrast"] = new Filter(new HighContrastScreenShakeShaderData(s9, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
+
             HasFinishedLoading = true;
         }
 
         public static ManagedShader GetShader(string name) => shaders[name];
 
         public static void SetShader(string name, Ref<Effect> newShaderData) => shaders[name] = new(name, newShaderData);
+
+        public override void PostUpdateEverything()
+        {
+            HighContrastScreenShakeShaderData.ToggleActivityIfNecessary();
+        }
     }
 }

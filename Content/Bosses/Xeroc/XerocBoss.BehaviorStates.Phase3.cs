@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
+using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.Music;
@@ -14,6 +15,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Events;
+using Terraria.Graphics.CameraModifiers;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
@@ -178,19 +180,28 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 CosmicLaserSound?.Stop();
                 CosmicLaserSound = LoopedSoundManager.CreateNew(CosmicLaserStartSound, CosmicLaserLoopSound, () => !NPC.active || CurrentAttack != XerocAttackType.SuperCosmicLaserbeam);
 
-                ShakeScreen(NPC.Center, 15f);
+                // Shake the screen.
+                Main.instance.CameraModifiers.Add(new PunchCameraModifier(NPC.Center, NPC.SafeDirectionTo(Target.Center), 42f, 2.75f, 112));
+                HighContrastScreenShakeShaderData.ContrastIntensity = 14.5f;
+
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 60);
                 RadialScreenShoveSystem.Start(NPC.Center, 54);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                     NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
+                }
             }
 
             // Update the laser sound.
             if (AttackTimer >= attackDelay)
             {
+                // Make the color contrast dissipate after the initial explosion.
+                HighContrastScreenShakeShaderData.ContrastIntensity = Clamp(HighContrastScreenShakeShaderData.ContrastIntensity - 0.24f, 0f, 20f);
+
                 // Make all other sounds rapidly fade out.
                 float attackCompletion = GetLerpValue(0f, shootTime - 30f, AttackTimer - attackDelay, true);
-                float muffleInterpolant = GetLerpValue(attackDelay, attackDelay + 9f, AttackTimer, true) * GetLerpValue(attackDelay + shootTime + 32f, attackDelay + shootTime - 40f, AttackTimer, true);
+                float muffleInterpolant = GetLerpValue(attackDelay, attackDelay + 17f, AttackTimer, true) * GetLerpValue(attackDelay + shootTime + 32f, attackDelay + shootTime - 40f, AttackTimer, true);
                 SoundMufflingSystem.MuffleFactor = Lerp(1f, 0.009f, muffleInterpolant);
                 MusicVolumeManipulationSystem.MusicMuffleFactor = muffleInterpolant;
 
@@ -202,8 +213,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         float fadeOut = GetLerpValue(0.98f, 0.93f, attackCompletion, true);
                         float ringingInterpolant = GetLerpValue(0.98f, 0.93f, SoundMufflingSystem.EarRingingIntensity, true) * GetLerpValue(0.12f, 0.4f, SoundMufflingSystem.EarRingingIntensity, true);
-                        sound.Sound.Volume = Main.soundVolume * Lerp(0.05f, 1.5f, muffleInterpolant) * Lerp(1f, 0.04f, ringingInterpolant);
-                        sound.Sound.Pitch = Lerp(0.01f, 0.6f, Pow(attackCompletion, 1.4f));
+                        sound.Sound.Volume = Main.soundVolume * (Lerp(0.05f, 1.5f, muffleInterpolant) * Lerp(1f, 0.04f, ringingInterpolant) + GetLerpValue(0.15f, 0.05f, attackCompletion, true) * 0.4f);
+                        sound.Sound.Pitch = Lerp(0.01f, 0.6f, Pow(attackCompletion, 1.36f));
                     });
                 }
                 SoundMufflingSystem.EarRingingIntensity *= 0.995f;
