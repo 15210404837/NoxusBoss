@@ -10,6 +10,8 @@ float edgeFadeInSharpness;
 float aheadCircleZoomFactor;
 float aheadCircleMoveBackFactor;
 float spaceBrightness;
+float2 spaceTextureOffset;
+float2 spaceTextureZoom;
 float2 aimDirection;
 float3 generalColor;
 float2x2 transformation;
@@ -42,7 +44,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float4 finalColor = tex2D(uImage0, coords) * sampleColor * float4(generalColor, 1) * portalBrightness;
     
     // Calculate the space color for the inside of the portal.
-    float4 spaceColor = tex2D(uImage3, frac(coords + globalTime * float2(0.1, 0)));
+    float4 spaceColor = tex2D(uImage3, frac(coords * spaceTextureZoom + globalTime * float2(0.1, 0) + spaceTextureOffset));
     spaceColor.rgb *= spaceBrightness + 0.5;
     finalColor = lerp(finalColor, spaceColor, InverseLerp(-0.05, 0.04, signedDistanceFromPortalEdge)) * edgeFade;
     

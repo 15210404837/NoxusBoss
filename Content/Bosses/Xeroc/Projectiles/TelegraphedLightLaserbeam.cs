@@ -124,7 +124,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         {
             float timeFade = GetLerpValue(LaserShootTime - 1f, LaserShootTime - 8f, Time - TelegraphTime, true);
             float startFade = GetLerpValue(0f, 0.065f, completionRatio, true);
-            return Color.IndianRed * Projectile.Opacity * timeFade * startFade * 0.75f;
+            Color baseColor = Color.Lerp(Color.IndianRed, Color.Coral, Projectile.identity / 9f % 1f);
+            return baseColor * Projectile.Opacity * timeFade * startFade * 0.75f;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

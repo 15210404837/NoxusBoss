@@ -26,7 +26,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Use screen culling for optimization reasons.
             RasterizerState screenCull = Main.Rasterizer;
             screenCull.ScissorTestEnable = true;
-            Main.instance.GraphicsDevice.ScissorRectangle = new(-50, -50, Main.screenWidth + 50, Main.screenHeight + 50);
+            Main.instance.GraphicsDevice.ScissorRectangle = new(-5, -5, Main.screenWidth + 10, Main.screenHeight + 10);
 
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, screenCull, null, Main.GameViewMatrix.TransformationMatrix);
 

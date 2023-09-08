@@ -42,6 +42,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             else
             {
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f, 0.5f);
+                NPC.velocity *= 0.82f;
 
                 // Make the robe's eyes stare at the target while hovering.
                 RobeEyesShouldStareAtTarget = true;

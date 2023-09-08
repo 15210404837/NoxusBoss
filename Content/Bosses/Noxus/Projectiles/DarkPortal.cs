@@ -120,6 +120,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             portalShader.TrySetParameter("edgeFadeInSharpness", 20.3f);
             portalShader.TrySetParameter("aheadCircleMoveBackFactor", 0.67f);
             portalShader.TrySetParameter("aheadCircleZoomFactor", 0.9f);
+            portalShader.TrySetParameter("spaceTextureZoom", Vector2.One);
             portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/StarDistanceLookup"), 1);
             portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2);
             portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void"), 3);

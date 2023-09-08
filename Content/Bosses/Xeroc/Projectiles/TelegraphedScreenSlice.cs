@@ -69,11 +69,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    float daggerSpacing = clockExists ? 160f : 192f;
+                    float daggerOffset = 48f;
+                    float daggerSpacing = 192f;
+                    if (clockExists)
+                    {
+                        daggerSpacing = 160f;
+                        daggerOffset = 0f;
+                    }
                     if (cosmicLaserExists)
+                    {
                         daggerSpacing = 230f;
+                        daggerOffset = 0f;
+                    }
 
-                    for (float d = 0f; d < LineLength; d += daggerSpacing)
+                    for (float d = daggerOffset; d < LineLength; d += daggerSpacing)
                     {
                         float hueInterpolant = d / LineLength * 2f % 1f;
                         Vector2 daggerStartingVelocity = Projectile.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(PiOver2) * 16f;
