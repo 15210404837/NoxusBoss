@@ -195,9 +195,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawWithPixelation()
         {
-            if (Time <= DelayUntilFreeMovement)
-                return;
-
             var fireTrailShader = ShaderManager.GetShader("GenericFlameTrail");
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
 
