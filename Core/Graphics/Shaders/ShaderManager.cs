@@ -61,7 +61,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
             Filters.Scene["NoxusBoss:LocalScreenSplit"] = new Filter(new LocalScreenSplitShaderData(s4, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Ref<Effect> s5 = new(Mod.Assets.Request<Effect>("Assets/Effects/XerocClockDeathZoneShader", AssetRequestMode.ImmediateLoad).Value);
-            Filters.Scene["NoxusBoss:XerocClockDeathDeathSky"] = new Filter(new XerocClockDeathDeathScreenShaderData(s5, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
+            Filters.Scene["NoxusBoss:XerocClockDeathZoneSky"] = new Filter(new XerocClockDeathZoneScreenShaderData(s5, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
 
             Ref<Effect> s6 = new(Mod.Assets.Request<Effect>("Assets/Effects/SpreadTelegraphInvertedShader", AssetRequestMode.ImmediateLoad).Value);
             ScreenShaderData telegraphShader = new(s6, ManagedShader.DefaultPassName);

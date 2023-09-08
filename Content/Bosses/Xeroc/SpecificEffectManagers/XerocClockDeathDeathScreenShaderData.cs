@@ -8,17 +8,17 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 {
-    public class XerocClockDeathDeathScene : ModSceneEffect
+    public class XerocClockDeathZoneScene : ModSceneEffect
     {
         public override bool IsSceneEffectActive(Player player) => AnyProjectiles(ModContent.ProjectileType<ClockConstellation>());
 
         public override void SpecialVisuals(Player player, bool isActive)
         {
-            player.ManageSpecialBiomeVisuals("NoxusBoss:XerocClockDeathDeathSky", isActive);
+            player.ManageSpecialBiomeVisuals("NoxusBoss:XerocClockDeathZoneSky", isActive);
         }
     }
 
-    public class XerocClockDeathDeathScreenShaderData : ScreenShaderData
+    public class XerocClockDeathZoneScreenShaderData : ScreenShaderData
     {
         public static float OutlineIntensity
         {
@@ -32,7 +32,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             set;
         }
 
-        public XerocClockDeathDeathScreenShaderData(Ref<Effect> shader, string passName)
+        public XerocClockDeathZoneScreenShaderData(Ref<Effect> shader, string passName)
             : base(shader, passName)
         {
         }
