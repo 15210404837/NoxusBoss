@@ -37,7 +37,29 @@ namespace NoxusBoss.Core.Graphics.Shaders
 
         public override void Apply()
         {
-            // This results in opposing forces between colors that causes the overall result to shift towards extremes, causing the contrast effect.
+            // The way matrices work is as a means of creating linear transformations, such as squishes, rotations, scaling effects, etc.
+            // Strictly speaking, however, they act as a sort of encoding for functions. The exact specifics of how this works is a bit too dense
+            // to stuff into a massive code comment, but 3blue1brown's linear algebra series does an excellent job of explaning how they work:
+            // https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
+
+            // For this matrix, the "axes" are the RGBA channels, in that order.
+            // Given that the matrix is somewhat sparse, it can be easy to represent the output equations for each color one-by-one.
+            // For the purpose of avoiding verbose expressions, I will represent "oneOffsetContrast" as "c", and "inverseForce" as "f":
+
+            // R = c * R + f * A
+            // G = c * G + f * A
+            // B = c * B + f * A
+            // For the purposes of the screen shaders, A is always 1, so it's possible to rewrite things explicitly like so:
+            // R = c * R + (1 - c) * 0.5
+            // G = c * G + (1 - c) * 0.5
+            // B = c * B + (1 - c) * 0.5
+
+            // These are all linear equations with slopes that become increasingly sharp the greater c is. At a certain point (which can be trivially computed from c) the output
+            // will be zero, and everything above or below that will race towards a large absolute value. The result of this is that color channels that are already strong are emphasized to their maximum
+            // extent while color channels that are weak vanish into nothing, effectively increasing the contrast by a significant margin.
+            // The reason the contrast needs to be offset by 1 is because inputs from 0-1 have the inverse effect, making the resulting colors more homogenous by bringing them closer to a neutral grey.
+            // This effect could be useful to note for other contexts, but for the intended purposes of this shader it's easier to correct for this.
+
             float configIntensityInterpolant = GetLerpValue(0f, 0.45f, NoxusBossConfig.Instance.VisualOverlayIntensity, true);
             float oneOffsetContrast = ContrastIntensity * configIntensityInterpolant + 1f;
             float inverseForce = (1f - oneOffsetContrast) * 0.5f;
