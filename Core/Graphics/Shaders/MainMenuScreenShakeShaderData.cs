@@ -8,6 +8,8 @@ namespace NoxusBoss.Core.Graphics.Shaders
 {
     public class MainMenuScreenShakeShaderData : ScreenShaderData
     {
+        public const string ShaderKey = "NoxusBoss:MainMenuShake";
+
         public static float ScreenShakeIntensity
         {
             get;
@@ -22,10 +24,10 @@ namespace NoxusBoss.Core.Graphics.Shaders
         public static void ToggleActivityIfNecessary()
         {
             bool shouldBeActive = ScreenShakeIntensity >= 0.01f;
-            if (shouldBeActive && !Filters.Scene["NoxusBoss:MainMenuShake"].IsActive())
-                Filters.Scene.Activate("NoxusBoss:MainMenuShake");
-            if (!shouldBeActive && Filters.Scene["NoxusBoss:MainMenuShake"].IsActive())
-                Filters.Scene.Deactivate("NoxusBoss:MainMenuShake");
+            if (shouldBeActive && !Filters.Scene[ShaderKey].IsActive())
+                Filters.Scene.Activate(ShaderKey);
+            if (!shouldBeActive && Filters.Scene[ShaderKey].IsActive())
+                Filters.Scene.Deactivate(ShaderKey);
         }
 
         public override void Apply()

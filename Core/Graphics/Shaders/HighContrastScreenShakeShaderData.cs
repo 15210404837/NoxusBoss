@@ -10,6 +10,8 @@ namespace NoxusBoss.Core.Graphics.Shaders
 {
     public class HighContrastScreenShakeShaderData : ScreenShaderData
     {
+        public const string ShaderKey = "NoxusBoss:HighContrast";
+
         public static float ContrastIntensity
         {
             get;
@@ -27,10 +29,10 @@ namespace NoxusBoss.Core.Graphics.Shaders
                 return;
 
             bool shouldBeActive = ContrastIntensity >= 0.01f && NoxusBossConfig.Instance.VisualOverlayIntensity >= 0.01f;
-            if (shouldBeActive && !Filters.Scene["NoxusBoss:HighContrast"].IsActive())
-                Filters.Scene.Activate("NoxusBoss:HighContrast");
-            if (!shouldBeActive && Filters.Scene["NoxusBoss:HighContrast"].IsActive())
-                Filters.Scene.Deactivate("NoxusBoss:HighContrast");
+            if (shouldBeActive && !Filters.Scene[ShaderKey].IsActive())
+                Filters.Scene.Activate(ShaderKey);
+            if (!shouldBeActive && Filters.Scene[ShaderKey].IsActive())
+                Filters.Scene.Deactivate(ShaderKey);
         }
 
         public override void Apply()
