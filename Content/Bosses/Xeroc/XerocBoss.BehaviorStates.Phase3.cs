@@ -196,6 +196,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 if (AttackTimer % 5f == 0f)
                 {
+                    // For some reason the audio engine has a stroke near the end of the attack and makes this do a stutter-like glitch.
+                    // This isn't anything I explicitly programmed and is effectively unintended behavior, but it fits Xeroc so I'll leave it alone for now.
                     CosmicLaserSound.Update(Main.LocalPlayer.Center, sound =>
                     {
                         float fadeOut = GetLerpValue(0.98f, 0.93f, attackCompletion, true);
