@@ -9,7 +9,7 @@ namespace NoxusBoss.Common.Utilities
         {
             float spacedAngle = angle;
 
-            // There should be a star point that looks directly upward. However, that isn't the case for non-even star counts with the equation below.
+            // There should be a star point that looks directly upward. However, that isn't the case for odd star counts with the equation below.
             // To address this, a -90 degree rotation is performed.
             if (pointCount % 2 != 0)
                 spacedAngle -= PiOver2;

@@ -19,32 +19,12 @@ namespace NoxusBoss.Common.Utilities
     {
         private static readonly FieldInfo shaderTextureField = typeof(MiscShaderData).GetField("_uImage1", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly FieldInfo shaderTextureField2 = typeof(MiscShaderData).GetField("_uImage2", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private static readonly FieldInfo shaderTextureField3 = typeof(MiscShaderData).GetField("_uImage3", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        public static Rectangle MouseScreenRectangle => new((int)Main.MouseScreen.X, (int)Main.MouseScreen.Y, 1, 1);
-
         /// <summary>
         /// Uses reflection to set the _uImage1. Its underlying data is private and the only way to change it publicly is via a method that only accepts paths to vanilla textures.
         /// </summary>
         /// <param name="shader">The shader</param>
         /// <param name="texture">The texture to use</param>
         public static void SetShaderTexture(this MiscShaderData shader, Asset<Texture2D> texture) => shaderTextureField.SetValue(shader, texture);
-
-        /// <summary>
-        /// Uses reflection to set the _uImage2. Its underlying data is private and the only way to change it publicly is via a method that only accepts paths to vanilla textures.
-        /// </summary>
-        /// <param name="shader">The shader</param>
-        /// <param name="texture">The texture to use</param>
-        public static void SetShaderTexture2(this MiscShaderData shader, Asset<Texture2D> texture) => shaderTextureField2.SetValue(shader, texture);
-
-        /// <summary>
-        /// Uses reflection to set the _uImage3. Its underlying data is private and the only way to change it publicly is via a method that only accepts paths to vanilla textures.
-        /// </summary>
-        /// <param name="shader">The shader</param>
-        /// <param name="texture">The texture to use</param>
-        public static void SetShaderTexture3(this MiscShaderData shader, Asset<Texture2D> texture) => shaderTextureField3.SetValue(shader, texture);
 
         /// <summary>
         /// Reset's a <see cref="SpriteBatch"/>'s <see cref="BlendState"/> based to a typical <see cref="BlendState.AlphaBlend"/>.

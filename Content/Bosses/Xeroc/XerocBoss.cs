@@ -177,7 +177,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         WingRotation = (-0.6f).AngleLerp(0.36f - instanceRatio * 0.25f, animationCompletion);
                         break;
                     case WingMotionState.Flap:
-                        WingRotation = PiecewiseAnimation((animationCompletion + Lerp(instanceRatio, 0f, 0.5f)) % 1f, Anticipation, Flap, Rest, Recovery);
+                        WingRotation = PiecewiseAnimation((animationCompletion + instanceRatio * 0.5f) % 1f, Anticipation, Flap, Rest, Recovery);
                         break;
                 }
 
