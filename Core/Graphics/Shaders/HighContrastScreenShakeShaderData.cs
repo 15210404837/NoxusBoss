@@ -39,7 +39,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
         {
             // The way matrices work is as a means of creating linear transformations, such as squishes, rotations, scaling effects, etc.
             // Strictly speaking, however, they act as a sort of encoding for functions. The exact specifics of how this works is a bit too dense
-            // to stuff into a massive code comment, but 3blue1brown's linear algebra series does an excellent job of explaning how they work:
+            // to stuff into a massive code comment, but 3blue1brown's linear algebra series does an excellent job of explaining how they work:
             // https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
 
             // For this matrix, the "axes" are the RGBA channels, in that order.
