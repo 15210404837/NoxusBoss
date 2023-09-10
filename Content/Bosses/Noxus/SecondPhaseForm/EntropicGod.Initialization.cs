@@ -173,7 +173,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             NPC.Calamity().ShouldCloseHPBar = true;
             InitializeHandsIfNecessary();
 
-            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/GodIsDead");
+            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/EntropicGod");
         }
 
         public void InitializeHandsIfNecessary()

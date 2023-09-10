@@ -150,7 +150,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             {
                 // Bring the music back.
                 if (Music == 0)
-                    Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/GodIsDead");
+                    Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/EntropicGod");
 
                 // Teleport above the player again.
                 if (AttackTimer == stunTime + 1f)

@@ -61,6 +61,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         public static void DrawEyes()
         {
+            if (XerocBoss.Myself is null || XerocBoss.Myself.ModNPC<XerocBoss>().Hands is null)
+                return;
+
             int eyeCount = 39;
             ulong eyeSeed = 8135uL;
             List<Vector2> existingEyePositions = new();
