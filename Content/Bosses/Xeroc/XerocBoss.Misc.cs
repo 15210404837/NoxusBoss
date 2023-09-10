@@ -43,6 +43,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             writer.WriteVector2(PunchDestination);
             writer.WriteVector2(SwordChargeDestination);
             writer.WriteVector2(HandFireDestination);
+            writer.WriteVector2(CircularPortalsOrigin);
 
             // Write lists.
             writer.Write(Hands.Count);
@@ -70,6 +71,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             PunchDestination = reader.ReadVector2();
             SwordChargeDestination = reader.ReadVector2();
             HandFireDestination = reader.ReadVector2();
+            CircularPortalsOrigin = reader.ReadVector2();
 
             // Read lists.
             Hands.Clear();

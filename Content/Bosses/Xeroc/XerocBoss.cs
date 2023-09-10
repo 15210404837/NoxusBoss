@@ -372,6 +372,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public Vector2 CircularPortalsOrigin
+        {
+            get;
+            set;
+        }
+
         public XerocWing[] Wings
         {
             get;

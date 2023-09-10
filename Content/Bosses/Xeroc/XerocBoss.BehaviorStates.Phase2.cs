@@ -1186,6 +1186,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NPC.velocity *= 0.8f;
 
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.16f);
+
+                if (AttackTimer == redirectTime - 1f)
+                {
+                    CircularPortalsOrigin = NPC.Center;
+                    NPC.netUpdate = true;
+                }
             }
 
             // Summon portals.
@@ -1204,18 +1210,30 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Summon portals.
                 if (AttackTimer % portalSummonRate == 0f)
                 {
-                    Vector2 portalSummonPosition = NPC.Center + portalSummonAngle.ToRotationVector2() * new Vector2(1650f, 1275f);
+                    Vector2 portalSummonPosition = CircularPortalsOrigin + portalSummonAngle.ToRotationVector2() * new Vector2(1650f, 1275f);
 
                     int remainingChargeTime = portalSummonTime - (int)(AttackTimer - redirectTime);
                     int fireDelay = remainingChargeTime + 30;
                     float portalScale = Main.rand.NextFloat(0.57f, 0.67f);
 
-                    Vector2 portalDirection = -NPC.SafeDirectionTo(portalSummonPosition).RotatedByRandom(laserAngularVariance);
+                    Vector2 portalDirection = (CircularPortalsOrigin - portalSummonPosition).SafeNormalize(Vector2.UnitY).RotatedByRandom(laserAngularVariance);
 
                     // Summon the portal and shoot the telegraph for the laser.
                     NewProjectileBetter(portalSummonPosition + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 35, fireDelay);
                     NewProjectileBetter(portalSummonPosition, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
                 }
+            }
+
+            // Teleport away before the lasers fire.
+            if (AttackTimer == redirectTime + portalSummonTime - 3f)
+            {
+                Vector2 oldPosition = NPC.Center;
+                Vector2 teleportDestination = Target.Center + Vector2.UnitX * Target.direction * 600f;
+                while (teleportDestination.WithinRange(oldPosition, 880f))
+                    teleportDestination.X += Target.direction * 4f;
+
+                TeleportTo(teleportDestination);
+                ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
             }
 
             if (AttackTimer >= redirectTime + portalSummonTime + attackTransitionDelay)
