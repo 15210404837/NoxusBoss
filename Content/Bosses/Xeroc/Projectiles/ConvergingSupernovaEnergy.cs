@@ -80,7 +80,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
                 float afterimageScale = Projectile.scale * ((afterimageCount - i) / (float)afterimageCount);
 
-                Color color = Projectile.GetAlpha(lightColor) * ((afterimageCount - i) / (float)afterimageCount);
+                Color color = Projectile.GetAlpha(Color.White) * ((afterimageCount - i) / (float)afterimageCount);
                 color.A = 0;
 
                 Main.spriteBatch.Draw(texture, drawPosition, frame, color, afterimageRotation, frame.Size() * 0.5f, afterimageScale, directionForImage, 0f);
