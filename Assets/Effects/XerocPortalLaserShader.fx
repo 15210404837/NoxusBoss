@@ -2,6 +2,7 @@ sampler uImage0 : register(s0);
 sampler uImage1 : register(s1);
 sampler uImage2 : register(s2);
 
+bool drawAdditively;
 float globalTime;
 float darknessNoiseScrollSpeed;
 float brightnessNoiseScrollSpeed;
@@ -51,7 +52,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     
     // Calculate color-affecting interpolants.
     float darknessNoise = tex2D(uImage1, coords * float2(2, 1) + darknessScrollOffset + float2(globalTime * -darknessNoiseScrollSpeed, 0));
-    float fadeToWhite = InverseLerp(0.2 - darknessNoise * 0.15, 0, baseCoords.x) * 0.85;
+    float fadeToWhite = InverseLerp(0.24 - darknessNoise * 0.15, 0, baseCoords.x) * 0.85;
     float brightnessNoise = tex2D(uImage1, coords * float2(2, 1) + brightnessScrollOffset + float2(globalTime * -brightnessNoiseScrollSpeed, 0));
     
     // Apply darkness effects.
@@ -70,9 +71,12 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float3 highlight = (1 - tex2D(uImage2, coords * float2(1.5, 1) + float2(0, globalTime * -0.06))) * lerp(0.5, 5, pow(darknessNoise, 3));
     
     // Calculate the edge-fade opacity.
-    float opacity = InverseLerp(0, 0.125, coords.y) * InverseLerp(1, 0.875, coords.y);
+    float opacity = InverseLerp(0, 0.2, coords.y) * InverseLerp(1, 0.8, coords.y) * 0.7;
     
-    return lerp(float4(finalColor + pow(highlight, 3.6), 1), 2, fadeToWhite) * opacity;
+    fadeToWhite += pow(sin(baseCoords.y * 3.141), 5 + darknessNoise * 50);
+    float4 result = lerp(float4(finalColor + pow(highlight, 3.6), 1), 2, fadeToWhite) * opacity;
+    result.a *= 1 - drawAdditively;
+    return result;
 }
 
 technique Technique1

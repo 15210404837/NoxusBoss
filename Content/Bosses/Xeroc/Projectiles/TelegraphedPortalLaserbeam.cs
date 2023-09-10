@@ -194,10 +194,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.8f,
                 Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
             };
+
+            bool drawAdditively = XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.CircularPortalLaserBarrages;
             laserShader.TrySetParameter("darknessNoiseScrollSpeed", 2.5f);
             laserShader.TrySetParameter("brightnessNoiseScrollSpeed", 1.7f);
             laserShader.TrySetParameter("darknessScrollOffset", Vector2.UnitY * (Projectile.identity * 0.3358f % 1f));
             laserShader.TrySetParameter("brightnessScrollOffset", Vector2.UnitY * (Projectile.identity * 0.3747f % 1f));
+            laserShader.TrySetParameter("drawAdditively", drawAdditively);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
             laserShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 2);
             LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
