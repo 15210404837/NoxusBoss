@@ -9,6 +9,7 @@ using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
+using NoxusBoss.Core.Music;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -566,7 +567,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Hey bozo the player's gone. Leave.
             if (Target.dead || !Target.active)
+            {
+                SoundMufflingSystem.EarRingingIntensity = 0f;
+                SoundMufflingSystem.MuffleFactor = 1f;
+                MusicVolumeManipulationSystem.MusicMuffleFactor = 0f;
                 NPC.active = false;
+            }
 
             // Grant the target infinite flight.
             Target.wingTime = Target.wingTimeMax;
