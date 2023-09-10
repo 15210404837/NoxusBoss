@@ -275,6 +275,7 @@ Mods: {
 			BabyXeroc.DisplayName: Baby Deity
 			ThePurifierProj.DisplayName: The Purifier
 			SwordConstellationSlashVisual.DisplayName: Good Visual Design
+			TelegraphedPortalLaserbeam.DisplayName: Cosmic Burst
 		}
 
 		Tiles: {

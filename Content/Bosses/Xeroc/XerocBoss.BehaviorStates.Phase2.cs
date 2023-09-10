@@ -1213,8 +1213,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Vector2 portalDirection = -NPC.SafeDirectionTo(portalSummonPosition).RotatedByRandom(laserAngularVariance);
 
                     // Summon the portal and shoot the telegraph for the laser.
-                    NewProjectileBetter(portalSummonPosition + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15);
-                    NewProjectileBetter(portalSummonPosition, portalDirection, ModContent.ProjectileType<TelegraphedLightLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
+                    NewProjectileBetter(portalSummonPosition + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15, fireDelay);
+                    NewProjectileBetter(portalSummonPosition, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
                 }
             }
 

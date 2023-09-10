@@ -303,7 +303,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     }
 
                     CurrentAttack = phaseCycle[PhaseCycleIndex % phaseCycle.Length];
-                    CurrentAttack = XerocAttackType.SuperCosmicLaserbeam;
                     PhaseCycleIndex++;
                     break;
             }

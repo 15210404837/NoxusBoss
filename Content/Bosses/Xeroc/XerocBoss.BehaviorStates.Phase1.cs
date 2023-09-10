@@ -618,15 +618,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Vector2 portalDirection = ((verticalCharges ? Vector2.UnitX : Vector2.UnitY) * NPC.SafeDirectionTo(Target.Center)).SafeNormalize(Vector2.UnitY).RotatedByRandom(laserAngularVariance);
 
                     // Summon the portal and shoot the telegraph for the laser.
-                    NewProjectileBetter(NPC.Center + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15);
-                    NewProjectileBetter(NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedLightLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
+                    NewProjectileBetter(NPC.Center + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15, fireDelay);
+                    NewProjectileBetter(NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
 
                     // Spawn a second telegraph laser in the opposite direction if a portal was summoned due to being close to the target.
                     // This is done to prevent just flying up/forward to negate the attack.
                     if (forcefullySpawnPortal)
                     {
                         portalDirection *= -1f;
-                        NewProjectileBetter(NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedLightLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
+                        NewProjectileBetter(NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
                     }
                 }
 

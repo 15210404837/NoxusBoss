@@ -5,6 +5,7 @@ using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -60,7 +61,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             portalShader.TrySetParameter("edgeFadeInSharpness", 20.3f);
             portalShader.TrySetParameter("aheadCircleMoveBackFactor", 0.67f);
             portalShader.TrySetParameter("aheadCircleZoomFactor", 0.9f);
-            portalShader.TrySetParameter("spaceBrightness", 1.5f);
+            portalShader.TrySetParameter("spaceBrightness", GetLerpValue(0.7f, 0.82f, ScreenEffectSystem.FlashIntensity, true) * 150f + 1.5f);
             portalShader.TrySetParameter("spaceTextureZoom", Vector2.One * 0.55f);
             portalShader.TrySetParameter("spaceTextureOffset", Vector2.UnitX * Projectile.identity * 0.156f);
             portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/StarDistanceLookup"), 1);

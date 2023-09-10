@@ -54,7 +54,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private static Vector2 FlashPosition;
 
-        private static float FlashIntensity;
+        internal static float FlashIntensity;
 
         private static int FlashLifeTime;
 
