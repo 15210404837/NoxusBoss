@@ -226,7 +226,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             spriteBatch.Draw(backglow, glimmerDrawPosition, null, glimmerDrawColor * 0.3f, glimmerRotation, backglow.Size() * 0.5f, glimmerScale * 1.5f, 0, 0f);
 
             // Draw the circular glow.
-            spriteBatch.Draw(circularGlow, glimmerDrawPosition, null, circularGlowDrawColor, glimmerRotation, circularGlow.Size() * 0.5f, glimmerScale * 1.25f, 0, 0f);
+            spriteBatch.Draw(circularGlow, glimmerDrawPosition, null, circularGlowDrawColor, Projectile.velocity.ToRotation(), circularGlow.Size() * 0.5f, glimmerScale * new Vector2(0.9f, 1.25f), 0, 0f);
         }
     }
 }
