@@ -20,8 +20,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         public void DoBehavior_ConjureExplodingStars()
         {
-            int redirectTime = 22;
-            int hoverTime = 34;
+            int redirectTime = 15;
+            int hoverTime = 22;
             int starShootCount = 6;
             int starCreateRate = 4;
             int starTelegraphTime = starShootCount * starCreateRate;
@@ -31,21 +31,32 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             float starOffsetRadius = 480f;
             ref float explosionCounter = ref NPC.ai[2];
 
-            // Redirect above the player.
-            if (AttackTimer <= redirectTime)
-            {
-                float redirectInterpolant = Pow(AttackTimer / redirectTime, 0.66f) * 0.45f;
-                float overshootInPixels = GetLerpValue(0.2f, 0.6f, redirectInterpolant, true) * GetLerpValue(0.96f, 0.75f, redirectInterpolant, true) * 50f;
-                Vector2 overshootOffset = (NPC.position - NPC.oldPosition).SafeNormalize(Vector2.Zero) * overshootInPixels;
-                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f + overshootOffset, redirectInterpolant);
-            }
-            else
-            {
-                NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 380f, 0.5f);
-                NPC.velocity *= 0.82f;
-
-                // Make the robe's eyes stare at the target while hovering.
+            // Make the robe's eyes stare at the target while hovering.
+            if (AttackTimer >= redirectTime)
                 RobeEyesShouldStareAtTarget = true;
+
+            Vector2 hoverDestination = Target.Center - Vector2.UnitY * 380f;
+            Vector2 idealVelocity = NPC.SafeDirectionTo(hoverDestination) * MathF.Max(0f, NPC.Distance(hoverDestination) - 230f) * 0.17f;
+            if (AttackTimer >= redirectTime + hoverTime)
+                idealVelocity = Vector2.Zero;
+
+            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.11f);
+
+            // Slow down rapidly if flying past the hover destination. If this happens when Xeroc is moving really, really fast a sonic boom of sorts is creating.
+            if (Vector2.Dot(NPC.velocity, NPC.SafeDirectionTo(hoverDestination)) < 0f)
+            {
+                // Create the sonic boom if necessary.
+                if (NPC.velocity.Length() >= 75f)
+                {
+                    NPC.velocity = NPC.velocity.ClampMagnitude(0f, 74f);
+                    SoundEngine.PlaySound(SunFireballShootSound with { Pitch = 0.6f }, Target.Center);
+                    ScreenEffectSystem.SetFlashEffect(NPC.Center, 4f, 54);
+
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                        NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                }
+
+                NPC.velocity *= 0.67f;
             }
 
             // Flap wings.
@@ -57,8 +68,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update hands.
             if (Hands.Count >= 2)
             {
-                DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-400f, 100f) * TeleportVisualsAdjustedScale);
-                DefaultHandDrift(Hands[1], NPC.Center + new Vector2(400f, 100f) * TeleportVisualsAdjustedScale);
+                DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-400f, 100f) * TeleportVisualsAdjustedScale, 2.5f);
+                DefaultHandDrift(Hands[1], NPC.Center + new Vector2(400f, 100f) * TeleportVisualsAdjustedScale, 2.5f);
                 Hands[0].Rotation = Hands[0].Rotation.AngleLerp(PiOver2, 0.1f);
                 Hands[1].Rotation = Hands[1].Rotation.AngleLerp(-PiOver2, 0.1f);
                 Hands[0].ShouldOpen = AttackTimer >= redirectTime + hoverTime - 7f;
@@ -81,6 +92,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Vector2 starSpawnOffset = starSpawnOffsetAngle.ToRotationVector2() * starOffsetRadius;
                 StarSpawnOffsets.Add(starSpawnOffset);
                 CreateTwinkle(Target.Center + starSpawnOffset, Vector2.One * 1.7f);
+
+                // Create bloom at the position of the star, to help it stand out more.
+                Color bloomColor = Color.Lerp(Color.LightCoral, Color.Yellow, Main.rand.NextFloat(0.6f));
+                StrongBloom bloom = new(Target.Center + starSpawnOffset, Vector2.Zero, bloomColor, 1.9f, 20);
+                GeneralParticleHandler.SpawnParticle(bloom);
 
                 NPC.netSpam = 0;
                 NPC.netUpdate = true;

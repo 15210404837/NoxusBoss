@@ -148,24 +148,24 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Vector2 leftWingOrigin = wingsTexture.Size() * new Vector2(1f, 0.86f);
             Vector2 rightWingOrigin = leftWingOrigin;
             rightWingOrigin.X = wingsTexture.Width - rightWingOrigin.X;
-            Color wingsDrawColor = Color.Lerp(Color.Transparent, Color.White, fadeInterpolant);
+            Color wingsDrawColor = Color.Lerp(Color.Transparent, Color.White, fadeInterpolant) * fadeInterpolant;
             if (glow)
                 wingsDrawColor.A = 0;
 
             // Wings become squished the faster they're moving, to give an illusion of 3D motion.
             float squishOffset = MathF.Min(0.7f, Math.Abs(rotationDifferenceMovingAverage) * 3.5f);
 
-            Vector2 scale = MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(1f, 1f - squishOffset) * fadeInterpolant * new Vector2(1f, 1.15f);
+            Vector2 scale = MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(1f, 1f - squishOffset) * new Vector2(1f, 1.15f);
             Main.spriteBatch.Draw(wingsTexture, drawPosition - Vector2.UnitX * TeleportVisualsAdjustedScale * 58f, null, wingsDrawColor, generalRotation + wingRotation, leftWingOrigin, scale, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(wingsTexture, drawPosition + Vector2.UnitX * TeleportVisualsAdjustedScale * 58f, null, wingsDrawColor, generalRotation - wingRotation, rightWingOrigin, scale, SpriteEffects.FlipHorizontally, 0f);
         }
 
-        public void DrawWings()
+        public void DrawWings(Vector2 drawOffset, float opacityFactor)
         {
             for (int i = 0; i < Wings.Length; i++)
             {
-                Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
-                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation * 2f, NPC.Opacity, true);
+                Vector2 bottom = NPC.Center + drawOffset + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
+                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation * 2f, NPC.Opacity * opacityFactor, true);
             }
 
             // Prepare the wing psychedelic shader.
@@ -180,8 +180,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             for (int i = 0; i < Wings.Length; i++)
             {
-                Vector2 bottom = NPC.Center + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
-                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation * 2f, NPC.Opacity, false);
+                Vector2 bottom = NPC.Center + drawOffset + Vector2.UnitY.RotatedBy(NPC.rotation) * TeleportVisualsAdjustedScale.Y * 220f - Main.screenPosition;
+                DrawWing(bottom + Vector2.UnitY * (i * -180f - 240f) * TeleportVisualsAdjustedScale.Y, Wings[i].WingRotation, Wings[i].WingRotationDifferenceMovingAverage, NPC.rotation * 2f, NPC.Opacity * opacityFactor, false);
             }
         }
 
@@ -316,7 +316,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Draw the cloth.
-            cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(ellipsoidCenter, 0f), ellipsoidRadius);
+            int simulationSteps = (int)(NPC.position.Distance(NPC.oldPosition) / 22f) + 1;
+            for (int i = 0; i < simulationSteps; i++)
+                cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(ellipsoidCenter, 0f), ellipsoidRadius);
 
             // Collect necessary shader and graphics information for the cloth drawing.
             var mesh = cloth.GenerateMesh();

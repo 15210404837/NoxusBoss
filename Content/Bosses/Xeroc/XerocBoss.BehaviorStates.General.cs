@@ -118,7 +118,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             SeamScale = GetLerpValue(0f, seamAppearTime, AttackTimer - starRecedeDelay - starRecedeTime - eyeAppearTime - eyeObserveTime - pupilContractDelay, true);
 
             // Make the seam grow after appearing.
-            SeamScale += Pow(GetLerpValue(0f, seamGrowTime, AttackTimer - starRecedeDelay - starRecedeTime - eyeAppearTime - eyeObserveTime - pupilContractDelay - seamAppearTime, true), 1.9f) * 4f;
+            SeamScale += Pow(GetLerpValue(0f, seamGrowTime, AttackTimer - starRecedeDelay - starRecedeTime - eyeAppearTime - eyeObserveTime - pupilContractDelay - seamAppearTime, true), 1.9f) * 2.3f;
 
             // Open the seam in the next state.
             // This is done in a separate state because honestly these GetLerpValue lines are getting ridiculous.

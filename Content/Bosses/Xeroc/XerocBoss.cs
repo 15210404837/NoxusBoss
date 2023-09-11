@@ -330,6 +330,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             set;
         }
 
+        public float AfterimageCount
+        {
+            get;
+            set;
+        }
+
         public bool DrawCongratulatoryText
         {
             get;
@@ -711,6 +717,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     DoBehavior_DeathAnimation_GFB();
                     break;
             }
+
+            // Calculate the afterimage count based on velocity.
+            // This rapidly approaches an ideal value but doesn't match it exactly, to allow for smooth transition into and out of afterimages.
+            float idealAfterimageCount = (int)Clamp((NPC.velocity.Length() - 30f) * 0.12f, 0f, NPC.oldPos.Length - 1f);
+            AfterimageCount = Lerp(AfterimageCount, idealAfterimageCount, 0.08f);
 
             // Handle mumble sounds.
             if (MumbleTimer >= 1)

@@ -54,7 +54,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             Main.spriteBatch.Draw(AfterimageTargetPrevious.Target, Vector2.Zero, Color.White);
 
             // Draw Xeroc's wings.
-            XerocBoss.Myself.ModNPC<XerocBoss>().DrawWings();
+            int afterimageCount = (int)XerocBoss.Myself.ModNPC<XerocBoss>().AfterimageCount;
+            XerocBoss.Myself.ModNPC<XerocBoss>().DrawWings(Vector2.Zero, 1f);
+            for (int i = afterimageCount; i >= 1; i--)
+            {
+                Vector2 drawOffset = XerocBoss.Myself.oldPos[i] - XerocBoss.Myself.position;
+                XerocBoss.Myself.ModNPC<XerocBoss>().DrawWings(drawOffset, Pow(1f - i / (float)afterimageCount, 3f));
+            }
 
             // Draw the afterimage shader to the result.
             ApplyPsychedelicDiffusionEffects();
