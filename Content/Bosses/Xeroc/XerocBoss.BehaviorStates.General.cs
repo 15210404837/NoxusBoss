@@ -13,6 +13,7 @@ using NoxusBoss.Core;
 using NoxusBoss.Core.GlobalItems;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
+using NoxusBoss.Core.Music;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;
@@ -444,6 +445,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Stay at 1 HP.
             NPC.life = 1;
             NPC.dontTakeDamage = true;
+
+            // Disable sound muffling.
+            SoundMufflingSystem.MuffleFactor = 0f;
+            MusicVolumeManipulationSystem.MusicMuffleFactor = 1f;
 
             // Flap wings.
             UpdateWings(AttackTimer / 42f % 1f);
