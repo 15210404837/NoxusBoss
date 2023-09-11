@@ -161,7 +161,7 @@ Mods: {
 				Tooltip:
 					'''
 					Resets the entire world to its original state
-					This process can take a while, so don't be alarmed if the game freezes for a bit
+					This process can take a while, so don't be alarmed if the game idles for a bit
 					Once thrown, the bomb takes 15 seconds to detonate
 					If you accidentally throw it, you can save and quit to prevent it from exploding
 					2012
