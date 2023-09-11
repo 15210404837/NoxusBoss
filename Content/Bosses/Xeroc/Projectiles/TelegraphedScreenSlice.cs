@@ -81,6 +81,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                         daggerSpacing = 230f;
                         daggerOffset = 0f;
                     }
+                    if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.RealityTearDaggers)
+                        daggerOffset = -48f;
                     if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.PunchesWithScreenSlices)
                         daggerOffset = -8f;
 
