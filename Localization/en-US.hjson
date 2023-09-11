@@ -4,6 +4,7 @@ Mods: {
 			EntropicGod: A fathomless being beyond description.
 			NoxusEgg: An anomalous egg of pure darkness. For countless eons it has been patiently waiting to hatch.
 			XerocBoss: The cosmic creator.
+			ItemDropConditions.FirstTimeExclusive: Only drops once.
 		}
 
 		Biomes: {
@@ -196,6 +197,11 @@ Mods: {
 			EternalGardenMusicBoxItem: {
 				DisplayName: Music Box (Eternal Garden)
 				Tooltip: ""
+			}
+
+			Rok: {
+				DisplayName: Rok
+				Tooltip: It's just an ordinary rock
 			}
 		}
 

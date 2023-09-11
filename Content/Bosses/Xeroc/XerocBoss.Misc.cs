@@ -16,9 +16,12 @@ using NoxusBoss.Content.Items.Placeable;
 using NoxusBoss.Content.Items.Placeable.Monoliths;
 using NoxusBoss.Content.Items.Placeable.Relics;
 using NoxusBoss.Content.Items.Placeable.Trophies;
+using NoxusBoss.Core;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
@@ -125,11 +128,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Vanity and decorations.
             npcLoot.Add(ModContent.ItemType<Cattail>());
             npcLoot.Add(ModContent.ItemType<ThePurifier>());
-            npcLoot.Add(ModContent.ItemType<Rock>());
             npcLoot.Add(ModContent.ItemType<DivineMonolith>());
             npcLoot.Add(ModContent.ItemType<NuminousDye>(), 1, 3, 5);
             npcLoot.Add(ModContent.ItemType<XerocMask>(), 7);
             npcLoot.Add(ModContent.ItemType<XerocTrophy>(), 10);
+
+            // The rock only drops the first time Xeroc is defeated.
+            IItemDropRuleCondition firstDefeatCondition = DropHelper.If(() => !WorldSaveSystem.HasDefeatedXeroc, true, Language.GetTextValue("Mods.NoxusBoss.Bestiary.ItemDropConditions.FirstTimeExclusive"));
+            npcLoot.DefineConditionalDropSet(firstDefeatCondition).Add(ModContent.ItemType<Rock>());
+
             npcLoot.DefineConditionalDropSet(DropHelper.RevAndMaster).Add(ModContent.ItemType<XerocRelic>());
             npcLoot.DefineConditionalDropSet(DropHelper.RevAndMaster).Add(ModContent.ItemType<EmpyreanEmberlet>());
         }
