@@ -136,7 +136,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             int redirectTime = 11;
             int handCount = 10;
-            int handSummonRate = 4;
+            int handSummonRate = 3;
             int handSummonTime = handCount * handSummonRate;
             float maxHandSpinSpeed = ToRadians(0.36f);
             float handMoveSpeedFactor = 2.8f;
@@ -193,9 +193,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Hover above the player while the hands attack.
             else
             {
-                int handEnergyChargeUpTime = 45;
+                int handEnergyChargeUpTime = 35;
 
-                int handArcSpinTime = 18;
+                int handArcSpinTime = 16;
                 int handArcTangentMovementTime = 10;
                 int handArcPunchTime = handArcSpinTime + handArcTangentMovementTime;
 
@@ -237,11 +237,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     if (wrappedHandAttackTimer % 10f == 0f)
                     {
                         SoundEngine.PlaySound(SunFireballShootSound, punchingHandCenter);
-                        Color energyColor = Color.Lerp(Color.Yellow, Color.IndianRed, Main.rand.NextFloat(0.25f, 0.825f));
+                        Color energyColor = Color.Lerp(Color.Coral, Color.IndianRed, Main.rand.NextFloat(0.25f, 0.825f));
                         PulseRing ring = new(punchingHandCenter, Vector2.Zero, energyColor, 3.2f, 0f, 30);
                         GeneralParticleHandler.SpawnParticle(ring);
 
-                        StrongBloom bloom = new(punchingHandCenter, Vector2.Zero, energyColor, 1f, 15);
+                        StrongBloom bloom = new(punchingHandCenter, Vector2.Zero, energyColor, 1.6f, 25);
                         GeneralParticleHandler.SpawnParticle(bloom);
                     }
 
@@ -291,11 +291,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     }
 
                     // Make the punching hand release fire behind it.
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 5; i++)
                     {
+                        float fireScale = Main.rand.NextFloat(0.8f, 1.15f);
                         Vector2 fireVelocity = leftHand.Velocity * -0.15f + Main.rand.NextVector2Circular(4f, 4f);
                         Color fireColor = Color.Lerp(Color.IndianRed, Color.Yellow, Main.rand.NextFloat(0.75f)) * 0.4f;
-                        HeavySmokeParticle fire = new(leftHand.Center + Main.rand.NextVector2Circular(12f, 12f), fireVelocity, fireColor, 12, 0.9f, 1f, 0f, true);
+                        HeavySmokeParticle fire = new(leftHand.Center + Main.rand.NextVector2Circular(12f, 12f), fireVelocity, fireColor, 16, fireScale, 2f, 0f, true);
                         GeneralParticleHandler.SpawnParticle(fire);
                     }
 
