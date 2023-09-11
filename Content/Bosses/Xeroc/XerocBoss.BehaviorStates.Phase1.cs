@@ -245,7 +245,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int totalRadialSlices = 6;
             int totalSlices = totalHorizontalSlices + totalRadialSlices;
             int handWaveTime = 27;
-            float sliceTelegraphLength = 2800f;
+            float sliceTelegraphLength = 2200f;
             float wrappedAttackTimer = AttackTimer % screenSliceRate;
             ref float sliceCounter = ref NPC.ai[2];
             ref float attackTransitionCounter = ref NPC.ai[3];
@@ -369,11 +369,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ZPosition = Lerp(ZPosition, 0f, 0.06f);
 
                 // Destroy the hands after enough time has passed.
-                if (attackTransitionCounter == 60f)
+                if (attackTransitionCounter == 25f)
                     DestroyAllHands();
 
                 attackTransitionCounter++;
-                if (attackTransitionCounter >= 150f)
+                if (attackTransitionCounter >= 84f)
                     SelectNextAttack();
             }
         }
