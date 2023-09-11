@@ -136,7 +136,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
         public override void SetDefaults()
         {
             NPC.npcSlots = 50f;
-            NPC.damage = 335;
+            NPC.damage = 380;
             NPC.width = 122;
             NPC.height = 290;
             NPC.defense = 130;
@@ -149,7 +149,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
 
             if (Main.expertMode)
             {
-                NPC.damage = 550;
+                NPC.damage = 600;
 
                 // Undo vanilla's automatic Expert boosts.
                 NPC.lifeMax /= 2;
