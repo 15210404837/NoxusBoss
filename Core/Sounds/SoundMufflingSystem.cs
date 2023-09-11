@@ -38,7 +38,7 @@ namespace NoxusBoss.Core
         private SlotId ReduceVolume(On_SoundPlayer.orig_Play_Inner orig, SoundPlayer self, ref SoundStyle style, Vector2? position, SoundUpdateCallback updateCallback)
         {
             SoundStyle copy = style;
-            if (MuffleFactor < 0.999f && !ExemptedSoundStyles.Any(s => s.IsTheSameAs(copy)) && EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
+            if (MuffleFactor < 0.999f && !ExemptedSoundStyles.Any(s => s.IsTheSameAs(copy)) && EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame && XerocBoss.Myself is not null)
                 style.Volume *= MuffleFactor;
 
             SlotId result = orig(self, ref style, position, updateCallback);

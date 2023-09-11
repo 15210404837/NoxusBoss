@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.MainMenuThemes;
@@ -447,8 +449,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             NPC.dontTakeDamage = true;
 
             // Disable sound muffling.
-            SoundMufflingSystem.MuffleFactor = 0f;
-            MusicVolumeManipulationSystem.MusicMuffleFactor = 1f;
+            SoundMufflingSystem.MuffleFactor = 1f;
+            MusicVolumeManipulationSystem.MusicMuffleFactor = 0f;
 
             // Flap wings.
             UpdateWings(AttackTimer / 42f % 1f);
@@ -595,7 +597,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GiveXerocLootUponReenteringWorld = true;
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
                         WorldSaveSystem.HasDefeatedXeroc = true;
-                        Player.SavePlayer(Main.ActivePlayerFileData);
+
+                        if (!Utilities.IsFileLocked(new(Main.ActivePlayerFileData.Path)))
+                            Player.SavePlayer(Main.ActivePlayerFileData);
                         if (Main.netMode == NetmodeID.MultiplayerClient)
                         {
                             Netplay.Disconnect = true;
