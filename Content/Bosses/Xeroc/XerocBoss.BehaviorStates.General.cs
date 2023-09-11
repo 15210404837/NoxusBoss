@@ -129,7 +129,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_OpenScreenTear()
         {
             int gripTime = 60;
-            int ripOpenTime = 18;
+            int ripOpenTime = 26;
             int backgroundAppearDelay = 240;
             int backgroundAppearTime = 180;
 
@@ -151,7 +151,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Music = 0;
 
             // Keep the seam scale at its minimum at first.
-            SeamScale = 5f;
+            SeamScale = 2.3f;
 
             // Stay above the target.
             NPC.Center = Target.Center - Vector2.UnitY * 1000f;
@@ -185,15 +185,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Have the hands move above and below the player, on the seam.
             float handMoveInterpolant = Pow(GetLerpValue(0f, gripTime, AttackTimer, true), 3.2f) * 0.5f;
 
-            Vector2 verticalOffsetDirection = Vector2.UnitX.RotatedBy(-SeamAngle - 0.045f);
+            Vector2 verticalOffsetDirection = Vector2.UnitX.RotatedBy(-SeamAngle - 0.015f);
             for (int i = 0; i < Hands.Count; i++)
             {
                 bool left = i % 2 == 0;
-                Vector2 handDestination = Target.Center + verticalOffsetDirection * -left.ToDirectionInt() * (i * 50f + 150f);
+                Vector2 handDestination = Target.Center + verticalOffsetDirection * -left.ToDirectionInt() * (i * 75f + 150f);
                 if (handDestination.Y <= Target.Center.Y)
                     handDestination.X -= 100f;
 
-                Hands[i].Center = Vector2.Lerp(Hands[i].Center, handDestination, handMoveInterpolant);
+                Hands[i].Center = Vector2.Lerp(Hands[i].Center, handDestination, handMoveInterpolant) + Main.rand.NextVector2Circular(4f, 4f);
                 if (Hands[i].Center.WithinRange(handDestination, 60f))
                 {
                     Hands[i].Rotation = Hands[i].Rotation.AngleLerp(PiOver2 * left.ToDirectionInt(), 0.3f);
@@ -204,7 +204,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Rip open the seam.
-            SeamScale += Pow(GetLerpValue(0f, ripOpenTime, AttackTimer - gripTime - 30f, true), 2f) * 250f;
+            SeamScale += Pow(GetLerpValue(0f, ripOpenTime, AttackTimer - gripTime - 30f, true), 1.5f) * 250f;
             if (SeamScale >= 4f && HeavenlyBackgroundIntensity <= 0.3f)
                 Target.Calamity().GeneralScreenShakePower = 20f;
 
