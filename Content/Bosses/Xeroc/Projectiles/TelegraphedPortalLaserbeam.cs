@@ -119,7 +119,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                     GeneralParticleHandler.SpawnParticle(gas);
                 }
 
-                SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound with { MaxInstances = 1 }, Main.LocalPlayer.Center);
+                SoundEngine.PlaySound(XerocBoss.PortalShootSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest }, Main.LocalPlayer.Center);
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower = 14f;
             }
 

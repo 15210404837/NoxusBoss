@@ -650,8 +650,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 // Go FAST.
+                float oldSpeed = NPC.velocity.Length();
                 Vector2 chargeDirectionVector = verticalCharges ? Vector2.UnitY * chargeDirection : Vector2.UnitX * chargeDirection;
                 NPC.velocity = Vector2.Lerp(NPC.velocity, chargeDirectionVector * 150f, fastChargeSpeedInterpolant);
+                if (NPC.velocity.Length() >= 92f && oldSpeed <= 91f)
+                {
+                    SoundEngine.PlaySound(SuddenMovementSound);
+                    ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.5f, 10);
+                    ShakeScreen(NPC.Center, 5f);
+                }
 
                 return;
             }

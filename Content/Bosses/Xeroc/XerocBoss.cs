@@ -507,6 +507,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalCast") with { Volume = 1.2f };
 
+        public static readonly SoundStyle PortalShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalShoot") with { Volume = 1.32f, PitchVariance = 0.18f };
+
         public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/QuasarLoopSound") with { Volume = 1.2f };
 
         public static readonly SoundStyle RealityTearSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocRealityTear") with { Volume = 1.7f, PitchVariance = 0.24f, MaxInstances = 10 };
