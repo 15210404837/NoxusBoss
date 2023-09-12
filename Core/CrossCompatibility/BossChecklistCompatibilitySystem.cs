@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Localization;
@@ -51,6 +53,37 @@ namespace NoxusBoss.Core.CrossCompatibility
                     extraInfo
                 });
             }
+
+            RemoveBossRushFromChecklist();
+        }
+
+        // This is cursed af but Boss Checklist does not allow easy REMOVAL of content in the same way as ADDING content via mod calls.
+        private static void RemoveBossRushFromChecklist()
+        {
+            // Get the universal list of Boss Rush entries.
+            object bossTracker = BossChecklist.GetType().GetField("bossTracker", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+            FieldInfo sortedEntriesField = bossTracker.GetType().GetField("SortedEntries", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            object entriesBase = sortedEntriesField.GetValue(bossTracker);
+            List<object> entries = ((IEnumerable)entriesBase).Cast<object>().ToList();
+
+            // Calculate entry name data for later.
+            string forbiddenEntryName = Language.GetTextValue("Mods.CalamityMod.BossChecklistIntegration.BossRush.EntryName");
+            PropertyInfo entryDisplayNameProperty = entries.First().GetType().GetProperty("DisplayName", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+            // Since SetValue doesn't accept List<object> it's necessary to create a new list of the hidden type so that it can be passed in.
+            // From there, it needs to be casted to an IList so its contents can be indirectly populated. Only THEN can it be passed into SetValue.
+            // This sucks.
+            object newEntries = Activator.CreateInstance(entriesBase.GetType());
+            IList newEntriesCasted = (IList)newEntries;
+            foreach (object entry in entries)
+            {
+                // Remove the boss rush entry.
+                string displayName = (string)entryDisplayNameProperty.GetValue(entry);
+                if (displayName != forbiddenEntryName)
+                    newEntriesCasted.Add(entry);
+            }
+
+            sortedEntriesField.SetValue(bossTracker, newEntries);
         }
     }
 }
