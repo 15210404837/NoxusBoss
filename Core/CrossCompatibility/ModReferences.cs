@@ -23,6 +23,12 @@ namespace NoxusBoss.Core.CrossCompatibility
             private set;
         }
 
+        public static Mod NycrosNohitMod
+        {
+            get;
+            private set;
+        }
+
         public static Mod ToastyQoL
         {
             get;
@@ -44,6 +50,8 @@ namespace NoxusBoss.Core.CrossCompatibility
                 CalamityHunt = calHunt;
             if (ModLoader.TryGetMod("InfernumMode", out Mod inf))
                 Infernum = inf;
+            if (ModLoader.TryGetMod("EfficientNohits", out Mod nycros))
+                NycrosNohitMod = nycros;
             if (ModLoader.TryGetMod("ToastyQoL", out Mod tQoL))
                 ToastyQoL = tQoL;
             if (ModLoader.TryGetMod("Wikithis", out Mod wikithis))
