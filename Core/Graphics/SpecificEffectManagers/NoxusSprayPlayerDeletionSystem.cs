@@ -81,7 +81,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
                         CaptureInterface.ResetFocus();
                         Main.ActivePlayerFileData.StopPlayTimer();
-                        Player.SavePlayer(Main.ActivePlayerFileData, false);
+                        Player.SavePlayer(Main.ActivePlayerFileData);
                         Player.ClearPlayerTempInfo();
                         Rain.ClearRain();
                         if (netMode == NetmodeID.SinglePlayer)

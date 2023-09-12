@@ -4,6 +4,7 @@ using CalamityMod.NPCs.PrimordialWyrm;
 using MonoMod.Cil;
 using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Content.Items.SummonItems;
+using NoxusBoss.Content.Subworlds;
 using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.GameContent;
@@ -89,6 +90,12 @@ namespace NoxusBoss.Core.GlobalItems
                     spawnRate = (int)(spawnRate * (aLotMoreSpawns ? 0.33333f : 0.6f));
                 if (maxSpawns >= 1)
                     maxSpawns += aLotMoreSpawns ? 8 : 3;
+            }
+
+            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
+            {
+                spawnRate = 10000000;
+                maxSpawns = 0;
             }
         }
     }

@@ -248,7 +248,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int totalRadialSlices = 6;
             int totalSlices = totalHorizontalSlices + totalRadialSlices;
             int handWaveTime = 27;
-            float sliceTelegraphLength = 2200f;
+            float sliceTelegraphLength = 2800f;
             float wrappedAttackTimer = AttackTimer % screenSliceRate;
             ref float sliceCounter = ref NPC.ai[2];
             ref float attackTransitionCounter = ref NPC.ai[3];

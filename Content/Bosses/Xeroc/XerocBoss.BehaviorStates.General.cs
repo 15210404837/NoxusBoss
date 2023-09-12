@@ -598,7 +598,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         XerocTipsOverrideSystem.UseDeathAnimationText = true;
                         WorldSaveSystem.HasDefeatedXeroc = true;
 
-                        if (!Utilities.IsFileLocked(new(Main.ActivePlayerFileData.Path)))
+                        if (!IsFileLocked(new(Main.ActivePlayerFileData.Path)))
                             Player.SavePlayer(Main.ActivePlayerFileData);
                         if (Main.netMode == NetmodeID.MultiplayerClient)
                         {

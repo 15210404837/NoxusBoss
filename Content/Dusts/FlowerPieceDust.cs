@@ -17,10 +17,10 @@ namespace NoxusBoss.Content.Dusts
         public override bool Update(Dust dust)
         {
             dust.position += dust.velocity;
-            dust.customData = (int)dust.customData + 1;
+            dust.customData = (int)dust.customData + 2;
             if ((int)dust.customData >= 35)
                 dust.color *= 0.95f;
-            if ((int)dust.customData >= 54)
+            if ((int)dust.customData >= 90)
                 dust.active = false;
 
             return false;
