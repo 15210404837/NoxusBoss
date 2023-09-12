@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework;
 using Terraria.ID;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
-using CalamityMod.Events;
 
 namespace NoxusBoss.Core.Graphics.Shaders
 {
@@ -89,7 +88,6 @@ namespace NoxusBoss.Core.Graphics.Shaders
 
         public override void PostUpdateEverything()
         {
-            BossRushEvent.BossRushStage = 43;
             HighContrastScreenShakeShaderData.ToggleActivityIfNecessary();
         }
     }
