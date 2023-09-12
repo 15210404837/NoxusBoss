@@ -178,8 +178,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (GeneralHoverOffset == Vector2.Zero || (NPC.WithinRange(Target.Center + GeneralHoverOffset, Target.velocity.Length() * 2f + 90f) && AttackTimer % 20f == 0f))
             {
                 // Make the screen rumble a little bit.
-                Target.Calamity().GeneralScreenShakePower = 6f;
-                SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce with { Volume = 1.2f, MaxInstances = 10 });
+                if (Target.Calamity().GeneralScreenShakePower <= 1f)
+                {
+                    Target.Calamity().GeneralScreenShakePower = 7.5f;
+                    SoundEngine.PlaySound(SuddenMovementSound);
+                }
 
                 float horizontalOffsetSign = GeneralHoverOffset.X == 0f ? Main.rand.NextFromList(-1f, 1f) : -Sign(GeneralHoverOffset.X);
                 GeneralHoverOffset = new Vector2(horizontalOffsetSign * Main.rand.NextFloat(500f, 700f), Main.rand.NextFloat(-550f, -340f));
@@ -349,8 +352,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Create slices.
             if (wrappedAttackTimer == handWaveTime && AttackTimer >= riseTime + 1f && sliceCounter < totalSlices)
             {
-                // Create a slice sound.
-                SoundEngine.PlaySound(Exoblade.BeamHitSound with { MaxInstances = 8, Volume = 5f });
+                // Create a reality tear.
+                SoundEngine.PlaySound(RealityTearSound with { Volume = 0.6f });
 
                 if (sliceCounter >= totalHorizontalSlices)
                     sliceDirection = sliceDirection.RotatedBy(Pi / totalRadialSlices);
@@ -560,7 +563,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             bool verticalCharges = chargeCounter % 2f == 1f;
             float laserAngularVariance = verticalCharges ? 0.02f : 0.05f;
-            float fastChargeSpeedInterpolahnt = verticalCharges ? 0.184f : 0.13f;
+            float fastChargeSpeedInterpolant = verticalCharges ? 0.184f : 0.13f;
             int portalReleaseRate = verticalCharges ? 3 : 4;
 
             // Flap wings.
@@ -648,7 +651,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Go FAST.
                 Vector2 chargeDirectionVector = verticalCharges ? Vector2.UnitY * chargeDirection : Vector2.UnitX * chargeDirection;
-                NPC.velocity = Vector2.Lerp(NPC.velocity, chargeDirectionVector * 150f, fastChargeSpeedInterpolahnt);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, chargeDirectionVector * 150f, fastChargeSpeedInterpolant);
+
                 return;
             }
 

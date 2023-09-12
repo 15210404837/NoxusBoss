@@ -509,6 +509,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/QuasarLoopSound") with { Volume = 1.2f };
 
+        public static readonly SoundStyle RealityTearSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocRealityTear") with { Volume = 1.7f, PitchVariance = 0.24f, MaxInstances = 10 };
+
         public static readonly SoundStyle ScreamSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocScream") with { Volume = 1.05f, MaxInstances = 20 };
 
         public static readonly SoundStyle ScreamSoundLong = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocScreamLong") with { Volume = 1.2f };
@@ -516,6 +518,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public static readonly SoundStyle SliceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSliceTelegraph") with { Volume = 1.05f, MaxInstances = 20 };
 
         public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };
+
+        public static readonly SoundStyle SuddenMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSuddenMovement", 2) with { Volume = 0.95f, MaxInstances = 10 };
 
         public static readonly SoundStyle SunFireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/SunFireballShootSound") with { Volume = 1.05f, MaxInstances = 5 };
 
