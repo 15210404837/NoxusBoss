@@ -65,7 +65,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 if (clockExists)
                     SoundEngine.PlaySound(CommonCalamitySounds.LargeWeaponFireSound with { Volume = 2.75f });
                 else
-                    SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
+                {
+                    float volume = XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.RealityTearDaggers ? 0.67f : 1.3f;
+                    SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound with { Volume = volume });
+                }
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
