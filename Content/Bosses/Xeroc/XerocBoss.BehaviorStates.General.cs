@@ -561,7 +561,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, 0.08f);
                 if (screenShattered == 0f && ZPosition <= -0.94f)
                 {
-                    SoundEngine.PlaySound(SupernovaSound with { Volume = 4f });
+                    SoundEngine.PlaySound(SupernovaSound with { Volume = 3.3f });
                     SoundEngine.PlaySound(ExplosionTeleportSound with { Volume = 4f });
                     Target.Calamity().GeneralScreenShakePower = 30f;
                     DestroyAllHands();

@@ -130,7 +130,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 ScreenEffectSystem.SetBlurEffect(Main.LocalPlayer.Center - Vector2.UnitY * 400f, 1f, 13);
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower = 12f;
                 SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
-                SoundEngine.PlaySound(XerocBoss.SupernovaSound with { Volume = 0.4f });
+                SoundEngine.PlaySound(XerocBoss.SupernovaSound with { Volume = 0.7f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
             }
 
             Time++;
