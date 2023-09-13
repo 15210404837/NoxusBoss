@@ -69,7 +69,7 @@ namespace NoxusBoss.Core.Graphics.Automators
             // Increment the render target lifetime timers. Once this reaches a certain threshold, the render target is automatically disposed.
             // This timer is reset back to 0 if it's accessed anywhere. The intent of this is to ensure that render targets that are not relevant at a given point in time
             // don't sit around in VRAM forever.
-            // The managed wrapper that is the ManagedRenderTarget instance will persist in the central list of this class, but the amount of amount of memory that holds is
+            // The managed wrapper that is the ManagedRenderTarget instance will persist in the central list of this class, but the amount of memory that holds is
             // negligible compared to the unmanaged texture data that the RenderTarget2D itself stores when not disposed.
             foreach (ManagedRenderTarget target in ManagedTargets)
             {
