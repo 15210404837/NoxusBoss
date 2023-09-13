@@ -45,7 +45,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             set;
         }
 
-        public static int DeathTimerMax => 360;
+        public static int DeathTimerMax => 240;
 
         public override void Load()
         {
