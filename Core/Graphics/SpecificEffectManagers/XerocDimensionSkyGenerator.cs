@@ -49,7 +49,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            Main.QueueMainThreadAction(() => XerocDimensionTarget = new(true, RenderTargetManager.CreateScreenSizedTarget));
+            // This render target should not be automatically disposed because of how much effort is necessary to regenerate it.
+            Main.QueueMainThreadAction(() => XerocDimensionTarget = new(true, RenderTargetManager.CreateScreenSizedTarget, false));
             Main.OnPreDraw += PrepareDimensionTarget;
         }
 

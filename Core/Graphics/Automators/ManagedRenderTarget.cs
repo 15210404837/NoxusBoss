@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,9 +7,16 @@ using Terraria;
 
 namespace NoxusBoss.Core.Graphics.Automators
 {
+    [DebuggerDisplay("Width: {target.Width}, Height: {target.Height}, Uninitialized: {IsUninitialized}, Time since last usage: {TimeSinceLastUsage} frame(s)")]
     public class ManagedRenderTarget : IDisposable
     {
         private RenderTarget2D target;
+
+        public int TimeSinceLastUsage
+        {
+            get;
+            internal set;
+        }
 
         internal bool WaitingForFirstInitialization
         {
@@ -36,10 +44,17 @@ namespace NoxusBoss.Core.Graphics.Automators
             private set;
         }
 
+        public bool SubjectToGarbageCollection
+        {
+            get;
+            private set;
+        }
+
         public RenderTarget2D Target
         {
             get
             {
+                TimeSinceLastUsage = 0;
                 if (IsUninitialized)
                 {
                     target = CreationCondition(Main.screenWidth, Main.screenHeight);
@@ -57,10 +72,11 @@ namespace NoxusBoss.Core.Graphics.Automators
 
         public delegate RenderTarget2D RenderTargetCreationCondition(int screenWidth, int screenHeight);
 
-        public ManagedRenderTarget(bool shouldResetUponScreenResize, RenderTargetCreationCondition creationCondition)
+        public ManagedRenderTarget(bool shouldResetUponScreenResize, RenderTargetCreationCondition creationCondition, bool subjectToGarbageCollection = true)
         {
             ShouldResetUponScreenResize = shouldResetUponScreenResize;
             CreationCondition = creationCondition;
+            SubjectToGarbageCollection = subjectToGarbageCollection;
             RenderTargetManager.ManagedTargets.Add(this);
         }
 
@@ -71,6 +87,7 @@ namespace NoxusBoss.Core.Graphics.Automators
 
             IsDisposed = true;
             target?.Dispose();
+            TimeSinceLastUsage = 0;
             GC.SuppressFinalize(this);
         }
 
@@ -78,6 +95,7 @@ namespace NoxusBoss.Core.Graphics.Automators
         {
             Dispose();
             IsDisposed = false;
+            TimeSinceLastUsage = 0;
 
             target = CreationCondition(screenWidth, screenHeight);
         }
