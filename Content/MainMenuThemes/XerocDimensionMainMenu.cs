@@ -30,7 +30,7 @@ namespace NoxusBoss.Content.MainMenuThemes
 
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
         {
-            Main.spriteBatch.Draw(XerocDimensionSkyGenerator.XerocDimensionTarget.Target, Vector2.Zero, Color.White);
+            Main.spriteBatch.Draw(XerocDimensionSkyGenerator.XerocDimensionTarget, Vector2.Zero, Color.White);
             return true;
         }
 

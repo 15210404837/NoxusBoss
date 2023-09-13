@@ -114,7 +114,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             var gd = Main.instance.GraphicsDevice;
 
             // Switch to the dimension render target.
-            gd.SetRenderTarget(XerocDimensionTarget.Target);
+            gd.SetRenderTarget(XerocDimensionTarget);
             gd.Clear(Color.Transparent);
 
             // Draw the sky background overlay, sun, and smoke.

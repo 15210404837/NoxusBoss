@@ -103,7 +103,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (CurrentAttack != XerocAttackType.Awaken)
             {
                 Color wingsColor = Color.Lerp(Color.White, Color.Black, GetLerpValue(1.5f, 5f, ZPosition, true) * 0.14f);
-                Main.spriteBatch.Draw(XerocWingDrawer.AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, wingsColor);
+                Main.spriteBatch.Draw(XerocWingDrawer.AfterimageTargetPrevious, Main.screenLastPosition - Main.screenPosition, wingsColor);
             }
 
             // Draw all hands.
@@ -324,7 +324,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             var mesh = cloth.GenerateMesh();
             var gd = Main.instance.GraphicsDevice;
             var clothShader = ShaderManager.GetShader("ClothShader");
-            Texture2D clothTexture = XerocRobePatternGenerator.PatternTarget.Target;
+            Texture2D clothTexture = XerocRobePatternGenerator.PatternTarget;
             CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
 
             // Apply the cloth shader and draw the cloth.

@@ -2,9 +2,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Configuration;
+using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
@@ -12,7 +14,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
     public class ScreenEffectSystem : ModSystem
     {
         #region Blur
-        private static RenderTarget2D BlurRenderTarget;
+        private static ManagedRenderTarget BlurRenderTarget;
 
         private static Vector2 BlurPosition;
 
@@ -50,7 +52,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         #endregion
 
         #region Flash
-        private static RenderTarget2D FlashRenderTarget;
+        private static ManagedRenderTarget FlashRenderTarget;
 
         private static Vector2 FlashPosition;
 
@@ -84,7 +86,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         #endregion
 
         #region Chromatic Aberration
-        private static RenderTarget2D AberrationTarget;
+        private static ManagedRenderTarget AberrationTarget;
 
         private static Vector2 AberrationPosition;
 
@@ -110,13 +112,22 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public override void OnModLoad()
         {
-            Main.OnResolutionChanged += ResizeRenderTarget;
+            // Initialize render targets. This does not happen serverside.
+            Main.QueueMainThreadAction(() =>
+            {
+                if (Main.netMode == NetmodeID.Server)
+                    return;
+
+                BlurRenderTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
+                FlashRenderTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
+                AberrationTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
+            });
+
             On_FilterManager.EndCapture += EndCaptureManager;
         }
 
         public override void OnModUnload()
         {
-            Main.OnResolutionChanged -= ResizeRenderTarget;
             On_FilterManager.EndCapture -= EndCaptureManager;
             Main.QueueMainThreadAction(() =>
             {
@@ -168,9 +179,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             if (BlurActive)
             {
-                if (BlurRenderTarget is null)
-                    ResizeRenderTarget(Vector2.Zero);
-
                 // Draw the screen contents to the blur render target.
                 BlurRenderTarget.SwapToRenderTarget();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -205,9 +213,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // This draws over the blur, so doing them together isn't really ideal.
             else if (FlashActive)
             {
-                if (FlashRenderTarget is null)
-                    ResizeRenderTarget(Vector2.Zero);
-
                 // Draw the screen contents to the blur render target.
                 FlashRenderTarget.SwapToRenderTarget();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
@@ -231,9 +236,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             if (AberrationLifetimeRatio > 0f)
             {
-                if (AberrationTarget is null)
-                    ResizeRenderTarget(Vector2.Zero);
-
                 AberrationTime++;
                 if (AberrationLifetimeRatio >= 1f)
                 {
@@ -261,17 +263,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             }
 
             return screenTarget1;
-        }
-
-        private static void ResizeRenderTarget(Vector2 obj)
-        {
-            BlurRenderTarget?.Dispose();
-            FlashRenderTarget?.Dispose();
-            AberrationTarget?.Dispose();
-
-            BlurRenderTarget = new(Main.instance.GraphicsDevice, Main.screenWidth, Main.screenHeight);
-            FlashRenderTarget = new(Main.instance.GraphicsDevice, Main.screenWidth, Main.screenHeight);
-            AberrationTarget = new(Main.instance.GraphicsDevice, Main.screenWidth, Main.screenHeight);
         }
     }
 }

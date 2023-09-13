@@ -47,11 +47,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
             // Prepare the render target for drawing.
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, Main.Rasterizer, null, Matrix.Identity);
-            gd.SetRenderTarget(AfterimageTarget.Target);
+            gd.SetRenderTarget(AfterimageTarget);
             gd.Clear(Color.Transparent);
 
             // Draw the contents of the previous frame to the target.
-            Main.spriteBatch.Draw(AfterimageTargetPrevious.Target, Vector2.Zero, Color.White);
+            Main.spriteBatch.Draw(AfterimageTargetPrevious, Vector2.Zero, Color.White);
 
             // Draw Xeroc's wings.
             int afterimageCount = (int)XerocBoss.Myself.ModNPC<XerocBoss>().AfterimageCount;
@@ -73,7 +73,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
         public static void ApplyPsychedelicDiffusionEffects()
         {
             var gd = Main.instance.GraphicsDevice;
-            gd.SetRenderTarget(AfterimageTargetPrevious.Target);
+            gd.SetRenderTarget(AfterimageTargetPrevious);
             gd.Clear(Color.Transparent);
 
             // Prepare the afterimage psychedelic shader.
@@ -83,7 +83,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             afterimageShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
             afterimageShader.Apply();
 
-            Main.spriteBatch.Draw(AfterimageTarget.Target, Vector2.Zero, Color.White);
+            Main.spriteBatch.Draw(AfterimageTarget, Vector2.Zero, Color.White);
         }
     }
 }

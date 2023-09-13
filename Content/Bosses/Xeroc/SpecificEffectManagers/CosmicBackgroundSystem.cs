@@ -120,7 +120,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             cosmicShader.TrySetParameter("colorChangeInfluence2", new Vector3(2.4f, -0.9f, 5.8f)); // Adds violets.
             cosmicShader.TrySetParameter("colorChangeStrength1", 0.6f);
             cosmicShader.TrySetParameter("colorChangeStrength2", 0.81f);
-            cosmicShader.SetTexture(KalisetFractal.Target, 1, SamplerState.AnisotropicWrap);
+            cosmicShader.SetTexture(KalisetFractal, 1, SamplerState.AnisotropicWrap);
             cosmicShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2, SamplerState.AnisotropicWrap);
             cosmicShader.Apply();
 

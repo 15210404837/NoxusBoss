@@ -41,7 +41,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
             // Prepare the render target for drawing.
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, Main.Rasterizer, null, Matrix.Identity);
-            gd.SetRenderTarget(PatternTarget.Target);
+            gd.SetRenderTarget(PatternTarget);
             gd.Clear(Color.DarkBlue);
 
             // Draw the eyes and background to the pattern target.
@@ -70,8 +70,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
             for (int i = 0; i < eyeCount; i++)
             {
-                float x = Lerp(54f, PatternTarget.Target.Width - 54f, RandomFloat(ref eyeSeed)) * 5f;
-                float y = Lerp(54f, PatternTarget.Target.Height - 54f, RandomFloat(ref eyeSeed)) * 5f;
+                float x = Lerp(54f, PatternTarget.Width - 54f, RandomFloat(ref eyeSeed)) * 5f;
+                float y = Lerp(54f, PatternTarget.Height - 54f, RandomFloat(ref eyeSeed)) * 5f;
                 Vector2 eyeDrawPosition = new(x, y);
 
                 // Calculate random information about the eyes, such as their rotation, variant, and scale.

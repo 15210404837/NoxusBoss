@@ -1,4 +1,6 @@
 ﻿using System;
+using CalamityMod;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
@@ -79,5 +81,16 @@ namespace NoxusBoss.Core.Graphics.Automators
 
             target = CreationCondition(screenWidth, screenHeight);
         }
+
+        // These extension methods don't apply to ManagedRenderTarget instances, even with the implicit conversion operator. As such, it is implemented manually.
+        public Vector2 Size() => Target.Size();
+
+        public void SwapToRenderTarget(Color? flushColor = null) => Target.SwapToRenderTarget(flushColor);
+
+        public void CopyContentsFrom(RenderTarget2D from) => Target.CopyContentsFrom(from);
+
+        // This allows for easy shorthand conversions from ManagedRenderTarget to RenderTarget2D without having to manually type out ManagedTarget.Target all the time.
+        // This is functionally equivalent to accessing the getter manually and will activate all of the relevant checks within said getter.
+        public static implicit operator RenderTarget2D(ManagedRenderTarget targetWrapper) => targetWrapper.Target;
     }
 }

@@ -55,7 +55,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Draw the contents of the screen split to the burn target.
             Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, Main.Rasterizer, null, Matrix.Identity);
-            gd.SetRenderTarget(BurnTarget.Target);
+            gd.SetRenderTarget(BurnTarget);
             gd.Clear(Color.Transparent);
 
             LocalScreenSplitShaderData.PrepareShaderParameters(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/BurnNoise").Value);
@@ -80,8 +80,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             float opacityFadeIn = GetLerpValue(0f, 9f, BurnTimer, true);
             float opacityFadeOut = GetLerpValue(BurnLifetime, BurnLifetime * 0.65f, BurnTimer, true);
             float opacity = opacityFadeIn * opacityFadeOut * configurationOpacity * 0.132f;
-            Main.spriteBatch.Draw(BurnTarget.Target, Vector2.Zero, Color.RosyBrown * opacity);
-            Main.spriteBatch.Draw(BurnTarget.Target, Vector2.Zero, Color.Orange with { A = 0 } * opacity * 0.3f);
+            Main.spriteBatch.Draw(BurnTarget, Vector2.Zero, Color.RosyBrown * opacity);
+            Main.spriteBatch.Draw(BurnTarget, Vector2.Zero, Color.Orange with { A = 0 } * opacity * 0.3f);
             Main.spriteBatch.End();
         }
 

@@ -66,7 +66,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearWrap, DepthStencilState.None, Main.Rasterizer, null, Matrix.Identity);
 
                 float deathAnimationCompletion = GetLerpValue(0f, DeathTimerMax * 0.64f, modPlayer.DeathTimerOverride, true);
-                Texture2D screenshot = modPlayer.PlayerAtTimeOfDeath.Target;
+                Texture2D screenshot = modPlayer.PlayerAtTimeOfDeath;
 
                 // Prepare the psychedelic dissipation shader.
                 float fadeOut = GetLerpValue(0.49f, 0.71f, deathAnimationCompletion, true);
@@ -120,13 +120,13 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 {
                     return new(Main.instance.GraphicsDevice, 350, 350);
                 });
-                var screenshotTarget = player.PlayerAtTimeOfDeath.Target;
+                var screenshotTarget = player.PlayerAtTimeOfDeath;
                 gd.SetRenderTarget(screenshotTarget);
                 gd.Clear(Color.Transparent);
 
                 // Draw the player to the screenshot target.
                 Vector2 oldPlayerPosition = player.Player.position;
-                player.Player.Center = player.PlayerAtTimeOfDeath.Target.Size() * 0.5f + Main.Camera.UnscaledPosition;
+                player.Player.Center = player.PlayerAtTimeOfDeath.Size() * 0.5f + Main.Camera.UnscaledPosition;
                 Lighting.AddLight(player.Player.Center, Vector3.One);
                 typeof(LegacyPlayerRenderer).GetMethod("DrawPlayerFull", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(Main.PlayerRenderer, new object[]
                 {

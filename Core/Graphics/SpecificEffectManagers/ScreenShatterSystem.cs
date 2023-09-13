@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Core.Configuration;
+using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -92,7 +93,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             private set;
         }
 
-        public static RenderTarget2D ContentsBeforeShattering
+        public static ManagedRenderTarget ContentsBeforeShattering
         {
             get;
             private set;
@@ -110,6 +111,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (Main.netMode == NetmodeID.Server)
                     return;
 
+                ContentsBeforeShattering = new(false, RenderTargetManager.CreateScreenSizedTarget);
                 DrawShader = new(Main.instance.GraphicsDevice)
                 {
                     TextureEnabled = true,
@@ -127,7 +129,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                     return;
 
                 DrawShader?.Dispose();
-                ContentsBeforeShattering?.Dispose();
             });
         }
 
@@ -236,10 +237,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             // Reset the render target if it is invalid or of the incorrect size.
             if (ContentsBeforeShattering is null || ContentsBeforeShattering.IsDisposed || ContentsBeforeShattering.Width != screenContents.Width || ContentsBeforeShattering.Height != screenContents.Height)
-            {
-                ContentsBeforeShattering?.Dispose();
-                ContentsBeforeShattering = new(Main.instance.GraphicsDevice, screenContents.Width, screenContents.Height, true, SurfaceFormat.Color, DepthFormat.Depth24, 0, RenderTargetUsage.PreserveContents);
-            }
+                ContentsBeforeShattering.Recreate(screenContents.Width, screenContents.Height);
 
             // Take the contents of the screen for usage by the shatter pieces.
             ContentsBeforeShattering.CopyContentsFrom(screenContents);

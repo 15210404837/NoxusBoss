@@ -276,7 +276,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             // Draw the sky background overlay, sun, and smoke.
             if (maxDepth >= 0f && minDepth < 0f)
             {
-                Main.spriteBatch.Draw(XerocDimensionSkyGenerator.XerocDimensionTarget.Target, Vector2.Zero, Color.White * Pow(Intensity, 2f));
+                Main.spriteBatch.Draw(XerocDimensionSkyGenerator.XerocDimensionTarget, Vector2.Zero, Color.White * Pow(Intensity, 2f));
 
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, GetCustomSkyBackgroundMatrix());

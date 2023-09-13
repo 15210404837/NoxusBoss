@@ -29,7 +29,7 @@ namespace NoxusBoss.Core.Graphics
 
         public override List<Texture2D> Layers => new()
         {
-            Main.gameMenu ? TextureAssets.MagicPixel.Value : XerocDimensionSkyGenerator.XerocDimensionTarget.Target
+            Main.gameMenu ? TextureAssets.MagicPixel.Value : XerocDimensionSkyGenerator.XerocDimensionTarget
         };
 
         public static void CreateParticle(Vector2 spawnPosition, Vector2 velocity, float size)

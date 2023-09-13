@@ -58,7 +58,7 @@ namespace NoxusBoss.Core.Graphics
 
             // Go to the pixelation target.
             var gd = Main.instance.GraphicsDevice;
-            gd.SetRenderTarget(PixelationTarget.Target);
+            gd.SetRenderTarget(PixelationTarget);
             gd.Clear(Color.Transparent);
 
             // Draw prims to the render target.
@@ -88,10 +88,10 @@ namespace NoxusBoss.Core.Graphics
 
             // Apply the pixelation shader.
             var pixelationShader = ShaderManager.GetShader("PixelationShader");
-            pixelationShader.TrySetParameter("pixelationFactor", Vector2.One * 3f / PixelationTarget.Target.Size());
+            pixelationShader.TrySetParameter("pixelationFactor", Vector2.One * 3f / PixelationTarget.Size());
             pixelationShader.Apply();
 
-            Main.spriteBatch.Draw(PixelationTarget.Target, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(PixelationTarget, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             Main.spriteBatch.End();
 
             orig(self);

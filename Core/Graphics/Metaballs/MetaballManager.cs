@@ -59,7 +59,7 @@ namespace NoxusBoss.Core.Graphics
                 // Draw the raw contents of the metaball to each of its render targets.
                 foreach (ManagedRenderTarget target in metaball.LayerTargets)
                 {
-                    gd.SetRenderTarget(target.Target);
+                    gd.SetRenderTarget(target);
                     gd.Clear(Color.Transparent);
                     metaball.DrawInstances();
                 }
@@ -110,7 +110,7 @@ namespace NoxusBoss.Core.Graphics
                     metaballShader.SetTexture(metaball.Layers[i], 1);
                     metaballShader.Apply();
 
-                    Main.spriteBatch.Draw(metaball.LayerTargets[i].Target, Main.screenLastPosition - Main.screenPosition, Color.White);
+                    Main.spriteBatch.Draw(metaball.LayerTargets[i], Main.screenLastPosition - Main.screenPosition, Color.White);
                 }
             }
         }

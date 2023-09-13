@@ -60,7 +60,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (Main.LocalPlayer.cWings != 0)
                     GameShaders.Armor.Apply(Main.LocalPlayer.cWings, Main.LocalPlayer);
 
-                Main.spriteBatch.Draw(AfterimageTargetPrevious.Target, Main.screenLastPosition - Main.screenPosition, Color.White);
+                Main.spriteBatch.Draw(AfterimageTargetPrevious, Main.screenLastPosition - Main.screenPosition, Color.White);
                 Main.spriteBatch.End();
             }
 
@@ -117,11 +117,11 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             // Prepare the render target for drawing.
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.Default, Main.Rasterizer, null, Matrix.Identity);
-            gd.SetRenderTarget(AfterimageTarget.Target);
+            gd.SetRenderTarget(AfterimageTarget);
             gd.Clear(Color.Transparent);
 
             // Draw the contents of the previous frame to the target.
-            Main.spriteBatch.Draw(AfterimageTargetPrevious.Target, Vector2.Zero, Color.White);
+            Main.spriteBatch.Draw(AfterimageTargetPrevious, Vector2.Zero, Color.White);
 
             // Draw player wings.
             DrawPlayerWingsToTarget();
@@ -171,7 +171,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 return;
 
             var gd = Main.instance.GraphicsDevice;
-            gd.SetRenderTarget(AfterimageTargetPrevious.Target);
+            gd.SetRenderTarget(AfterimageTargetPrevious);
             gd.Clear(Color.Transparent);
 
             // Prepare the afterimage psychedelic shader.
@@ -181,7 +181,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             afterimageShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
             afterimageShader.Apply();
 
-            Main.spriteBatch.Draw(AfterimageTarget.Target, Vector2.Zero, Color.White);
+            Main.spriteBatch.Draw(AfterimageTarget, Vector2.Zero, Color.White);
         }
     }
 }

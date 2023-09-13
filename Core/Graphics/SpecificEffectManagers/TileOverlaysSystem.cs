@@ -40,7 +40,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             var gd = Main.instance.GraphicsDevice;
 
-            gd.SetRenderTarget(OverlayableTarget.Target);
+            gd.SetRenderTarget(OverlayableTarget);
             gd.Clear(Color.Transparent);
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 
@@ -78,7 +78,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             shader.SetTexture(Main.instance.blackTarget, 2);
             shader.Apply();
 
-            Main.spriteBatch.Draw(OverlayableTarget.Target, Vector2.Zero, Color.White);
+            Main.spriteBatch.Draw(OverlayableTarget, Vector2.Zero, Color.White);
             Main.spriteBatch.End();
         }
     }
