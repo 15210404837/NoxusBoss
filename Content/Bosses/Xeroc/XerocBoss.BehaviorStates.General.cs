@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CalamityMod;
+using CalamityMod.Buffs.StatBuffs;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -269,6 +270,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Bring the music.
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Xeroc");
+            Music = MusicLoader.GetMusicSlot(ModLoader.GetMod("CalamityModMusic"), "Sounds/Music/BossRushTier2");
             SceneEffectPriority = SceneEffectPriority.BossHigh;
 
             // Flap wings.
@@ -398,8 +400,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (AttackTimer >= backgroundEnterTime + cooldownTime + blackHoleSummonDelay + (useBlackHole ? Supernova.Lifetime : 0))
             {
-                KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant - 0.006f, 0.37f, 1f);
-                if (KaleidoscopeInterpolant <= 0.37f)
+                KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant - 0.006f, 0.23f, 1f);
+                if (KaleidoscopeInterpolant <= 0.23f)
                     SelectNextAttack();
             }
 

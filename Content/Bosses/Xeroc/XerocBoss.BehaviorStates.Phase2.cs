@@ -1191,6 +1191,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (AttackTimer == redirectTime - 1f)
                 {
                     CircularPortalsOrigin = NPC.Center;
+
+                    // Ensure that the portals don't spawn embedded into the ground, with the open area covered up by tiles.
+                    // Without this check, the majority of the downward facing open space is inaccessible to the player and it's likely they'll take an unavoidable hit.
+                    while (!Collision.CanHit(CircularPortalsOrigin, 1, 1, CircularPortalsOrigin + Vector2.UnitY * 200f, 1, 1))
+                        CircularPortalsOrigin -= Vector2.UnitY * 5f;
+
                     NPC.netUpdate = true;
                 }
             }

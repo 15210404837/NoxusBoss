@@ -130,7 +130,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             float kaleidoscopeOverpowerInterpolant = Pow(1f - KaleidoscopeInterpolant, 0.4f);
             DrawSkyOverlay(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
-            CosmicBackgroundSystem.Draw(backgroundIntensity * Remap(KaleidoscopeInterpolant, 1f, 0.2f, 0.3f, 1f));
+            CosmicBackgroundSystem.Draw(backgroundIntensity * Remap(KaleidoscopeInterpolant, 1f, 0.1f, 0.2f, 1f));
             DrawSmoke(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
             DrawGalaxies(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
 

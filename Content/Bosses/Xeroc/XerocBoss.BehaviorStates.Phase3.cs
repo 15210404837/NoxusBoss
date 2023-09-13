@@ -78,7 +78,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     XerocKeyboardShader.BrightnessIntensity = 1f;
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center, Vector2.UnitY, ModContent.ProjectileType<SuperLightBeam>(), SuperLaserbeamDamage, 0f);
+                        NewProjectileBetter(NPC.Center, Vector2.UnitY, ModContent.ProjectileType<SuperLightBeam>(), SuperLaserbeamDamage * 5, 0f);
                 }
             }
 
