@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
@@ -151,32 +152,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
             if (Time <= TelegraphTime)
             {
-                Vector2[] telegraphPoints = new Vector2[]
-                {
-                    Projectile.Center,
-                    Projectile.Center + laserDirection * MaxLaserLength * 0.2f,
-                    Projectile.Center + laserDirection * MaxLaserLength * 0.4f,
-                    Projectile.Center + laserDirection * MaxLaserLength * 0.6f,
-                    Projectile.Center + laserDirection * MaxLaserLength * 0.8f,
-                    Projectile.Center + laserDirection * MaxLaserLength,
-                };
+                // Calculate telegraph control points. The key difference between this and the laser is that the telegraph always reaches out by the laser's maximum distance, while the laser bursts out a bit initially.
+                List<Vector2> telegraphControlPoints = Projectile.GetLaserControlPoints(6, MaxLaserLength, laserDirection);
+
                 telegraphShader.TrySetParameter("generalOpacity", Projectile.Opacity);
-                TelegraphDrawer.Draw(telegraphPoints, -Main.screenPosition, 33);
+                TelegraphDrawer.Draw(telegraphControlPoints, -Main.screenPosition, 33);
                 return;
             }
 
-            // Draw the laser after the telegraph is no longer necessary.
-            Vector2[] laserPoints = new Vector2[]
-            {
-                Projectile.Center,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.2f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.4f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.6f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.8f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
-            };
+            // Calculate laser control points.
+            List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(9, LaserLengthFactor * MaxLaserLength, laserDirection);
+
+            // Draw the laser.
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
-            LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
+            LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, 45);
         }
 
         public override bool ShouldUpdatePosition() => false;

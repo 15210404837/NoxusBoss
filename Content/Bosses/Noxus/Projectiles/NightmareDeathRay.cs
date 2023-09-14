@@ -220,14 +220,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             laserShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons"), 4);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/ViscousNoise"), 5);
 
-            List<Vector2> points = new();
-            for (int i = 0; i <= 32; i++)
-                points.Add(Vector2.Lerp(Projectile.Center, Projectile.Center + Vector2.UnitX * LaserLength, i / 32f));
-
             if (Time >= 2f)
             {
+                List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(33, LaserLength, Vector2.UnitX);
                 BeamDrawer.SpecifyPerspectiveMatrixMultiplier(CreateRotationMatrix(Rotation) * Matrix.CreateScale(1f, 1f / SquishFactor, 1f));
-                BeamDrawer.Draw(points, Projectile.Center, 70);
+                BeamDrawer.Draw(laserControlPoints, Projectile.Center, 70);
             }
         }
 

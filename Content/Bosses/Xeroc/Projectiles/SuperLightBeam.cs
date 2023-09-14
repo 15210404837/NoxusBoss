@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
@@ -90,7 +91,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             var laserShader = ShaderManager.GetShader("XerocStarLaserShader");
             LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
 
-            // Draw a backglow for the laser.
+            // Draw a backglow for the laser based on bloom.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
             Vector2 center = Projectile.Center + Projectile.velocity * LaserLengthFactor * MaxLaserLength * 0.5f;
             DrawBloomLineTelegraph(center - Main.screenPosition, new()
@@ -106,18 +107,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 Scale = Vector2.One * LaserLengthFactor * MaxLaserLength * Projectile.Opacity * 5f
             }, true);
 
-            // Draw the laser after the telegraph is no longer necessary.
-            Vector2[] laserPoints = new Vector2[]
-            {
-                Projectile.Center,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.25f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.5f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.75f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
-            };
+            // Calculate laser control points.
+            List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(10, LaserLengthFactor * MaxLaserLength, laserDirection);
+
+            // Draw the laser.
             laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 1);
-            LaserDrawer.Draw(laserPoints, -Main.screenPosition, 41);
+            LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, 41);
         }
 
         public override bool ShouldUpdatePosition() => false;

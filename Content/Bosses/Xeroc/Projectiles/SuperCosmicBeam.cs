@@ -1,4 +1,5 @@
-﻿using CalamityMod;
+﻿using System.Collections.Generic;
+using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -122,22 +123,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             var laserShader = ShaderManager.GetShader("XerocCosmicLaserShader");
             LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
 
-            // Draw the laser after the telegraph is no longer necessary.
+            // Calculate laser control points.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
-            Vector2[] laserPoints = new Vector2[]
-            {
-                Projectile.Center,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.25f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.5f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength * 0.75f,
-                Projectile.Center + laserDirection * LaserLengthFactor * MaxLaserLength,
-            };
+            List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(16, LaserLengthFactor * MaxLaserLength, laserDirection);
+
+            // Draw the laser.
             laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
             laserShader.TrySetParameter("scrollSpeedFactor", 1.3f);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"), 1);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 2);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/BurnNoise"), 3);
-            LaserDrawer.Draw(laserPoints, -Main.screenPosition, 45);
+            LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, 45);
         }
 
         public override bool ShouldUpdatePosition() => false;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using CalamityMod;
 using Microsoft.Xna.Framework;
@@ -134,6 +135,21 @@ namespace NoxusBoss.Common.Utilities
             // In order to achieve this it is necessary to firstly anchor the coordinates so that <0, 0> is the origin and not <0.5, 0.5>, and then convert back to
             // the original anchor point after the transformation is complete.
             return Vector2.Transform(baseUV - Vector2.One * 0.5f, Main.GameViewMatrix.TransformationMatrix with { M41 = 0f, M42 = 0f }) + Vector2.One * 0.5f;
+        }
+
+        public static List<Vector2> GetLaserControlPoints(this Projectile projectile, int samplesCount, float laserLength, Vector2? laserDirection = null)
+        {
+            // Calculate the start and end of the laser.
+            // The resulting list will interpolate between these two values.
+            Vector2 start = projectile.Center;
+            Vector2 end = start + (laserDirection ?? projectile.velocity.SafeNormalize(Vector2.Zero)) * laserLength;
+
+            // Generate 'samplesCount' evenly spaced control points.
+            List<Vector2> controlPoints = new();
+            for (int i = 0; i < samplesCount; i++)
+                controlPoints.Add(Vector2.Lerp(start, end, i / (float)(samplesCount - 1f)));
+
+            return controlPoints;
         }
     }
 }
