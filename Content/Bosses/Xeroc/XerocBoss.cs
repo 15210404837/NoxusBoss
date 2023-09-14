@@ -411,7 +411,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         float localInterpolant = GetLerpValue(0f, 0.25f, TeleportVisualsInterpolant);
                         scale.X *= Lerp(1f, maxStretchFactor, Sin(Pi * localInterpolant));
-                        scale.Y *= Lerp(1f, 0.2f, localInterpolant);
+                        scale.Y *= Lerp(1f, 0.1f, Pow(localInterpolant, 2f));
                     }
 
                     // 2. Vertical collapse.
@@ -419,7 +419,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         float localInterpolant = Pow(GetLerpValue(0.5f, 0.25f, TeleportVisualsInterpolant), 1f);
                         scale.X = localInterpolant;
-                        scale.Y = localInterpolant * 0.2f;
+                        scale.Y = localInterpolant * 0.1f;
                     }
 
                     // 3. Return to normal scale, use vertical overshoot at the end.
@@ -427,8 +427,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         float localInterpolant = GetLerpValue(0.5f, 0.92f, TeleportVisualsInterpolant, true);
 
-                        // 1.17234093 = 1 / sin(1.8)^6, acting as a correction factor to ensure that the final scale in the sinusoidal overshoot is one.
-                        float verticalScaleOvershot = Pow(Sin(localInterpolant * 1.8f), 6f) * 1.17234093f;
+                        // 1.594424 = 1 / sin(1.96)^6, acting as a correction factor to ensure that the final scale in the sinusoidal overshoot is one.
+                        float verticalScaleOvershot = Pow(Sin(localInterpolant * 1.96f), 6f) * 1.594424f;
                         scale.X = localInterpolant;
                         scale.Y = verticalScaleOvershot;
                     }
@@ -527,6 +527,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle SupernovaSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSupernova") with { Volume = 0.8f, MaxInstances = 20 };
 
+        public static readonly SoundStyle TeleportInSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/TeleportIn") with { Volume = 0.65f, MaxInstances = 5, PitchVariance = 0.16f };
+
+        public static readonly SoundStyle TeleportOutSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/TeleportOut") with { Volume = 0.65f, MaxInstances = 5, PitchVariance = 0.16f };
+
         public static readonly SoundStyle WingFlapSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocWingFlap", 4) with { Volume = 1.6f };
 
         public static int WingCount => 1;
@@ -554,11 +558,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         // Hits several times per second, resulting in a shredding effect.
         public static int SuperLaserbeamDamage => Main.expertMode ? 175 : 140;
 
+        public static int DefaultTeleportDelay => 15;
+
         public static int IdealFightDuration => SecondsToFrames(270f);
 
         public static float MaxTimedDRDamageReduction => 0.24f;
-
-        public const int DefaultTeleportDelay = 8;
 
         public const float Phase2LifeRatio = 0.65f;
 

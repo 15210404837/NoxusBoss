@@ -219,9 +219,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Play wing flap sounds.
-            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0 && CurrentAttack != XerocAttackType.DeathAnimation && CurrentAttack != XerocAttackType.DeathAnimation_GFB)
+            if (WingsMotionState == WingMotionState.Flap && Distance(animationCompletion, 0.5f) <= 0.03f && NPC.soundDelay <= 0 && CurrentAttack != XerocAttackType.DeathAnimation && CurrentAttack != XerocAttackType.DeathAnimation_GFB && NPC.Opacity >= 0.2f)
             {
-                float volume = 1.5f;
+                float volume = NPC.Opacity * 1.5f;
                 if (ZPosition >= 0.01f)
                     volume /= ZPosition + 1f;
 
@@ -237,7 +237,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             TopTeethOffset = PiecewiseAnimation(animationCompletion, rise, chomp);
         }
 
-        public void TeleportTo(Vector2 teleportPosition)
+        public void TeleportTo(Vector2 teleportPosition, bool playSound = true)
         {
             NPC.Center = teleportPosition;
             NPC.velocity = Vector2.Zero;
@@ -251,12 +251,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             for (int i = 0; i < NPC.oldPos.Length; i++)
                 NPC.oldPos[i] = NPC.position;
 
-            SoundEngine.PlaySound(Providence.NearBurnSound with
-            {
-                Pitch = 0.5f,
-                Volume = 2f,
-                MaxInstances = 8
-            }, NPC.Center);
+            // Play a teleport sound if the teleport parameters permits.
+            if (playSound)
+                SoundEngine.PlaySound(TeleportOutSound, NPC.Center);
 
             // Create teleport particle effects.
             ExpandingGreyscaleCircleParticle circle = new(NPC.Center, Vector2.Zero, new(219, 194, 229), 19, 0.28f);

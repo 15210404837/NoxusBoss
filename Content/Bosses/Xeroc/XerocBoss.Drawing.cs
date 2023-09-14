@@ -318,7 +318,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draw the cloth.
             int simulationSteps = (int)(NPC.position.Distance(NPC.oldPosition) / 22f) + 1;
             for (int i = 0; i < simulationSteps; i++)
-                cloth.Simulate(Pow(TeleportVisualsAdjustedScale.X, 1.5f), new(ellipsoidCenter, 0f), ellipsoidRadius);
+                cloth.Simulate(Pow(MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y), 1.5f), new(ellipsoidCenter, 0f), ellipsoidRadius);
 
             // Collect necessary shader and graphics information for the cloth drawing.
             var mesh = cloth.GenerateMesh();
@@ -356,8 +356,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             Texture2D overlayTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Draw the bright backlight.
-            Vector2 censorScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(200f, 340f) / pixel.Size();
-            Vector2 backlightScale = Vector2.One * MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y) * new Vector2(400f, 448f) / backlightTexture.Size();
+            Vector2 censorScale = Vector2.One * TeleportVisualsAdjustedScale * new Vector2(200f, 340f) / pixel.Size();
+            Vector2 backlightScale = Vector2.One * TeleportVisualsAdjustedScale * new Vector2(400f, 448f) / backlightTexture.Size();
             Vector2 idealCensorDrawPosition = IdealCensorPosition - screenPos + Vector2.UnitY * censorScale * 80f;
             Vector2 censorDrawPosition = CensorPosition - screenPos + Vector2.UnitY * censorScale * 80f;
             censorDrawPosition = Vector2.Lerp(censorDrawPosition, idealCensorDrawPosition, GetLerpValue(1f, 2.1f, ZPosition + Abs(NPC.rotation) * 40f, true) * 0.45f + 0.42f);

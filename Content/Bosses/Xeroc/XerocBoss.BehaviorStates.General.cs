@@ -421,7 +421,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         {
             if (AttackTimer == 1f)
             {
-                TeleportTo(Target.Center - Vector2.UnitY * 350f);
+                TeleportTo(Target.Center - Vector2.UnitY * 350f, false);
                 Target.Calamity().GeneralScreenShakePower = 12f;
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
@@ -480,7 +480,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 // Teleport in front of the target on the first frame.
                 if (AttackTimer == 1f)
-                    TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 500f);
+                    TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 500f, false);
 
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
                 SeamScale = 0f;
@@ -651,7 +651,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Teleport in front of the target on the first frame and create a funny death sound.
             if (AttackTimer == 1f)
             {
-                TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 500f);
+                TeleportTo(Target.Center + Vector2.UnitX * Target.direction * 500f, false);
                 SoundEngine.PlaySound(GFBDeathSound);
             }
 

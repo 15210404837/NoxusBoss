@@ -58,6 +58,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Vector2 hoverDestination = Target.Center - Vector2.UnitY * 442f;
                 NPC.velocity = (hoverDestination - NPC.Center) * 0.1f;
 
+                // Use teleport visuals.
+                if (AttackTimer >= sliceShootDelay - DefaultTeleportDelay)
+                {
+                    if (AttackTimer == sliceShootDelay - DefaultTeleportDelay)
+                        SoundEngine.PlaySound(TeleportInSound, NPC.Center);
+
+                    TeleportVisualsInterpolant = GetLerpValue(sliceShootDelay - DefaultTeleportDelay, sliceShootDelay - DefaultTeleportDelay - 1f, AttackTimer, true) * 0.5f;
+                }
+
                 // Teleport away after hovering.
                 if (AttackTimer >= sliceShootDelay - 1f)
                 {
@@ -72,6 +81,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 return;
             }
+
+            // Reset the teleport visuals interpolant after the teleport has concluded.
+            TeleportVisualsInterpolant = 0f;
 
             // Stay invisible.
             NPC.Opacity = 0f;
@@ -138,6 +150,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int handCount = 10;
             int handSummonRate = 3;
             int handSummonTime = handCount * handSummonRate;
+            int teleportVisualsTime = 21;
             float maxHandSpinSpeed = ToRadians(0.36f);
             float handMoveSpeedFactor = 2.8f;
             Vector2 handOffsetRadius = new(332f, 396f);
@@ -152,7 +165,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Update teeth.
             PerformTeethChomp(AttackTimer / 45f % 1f);
 
-            // Hover to the top left/right of the target at first.
+            // Teleport and hover to the top left/right of the target at first.
             if (AttackTimer <= redirectTime)
             {
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 450f, -360f);
@@ -160,12 +173,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.velocity *= 0.75f;
                 usedHandIndex = -1f;
 
-                // Initialize the punch offset angle.
+                // Initialize the punch offset angle and teleport to the target.
                 if (AttackTimer == 1f)
                 {
+                    TeleportTo(hoverDestination);
                     PunchOffsetAngle = Main.rand.NextFloat(-0.81f, 0.81f);
                     NPC.netUpdate = true;
                 }
+
+                // Perform teleport visuals.
+                TeleportVisualsInterpolant = Lerp(0.5f, 1f, GetLerpValue(1f, teleportVisualsTime + 1f, AttackTimer, true));
+                if (TeleportVisualsInterpolant >= 1f)
+                    TeleportVisualsInterpolant = 0f;
             }
 
             // Hover near the target and conjure hands.
@@ -912,6 +931,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int constellationConvergeTime = SwordConstellation.ConvergeTime;
             int animationTime = 58 - SwordSlashCounter * 5;
             int slashCount = 5;
+            int teleportVisualsTime = 17;
             float anticipationAnimationPercentage = 0.5f;
 
             // Make the attack faster in successive phases.
@@ -952,7 +972,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         p.Kill();
                 }
 
-                ZPosition = 1f;
                 SwordAnimationTimer = 0;
                 XerocKeyboardShader.BrightnessIntensity = 1f;
                 TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(340f, 340f));
@@ -965,6 +984,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
+            }
+
+            // Perform teleport visuals.
+            TeleportVisualsInterpolant = Lerp(0.5f, 1f, GetLerpValue(1f, teleportVisualsTime + 1f, AttackTimer, true));
+            if (TeleportVisualsInterpolant >= 1f)
+            {
+                TeleportVisualsInterpolant = 0f;
+                ZPosition = Clamp(ZPosition + 0.15f, 0f, 1f);
             }
 
             // Play mumble sounds.
@@ -1234,6 +1261,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(portalSummonPosition, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), LightLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
                 }
             }
+
+            // Create teleport visual effects.
+            TeleportVisualsInterpolant = GetLerpValue(redirectTime + portalSummonTime - DefaultTeleportDelay - 3f, redirectTime + portalSummonTime - 3f, AttackTimer, true) * 0.5f;
+            if (AttackTimer == redirectTime + portalSummonTime - DefaultTeleportDelay - 3f)
+                SoundEngine.PlaySound(TeleportInSound, NPC.Center);
+            if (AttackTimer >= redirectTime + portalSummonTime - 3f)
+                TeleportVisualsInterpolant = 0f;
 
             // Teleport away before the lasers fire.
             if (AttackTimer == redirectTime + portalSummonTime - 3f)

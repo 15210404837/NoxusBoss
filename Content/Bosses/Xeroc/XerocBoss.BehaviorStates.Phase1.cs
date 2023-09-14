@@ -135,7 +135,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int shootDelay = 70;
             int starburstCount = 27;
             int attackTransitionDelay = 78;
-            int teleportDelay = DefaultTeleportDelay;
+            int teleportDelay = 12;
             float starburstArc = ToRadians(396f);
             float starburstShootSpeed = 24f;
 
@@ -151,6 +151,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Teleport above the target at first.
             if (AttackTimer <= teleportDelay * 2f)
             {
+                if (AttackTimer == 1f)
+                    SoundEngine.PlaySound(TeleportInSound, NPC.Center);
+
                 NPC.velocity *= 0.8f;
                 TeleportVisualsInterpolant = AttackTimer / teleportDelay * 0.5f;
                 if (AttackTimer == teleportDelay)
@@ -388,6 +391,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int shootTime = 450;
             int starburstReleaseRate = 35;
             int starburstCount = 16;
+            int teleportVisualsTime = 20;
             float starburstStartingSpeed = 0.6f;
             ref float flareShootCounter = ref NPC.ai[2];
 
@@ -423,6 +427,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 PerformMumble();
                 return;
             }
+
+            // Create post-teleport visuals.
+            TeleportVisualsInterpolant = Lerp(0.5f, 1f, GetLerpValue(1f, teleportVisualsTime + 1f, AttackTimer, true));
+            if (TeleportVisualsInterpolant >= 1f)
+                TeleportVisualsInterpolant = 0f;
 
             if (AttackTimer <= 48f)
             {
