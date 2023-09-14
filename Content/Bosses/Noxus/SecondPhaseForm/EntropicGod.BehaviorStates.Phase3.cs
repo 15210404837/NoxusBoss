@@ -304,6 +304,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 ZPosition = Clamp(ZPosition - 0.17f, -0.98f, 4f);
                 NPC.Opacity = ZPosition <= -0.98f ? 0f : 1f;
 
+                // Drift horizontally towards the target if they're sufficiently far from the twinkle, to make it so that they player can't just constantly run in one direction to avoid the charge.
                 if (Distance(NPC.Center.X, Target.Center.X) >= 100f)
                     NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitX * NPC.SafeDirectionTo(Target.Center) * 16f, 0.067f);
 

@@ -645,7 +645,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 leftHandDestination = NPC.Center + new Vector2(8f, 150f);
                 rightHandDestination = NPC.Center + new Vector2(-8f, 150f);
 
-                // Fade away.
+                // Fade away once going fast enough.
                 if (NPC.velocity.Length() >= 12f)
                     NPC.Opacity = Clamp(NPC.Opacity - 0.03f, 0f, 1f);
             }

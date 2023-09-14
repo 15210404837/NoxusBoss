@@ -35,12 +35,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer >= redirectTime)
                 RobeEyesShouldStareAtTarget = true;
 
+            // Fly towards above the target at first. After the redirect and hover time has concluded, however, Xeroc becomes comfortable with his current position and slows down rapidly.
+            float slowdownRadius = 230f;
             Vector2 hoverDestination = Target.Center - Vector2.UnitY * 380f;
-            Vector2 idealVelocity = NPC.SafeDirectionTo(hoverDestination) * MathF.Max(0f, NPC.Distance(hoverDestination) - 230f) * 0.17f;
             if (AttackTimer >= redirectTime + hoverTime)
-                idealVelocity = Vector2.Zero;
-
-            NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.11f);
+                hoverDestination = NPC.Center;
+            NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.17f, 0.89f, slowdownRadius);
 
             // Slow down rapidly if flying past the hover destination. If this happens when Xeroc is moving really, really fast a sonic boom of sorts is creating.
             if (Vector2.Dot(NPC.velocity, NPC.SafeDirectionTo(hoverDestination)) < 0f)
@@ -280,8 +280,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             hoverDestination.Y -= hoverVerticalWaveSine * ZPosition * 8f;
 
             // Stay above the target while in the background.
-            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.03f);
-            NPC.velocity = Vector2.Lerp(NPC.velocity, (hoverDestination - NPC.Center) * 0.07f, 0.06f);
+            NPC.SmoothFlyNear(hoverDestination, 0.07f, 0.94f);
 
             // Create hands.
             if (AttackTimer == 1f)
@@ -447,21 +446,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 return;
             }
 
-            // Drift towards the target.
-            if (AttackTimer >= attackDelay)
+            // Fly to the side of the target before the attack begins.
+            if (AttackTimer < attackDelay)
             {
+                Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 700f, -250f);
+                NPC.SmoothFlyNear(hoverDestination, 0.12f, 0.87f);
+            }
+
+            // Drift towards the target once the attack has begun.
+            else
+            {
+                // Rapidly slow down if there's any remnant speed from prior movement.
                 if (NPC.velocity.Length() > 4f)
                     NPC.velocity *= 0.8f;
 
                 float hoverSpeedInterpolant = Remap(NPC.Distance(Target.Center), 750f, 1800f, 0.003f, 0.04f);
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, hoverSpeedInterpolant);
                 NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 4f, 0.1f);
-            }
-            else
-            {
-                Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 700f, -250f);
-                Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.12f;
-                NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.13f);
             }
 
             // Find the star to control.
@@ -558,7 +559,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int portalExistTime = 40;
             int chargeCount = 4;
             int laserShootTime = 32;
-            ref float chargeDirection = ref NPC.ai[2];
+            ref float chargeDirectionSign = ref NPC.ai[2];
             ref float chargeCounter = ref NPC.ai[3];
 
             bool verticalCharges = chargeCounter % 2f == 1f;
@@ -612,9 +613,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 if (AttackTimer == closeRedirectTime + farRedirectTime - 1f)
                 {
-                    chargeDirection = (Target.Center.X > NPC.Center.X).ToDirectionInt();
+                    chargeDirectionSign = (Target.Center.X > NPC.Center.X).ToDirectionInt();
                     if (verticalCharges)
-                        chargeDirection = -1f;
+                        chargeDirectionSign = -1f;
 
                     NPC.velocity.Y *= 0.6f;
                     NPC.netUpdate = true;
@@ -651,7 +652,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Go FAST.
                 float oldSpeed = NPC.velocity.Length();
-                Vector2 chargeDirectionVector = verticalCharges ? Vector2.UnitY * chargeDirection : Vector2.UnitX * chargeDirection;
+                Vector2 chargeDirectionVector = verticalCharges ? Vector2.UnitY * chargeDirectionSign : Vector2.UnitX * chargeDirectionSign;
                 NPC.velocity = Vector2.Lerp(NPC.velocity, chargeDirectionVector * 150f, fastChargeSpeedInterpolant);
                 if (NPC.velocity.Length() >= 92f && oldSpeed <= 91f)
                 {
@@ -735,13 +736,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 star.velocity = Vector2.Lerp(star.velocity, star.SafeDirectionTo(starHoverDestination) * 8f, 0.04f);
             }
 
-            // Have Xeroc rapidly attempt to hover above the player, with a bit of a horizontal offset at first.
+            // Have Xeroc rapidly attempt to hover above the player at first, with a bit of a horizontal offset.
             if (AttackTimer < redirectTime)
             {
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 300f, -250f);
                 Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.12f;
                 NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.15f);
 
+                // Keep the store below Xeoc while hovering.
                 if (star is not null)
                     star.Center = Vector2.Lerp(star.Center, NPC.Center + Vector2.UnitY * TeleportVisualsAdjustedScale * 350f, 0.15f);
             }
@@ -759,6 +761,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.Center = Target.Center + Vector2.UnitY * 1400f;
 
                 // Make hands close in on the star, as though collapsing it.
+                // The hands jitter a bit during this, as a way of indicating that they're fighting slightly to collapse the star.
                 if (star is not null)
                 {
                     float starScale = Remap(pressureInterpolant, 0.1f, 0.8f, ControlledStar.MaxScale, 0.8f);

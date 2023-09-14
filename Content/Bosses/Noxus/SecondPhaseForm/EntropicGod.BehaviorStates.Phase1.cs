@@ -166,7 +166,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 MakeHandsOpen();
 
                 // Release the spikes.
-                // (((((OK yeah technically they move but it's only for rotation and so slow that it's negligible)))))
+                // (((((OK yeah technically they move but it's only for rotation and they're so slow that it's negligible)))))
                 if (AttackTimer % spikeReleaseRate == spikeReleaseRate - 1f && AttackTimer >= DefaultTeleportDelay * 2f + 16f)
                 {
                     int telegraphDelay = (int)AttackTimer - (DefaultTeleportDelay * 2 + handArcTime);

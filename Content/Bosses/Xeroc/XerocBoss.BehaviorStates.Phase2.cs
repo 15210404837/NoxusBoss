@@ -218,8 +218,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
                 // Hover above the target.
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 580f, -360f);
-                Vector2 idealVelocity = (hoverDestination - NPC.Center) * 0.06f;
-                NPC.velocity = Vector2.Lerp(NPC.velocity, idealVelocity, 0.06f);
+                NPC.SmoothFlyNear(hoverDestination, 0.06f, 0.94f);
 
                 // Make the first hand wait and reel back in anticipation of the arc punch, while the other one silently waits to the side.
                 if (wrappedHandAttackTimer <= handEnergyChargeUpTime && doArcPunch)
@@ -459,7 +458,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer <= starCreationDelay)
             {
                 Vector2 hoverDestination = Target.Center - Vector2.UnitY * spinRadius;
-                NPC.velocity = Vector2.Lerp(NPC.velocity, (hoverDestination - NPC.Center) * 0.16f, 0.12f);
+                NPC.SmoothFlyNear(hoverDestination, 0.16f, 0.88f);
 
                 // Decide the spin direction on the first frame, based on which side of the player Xeroc is.
                 // This is done so that the spin continues moving in the direction the hover made Xeroc move.
@@ -529,14 +528,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                 }
 
+                // Accelerate and continue arcing until very, very fast.
                 if (NPC.velocity.Length() <= 105f)
                     NPC.velocity = NPC.velocity.RotatedBy(TwoPi * spinDirection / 210f) * 1.08f;
+
+                // Fade out while accelerating.
                 NPC.Opacity = Clamp(NPC.Opacity - 0.02f, 0f, 1f);
 
                 PupilTelegraphArc = 10f;
                 PupilTelegraphOpacity = Clamp(PupilTelegraphOpacity + 0.045f, 0f, NPC.Opacity * 0.25f + 0.001f);
 
                 // Silently hover above the player when completely invisible.
+                // This has no effect on the aesthetics and the player will not notice this, but it helps significantly in ensuring that Xeroc isn't very far from the player when the next attack begins.
                 if (NPC.Opacity <= 0f)
                 {
                     NPC.velocity = Vector2.Zero;
@@ -716,7 +719,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Stay above the target while in the background.
             NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.03f);
-            NPC.velocity = Vector2.Lerp(NPC.velocity, (hoverDestination - NPC.Center) * 0.07f, 0.06f);
+            NPC.SmoothFlyNear(hoverDestination, 0.07f, 0.94f);
 
             // Move hands.
             if (Hands.Count >= 2)
@@ -1082,7 +1085,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
                         foreach (Projectile sword in swords)
                         {
-                            sword.ai[2] = 1f; // Disable natural slash drawing effects for the sword itself.
+                            sword.ai[2] = 1f; // Disable the afterimage drawing for the sword itself, now that the afterimage is being released from it as a separate projectile.
+                            sword.netUpdate = true;
 
                             Vector2 slashDirection = NPC.velocity.SafeNormalize(Vector2.UnitY);
 
