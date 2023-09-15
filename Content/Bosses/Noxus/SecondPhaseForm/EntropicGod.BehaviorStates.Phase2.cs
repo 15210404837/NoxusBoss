@@ -374,7 +374,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 Hands[1].ShouldOpen = true;
 
             // Rise upward as the laser is moved upward.
-            if (aimUpwardsInterpolant > 0f && LaserLengthFactor != -1f && NPC.Center.Y < Target.Center.Y)
+            if (aimUpwardsInterpolant > 0f && LaserLengthFactor != -1f)
                 NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(NPC.Center.X, Target.Center.Y - aimUpwardsInterpolant * 800f), aimUpwardsInterpolant * 0.2f);
 
             // Make the screen shatter.
