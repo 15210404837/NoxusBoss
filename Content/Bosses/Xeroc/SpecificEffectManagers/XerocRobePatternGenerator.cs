@@ -5,7 +5,6 @@ using Terraria;
 using System.Collections.Generic;
 using System.Linq;
 using NoxusBoss.Core.Graphics.Automators;
-using Terraria.ID;
 using CalamityMod;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers

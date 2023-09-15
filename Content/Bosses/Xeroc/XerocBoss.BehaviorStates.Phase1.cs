@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CalamityMod;
-using CalamityMod.Items.Weapons.Melee;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
@@ -49,7 +48,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (NPC.velocity.Length() >= 75f)
                 {
                     NPC.velocity = NPC.velocity.ClampMagnitude(0f, 74f);
-                    SoundEngine.PlaySound(SunFireballShootSound with { Pitch = 0.6f }, Target.Center);
+                    SoundEngine.PlaySound(SunFireballShootSound with
+                    {
+                        Pitch = 0.6f
+                    }, Target.Center);
                     ScreenEffectSystem.SetFlashEffect(NPC.Center, 4f, 54);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -80,7 +82,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Snap fingers and make the screen shake.
                 if (AttackTimer == redirectTime + hoverTime - 10f)
                 {
-                    SoundEngine.PlaySound(FingerSnapSound with { Volume = 4f });
+                    SoundEngine.PlaySound(FingerSnapSound with
+                    {
+                        Volume = 4f
+                    });
                     Target.Calamity().GeneralScreenShakePower = 11f;
                 }
             }
@@ -157,7 +162,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 NPC.velocity *= 0.8f;
                 TeleportVisualsInterpolant = AttackTimer / teleportDelay * 0.5f;
                 if (AttackTimer == teleportDelay)
-                    TeleportTo(Target.Center - Vector2.UnitY * 600f);
+                    TeleportTo(Target.Center - Vector2.UnitY * 372f);
             }
 
             // Squint briefly and look at the target before attacking.
@@ -228,7 +233,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ScreenEffectSystem.SetChromaticAberrationEffect(EyePosition, starburstInterpolant * 3f, 10);
 
                 if (Main.rand.NextBool(3))
-                    SoundEngine.PlaySound(SunFireballShootSound with { MaxInstances = 100, Volume = 0.5f, Pitch = -0.2f });
+                    SoundEngine.PlaySound(SunFireballShootSound with
+                    {
+                        MaxInstances = 100,
+                        Volume = 0.5f,
+                        Pitch = -0.2f
+                    });
 
                 // Create bloom on Xeroc's pupil.
                 StrongBloom bloom = new(PupilPosition, Vector2.Zero, Color.Red * starburstInterpolant, 0.8f, 32);
@@ -355,7 +365,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (wrappedAttackTimer == handWaveTime && AttackTimer >= riseTime + 1f && sliceCounter < totalSlices)
             {
                 // Create a reality tear.
-                SoundEngine.PlaySound(RealityTearSound with { Volume = 0.6f });
+                SoundEngine.PlaySound(RealityTearSound with
+                {
+                    Volume = 0.6f
+                });
 
                 if (sliceCounter >= totalHorizontalSlices)
                     sliceDirection = sliceDirection.RotatedBy(Pi / totalRadialSlices);
@@ -440,7 +453,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
             if (AttackTimer == 52f)
             {
-                SoundEngine.PlaySound(FingerSnapSound with { Volume = 4f });
+                SoundEngine.PlaySound(FingerSnapSound with
+                {
+                    Volume = 4f
+                });
                 XerocKeyboardShader.BrightnessIntensity += 0.45f;
             }
 
@@ -508,7 +524,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Release accelerating bursts of starbursts over time.
             if (AttackTimer >= attackDelay && AttackTimer % starburstReleaseRate == 0f)
             {
-                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with { Pitch = -0.4f, MaxInstances = 5 }, star.Center);
+                SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot with
+                {
+                    Pitch = -0.4f,
+                    MaxInstances = 5
+                }, star.Center);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int starburstID = ModContent.ProjectileType<Starburst>();
@@ -792,7 +812,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 if (star is not null)
                 {
-                    DefaultHandDrift(Hands[i], star.Center + (TwoPi * i / Hands.Count + AttackTimer / 18f).ToRotationVector2() * (star.scale * handOrbitOffset + 50f), 1.4f); ;
+                    DefaultHandDrift(Hands[i], star.Center + (TwoPi * i / Hands.Count + AttackTimer / 18f).ToRotationVector2() * (star.scale * handOrbitOffset + 50f), 1.4f);
+                    ;
                     Hands[i].Rotation = Hands[i].Center.AngleTo(star.Center) - PiOver2;
                 }
                 Hands[i].Center += Main.rand.NextVector2Circular(10f, 10f) * Pow(pressureInterpolant, 2f);

@@ -1,20 +1,12 @@
 ﻿using CalamityMod;
 using CalamityMod.Dusts;
-using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
-using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Content.Items.Placeable.Monoliths;
-using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent;
 using Terraria.GameContent.ObjectInteractions;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 

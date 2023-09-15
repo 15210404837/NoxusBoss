@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
-using Terraria.Graphics.CameraModifiers;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using static NoxusBoss.Core.Graphics.SpecificEffectManagers.NoxusSprayPlayerDeletionSystem;

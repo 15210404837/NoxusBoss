@@ -1,13 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using CalamityMod;
-using CalamityMod.Buffs.StatBuffs;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.MainMenuThemes;
@@ -296,6 +293,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Become completely opaque.
             NPC.Opacity = 1f;
+
+            // Disable incoming damage, to prevent the player taking away 10% of Xeroc's health while he's not moving.
+            NPC.dontTakeDamage = true;
 
             // Update universal hands.
             DefaultUniversalHandMotion();
