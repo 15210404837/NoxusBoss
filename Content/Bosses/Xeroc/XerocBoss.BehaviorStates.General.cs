@@ -73,11 +73,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             CameraPanSystem.CameraPanInterpolant = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.17f);
             CameraPanSystem.Zoom = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.4f) * 0.6f;
 
-            // Inputs are disabled and UIs are hidden during the camera effects. This is safely undone in the RoarAnimation attack state.
-            if (CameraPanSystem.CameraPanInterpolant >= 0.01f)
+            // Inputs are disabled and UIs are hidden during the camera effects. This is safely undone once Xeroc begins screaming, or if he goes away for some reason.
+            if (AttackTimer == starRecedeDelay + 1f)
             {
-                Main.hideUI = true;
-                Main.blockInput = true;
+                InputAndUIBlockerSystem.Start(true, true, () =>
+                {
+                    // The block should immediately terminate if Xeroc leaves for some reason.
+                    if (!NPC.active)
+                        return false;
+
+                    // The block naturally terminates once Xeroc isn't doing any introductory attack scenes.
+                    if (CurrentAttack != XerocAttackType.Awaken && CurrentAttack != XerocAttackType.OpenScreenTear)
+                        return false;
+
+                    return true;
+                });
             }
 
             // All code beyond this point only executes once all the stars have left.
@@ -245,10 +255,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_RoarAnimation()
         {
             int screamTime = 210;
-
-            // Ensure that players can move and view their UIs again.
-            Main.hideUI = false;
-            Main.blockInput = false;
 
             // Make the robe's eyes stare at the target.
             RobeEyesShouldStareAtTarget = true;
@@ -492,6 +498,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 XerocKeyboardShader.DarknessIntensity = UniversalBlackOverlayInterpolant;
             }
 
+            // Scream at first.
             if (AttackTimer == 1f)
                 SoundEngine.PlaySound(ScreamSoundLong);
             if (AttackTimer % 8f == 0f && AttackTimer <= blackDelay + riseDelay - 75f)
@@ -504,11 +511,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
                 Target.Calamity().GeneralScreenShakePower = 15f;
             }
+
+            // Block the UI and inputs until they return to the title screen.
             if (AttackTimer >= blackDelay + riseDelay - 75f)
-            {
-                Main.hideUI = true;
-                Main.blockInput = true;
-            }
+                InputAndUIBlockerSystem.Start(true, true, () => NPC.active);
 
             // Move into the background.
             if (AttackTimer <= blackDelay + riseDelay + riseTime && !Hands.Any())
@@ -573,34 +579,40 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NPC.netUpdate = true;
                 }
 
+                // Disable music and make the keyboard shader dance chaotically after the screen has been shattered.
                 if (screenShattered == 1f)
                 {
                     Music = 0;
-                    Main.hideUI = true;
-                    Main.blockInput = true;
                     XerocKeyboardShader.RandomColorsTimer = 5;
                 }
 
                 if (AttackTimer >= blackDelay + riseDelay + riseTime + handCount * handReleaseRate + chargeLineUpTime + screenShatterDelay + crashDelay)
                 {
-                    // Completely disappear in multiplayer.
+                    // Completely disappear in multiplayer. This will happen server-side, while all clients involved in the fight are kicked out of the server.
                     NPC.active = false;
 
                     if (Main.netMode != NetmodeID.Server)
                     {
+                        // Get out of the subworld.
                         typeof(SubworldSystem).GetField("current", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
                         typeof(SubworldSystem).GetField("cache", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
 
+                        // Bring the player to the main menu, and enable the marker that ensures they will receive loot upon re-entry.
                         Main.menuMode = 0;
                         Main.gameMenu = true;
-                        Main.hideUI = false;
-                        Main.blockInput = false;
                         Main.LocalPlayer.GetModPlayer<NoxusPlayer>().GiveXerocLootUponReenteringWorld = true;
-                        XerocTipsOverrideSystem.UseDeathAnimationText = true;
+
+                        // Mark Xeroc as defeated.
                         WorldSaveSystem.HasDefeatedXeroc = true;
 
+                        // Ensure that the player sees the "You have passed the test." dialog upon being sent to the main menu.
+                        XerocTipsOverrideSystem.UseDeathAnimationText = true;
+
+                        // Save the player's file data, to ensure that the loot re-entry is registered.
                         if (!IsFileLocked(new(Main.ActivePlayerFileData.Path)))
                             Player.SavePlayer(Main.ActivePlayerFileData);
+
+                        // Kick clients out of the server.
                         if (Main.netMode == NetmodeID.MultiplayerClient)
                         {
                             Netplay.Disconnect = true;
@@ -608,7 +620,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         }
 
                         // Forcefully change the menu theme to the Xeroc one if he was defeated for the first time.
-                        // This is done half as an indicator that the world exist isn't a bug and half as a reveal that the option is unlocked.
+                        // This is done half as an indicator that the "I got kicked out of my world!" behavior isn't a bug and half as a reveal that the option is unlocked.
                         if (!WorldSaveSystem.HasDefeatedXerocInAnyWorld)
                         {
                             WorldSaveSystem.HasDefeatedXerocInAnyWorld = true;

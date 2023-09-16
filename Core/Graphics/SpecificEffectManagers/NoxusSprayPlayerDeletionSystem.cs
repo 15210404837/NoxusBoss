@@ -41,23 +41,21 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (PlayerWasDeleted)
             {
                 Main.LocalPlayer.immuneAlpha = 255;
-                Main.blockInput = true;
-                Main.hideUI = true;
                 Main.LocalPlayer.dead = true;
                 Main.LocalPlayer.respawnTimer = 100;
 
-                // Store the screen position at the time of the screen being deleted.
+                // Store the screen position at the time of the screen being deleted and disable player inputs/UI for the duration of the effect.
                 if (DeletionTimer == 1)
+                {
                     ScreenPositionAtPointOfDeletion = Main.screenPosition;
+                    InputAndUIBlockerSystem.Start(true, true, () => PlayerWasDeleted);
+                }
 
                 DeletionTimer++;
 
                 // Kick the player to the game menu after being gone for long enough.
                 if (DeletionTimer >= 210)
                 {
-                    Main.blockInput = false;
-                    Main.hideUI = false;
-
                     Main.menuMode = 10;
                     Main.gameMenu = true;
                     Main.hideUI = false;
