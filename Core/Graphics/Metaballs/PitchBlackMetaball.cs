@@ -27,6 +27,8 @@ namespace NoxusBoss.Core.Graphics
 
         public override Color EdgeColor => Color.MediumPurple;
 
+        public override bool AnythingToDraw => GasParticles.Any() || EntropicGod.Myself is not null || AnyProjectiles(ModContent.ProjectileType<BabyNoxus>());
+
         public override List<Texture2D> Layers => new()
         {
             ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/Metaballs/PitchBlackLayer").Value

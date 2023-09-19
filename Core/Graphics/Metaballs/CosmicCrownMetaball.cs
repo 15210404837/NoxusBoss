@@ -15,6 +15,8 @@ namespace NoxusBoss.Core.Graphics
 
         public override Color EdgeColor => Color.DarkSlateBlue;
 
+        public override bool AnythingToDraw => XerocBoss.Myself is not null && XerocBoss.Myself.Opacity >= 0.8f;
+
         public override List<Texture2D> Layers => new()
         {
             ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/Metaballs/CosmicCrownLayer").Value

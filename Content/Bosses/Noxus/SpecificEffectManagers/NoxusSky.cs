@@ -94,6 +94,12 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
 
         internal static float intensity;
 
+        public static bool AlreadyDrewThisFrame
+        {
+            get;
+            set;
+        }
+
         public static float FogIntensity
         {
             get;
@@ -144,6 +150,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
 
         public override void Update(GameTime gameTime)
         {
+            AlreadyDrewThisFrame = false;
+
             // Keep the effect active when generating a Noxus World.
             float maxIntensity = 1f;
             if (WorldGen.generatingWorld && Main.gameMenu && NoxusWorldManager.Enabled)
@@ -237,6 +245,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            // Ensure that the background only draws once per frame for efficiency.
+            if (minDepth >= -1000000f || (AlreadyDrewThisFrame && Main.instance.IsActive))
+                return;
+
+            AlreadyDrewThisFrame = true;
             Main.spriteBatch.EnterShaderRegion();
             DrawBackground(Color.Lerp(Color.Lerp(Color.BlueViolet, Color.Indigo, 0.6f), Color.DarkGray, 0.2f));
 

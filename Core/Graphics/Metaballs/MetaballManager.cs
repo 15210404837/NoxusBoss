@@ -49,6 +49,10 @@ namespace NoxusBoss.Core.Graphics
             var gd = Main.instance.GraphicsDevice;
             foreach (Metaball metaball in metaballs)
             {
+                // Don't bother wasting resources if the metaballs are not in used at the moment.
+                if (!metaball.AnythingToDraw)
+                    continue;
+
                 // Update the metaball.
                 if (!Main.gamePaused)
                     metaball.Update();
@@ -98,7 +102,7 @@ namespace NoxusBoss.Core.Graphics
             var metaballShader = ShaderManager.GetShader("MetaballEdgeShader");
             var gd = Main.instance.GraphicsDevice;
 
-            foreach (Metaball metaball in metaballs.Where(m => m.DrawContext == layerType))
+            foreach (Metaball metaball in metaballs.Where(m => m.DrawContext == layerType && m.AnythingToDraw))
             {
                 for (int i = 0; i < metaball.LayerTargets.Count; i++)
                 {

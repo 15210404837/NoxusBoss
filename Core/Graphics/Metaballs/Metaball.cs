@@ -11,6 +11,11 @@ namespace NoxusBoss.Core.Graphics
     {
         internal List<ManagedRenderTarget> LayerTargets = new();
 
+        public abstract bool AnythingToDraw
+        {
+            get;
+        }
+
         public abstract List<Texture2D> Layers
         {
             get;

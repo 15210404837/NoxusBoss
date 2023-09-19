@@ -77,6 +77,11 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (HeavenlyBackgroundIntensity > 0f && !IsEffectActive)
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
 
+            // Don't bother doing anything if the background should not be drawn, for performance reasons.
+            bool usingXerocMenu = Main.gameMenu && MenuLoader.CurrentMenu == XerocDimensionMainMenu.Instance;
+            if (HeavenlyBackgroundIntensity <= 0f && !usingXerocMenu && DivineMonolithIntensity <= 0f && !DeificTouch.UsingEffect)
+                return;
+
             // Ensure that the target has the correct screen size.
             int width = Main.instance.GraphicsDevice.Viewport.Width;
             int height = Main.instance.GraphicsDevice.Viewport.Height;
@@ -93,7 +98,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             float intensity = HeavenlyBackgroundIntensity * Remap(ManualSunScale, 1f, 12f, 1f, 0.45f);
             if (!IsEffectActive && DeificTouch.UsingEffect && HeavenlyBackgroundIntensity <= 0f && Intensity <= 0f)
                 intensity = 1.5f;
-            if (Main.gameMenu && MenuLoader.CurrentMenu == XerocDimensionMainMenu.Instance)
+            if (usingXerocMenu)
             {
                 intensity = 1.18f;
                 Main.time = 24000;

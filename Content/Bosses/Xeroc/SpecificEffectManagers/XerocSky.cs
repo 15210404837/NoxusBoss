@@ -196,6 +196,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             private set;
         } = new();
 
+        public static bool AlreadyDrewThisFrame
+        {
+            get;
+            set;
+        }
+
         public static Vector2 DefaultManualSunDrawPosition => Vector2.UnitY * -2500f;
 
         public static float SeamAngle => 1.67f;
@@ -204,6 +210,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         public override void Update(GameTime gameTime)
         {
+            AlreadyDrewThisFrame = false;
+
             // Make the intensity go up or down based on whether the sky is in use.
             Intensity = Clamp(Intensity + IsEffectActive.ToDirectionInt() * 0.01f, 0f, 1f);
 
@@ -273,7 +281,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
+            // Ensure that the background only draws once per frame for efficiency.
+            if (minDepth >= -1000000f || (AlreadyDrewThisFrame && Main.instance.IsActive))
+                return;
+
             // Draw the sky background overlay, sun, and smoke.
+            AlreadyDrewThisFrame = true;
             if (maxDepth >= 0f && minDepth < 0f)
             {
                 Main.spriteBatch.Draw(XerocDimensionSkyGenerator.XerocDimensionTarget, Vector2.Zero, Color.White * Pow(Intensity, 2f));

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -37,6 +38,13 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             if (OverlayableTarget is null)
                 return;
+
+            // Verify that there's anything to draw.
+            if (!Main.projectile.Any(p => p.active && p.ModProjectile is IDrawsOverTiles))
+            {
+                overlayDrewLastFrame = false;
+                return;
+            }
 
             var gd = Main.instance.GraphicsDevice;
 

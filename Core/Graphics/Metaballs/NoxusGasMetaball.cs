@@ -25,6 +25,8 @@ namespace NoxusBoss.Core.Graphics
 
         public override Color EdgeColor => Color.MediumPurple;
 
+        public override bool AnythingToDraw => GasParticles.Any() || AnyProjectiles(ModContent.ProjectileType<DarkComet>());
+
         public override List<Texture2D> Layers => new()
         {
             ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/Metaballs/NoxusGasLayer1").Value

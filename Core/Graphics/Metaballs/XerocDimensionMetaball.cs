@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -26,6 +27,8 @@ namespace NoxusBoss.Core.Graphics
         public override MetaballDrawLayerType DrawContext => MetaballDrawLayerType.BeforeNPCs;
 
         public override Color EdgeColor => Color.IndianRed;
+
+        public override bool AnythingToDraw => GasParticles.Any();
 
         public override List<Texture2D> Layers => new()
         {

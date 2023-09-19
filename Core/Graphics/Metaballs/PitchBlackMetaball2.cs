@@ -37,6 +37,8 @@ namespace NoxusBoss.Core.Graphics
             }
         }
 
+        public override bool AnythingToDraw => GasParticles.Any() || (XerocBoss.Myself is not null && XerocBoss.Myself.Opacity >= 0.5f);
+
         public override List<Texture2D> Layers => new()
         {
             ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/Metaballs/PitchBlackLayer").Value

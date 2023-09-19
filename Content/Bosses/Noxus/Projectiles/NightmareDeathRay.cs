@@ -224,7 +224,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             {
                 List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(33, LaserLength, Vector2.UnitX);
                 BeamDrawer.SpecifyPerspectiveMatrixMultiplier(CreateRotationMatrix(Rotation) * Matrix.CreateScale(1f, 1f / SquishFactor, 1f));
-                BeamDrawer.Draw(laserControlPoints, Projectile.Center, 70);
+                BeamDrawer.Draw(laserControlPoints, Projectile.Center, 40);
             }
         }
 
