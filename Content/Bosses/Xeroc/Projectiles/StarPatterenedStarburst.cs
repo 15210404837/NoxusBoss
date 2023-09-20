@@ -132,10 +132,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                         NewProjectileBetter(ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), XerocBoss.StarDamage, 0f, -1, 1.112f);
 
                         float angularOffset = OffsetAngle + Main.rand.NextFloatDirection() * 0.6f;
-                        for (int i = 0; i < 11; i++)
+                        for (int i = 0; i < 9; i++)
                         {
-                            Vector2 sparkVelocity = (TwoPi * i / 11f + angularOffset).ToRotationVector2() * 12f;
-                            NewProjectileBetter(ClosestPlayerHoverDestination, sparkVelocity, ModContent.ProjectileType<SlowSolarSpark>(), XerocBoss.StarburstDamage, 0f);
+                            Vector2 sparkVelocity = (TwoPi * i / 9f + angularOffset).ToRotationVector2() * 2.6f;
+                            NewProjectileBetter(ClosestPlayerHoverDestination, sparkVelocity, ModContent.ProjectileType<Starburst>(), XerocBoss.StarburstDamage, 0f, -1, 0f, 2f);
                         }
                     }
 
@@ -177,7 +177,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
 
             // Draw a bloom flare behind the starburst.
-            Starburst.DrawStarburstBloomFlare(Projectile, 1.6f);
+            Starburst.DrawStarburstBloomFlare(Projectile, 0.4f);
 
             // Draw afterimages that trail closely behind the star core.
             int afterimageCount = 3;

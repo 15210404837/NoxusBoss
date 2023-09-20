@@ -493,7 +493,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 int movementDelay = starCreationDelay + starCreationTime - (int)AttackTimer + 17;
                 float spinCompletionRatio = GetLerpValue(0f, starCreationTime, AttackTimer - starCreationDelay, true);
-                float spinOffsetAngle = MathHelper.SmoothStep(0f, Pi, GetLerpValue(0f, starCreationTime, AttackTimer - starCreationDelay, true)) * spinDirection;
+                float spinOffsetAngle = MathHelper.SmoothStep(0f, TwoPi, GetLerpValue(0f, starCreationTime, AttackTimer - starCreationDelay, true)) * spinDirection;
                 float hoverSnapInterpolant = GetLerpValue(0f, 5f, AttackTimer - starCreationDelay, true) * 0.48f;
                 Vector2 spinOffset = -Vector2.UnitY.RotatedBy(spinOffsetAngle) * spinRadius;
                 Vector2 spinDestination = Target.Center + spinOffset;

@@ -31,7 +31,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         {
             Main.projFrames[Type] = 6;
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 8;
+            ProjectileID.Sets.TrailCacheLength[Type] = 30;
         }
 
         public override void SetDefaults()
@@ -77,7 +77,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             // Animate frames.
             Projectile.frameCounter++;
-            Projectile.frame = Projectile.frameCounter / 4 % Main.projFrames[Type];
+            Projectile.frame = Projectile.frameCounter / 5 % Main.projFrames[Type];
 
             if (Projectile.localAI[0] == 0f && Big)
             {
@@ -129,10 +129,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public static void DrawStarburstBloomFlare(Projectile projectile, float opacityFactor = 1f)
         {
             Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
+            Texture2D backglow = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + projectile.identity;
 
             Color baseColor1 = ClockConstellation.TimeIsStopped ? Color.Turquoise : Color.Yellow;
-            Color baseColor2 = ClockConstellation.TimeIsStopped ? Color.Cyan : Color.Red;
+            Color baseColor2 = ClockConstellation.TimeIsStopped ? Color.Cyan : Color.Lerp(Color.Red, Color.Wheat, Cos01(Main.GlobalTimeWrappedHourly * 3f + projectile.identity * 0.2f));
 
             // Make starbursts within the eject range of the clock during the time stop red, to indicate that they're going to be shot outward.
             if (ClockConstellation.TimeIsStopped)
@@ -145,24 +146,28 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 }
             }
 
-            Color bloomFlareColor1 = baseColor1 with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
-            Color bloomFlareColor2 = baseColor2 with { A = 0 } * projectile.Opacity * opacityFactor * 0.54f;
+            // Draw the bloom flare.
+            Color bloomFlareColor1 = baseColor1 with { A = 0 } * projectile.Opacity * opacityFactor * 0.45f;
+            Color bloomFlareColor2 = baseColor2 with { A = 0 } * projectile.Opacity * opacityFactor * 0.45f;
 
             Vector2 bloomFlareDrawPosition = projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.08f, 0, 0f);
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
+
+            // Draw the backglow.
+            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Red with { A = 0 } * opacityFactor * 0.5f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Wheat with { A = 0 } * opacityFactor * 0.4f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
 
             // Draw a bloom flare behind the starburst.
             DrawStarburstBloomFlare(Projectile);
 
             // Draw afterimages that trail closely behind the star core.
-            int afterimageCount = Big ? 2 : 5;
+            int afterimageCount = Big ? 16 : 5;
             for (int i = 0; i < afterimageCount; ++i)
             {
                 float afterimageRotation = Projectile.oldRot[i];
@@ -170,13 +175,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 Vector2 drawPosition = Projectile.oldPos[i] + Projectile.Size * 0.5f - Main.screenPosition;
 
                 // Make afterimages clump near the true position.
-                drawPosition = Vector2.Lerp(drawPosition, Projectile.Center - Main.screenPosition, 0.6f);
+                drawPosition = Vector2.Lerp(drawPosition, Projectile.Center - Main.screenPosition, 0.67f);
 
-                float afterimageScale = Projectile.scale * ((afterimageCount - i) / (float)afterimageCount);
+                float afterimageScale = Projectile.scale * Lerp(1f, 0.33f, 1f - ((afterimageCount - i) / (float)afterimageCount));
 
                 Color color = Projectile.GetAlpha(lightColor) * ((afterimageCount - i) / (float)afterimageCount);
                 color.A = 0;
 
+                Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, (Projectile.frame + i / 4) % Main.projFrames[Type]);
                 Main.spriteBatch.Draw(texture, drawPosition, frame, color, afterimageRotation, frame.Size() * 0.5f, afterimageScale, directionForImage, 0f);
             }
             return false;
