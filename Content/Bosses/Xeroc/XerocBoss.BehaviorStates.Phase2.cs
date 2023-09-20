@@ -583,21 +583,31 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_BrightStarJumpscares()
         {
+            int barrageCount = 2;
             int backgroundDimTime = 32;
             int starCreationRate = 5;
             int starCreationCountPerSide = 4;
             int starFireDelay = 29;
-            int starCreationTime = starCreationRate * starCreationCountPerSide + starFireDelay;
             int starShoveDelay = DefaultTwinkleLifetime + 10;
-            int attackTransitionDelay = 120;
+            int attackTransitionDelay = 80;
             float defaultStarZPosition = 5.9f;
             float defaultHandHoverOffset = 334f;
             float handHoverOffset = defaultHandHoverOffset;
             Vector2 leftHandHoverPosition = NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * defaultHandHoverOffset;
             Vector2 rightHandHoverPosition = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * defaultHandHoverOffset;
             Vector2 destinationOffsetArea = new(700f, 440f);
-            ref float starCreationCounter = ref NPC.ai[2];
+            ref float barrageCounter = ref NPC.ai[2];
             ref float timeSinceStarsWereShoved = ref NPC.ai[3];
+
+            if (barrageCounter >= 1f)
+            {
+                starShoveDelay -= 4;
+                starCreationRate--;
+                starCreationCountPerSide++;
+                attackTransitionDelay += 40;
+            }
+
+            int starCreationTime = starCreationRate * starCreationCountPerSide + starFireDelay;
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
@@ -654,7 +664,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     });
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        starCreationCounter++;
+                        int starCreationCounter = CountProjectiles(ModContent.ProjectileType<BackgroundStar>()) / 2;
 
                         // Create the star on the left.
                         float destinationOffsetAngle = Pi * starCreationCounter / starCreationCountPerSide - PiOver4;
@@ -747,7 +757,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     }
                 }
 
+                // Begin the next barrage if ready.
                 timeSinceStarsWereShoved++;
+                if (timeSinceStarsWereShoved >= starShoveDelay + attackTransitionDelay && barrageCounter < barrageCount - 1f)
+                {
+                    AttackTimer = backgroundDimTime;
+                    timeSinceStarsWereShoved = 0f;
+                    barrageCounter++;
+                    NPC.netUpdate = true;
+                }
 
                 // The stars will increase the background brightness when they explode, ensure that when this happens it returns to its natural levels shortly afterwards.
                 HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.35f, 0.13f);
