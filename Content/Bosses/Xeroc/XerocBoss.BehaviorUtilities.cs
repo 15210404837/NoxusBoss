@@ -20,6 +20,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         public static int TotalUniversalHands => 2;
 
+        public static int DefaultTwinkleLifetime => 24;
+
         public void PerformZPositionEffects()
         {
             // Give the illusion of being in 3D space by shrinking. This is also followed by darkening effects in the draw code, to make it look like he's fading into the dark clouds.
@@ -299,6 +301,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     }
 
                     CurrentAttack = phaseCycle[PhaseCycleIndex % phaseCycle.Length];
+                    CurrentAttack = XerocAttackType.BrightStarJumpscares;
                     PhaseCycleIndex++;
                     break;
             }
@@ -328,13 +331,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 MumbleTimer = 1;
         }
 
-        public static TwinkleParticle CreateTwinkle(Vector2 spawnPosition, Vector2 scaleFactor)
+        public static TwinkleParticle CreateTwinkle(Vector2 spawnPosition, Vector2 scaleFactor, TwinkleParticle.LockOnDetails lockOnDetails = default)
         {
             Color twinkleColor = Color.Lerp(Color.Goldenrod, Color.IndianRed, Main.rand.NextFloat(0.15f, 0.67f));
-            TwinkleParticle twinkle = new(spawnPosition, Vector2.Zero, twinkleColor, 24, 8, scaleFactor);
+            TwinkleParticle twinkle = new(spawnPosition, Vector2.Zero, twinkleColor, DefaultTwinkleLifetime, 8, scaleFactor, lockOnDetails);
             GeneralParticleHandler.SpawnParticle(twinkle);
 
-            SoundEngine.PlaySound(EntropicGod.TwinkleSound);
+            SoundEngine.PlaySound(EntropicGod.TwinkleSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
             return twinkle;
         }
 

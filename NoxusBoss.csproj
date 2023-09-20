@@ -12,10 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CalamityMod">
-      <HintPath>..\..\ModReader\CalamityMod\CalamityMod.dll</HintPath>
+      <HintPath>..\InfernumMode\bin\Debug\net6.0\CalamityMod.dll</HintPath>
     </Reference>
     <Reference Include="SubworldLibrary">
-      <HintPath>..\..\ModReader\SubworldLibrary\SubworldLibrary.dll</HintPath>
+      <HintPath>..\InfernumMode\bin\Debug\net6.0\SubworldLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

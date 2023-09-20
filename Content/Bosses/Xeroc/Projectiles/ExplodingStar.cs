@@ -94,11 +94,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                     starburstCount = 7;
 
                 if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.BrightStarJumpscares)
-                {
-                    starburstSpread = ToRadians(49f);
-                    starburstID = ModContent.ProjectileType<Starburst>();
-                    starburstSpeed = 6f;
-                }
+                    return;
 
                 Vector2 directionToTarget = Projectile.SafeDirectionTo(Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center);
                 for (int i = 0; i < starburstCount; i++)

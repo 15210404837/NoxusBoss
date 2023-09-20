@@ -584,17 +584,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_BrightStarJumpscares()
         {
             int backgroundDimTime = 32;
-            int starCreationRate = 9;
-            int starCreationCountPerSide = 6;
-            int starFireDelay = 56;
+            int starCreationRate = 5;
+            int starCreationCountPerSide = 4;
+            int starFireDelay = 29;
             int starCreationTime = starCreationRate * starCreationCountPerSide + starFireDelay;
-            int starShoveRate = 20;
+            int starShoveDelay = DefaultTwinkleLifetime + 10;
+            int attackTransitionDelay = 120;
             float defaultStarZPosition = 5.9f;
             float defaultHandHoverOffset = 334f;
+            float handHoverOffset = defaultHandHoverOffset;
             Vector2 leftHandHoverPosition = NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * defaultHandHoverOffset;
             Vector2 rightHandHoverPosition = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * defaultHandHoverOffset;
+            Vector2 destinationOffsetArea = new(700f, 440f);
             ref float starCreationCounter = ref NPC.ai[2];
-            ref float starShoveIndex = ref NPC.ai[3];
+            ref float timeSinceStarsWereShoved = ref NPC.ai[3];
 
             // Flap wings.
             UpdateWings(AttackTimer / 45f % 1f);
@@ -610,13 +613,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.5f, 0.09f);
                 ZPosition = Pow(AttackTimer / backgroundDimTime, 1.74f) * 4.5f;
+
+                if (CurrentPhase >= 1)
+                    KaleidoscopeInterpolant *= 0.8f;
+
+                // Create hands.
+                if (AttackTimer == backgroundDimTime - 1f)
+                {
+                    while (Hands.Count < starCreationCountPerSide * 2 - 1)
+                        ConjureHandsAtPosition(NPC.Center, Vector2.Zero, false);
+                }
             }
 
             // Move behind the player and cast stars.
             else if (AttackTimer <= backgroundDimTime + starCreationTime)
             {
                 // Make the hands suddenly move outward. They return to Xeroc shortly before the stars being being shoved.
-                float handHoverOffset = Remap(AttackTimer - backgroundDimTime, starCreationTime - 12f, starCreationTime - 4f, 720f, defaultHandHoverOffset);
+                handHoverOffset = Remap(AttackTimer - backgroundDimTime, starCreationTime - 12f, starCreationTime - 4f, 720f, defaultHandHoverOffset);
                 if (AttackTimer == backgroundDimTime + 1f)
                 {
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -629,8 +642,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         Pitch = -0.5f
                     });
                 }
-                leftHandHoverPosition = NPC.Center - Vector2.UnitX * TeleportVisualsAdjustedScale * handHoverOffset;
-                rightHandHoverPosition = NPC.Center + Vector2.UnitX * TeleportVisualsAdjustedScale * handHoverOffset;
 
                 // Create stars.
                 if (AttackTimer % starCreationRate == 1f && AttackTimer < backgroundDimTime + starCreationRate * starCreationCountPerSide)
@@ -644,8 +655,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         starCreationCounter++;
-                        NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), BackgroundStarDamage, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), -starCreationCounter);
-                        NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), BackgroundStarDamage, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), starCreationCounter);
+
+                        // Create the star on the left.
+                        float destinationOffsetAngle = Pi * starCreationCounter / starCreationCountPerSide - PiOver4;
+                        ProjectileSpawnManagementSystem.PrepareProjectileForSpawning(star =>
+                        {
+                            star.ModProjectile<BackgroundStar>().ScreenDestinationOffset = destinationOffsetAngle.ToRotationVector2() * destinationOffsetArea + Main.rand.NextVector2Circular(150f, 55f);
+                        });
+                        NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), -starCreationCounter);
+
+                        // Create the star on the right.
+                        ProjectileSpawnManagementSystem.PrepareProjectileForSpawning(star =>
+                        {
+                            star.ModProjectile<BackgroundStar>().ScreenDestinationOffset = destinationOffsetAngle.ToRotationVector2() * -destinationOffsetArea + Main.rand.NextVector2Circular(150f, 55f);
+                        });
+                        NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), starCreationCounter);
+
+                        // Fire an NPC state sync.
                         NPC.netSpam = 0;
                         NPC.netUpdate = true;
                     }
@@ -676,49 +702,65 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Shove hands towards the screen.
-            else if (starShoveIndex <= starCreationCountPerSide * 2f && AnyProjectiles(ModContent.ProjectileType<BackgroundStar>()))
+            else if (timeSinceStarsWereShoved <= starShoveDelay + attackTransitionDelay)
             {
-                // Shove stars forward.
-                if (AttackTimer % starShoveRate == starShoveRate - 1f)
+                // Cast twinkle telegraphs before the shove occurs.
+                if (timeSinceStarsWereShoved == 1f)
                 {
-                    starShoveIndex++;
-                    int modifiedStarIndex = (int)(starShoveIndex / 2f);
-                    bool left = starShoveIndex % 2f == 1f;
-                    if (left)
-                        modifiedStarIndex *= -1;
-
-                    // Make hands go forward suddenly.
-                    Vector2 handPosition;
-                    if (left)
-                    {
-                        Hands[0].ScaleFactor = 4f;
-                        handPosition = Hands[0].Center;
-                    }
-                    else
-                    {
-                        Hands[1].ScaleFactor = 4f;
-                        handPosition = Hands[1].Center;
-                    }
-
-                    var stars = AllProjectilesByID(ModContent.ProjectileType<BackgroundStar>()).Where(s => s.ModProjectile<BackgroundStar>().Index == modifiedStarIndex);
+                    var stars = AllProjectilesByID(ModContent.ProjectileType<BackgroundStar>());
                     foreach (Projectile star in stars)
                     {
-                        star.ModProjectile<BackgroundStar>().ApproachingScreen = true;
-                        star.velocity = Vector2.Zero;
-                        star.netUpdate = true;
+                        CreateTwinkle(star.Center, Vector2.One * 1.55f, new()
+                        {
+                            LockOnCenter = () => star.ModProjectile<BackgroundStar>().WorldDestination,
+                            LockOnOffset = Vector2.Zero
+                        });
                     }
+                }
 
+                // Prepare visuals in anticipation of the star shove.
+                if (timeSinceStarsWereShoved == starShoveDelay)
+                {
                     // Play sounds and create visuals.
-                    SoundEngine.PlaySound(SunFireballShootSound);
+                    SoundEngine.PlaySound(FastHandMovementSound);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.6f, 12);
                     Target.Calamity().GeneralScreenShakePower = 5f;
                 }
+
+                // Shove stars. This isn't done all at once for more impact.
+                if (timeSinceStarsWereShoved >= starShoveDelay && AttackTimer % 2f == 1f)
+                {
+                    var stars = AllProjectilesByID(ModContent.ProjectileType<BackgroundStar>()).OrderBy(p => Main.rand.NextFloat());
+                    foreach (Projectile star in stars)
+                    {
+                        if (star.ModProjectile<BackgroundStar>().ApproachingScreen)
+                            continue;
+
+                        int handIndex = (int)star.ai[1] + starCreationCountPerSide;
+                        if (handIndex < Hands.Count)
+                            Hands[handIndex].ScaleFactor = 6f;
+
+                        star.ModProjectile<BackgroundStar>().ApproachingScreen = true;
+                        star.velocity = Vector2.Zero;
+                        star.netUpdate = true;
+                        break;
+                    }
+                }
+
+                timeSinceStarsWereShoved++;
+
+                // The stars will increase the background brightness when they explode, ensure that when this happens it returns to its natural levels shortly afterwards.
+                HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 0.35f, 0.13f);
             }
 
             else
             {
-                ZPosition *= 0.9f;
-                HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 1f, 0.12f);
+                ZPosition *= 0.84f;
+                HeavenlyBackgroundIntensity = Lerp(HeavenlyBackgroundIntensity, 1f, 0.16f);
+
+                if (CurrentPhase >= 1)
+                    KaleidoscopeInterpolant = Lerp(KaleidoscopeInterpolant, 0.23f, 0.15f);
+
                 if (HeavenlyBackgroundIntensity >= 0.999f)
                 {
                     ZPosition = 0f;
@@ -743,6 +785,24 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Move hands.
             if (Hands.Count >= 2)
             {
+                int handIndex = 0;
+                foreach (var hand in Hands)
+                {
+                    hand.UsePalmForm = true;
+                    hand.ScaleFactor = Lerp(hand.ScaleFactor, 1f, 0.09f);
+                    hand.Rotation = 0f;
+                    hand.DirectionOverride = 0;
+                    hand.RobeDirection = (handIndex < Hands.Count / 2).ToDirectionInt();
+                    hand.UseRobe = true;
+
+                    Vector2 handHoverOffsetVector = (TwoPi * handIndex / Hands.Count + Pi - 0.65f).ToRotationVector2() * new Vector2(1f, 0.3f) * handHoverOffset;
+                    if (Abs(handHoverOffsetVector.X) <= 180f)
+                        handHoverOffsetVector.X = Sign(handHoverOffsetVector.X) * 180f;
+
+                    DefaultHandDrift(hand, NPC.Center + handHoverOffsetVector * TeleportVisualsAdjustedScale, 4f);
+                    handIndex++;
+                }
+
                 Hands[0].UsePalmForm = Hands[1].UsePalmForm = true;
                 Hands[0].ScaleFactor = Lerp(Hands[0].ScaleFactor, 1f, 0.09f);
                 Hands[1].ScaleFactor = Lerp(Hands[1].ScaleFactor, 1f, 0.09f);

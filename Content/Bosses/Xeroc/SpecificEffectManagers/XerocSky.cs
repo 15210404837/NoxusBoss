@@ -234,7 +234,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 SkyPupilScale = Lerp(SkyPupilScale, 1f, 0.05f);
                 SkyEyeScale = Lerp(SkyEyeScale, 1f, 0.05f);
                 SeamScale = Clamp(SeamScale * 0.87f - 0.023f, 0f, 300f);
-                HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
+                HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 2.5f);
                 ManualSunOpacity = Clamp(ManualSunOpacity - 0.04f, 0f, 1f);
                 ManualSunScale = Clamp(ManualSunScale * 0.92f - 0.3f, 0f, 50f);
                 DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.1f, 0f, 1f);

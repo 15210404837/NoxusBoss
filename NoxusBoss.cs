@@ -19,7 +19,7 @@ namespace NoxusBoss
         {
             get;
             private set;
-        }
+        } = true;
 
         public static Mod Instance
         {

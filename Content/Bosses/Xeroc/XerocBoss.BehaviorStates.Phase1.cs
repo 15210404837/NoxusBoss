@@ -96,7 +96,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 float starSpawnOffsetAngle = TwoPi * (AttackTimer - redirectTime - hoverTime) / starTelegraphTime - PiOver2;
                 Vector2 starSpawnOffset = starSpawnOffsetAngle.ToRotationVector2() * starOffsetRadius;
                 StarSpawnOffsets.Add(starSpawnOffset);
-                CreateTwinkle(Target.Center + starSpawnOffset, Vector2.One * 1.7f);
+                CreateTwinkle(Target.Center + starSpawnOffset, Vector2.One * 1.7f, new()
+                {
+                    LockOnOffset = starSpawnOffset,
+                    LockOnCenter = () => Target.Center
+                });
 
                 // Create bloom at the position of the star, to help it stand out more.
                 Color bloomColor = Color.Lerp(Color.LightCoral, Color.Yellow, Main.rand.NextFloat(0.6f));

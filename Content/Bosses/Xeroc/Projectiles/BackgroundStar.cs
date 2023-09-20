@@ -4,6 +4,7 @@ using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -16,6 +17,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
     public class BackgroundStar : ModProjectile, IDrawPixelated
     {
+        public Vector2 ScreenDestinationOffset
+        {
+            get;
+            set;
+        }
+
+        public Vector2 WorldDestination => XerocBoss.Myself is null ? Vector2.Zero : Main.player[XerocBoss.Myself.target].Center + ScreenDestinationOffset;
+
         public PrimitiveTrailCopy TrailDrawer
         {
             get;
@@ -55,9 +64,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.hide = true;
         }
 
-        public override void SendExtraAI(BinaryWriter writer) => writer.Write(ApproachingScreen);
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(ApproachingScreen);
+            writer.WriteVector2(ScreenDestinationOffset);
+        }
 
-        public override void ReceiveExtraAI(BinaryReader reader) => ApproachingScreen = reader.ReadBoolean();
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            ApproachingScreen = reader.ReadBoolean();
+            ScreenDestinationOffset = reader.ReadVector2();
+        }
 
         public override void AI()
         {
@@ -80,16 +97,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Get close to the screen if instructed to do so.
             if (ApproachingScreen)
             {
-                ZPosition = Lerp(ZPosition, -0.93f, 0.13f);
-
-                Vector2 targetPosition = Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center - Vector2.UnitY * 420f;
-                if (Projectile.velocity == Vector2.Zero)
-                {
-                    Projectile.velocity = (targetPosition - Projectile.Center) * 0.014f;
-                    Projectile.netUpdate = true;
-                }
-
-                Projectile.velocity *= 1.014f;
+                ZPosition = Lerp(ZPosition, -0.93f, 0.23f);
+                Projectile.velocity = Projectile.SafeDirectionTo(WorldDestination) * Clamp(Projectile.velocity.Length() + 5.4f, 7f, 99f);
 
                 if (ZPosition <= -0.92f)
                 {
@@ -98,9 +107,21 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                     SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound, Projectile.Center);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        int starIndex = NewProjectileBetter(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), XerocBoss.StarDamage, 0f, -1, 1.089f);
+                        // Create the start explosion.
+                        int starIndex = NewProjectileBetter(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), 0, 0f, -1, 1.089f);
                         if (starIndex >= 0 && starIndex < Main.maxProjectiles)
                             Main.projectile[starIndex].ModProjectile<ExplodingStar>().Time = 18f;
+
+                        // Explode into somewhat slow moving spark patterns.
+                        float angleToTarget = Projectile.AngleTo(Main.player[XerocBoss.Myself.target].Center);
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Vector2 sparkVelocity = (TwoPi * i / 4f + angleToTarget).ToRotationVector2() * 3f;
+                            NewProjectileBetter(WorldDestination, sparkVelocity, ModContent.ProjectileType<SlowSolarSpark>(), XerocBoss.StarburstDamage, 0f);
+                        }
+
+                        Main.LocalPlayer.Calamity().GeneralScreenShakePower = 11f;
+                        XerocSky.HeavenlyBackgroundIntensity += 1.5f;
                     }
 
                     Projectile.Kill();

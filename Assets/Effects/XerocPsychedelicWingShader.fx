@@ -32,13 +32,16 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     float warpAngle = tex2D(uImage1, coords * 1.3 + float2(globalTime * 0.2, 0)).r * 16;
     float2 warpNoiseOffset = float2(TriangleWave(warpAngle + 1.57), TriangleWave(warpAngle));
     float psychedelicInterpolant = tex2D(uImage1, coords * 0.9 + warpNoiseOffset * 0.023).r * 1.45;
+    float brightnessInterpolant = tex2D(uImage1, coords * 2.5 - warpNoiseOffset * 0.055).r;
     
     // Calculate the base psychedelic color from the warp noise.
     float3 psychedelicColor = Palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.2), float3(1, 1, 1), float3(0, 0.333, 0.667)) * 0.8;
+    psychedelicColor += pow(brightnessInterpolant, 3.5) * 2.4;
+    
     float4 psychedelicColor4 = float4(psychedelicColor, 1) * color.a;
     
     // Calculate ring-based brightness values.
-    float ringBrightness = saturate(0.2 / TriangleWave(globalTime * 2.33 - distanceFromEdge * 5)) + 1;
+    float ringBrightness = clamp(0.2 / TriangleWave(globalTime * 0.6 - distanceFromEdge * 2), 0, 2.7) + 1;
     
     float4 result = lerp(color, psychedelicColor4, color.r * 0.8) * ringBrightness;
     

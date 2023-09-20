@@ -282,6 +282,7 @@ Mods: {
 			ThePurifierProj.DisplayName: The Purifier
 			SwordConstellationSlashVisual.DisplayName: Good Visual Design
 			TelegraphedPortalLaserbeam.DisplayName: Cosmic Burst
+			SlowSolarSpark.DisplayName: Solar Spark
 		}
 
 		Tiles: {

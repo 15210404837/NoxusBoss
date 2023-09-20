@@ -1,4 +1,5 @@
-﻿using CalamityMod.Particles;
+﻿using System;
+using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -8,6 +9,23 @@ namespace NoxusBoss.Content.Particles
 {
     public class TwinkleParticle : Particle
     {
+        public struct LockOnDetails
+        {
+            public Func<Vector2> LockOnCenter;
+
+            public Vector2 LockOnOffset;
+
+            public void Apply(ref Vector2 position)
+            {
+                if (LockOnCenter is null)
+                    return;
+
+                position = LockOnCenter() + LockOnOffset;
+            }
+        }
+
+        public LockOnDetails LockOnThing;
+
         public int TotalStarPoints;
 
         public float Opacity = 1f;
@@ -22,7 +40,7 @@ namespace NoxusBoss.Content.Particles
 
         public override string Texture => "NoxusBoss/Content/Particles/VerticalLightStreak";
 
-        public TwinkleParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, int totalStarPoints, Vector2 scaleFactor)
+        public TwinkleParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, int totalStarPoints, Vector2 scaleFactor, LockOnDetails lockOnDetails = default)
         {
             Position = position;
             Velocity = velocity;
@@ -30,11 +48,13 @@ namespace NoxusBoss.Content.Particles
             ScaleFactor = scaleFactor;
             TotalStarPoints = totalStarPoints;
             Lifetime = lifetime;
+            LockOnThing = lockOnDetails;
         }
 
         public override void Update()
         {
             Opacity = GetLerpValue(0f, 10f, Time, true) * GetLerpValue(Lifetime, 16f, Time, true);
+            LockOnThing.Apply(ref Position);
         }
 
         public override void CustomDraw(SpriteBatch spriteBatch)
