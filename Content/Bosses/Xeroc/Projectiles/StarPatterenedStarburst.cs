@@ -130,6 +130,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                     {
                         NewProjectileBetter(ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                         NewProjectileBetter(ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), XerocBoss.StarDamage, 0f, -1, 1.112f);
+
+                        float angularOffset = OffsetAngle + Main.rand.NextFloatDirection() * 0.6f;
+                        for (int i = 0; i < 11; i++)
+                        {
+                            Vector2 sparkVelocity = (TwoPi * i / 11f + angularOffset).ToRotationVector2() * 12f;
+                            NewProjectileBetter(ClosestPlayerHoverDestination, sparkVelocity, ModContent.ProjectileType<SlowSolarSpark>(), XerocBoss.StarburstDamage, 0f);
+                        }
                     }
 
                     Projectile.Kill();

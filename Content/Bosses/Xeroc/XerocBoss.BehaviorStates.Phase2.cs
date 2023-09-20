@@ -574,6 +574,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (Hands.Count >= 2)
             {
+                Hands[0].RobeDirection = 1;
+                Hands[1].RobeDirection = -1;
                 Hands[0].Rotation = Pi + PiOver2;
                 Hands[1].Rotation = Pi - PiOver2;
                 DefaultHandDrift(Hands[0], rightHandHoverDestination, handMoveSpeedFactor);

@@ -16,6 +16,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
     {
         public bool DrawAdditiveShader => true;
 
+        public static bool FromStarConvergenceAttack => XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarConvergenceAndRedirecting;
+
         public ref float Temperature => ref Projectile.localAI[0];
 
         public ref float Time => ref Projectile.localAI[1];
@@ -38,6 +40,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.ConjureExplodingStars)
                 Projectile.timeLeft = 30;
+            if (FromStarConvergenceAttack)
+                Projectile.timeLeft = 15;
         }
 
         public override void AI()
@@ -49,7 +53,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Time++;
 
             // Perform scale effects to do the explosion.
-            if (Time <= 20f)
+            if (Time <= 20f && !FromStarConvergenceAttack)
                 Projectile.scale = Pow(GetLerpValue(0f, 20f, Time, true), 2.7f);
             else
             {
@@ -68,7 +72,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             {
                 float screenShakePower = GetLerpValue(1600f, 750f, Main.LocalPlayer.Distance(Projectile.Center), true) * 3f;
                 Main.LocalPlayer.Calamity().GeneralScreenShakePower += screenShakePower;
-                SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound with { Pitch = 0.5f, MaxInstances = 2 });
+                
+                SoundStyle explosionSound = FromStarConvergenceAttack ? XerocBoss.SupernovaSound : XerocBoss.ExplosionTeleportSound with { Pitch = 0.5f };
+                SoundEngine.PlaySound(explosionSound with { MaxInstances = 3 });
                 ScreenEffectSystem.SetFlashEffect(Projectile.Center, 1f, 30);
                 XerocKeyboardShader.BrightnessIntensity += 0.23f;
             }
