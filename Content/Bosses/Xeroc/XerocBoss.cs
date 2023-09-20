@@ -15,6 +15,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
+using Terraria.Graphics.Light;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static CalamityMod.CalamityUtils;
@@ -586,6 +587,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             if (!NPC.WithinRange(Target.Center, 4600f - Target.aggro))
                 NPC.TargetClosest();
+
+            // Nope.
+            if (!Lighting.NotRetro)
+                Lighting.Mode = LightMode.Color;
 
             // Hey bozo the player's gone. Leave.
             if (Target.dead || !Target.active)
