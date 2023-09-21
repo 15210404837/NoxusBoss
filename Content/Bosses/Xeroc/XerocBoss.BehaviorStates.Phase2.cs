@@ -881,6 +881,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, 1f);
                 }
 
+                // Play a sound to accompany the converging stars.
+                SoundEngine.PlaySound(StarConvergenceFastSound);
+
                 // Play mumble sounds.
                 PerformMumble();
             }
@@ -1062,8 +1065,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
 
+                // Create the sword.
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
+
+                // Play a sound to accompany the converging stars.
+                SoundEngine.PlaySound(StarConvergenceFastSound);
             }
 
             // Perform teleport visuals.

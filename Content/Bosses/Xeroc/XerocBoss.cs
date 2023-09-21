@@ -504,7 +504,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocHumm") with { Volume = 1.1f, IsLooped = true };
 
-        public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocMumble", 5) with { Volume = 0.89f };
+        public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocMumble", 7) with { Volume = 0.89f };
 
         public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalCast") with { Volume = 1.2f };
 
@@ -520,11 +520,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle SliceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSliceTelegraph") with { Volume = 1.05f, MaxInstances = 20 };
 
-        public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };
+        public static readonly SoundStyle StarConvergenceSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/StarConvergence") with { Volume = 0.8f };
+
+        public static readonly SoundStyle StarConvergenceFastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/StarConvergenceFast") with { Volume = 0.8f };
 
         public static readonly SoundStyle SuddenMovementSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSuddenMovement", 2) with { Volume = 0.95f, MaxInstances = 10 };
 
         public static readonly SoundStyle SunFireballShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/SunFireballShootSound") with { Volume = 1.05f, MaxInstances = 5 };
+
+        public static readonly SoundStyle SwordSlashSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSwordSlash") with { Volume = 1.3f, MaxInstances = 4 };
 
         public static readonly SoundStyle SupernovaSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocSupernova") with { Volume = 0.8f, MaxInstances = 20 };
 

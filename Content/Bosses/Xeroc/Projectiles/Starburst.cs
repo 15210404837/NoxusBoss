@@ -136,6 +136,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Color baseColor2 = ClockConstellation.TimeIsStopped ? Color.Cyan : Color.Lerp(Color.Red, Color.Wheat, Cos01(Main.GlobalTimeWrappedHourly * 3f + projectile.identity * 0.2f));
 
             // Make starbursts within the eject range of the clock during the time stop red, to indicate that they're going to be shot outward.
+            float backglowOpacityFactor = opacityFactor;
             if (ClockConstellation.TimeIsStopped)
             {
                 var clocks = AllProjectilesByID(ModContent.ProjectileType<ClockConstellation>());
@@ -143,7 +144,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 {
                     baseColor1 = Color.Red;
                     baseColor2 = Color.Red;
+                    backglowOpacityFactor *= 0.5f;
                 }
+
+                // Disable soft backglow bloom for the cyan starbursts so that they're more clear against the clock death zone.
+                else
+                    backglowOpacityFactor = 0f;
             }
 
             // Draw the bloom flare.
@@ -155,8 +161,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
 
             // Draw the backglow.
-            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Red with { A = 0 } * opacityFactor * 0.5f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
-            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Wheat with { A = 0 } * opacityFactor * 0.4f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
+            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Red with { A = 0 } * backglowOpacityFactor * 0.5f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Wheat with { A = 0 } * backglowOpacityFactor * 0.4f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -198,7 +204,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             // Draw a flame trail.
             fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 4);
+            TrailDrawer.Draw(Projectile.oldPos.Take(8), Projectile.Size * 0.5f - Main.screenPosition, 9);
         }
 
         public override bool ShouldUpdatePosition() => !ClockConstellation.TimeIsStopped;

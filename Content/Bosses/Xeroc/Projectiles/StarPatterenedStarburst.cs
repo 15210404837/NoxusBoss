@@ -207,7 +207,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             // Draw a flame trail.
             fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 7);
+            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 4);
         }
 
         public override bool ShouldUpdatePosition() => Time >= DelayUntilFreeMovement;

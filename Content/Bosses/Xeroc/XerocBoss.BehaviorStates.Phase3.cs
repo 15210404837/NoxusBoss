@@ -478,6 +478,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 TeleportTo(Target.Center + Vector2.UnitY * 2000f);
+
+                // Play a sound to accompany the converging stars.
+                SoundEngine.PlaySound(StarConvergenceSound);
             }
 
             // Stay at the top of the clock after redirecting.
