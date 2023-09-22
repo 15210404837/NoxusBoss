@@ -81,7 +81,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
 
             // Animate frames.
-            Projectile.frameCounter++;
+            if (Projectile.FinalExtraUpdate())
+                Projectile.frameCounter++;
             Projectile.frame = Projectile.frameCounter / 4 % Main.projFrames[Type];
 
             // Stick in place at first.
@@ -102,7 +103,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 float snapAngle = Round(angle / angleSnapOffset) * angleSnapOffset;
 
                 Vector2 closestPlayerCenter = Main.player[Player.FindClosest(Projectile.Center, 1, 1)].Center;
-                Vector2 hoverOffset = Vector2.Lerp(StarPolarEquation(StarPointCount, angle) * radius, (snapAngle + Pi / StarPointCount + ConvergenceAngleOffset).ToRotationVector2() * radius * 1.1f, stickInPerfectCircleInterpolant);
+                Vector2 starOffset = StarPolarEquation(StarPointCount, angle) * radius;
+                Vector2 circleOffset = (snapAngle + Pi / StarPointCount + ConvergenceAngleOffset).ToRotationVector2() * radius * 1.1f;
+                Vector2 hoverOffset = Vector2.Lerp(starOffset, circleOffset, stickInPerfectCircleInterpolant);
                 Vector2 hoverDestination = closestPlayerCenter + hoverOffset;
                 if (stickInPerfectCircleInterpolant >= 0.9f)
                 {

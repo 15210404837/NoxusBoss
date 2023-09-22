@@ -155,7 +155,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Draw the bloom flare.
             Color bloomFlareColor1 = baseColor1 with { A = 0 } * projectile.Opacity * opacityFactor * 0.45f;
             Color bloomFlareColor2 = baseColor2 with { A = 0 } * projectile.Opacity * opacityFactor * 0.45f;
-
             Vector2 bloomFlareDrawPosition = projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.08f, 0, 0f);
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
