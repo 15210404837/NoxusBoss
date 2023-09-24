@@ -144,7 +144,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 {
                     baseColor1 = Color.Red;
                     baseColor2 = Color.Red;
-                    backglowOpacityFactor *= 0.5f;
+                    backglowOpacityFactor *= 0.25f;
                 }
 
                 // Disable soft backglow bloom for the cyan starbursts so that they're more clear against the clock death zone.
