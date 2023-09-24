@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
@@ -37,6 +38,12 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             set;
         }
 
+        public static float VignetteInterpolant
+        {
+            get;
+            set;
+        }
+
         public static int DistortionPointCount => 6;
 
         public NoxusEggScreenShaderData(Ref<Effect> shader, string passName)
@@ -52,7 +59,13 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             {
                 NPC egg = Main.npc[eggIndex];
                 NoxusEggPosition = egg.Center;
-                DistortionIntensity = Clamp(egg.Opacity * egg.scale, 0f, 1f);
+
+                float maxIntensity = 1f;
+                if (egg.ModNPC<NoxusEgg>().CurrentAttack == NoxusEgg.NoxusEggAttackType.Awaken)
+                    maxIntensity = Clamp(egg.ModNPC<NoxusEgg>().AttackTimer * 0.005f, 0.01f, 1f);
+                VignetteInterpolant = maxIntensity;
+
+                DistortionIntensity = Clamp(egg.Opacity * egg.scale, 0f, maxIntensity);
             }
 
             else if (noxusIndex != -1)
@@ -60,10 +73,14 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
                 NPC noxus = Main.npc[noxusIndex];
                 NoxusEggPosition = noxus.Center;
                 DistortionIntensity = Clamp(noxus.Opacity * noxus.scale * 0.9f, 0f, 1f);
+                VignetteInterpolant = 1f;
             }
 
             else
+            {
                 DistortionIntensity = Clamp(DistortionIntensity - 0.1f, 0f, 1f);
+                VignetteInterpolant = Clamp(VignetteInterpolant - 0.1f, 0f, 1f);
+            }
         }
 
         public override void Apply()
@@ -94,6 +111,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             darknessFactor = Lerp(darknessFactor, 1f, Main.ColorOfTheSkies.ToVector3().Length());
 
             Shader.Parameters["darknessFactor"].SetValue(Lerp(1f, darknessFactor, DistortionIntensity));
+            Shader.Parameters["vignetteIntensityInterpolant"].SetValue(VignetteInterpolant);
 
             base.Apply();
         }

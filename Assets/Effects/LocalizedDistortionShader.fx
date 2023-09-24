@@ -23,6 +23,7 @@ float4 uShaderSpecificData;
 
 // !!! Screen shader, do not delete the above parameters !!!
 
+float vignetteIntensityInterpolant;
 float darknessFactor;
 float2 distortionCenter;
 float2 distortionCenters[6];
@@ -57,7 +58,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     coords *= 1 - coords.yx;
     float vignetteIntensity = coords.x * coords.y * (30 - uIntensity * 17);
     
-    return color * pow(vignetteIntensity, 0.176);
+    return color * lerp(1, pow(vignetteIntensity, 0.176), vignetteIntensityInterpolant);
 }
 
 technique Technique1
