@@ -6,7 +6,6 @@ using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
