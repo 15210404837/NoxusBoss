@@ -104,7 +104,7 @@ namespace NoxusBoss.Content.Projectiles
 
         public static readonly PiecewiseCurve RiseMotionCurve = new PiecewiseCurve().
             Add(new PolynomialEasing(2f), EasingType.In, -4f, 0.36f). // Ascend motion.
-            Add(new LinearEasing(), EasingType.In, -4f, 0.72f). // Rise without change.
+            Add(LinearEasing.Default, EasingType.In, -4f, 0.72f). // Rise without change.
             Add(new PolynomialEasing(1.5f), EasingType.Out, 0f, 1f); // Slowdown.
 
         // These first three times are roughly synced to the duration of the Terminus chargeup sound, which is around 5.813 seconds (348 frames).
