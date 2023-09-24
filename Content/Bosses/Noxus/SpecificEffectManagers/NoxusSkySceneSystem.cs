@@ -59,7 +59,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             if (inGameMenuNotGeneratingWorld || !NoxusWorldManager.Enabled || !Main.dayTime)
             {
                 // Don't draw Noxus if he's fucking dead, has fallen from space already, or hasn't started orbiting the planet yet.
-                if (WorldSaveSystem.HasDefeatedEgg || NoxusEggCutsceneSystem.HasSummonedNoxus || !NoxusEggCutsceneSystem.NoxusBeganOrbitingPlanet)
+                if (WorldSaveSystem.HasDefeatedEgg || NoxusEggCutsceneSystem.NoxusHasFallenFromSky || !NoxusEggCutsceneSystem.NoxusBeganOrbitingPlanet)
                     return;
 
                 // Don't draw Noxus if he's behind the view position or if on the title screen.

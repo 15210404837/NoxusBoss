@@ -18,7 +18,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             set;
         }
 
-        public static bool HasSummonedNoxus
+        public static bool NoxusHasFallenFromSky
         {
             get;
             set;
@@ -32,7 +32,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
         {
             get
             {
-                if (HasSummonedNoxus)
+                if (NoxusHasFallenFromSky)
                     return Language.GetTextValue($"Mods.NoxusBoss.Dialog.FinalBossDefeatNoxusIndicator_SeenNoxus");
 
                 return Language.GetTextValue($"Mods.NoxusBoss.Dialog.FinalBossDefeatNoxusIndicator");
@@ -64,19 +64,19 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
         public override void PreUpdateWorld()
         {
             // Randomly make Noxus appear.
-            if ((int)Math.Round(Main.time) == 10 && !HasSummonedNoxus && NoxusCanCommitSkydivingFromSpace && Main.rand.NextBool(3) && PlayersOnSurface.Any() && !Main.dayTime)
+            if ((int)Math.Round(Main.time) == 10 && !NoxusHasFallenFromSky && NoxusCanCommitSkydivingFromSpace && Main.rand.NextBool(3) && PlayersOnSurface.Any() && !Main.dayTime)
             {
                 BroadcastText(PostMLNightText, new(50, 255, 130));
                 WillTryToSummonNoxusTonight = true;
             }
 
             // Randomly spawn Noxus.
-            if (WillTryToSummonNoxusTonight && Main.rand.NextBool(7200) && PlayersOnSurface.Any() && !HasSummonedNoxus)
+            if (WillTryToSummonNoxusTonight && Main.rand.NextBool(7200) && PlayersOnSurface.Any() && !NoxusHasFallenFromSky)
             {
                 Player playerToSpawnNear = Main.rand.Next(PlayersOnSurface);
                 NPC.NewNPC(new EntitySource_WorldEvent(), (int)playerToSpawnNear.Center.X, (int)playerToSpawnNear.Center.Y - 1200, ModContent.NPCType<NoxusEggCutscene>(), 1);
 
-                HasSummonedNoxus = true;
+                NoxusHasFallenFromSky = true;
             }
 
             // Try again later if Noxus couldn't spawn at night.

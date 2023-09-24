@@ -107,7 +107,7 @@ namespace NoxusBoss.Core
             HasMetXeroc = false;
             OgsculeRulesOverTheUniverse = false;
             HasPlacedCattail = false;
-            NoxusEggCutsceneSystem.HasSummonedNoxus = false;
+            NoxusEggCutsceneSystem.NoxusHasFallenFromSky = false;
         }
 
         public override void OnWorldUnload()
@@ -122,7 +122,7 @@ namespace NoxusBoss.Core
             HasMetXeroc = false;
             OgsculeRulesOverTheUniverse = false;
             HasPlacedCattail = false;
-            NoxusEggCutsceneSystem.HasSummonedNoxus = false;
+            NoxusEggCutsceneSystem.NoxusHasFallenFromSky = false;
         }
 
         public override void SaveWorldData(TagCompound tag)
@@ -133,8 +133,8 @@ namespace NoxusBoss.Core
                 tag["HasDefeatedNoxus"] = true;
             if (HasDefeatedXeroc)
                 tag["HasDefeatedXeroc"] = true;
-            if (NoxusEggCutsceneSystem.HasSummonedNoxus)
-                tag["HasSummonedNoxus"] = true;
+            if (NoxusEggCutsceneSystem.NoxusHasFallenFromSky)
+                tag["NoxusHasFallenFromSky"] = true;
             if (HasMetXeroc)
                 tag["HasMetXeroc"] = true;
             if (OgsculeRulesOverTheUniverse)
@@ -150,7 +150,7 @@ namespace NoxusBoss.Core
             HasDefeatedEgg = tag.ContainsKey("HasDefeatedEgg");
             hasDefeatedNoxus = tag.ContainsKey("HasDefeatedNoxus");
             HasDefeatedXeroc = tag.ContainsKey("HasDefeatedXeroc");
-            NoxusEggCutsceneSystem.HasSummonedNoxus = tag.ContainsKey("HasSummonedNoxus");
+            NoxusEggCutsceneSystem.NoxusHasFallenFromSky = tag.ContainsKey("NoxusHasFallenFromSky");
             HasMetXeroc = tag.ContainsKey("HasMetXeroc");
             OgsculeRulesOverTheUniverse = tag.ContainsKey("OgsculeRulesOverTheUniverse");
             HasPlacedCattail = tag.ContainsKey("HasPlacedCattail");
@@ -167,7 +167,7 @@ namespace NoxusBoss.Core
             b1[3] = HasMetXeroc;
             b1[4] = OgsculeRulesOverTheUniverse;
             b1[5] = HasPlacedCattail;
-            b1[6] = NoxusEggCutsceneSystem.HasSummonedNoxus;
+            b1[6] = NoxusEggCutsceneSystem.NoxusHasFallenFromSky;
 
             writer.Write(b1);
             writer.Write(XerocDeathCount);
@@ -182,7 +182,7 @@ namespace NoxusBoss.Core
             HasMetXeroc = b1[3];
             OgsculeRulesOverTheUniverse = b1[4];
             HasPlacedCattail = b1[5];
-            NoxusEggCutsceneSystem.HasSummonedNoxus = b1[6];
+            NoxusEggCutsceneSystem.NoxusHasFallenFromSky = b1[6];
 
             XerocDeathCount = reader.ReadInt32();
         }
