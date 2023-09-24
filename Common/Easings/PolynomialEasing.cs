@@ -2,6 +2,14 @@
 {
     public class PolynomialEasing : EasingCurve
     {
+        public static readonly PolynomialEasing Quadratic = new(2f);
+
+        public static readonly PolynomialEasing Cubic = new(3f);
+
+        public static readonly PolynomialEasing Quartic = new(4f);
+
+        public static readonly PolynomialEasing Quintic = new(5f);
+
         public PolynomialEasing(float exponent)
         {
             InCurve = new(interpolant =>

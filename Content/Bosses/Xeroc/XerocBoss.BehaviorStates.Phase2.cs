@@ -22,9 +22,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
     {
         // Used by the sword slash attack. Dictates how the sword's angle is manipulated to achieve the swing.
         public static readonly PiecewiseCurve SwordSlashAngularMotion = new PiecewiseCurve().
-            Add(new PolynomialEasing(2f), EasingType.Out, 0f, 0.5f, Pi). // Slow start/anticipation.
-            Add(new PolynomialEasing(5f), EasingType.Out, Pi + 0.54f, 0.8f). // Fast swing.
-            Add(new PolynomialEasing(3f), EasingType.In, 0f, 1f); // End swing.
+            Add(PolynomialEasing.Quadratic, EasingType.Out, 0f, 0.5f, Pi). // Slow start/anticipation.
+            Add(PolynomialEasing.Quintic, EasingType.Out, Pi + 0.54f, 0.8f). // Fast swing.
+            Add(PolynomialEasing.Cubic, EasingType.In, 0f, 1f); // End swing.
 
         public void DoBehavior_VergilScreenSlices()
         {

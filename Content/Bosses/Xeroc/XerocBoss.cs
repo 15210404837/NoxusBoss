@@ -163,10 +163,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Positive rotations = upward flaps.
             // Negative rotations = downward flaps.
             public static readonly PiecewiseCurve WingFlapAngularMotion = new PiecewiseCurve().
-                Add(new PolynomialEasing(3f), EasingType.Out, 0.25f, 0.5f, -0.4f). // Anticipation.
-                Add(new PolynomialEasing(4f), EasingType.In, -1.62f, 0.71f). // Flap. Descends 1.87 radians (Approximately 107 degrees) in a short period of time.
-                Add(new PolynomialEasing(3f), EasingType.In, -1.03f, 0.9f). // Rest. Helps wings return naturally to the anticipation state, but not completely.
-                Add(new PolynomialEasing(2f), EasingType.In, -0.4f, 1f); // Recovery. By the end of this frame the wings have returned to their starting value of -0.4 radians and are ready for anticipation again.
+                Add(PolynomialEasing.Cubic, EasingType.Out, 0.25f, 0.5f, -0.4f). // Anticipation.
+                Add(PolynomialEasing.Quartic, EasingType.In, -1.62f, 0.71f). // Flap. Descends 1.87 radians (Approximately 107 degrees) in a short period of time.
+                Add(PolynomialEasing.Cubic, EasingType.In, -1.03f, 0.9f). // Rest. Helps wings return naturally to the anticipation state, but not completely.
+                Add(PolynomialEasing.Quadratic, EasingType.In, -0.4f, 1f); // Recovery. By the end of this frame the wings have returned to their starting value of -0.4 radians and are ready for anticipation again.
 
             public void Update(WingMotionState motionState, float animationCompletion, float instanceRatio)
             {

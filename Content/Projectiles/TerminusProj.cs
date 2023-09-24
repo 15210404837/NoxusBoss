@@ -103,7 +103,7 @@ namespace NoxusBoss.Content.Projectiles
         public List<ChargingEnergyStreak> EnergyStreaks = new();
 
         public static readonly PiecewiseCurve RiseMotionCurve = new PiecewiseCurve().
-            Add(new PolynomialEasing(2f), EasingType.In, -4f, 0.36f). // Ascend motion.
+            Add(PolynomialEasing.Quadratic, EasingType.In, -4f, 0.36f). // Ascend motion.
             Add(LinearEasing.Default, EasingType.In, -4f, 0.72f). // Rise without change.
             Add(new PolynomialEasing(1.5f), EasingType.Out, 0f, 1f); // Slowdown.
 
