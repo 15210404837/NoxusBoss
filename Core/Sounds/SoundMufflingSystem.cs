@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Subworlds;
 using ReLogic.Utilities;
@@ -25,9 +26,12 @@ namespace NoxusBoss.Core
 
         public static List<SoundStyle> ExemptedSoundStyles => new()
         {
+            NoxusEgg.GlitchSound,
+
             XerocBoss.CosmicLaserStartSound,
             XerocBoss.CosmicLaserLoopSound,
-            XerocBoss.EarRingingSound
+            XerocBoss.EarRingingSound,
+            XerocBoss.Phase3TransitionLoopSound,
         };
 
         public override void OnModLoad()

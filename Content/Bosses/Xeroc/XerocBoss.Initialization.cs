@@ -133,10 +133,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         // With the exception of the clock attack this cycle should keep the player constantly on the move.
         public static XerocAttackType[] Phase3Cycle => new[]
         {
-            // Start with the true melle sword attack. This one uses two swords and is a bit faster than the original from the second phase.
-            XerocAttackType.SwordConstellation2,
-
-            // The aforementioned slow clock attack.
+            // Start with the new time manipulation clock attack, to act as an introduction to the fight.
             XerocAttackType.TimeManipulation,
             
             // A chaotic laser chase sequence to keep the player constantly on their feet.
@@ -147,6 +144,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             
             // Perform the cosmic laserbeam attack.
             XerocAttackType.SuperCosmicLaserbeam,
+            
+            // Use the true melle sword attack. This one uses two swords and is a bit faster than the original from the second phase.
+            XerocAttackType.SwordConstellation2,
         };
 
         public static XerocAttackType[] TestCycle => new[]

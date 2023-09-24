@@ -5,6 +5,7 @@ using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.MainMenuThemes;
@@ -425,12 +426,75 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_EnterPhase3()
         {
+            int glitchDelay = 32;
+            int attackTransitionDelay = 71;
+
+            // Disable sounds and music temporarily.
+            SoundMufflingSystem.MuffleFactor = 0.004f;
+            MusicVolumeManipulationSystem.MusicMuffleFactor = 1f;
+
+            // Handle first-frame initializations.
             if (AttackTimer == 1f)
             {
-                TeleportTo(Target.Center - Vector2.UnitY * 350f, false);
-                Target.Calamity().GeneralScreenShakePower = 12f;
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                // Start the phase transition sound
+                Phase3TransitionSound?.Stop();
+                Phase3TransitionSound = LoopedSoundManager.CreateNew(Phase3TransitionLoopSound, () => !NPC.active || CurrentAttack != XerocAttackType.EnterPhase3);
+
+                // Disable the UI and inputs for the duration of the attack.
+                InputAndUIBlockerSystem.Start(true, true, () => CurrentAttack == XerocAttackType.EnterPhase3);
+
+                // Create a white overlay effect.
+                OriginalLightGlitchOverlaySystem.WhiteOverlayInterpolant = 1f;
+            }
+
+            // Update the phase transition sound.
+            Phase3TransitionSound?.Update(Main.LocalPlayer.Center, sound =>
+            {
+                sound.Sound.Volume = Clamp(Main.soundVolume * 1.33f, 0f, 1f);
+            });
+
+            // Show the player the Original Light.
+            if (AttackTimer <= 10f)
+                OriginalLightGlitchOverlaySystem.OverlayInterpolant = 1f;
+
+            // Create glitch effects.
+            if (AttackTimer == glitchDelay)
+            {
+                OriginalLightGlitchOverlaySystem.GlitchIntensity = 1f;
+                OriginalLightGlitchOverlaySystem.EyeOverlayOpacity = 1f;
+                OriginalLightGlitchOverlaySystem.WhiteOverlayInterpolant = 1f;
+
+                // Play the glitch sound.
+                SoundEngine.PlaySound(NoxusEgg.GlitchSound);
+            }
+
+            // Transition to the next attack when ready.
+            if (AttackTimer >= attackTransitionDelay)
+            {
+                // Play the glitch sound.
+                SoundEngine.PlaySound(NoxusEgg.GlitchSound);
+
+                // Teleport behind the target.
+                TeleportTo(Target.Center - Vector2.UnitX * Target.direction * 400f, false);
+
+                // Return sounds back to normal
+                SoundMufflingSystem.MuffleFactor = 1f;
+                MusicVolumeManipulationSystem.MusicMuffleFactor = 0f;
+
+                // Disable the light effect.
+                OriginalLightGlitchOverlaySystem.OverlayInterpolant = 0f;
+                OriginalLightGlitchOverlaySystem.GlitchIntensity = 0f;
+                OriginalLightGlitchOverlaySystem.EyeOverlayOpacity = 0f;
+                OriginalLightGlitchOverlaySystem.WhiteOverlayInterpolant = 0f;
+
+                // Stop the looping sound.
+                Phase3TransitionSound?.Stop();
+
+                // Create disorienting visual effects.
+                TotalWhiteOverlaySystem.WhiteInterpolant = 1f;
+                ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 2.2f, 150);
+                ShakeScreen(NPC.Center, 15f);
+                SoundEngine.PlaySound(EarRingingSound with { Volume = 0.12f });
 
                 SelectNextAttack();
             }

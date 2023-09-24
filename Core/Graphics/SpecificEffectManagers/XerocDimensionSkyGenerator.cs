@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
@@ -228,24 +229,48 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         public static void DrawKaleidoscopicBackground(float backgroundIntensity)
         {
+            if (XerocBoss.Myself is null)
+                return;
+
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, Main.Rasterizer, null, Matrix.Identity);
 
             // Apply the kaleidoscope shader.
+            bool inFinalPhase = XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentPhase >= 2;
+            bool clockAttack = XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.TimeManipulation;
+            bool cosmicLaserAttack = XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.SuperCosmicLaserbeam;
+            float generalBrightness = 1f;
+            float animationSpeed = 0.1687f;
+            if (clockAttack)
+            {
+                generalBrightness = 1.3f;
+                animationSpeed = 0.14f;
+            }
+            else if (inFinalPhase)
+            {
+                generalBrightness = 2f;
+                animationSpeed = 0.31f;
+            }
+            if (cosmicLaserAttack)
+                generalBrightness = 0f;
+
             var kaleidoscopeShader = ShaderManager.GetShader("KaleidoscopeShader");
-            kaleidoscopeShader.TrySetParameter("totalSplits", 7f);
+            kaleidoscopeShader.TrySetParameter("totalSplits", inFinalPhase ? 4f : 7f);
             kaleidoscopeShader.TrySetParameter("distanceBandingFactor", 0f);
-            kaleidoscopeShader.TrySetParameter("animationSpeed", 0.1687f);
-            kaleidoscopeShader.TrySetParameter("greyscaleInterpolant", 1f);
+            kaleidoscopeShader.TrySetParameter("animationSpeed", animationSpeed);
+            kaleidoscopeShader.TrySetParameter("greyscaleInterpolant", inFinalPhase ? 0.03f : 1f);
             kaleidoscopeShader.TrySetParameter("contrastPower", 1.9f);
+            kaleidoscopeShader.TrySetParameter("generalBrightness", generalBrightness);
             kaleidoscopeShader.TrySetParameter("vignetteStrength", 1.8f);
             kaleidoscopeShader.TrySetParameter("screenPosition", Main.screenPosition);
-            kaleidoscopeShader.TrySetParameter("zoom", Vector2.One * 0.4f);
+            kaleidoscopeShader.TrySetParameter("zoom", Vector2.One * (inFinalPhase ? 1.5f : 0.4f));
             kaleidoscopeShader.Apply();
 
             // Draw the pattern.
             Rectangle screenArea = new(0, -170, 1920, 1250);
             Texture2D patternTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/SpecificEffectManagers/BackgroundPattern").Value;
+            if (inFinalPhase)
+                patternTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TheOriginalLight/Background").Value;
 
             Main.spriteBatch.Draw(patternTexture, screenArea, Color.White * backgroundIntensity);
         }

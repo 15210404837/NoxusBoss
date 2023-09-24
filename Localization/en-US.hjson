@@ -296,9 +296,23 @@ Mods: {
 			NoxusBossConfig: {
 				DisplayName: Config
 
+				PhotosensitivityMode: {
+					Label: Photosensitivity Mode
+					Tooltip: Toggles effects that rely on sudden, flashing animations. This affects related config options when toggled, though they can be manually overridden if desired.
+				}
+
+				ScreenShakeIntensity: {
+					Label: Screen Shake Intensity
+					Tooltip: 
+						'''
+						Changes the intensity of screen shake effects. At zero, all screen shake effects induced by this mod are disabled.
+						If Calamity's config disallows screen shake, this config is set to zero.
+						'''
+				}
+
 				ScreenShatterEffects: {
 					Label: Screen Shatter Effects
-					Tooltip: Enables screen shatter effects. Disable if they're too straining on the eyes.
+					Tooltip: Toggles screen shatter effects. Disable if they're too straining on the eyes.
 				}
 
 				VisualOverlayIntensity: {

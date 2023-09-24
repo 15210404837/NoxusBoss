@@ -247,6 +247,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public LoopedSoundInstance CosmicLaserSound;
 
+        public LoopedSoundInstance Phase3TransitionSound;
+
         public int MumbleTimer
         {
             get;
@@ -505,6 +507,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public static readonly SoundStyle HummSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocHumm") with { Volume = 1.1f, IsLooped = true };
 
         public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocMumble", 7) with { Volume = 0.89f };
+
+        public static readonly SoundStyle Phase3TransitionLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPhase3Transition");
 
         public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalCast") with { Volume = 1.2f };
 

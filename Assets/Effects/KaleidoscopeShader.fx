@@ -7,6 +7,7 @@ float animationSpeed;
 float vignetteStrength;
 float contrastPower;
 float greyscaleInterpolant;
+float generalBrightness;
 float2 zoom;
 float2 screenPosition;
 
@@ -50,7 +51,7 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     // Apply a vignette effect, to make the edges feel more smooth.
     result = lerp(result, float4(0, 0, 0, 1) * result.a, saturate(distanceFromCenter * vignetteStrength));
     
-    return result;
+    return result * generalBrightness;
 }
 
 technique Technique1

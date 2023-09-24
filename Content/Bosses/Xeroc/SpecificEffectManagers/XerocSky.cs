@@ -227,6 +227,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             if (Intensity < 1f)
                 SkyEyeOpacity = Clamp(SkyEyeOpacity - 0.02f, 0f, Intensity + 0.001f);
 
+            float minKaleidoscopeInterpolant = 0f;
+            if (XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentPhase >= 2)
+            {
+                var currentAttack = XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack;
+                if (currentAttack == XerocBoss.XerocAttackType.SuperCosmicLaserbeam)
+                    minKaleidoscopeInterpolant = 0f;
+                else if (currentAttack == XerocBoss.XerocAttackType.TimeManipulation)
+                    minKaleidoscopeInterpolant = 0.7f;
+                else
+                    minKaleidoscopeInterpolant = 0.9f;
+            }
+
             // Make a bunch of things return to the base value.
             if (!Main.gamePaused && !IsEffectActive)
             {
@@ -238,7 +250,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 ManualSunOpacity = Clamp(ManualSunOpacity - 0.04f, 0f, 1f);
                 ManualSunScale = Clamp(ManualSunScale * 0.92f - 0.3f, 0f, 50f);
                 DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.1f, 0f, 1f);
-                KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant * 0.95f - 0.15f, 0f, 1f);
+                KaleidoscopeInterpolant = Clamp(KaleidoscopeInterpolant * 0.95f - 0.15f, minKaleidoscopeInterpolant, 1f);
+            }
+            else if (KaleidoscopeInterpolant < minKaleidoscopeInterpolant || (HeavenlyBackgroundIntensity < 1f && minKaleidoscopeInterpolant >= 0.01f))
+            {
+                KaleidoscopeInterpolant = minKaleidoscopeInterpolant;
+                HeavenlyBackgroundIntensity = 1f;
             }
 
             // Make the eye disappear from the background if Xeroc is already visible in the foreground.
