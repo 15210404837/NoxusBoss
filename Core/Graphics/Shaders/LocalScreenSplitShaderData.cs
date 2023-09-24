@@ -32,7 +32,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
             shader.Parameters["splitSlopes"].SetValue(LocalScreenSplitSystem.SplitSlopes);
             shader.Parameters["activeSplits"].SetValue(LocalScreenSplitSystem.SplitCompletionRatios.Select(a => a > 0f && a < 1f).ToArray());
             shader.Parameters["offsetsAreAllowed"].SetValue(CalamityConfig.Instance.Screenshake);
-            shader.Parameters["splitBrightnessFactor"].SetValue(1.3f + Pow(CalamityUtils.Convert01To010(LocalScreenSplitSystem.SplitCompletionRatios.Average()), 2.5f) * 2.2f);
+            shader.Parameters["splitBrightnessFactor"].SetValue(1.3f + Pow(Convert01To010(LocalScreenSplitSystem.SplitCompletionRatios.Average()), 2.5f) * 2.2f);
             shader.Parameters["splitTextureZoomFactor"].SetValue(0.75f);
 
             Main.instance.GraphicsDevice.Textures[1] = overlayTexture;

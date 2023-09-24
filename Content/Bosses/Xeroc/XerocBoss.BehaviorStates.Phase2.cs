@@ -4,6 +4,7 @@ using System.Linq;
 using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
@@ -13,13 +14,18 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static CalamityMod.CalamityUtils;
 using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
+        // Used by the sword slash attack. Dictates how the sword's angle is manipulated to achieve the swing.
+        public static readonly PiecewiseCurve SwordSlashAngularMotion = new PiecewiseCurve().
+            Add(new PolynomialEasing(2f), EasingType.Out, 0f, 0.5f, Pi). // Slow start/anticipation.
+            Add(new PolynomialEasing(5f), EasingType.Out, Pi + 0.54f, 0.8f). // Fast swing.
+            Add(new PolynomialEasing(3f), EasingType.In, 0f, 1f); // End swing.
+
         public void DoBehavior_VergilScreenSlices()
         {
             int sliceShootDelay = 40;
@@ -867,11 +873,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Make the robe's eyes stare at the target.
             RobeEyesShouldStareAtTarget = true;
 
-            // Easing time!
-            CurveSegment slowStart = new(PolyOutEasing, 0f, Pi, -Pi, 2);
-            CurveSegment swingFast = new(PolyOutEasing, 0.5f, slowStart.EndingHeight, Pi + 0.54f, 5);
-            CurveSegment endSwing = new(PolyInEasing, 0.8f, swingFast.EndingHeight, Pi - swingFast.EndingHeight, 3);
-
             // Summon the sword constellation, along with a single hand to wield it on the first frame.
             // Also teleport above the target.
             if (AttackTimer == 1f)
@@ -1048,7 +1049,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Calculate sword direction values.
             float animationCompletion = SwordAnimationTimer / (float)animationTime;
-            float anticipationAngle = PiecewiseAnimation(animationCompletion, slowStart, swingFast, endSwing) - PiOver2;
+            float anticipationAngle = SwordSlashAngularMotion.Evaluate(animationCompletion) - PiOver2;
             Vector2 handHoverOffset = anticipationAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(SwordSlashDirection * 800f, 450f);
             swordRotation = handHoverOffset.ToRotation() + SwordSlashDirection * PiOver2;
             if (SwordSlashDirection == -1)

@@ -19,7 +19,6 @@ using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {

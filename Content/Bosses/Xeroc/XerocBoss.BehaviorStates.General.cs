@@ -5,6 +5,7 @@ using CalamityMod;
 using CalamityMod.Events;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
@@ -20,13 +21,16 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static CalamityMod.CalamityUtils;
 using static NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers.XerocSky;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
     public partial class XerocBoss : ModNPC
     {
+        public static readonly PiecewiseCurve FistOffsetCurve = new PiecewiseCurve().
+            Add(new PolynomialEasing(4f), EasingType.In, 410f, 0.72f, 50f). // Anticipation.
+            Add(new PolynomialEasing(17f), EasingType.In, 0f, 1f); // Punch.
+
         public void DoBehavior_Awaken()
         {
             int starRecedeDelay = 120;
@@ -334,11 +338,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 daggerShootRate = 35;
 
             // Destroy the ripper UI.
-            CurveSegment anticipation = new(EasingType.PolyIn, 0f, 50f, 360f, 4);
-            CurveSegment punch = new(EasingType.PolyIn, 0.72f, anticipation.EndingHeight, -anticipation.EndingHeight, 17);
-
             float ripperDestructionAnimationCompletion = GetLerpValue(0f, ripperDestructionAnimationTime, AttackTimer - cooldownTime + ripperDestructionAnimationTime, true);
-            RipperUIDestructionSystem.FistOffset = PiecewiseAnimation(ripperDestructionAnimationCompletion, anticipation, punch);
+            RipperUIDestructionSystem.FistOffset = FistOffsetCurve.Evaluate(ripperDestructionAnimationCompletion);
             RipperUIDestructionSystem.FistOpacity = GetLerpValue(0f, 0.59f, ripperDestructionAnimationCompletion, true);
             if (!RipperUIDestructionSystem.IsUIDestroyed && ripperDestructionAnimationCompletion >= 1f)
             {

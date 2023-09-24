@@ -50,7 +50,7 @@ namespace NoxusBoss.Content.Tiles
                 {
                     Vector2 directionToPlayer = (nearestPlayer.Center - startingPoint).SafeNormalize(-Vector2.UnitY);
                     Vector2 galaxyVelocity = directionToPlayer.RotatedByRandom(1.87f) * Main.rand.NextFloat(9.5f, 28f) + Main.rand.NextVector2Circular(9f, 9f);
-                    Color galaxyColor = CalamityUtils.MulticolorLerp(Pow(Main.rand.NextFloat(), 2f) * 0.92f, Color.OrangeRed, Color.Coral, Color.HotPink, Color.Magenta, Color.DarkViolet, Color.Cyan) * 1.9f;
+                    Color galaxyColor = MulticolorLerp(Pow(Main.rand.NextFloat(), 2f) * 0.92f, Color.OrangeRed, Color.Coral, Color.HotPink, Color.Magenta, Color.DarkViolet, Color.Cyan) * 1.9f;
                     galaxyColor = Color.Lerp(galaxyColor, Color.Wheat, 0.55f);
 
                     int galaxyLifetime = (int)Remap(galaxyVelocity.Length(), 10f, 19.2f, 90f, 150f) + Main.rand.Next(-30, 45);
@@ -127,12 +127,12 @@ namespace NoxusBoss.Content.Tiles
 
         public override void HitWire(int i, int j)
         {
-            CalamityUtils.LightHitWire(Type, i, j, 2, 4);
+            LightHitWire(Type, i, j, 2, 4);
         }
 
         public override bool RightClick(int i, int j)
         {
-            CalamityUtils.LightHitWire(Type, i, j, 2, 4);
+            LightHitWire(Type, i, j, 2, 4);
             return true;
         }
 

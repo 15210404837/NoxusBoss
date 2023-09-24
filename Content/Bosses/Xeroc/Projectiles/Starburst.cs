@@ -120,7 +120,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Color startingColor = Color.Lerp(Color.White, Color.IndianRed, 0.25f);
             Color middleColor = Color.Lerp(Color.OrangeRed, Color.Yellow, 0.4f);
             Color endColor = Color.Lerp(Color.Purple, Color.Black, 0.35f);
-            Color color = CalamityUtils.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity;
+            Color color = MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity;
 
             color.A = (byte)(trailOpacity * 255);
             return color * Projectile.Opacity;
@@ -153,15 +153,27 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
 
             // Draw the bloom flare.
-            Color bloomFlareColor1 = baseColor1 with { A = 0 } * projectile.Opacity * opacityFactor * 0.45f;
-            Color bloomFlareColor2 = baseColor2 with { A = 0 } * projectile.Opacity * opacityFactor * 0.45f;
+            Color bloomFlareColor1 = baseColor1 with
+            {
+                A = 0
+            } * projectile.Opacity * opacityFactor * 0.45f;
+            Color bloomFlareColor2 = baseColor2 with
+            {
+                A = 0
+            } * projectile.Opacity * opacityFactor * 0.45f;
             Vector2 bloomFlareDrawPosition = projectile.Center - Main.screenPosition;
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.08f, 0, 0f);
             Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
 
             // Draw the backglow.
-            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Red with { A = 0 } * backglowOpacityFactor * 0.5f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
-            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Wheat with { A = 0 } * backglowOpacityFactor * 0.4f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
+            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Red with
+            {
+                A = 0
+            } * backglowOpacityFactor * 0.5f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Wheat with
+            {
+                A = 0
+            } * backglowOpacityFactor * 0.4f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)

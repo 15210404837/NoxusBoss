@@ -19,7 +19,6 @@ using Terraria.Graphics.Effects;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI.Chat;
-using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -210,7 +209,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
 
                 ulong seed = hand.UniqueID;
-                int brightness = (int)Lerp(102f, 186f, PolyInOutEasing(RandomFloat(ref seed), 7));
+                int brightness = (int)Lerp(102f, 186f, RandomFloat(ref seed));
                 brightness -= (int)(ZPosition * 13f);
 
                 Color baseHandColor = new(brightness, brightness, brightness);
@@ -326,7 +325,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             var gd = Main.instance.GraphicsDevice;
             var clothShader = ShaderManager.GetShader("ClothShader");
             Texture2D clothTexture = XerocRobePatternGenerator.PatternTarget;
-            CalculatePerspectiveMatricies(out Matrix view, out Matrix projection);
+            CalculatePrimitivePerspectiveMatricies(out Matrix view, out Matrix projection);
 
             // Apply the cloth shader and draw the cloth.
             Matrix worldToUV = Matrix.CreateTranslation(-screenPos.X, -screenPos.Y, 0f) * view * projection;

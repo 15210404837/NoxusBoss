@@ -171,7 +171,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             if (shardVertices.Any())
             {
-                CalamityUtils.CalculatePerspectiveMatricies(out Matrix effectView, out Matrix effectProjection);
+                CalculatePrimitivePerspectiveMatricies(out Matrix effectView, out Matrix effectProjection);
 
                 // Calculate a universal scale factor for all shards. This is done to make them appear to be "approaching" the camera as time goes on.
                 Vector2 scaleFactor = (MathHelper.SmoothStep(0f, 1f, 1f - ShardOpacity) * 3f + 1f) * Vector2.One / Main.GameViewMatrix.Zoom;

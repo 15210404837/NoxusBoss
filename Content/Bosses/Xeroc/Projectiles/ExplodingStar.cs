@@ -83,7 +83,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return CalamityUtils.CircularHitboxCollision(Projectile.Center, Projectile.width * Projectile.scale * 0.19f, targetHitbox);
+            return CircularHitboxCollision(Projectile.Center, Projectile.width * Projectile.scale * 0.19f, targetHitbox);
         }
 
         public override void Kill(int timeLeft)
@@ -117,7 +117,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Texture2D noise2 = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise").Value;
 
             float colorInterpolant = GetLerpValue(3000f, 32000f, Temperature, true);
-            Color starColor = CalamityUtils.MulticolorLerp(colorInterpolant, Color.Red, Color.Orange, Color.Yellow);
+            Color starColor = MulticolorLerp(colorInterpolant, Color.Red, Color.Orange, Color.Yellow);
             starColor = Color.Lerp(starColor, Color.IndianRed, 0.32f);
 
             var fireballShader = ShaderManager.GetShader("FireballShader");

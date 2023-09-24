@@ -102,7 +102,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
             Color drawColor = Color.White;
             drawColor.A = (byte)(drawColor.A * alphaFactor);
-            CalamityUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], drawColor);
+            DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], drawColor);
             return false;
         }
     }

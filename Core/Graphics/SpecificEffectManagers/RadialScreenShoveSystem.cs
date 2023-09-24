@@ -54,7 +54,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                     DistortionTimer = 0;
             }
 
-            DistortionPower = CalamityUtils.Convert01To010(DistortionCompletionRatio);
+            DistortionPower = Convert01To010(DistortionCompletionRatio);
         }
 
         public static void Start(Vector2 distortionCenter, int distortionTime)

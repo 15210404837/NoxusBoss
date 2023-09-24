@@ -133,14 +133,14 @@ namespace NoxusBoss.Content.Bosses.Noxus.PreFightForm
                 bool openAir = PlayerToFollow.ZoneForest && !PlayerToFollow.ZoneSkyHeight;
                 for (int dy = 4; dy < 36; dy++)
                 {
-                    Tile t = CalamityUtils.ParanoidTileRetrieval((int)(PlayerToFollow.Center.X / 16f), (int)(PlayerToFollow.Center.Y / 16f) - dy);
+                    Tile t = ParanoidTileRetrieval((int)(PlayerToFollow.Center.X / 16f), (int)(PlayerToFollow.Center.Y / 16f) - dy);
                     if (t.HasUnactuatedTile && WorldGen.SolidTile(t))
                     {
                         openAir = false;
                         break;
                     }
 
-                    t = CalamityUtils.ParanoidTileRetrieval((int)(startingPosition.X / 16f), (int)(startingPosition.Y / 16f) - dy);
+                    t = ParanoidTileRetrieval((int)(startingPosition.X / 16f), (int)(startingPosition.Y / 16f) - dy);
                     if (t.HasUnactuatedTile && WorldGen.SolidTile(t))
                     {
                         openAir = false;
@@ -214,7 +214,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.PreFightForm
                 for (int i = 0; i < NPC.width; i += Main.rand.Next(2, 6))
                 {
                     Point p = new((int)(NPC.BottomLeft.X + i) / 16, (int)(NPC.BottomLeft.Y / 16f) - 1);
-                    Tile t = CalamityUtils.ParanoidTileRetrieval(p.X, p.Y);
+                    Tile t = ParanoidTileRetrieval(p.X, p.Y);
                     if (t.HasUnactuatedTile)
                     {
                         for (int j = 0; j < 3; j++)

@@ -15,7 +15,7 @@ namespace NoxusBoss.Core.Graphics.Automators
 
         public static event RenderTargetUpdateDelegate RenderTargetUpdateLoopEvent;
 
-        public static readonly int TimeUntilUntilUnusedTargetsAreDisposed = CalamityUtils.SecondsToFrames(5f);
+        public static readonly int TimeUntilUntilUnusedTargetsAreDisposed = SecondsToFrames(5f);
 
         internal static void ResetTargetSizes(On_Main.orig_SetDisplayMode orig, int width, int height, bool fullscreen)
         {

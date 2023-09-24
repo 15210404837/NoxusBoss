@@ -69,7 +69,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public override bool PreDraw(ref Color lightColor)
         {
             Color drawColor = Color.White;
-            CalamityUtils.DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], drawColor);
+            DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], drawColor);
             return false;
         }
     }

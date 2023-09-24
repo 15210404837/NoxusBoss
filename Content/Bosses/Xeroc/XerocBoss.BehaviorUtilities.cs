@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
@@ -12,7 +13,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -231,11 +231,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
         }
 
-        public void PerformTeethChomp(float animationCompletion, float chompAnimationDelay = 0.7f, int risePower = 4, int chompPower = 24)
+        public void PerformTeethChomp(float animationCompletion, float chompAnimationDelay = 0.7f, float risePower = 4f, float chompPower = 24f)
         {
-            CurveSegment rise = new(EasingType.PolyOut, 0f, 2f, -32f, risePower);
-            CurveSegment chomp = new(EasingType.PolyOut, chompAnimationDelay, rise.EndingHeight, 6f - rise.EndingHeight, chompPower);
-            TopTeethOffset = PiecewiseAnimation(animationCompletion, rise, chomp);
+            PiecewiseCurve chompMotionCurve = new PiecewiseCurve().
+                Add(new PolynomialEasing(risePower), EasingType.Out, -30f, chompAnimationDelay, 2f). // Rise.
+                Add(new PolynomialEasing(chompPower), EasingType.Out, 6f, 1f); // Chomp.
+
+            TopTeethOffset = chompMotionCurve.Evaluate(animationCompletion);
         }
 
         public void TeleportTo(Vector2 teleportPosition, bool playSound = true)

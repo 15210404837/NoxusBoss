@@ -66,12 +66,12 @@ namespace NoxusBoss.Content.Tiles
 
         public override void HitWire(int i, int j)
         {
-            CalamityUtils.LightHitWire(Type, i, j, 2, 4);
+            LightHitWire(Type, i, j, 2, 4);
         }
 
         public override bool RightClick(int i, int j)
         {
-            CalamityUtils.LightHitWire(Type, i, j, 2, 4);
+            LightHitWire(Type, i, j, 2, 4);
             return true;
         }
 

@@ -546,7 +546,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
                 for (int i = 0; i < NPC.width; i += Main.rand.Next(2, 6))
                 {
                     Point p = new((int)(NPC.BottomLeft.X + i) / 16, (int)(NPC.BottomLeft.Y / 16f) - 1);
-                    Tile t = CalamityUtils.ParanoidTileRetrieval(p.X, p.Y);
+                    Tile t = ParanoidTileRetrieval(p.X, p.Y);
 
                     // Create tile impact dust particles.
                     if (t.HasUnactuatedTile)

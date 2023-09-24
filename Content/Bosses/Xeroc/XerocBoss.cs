@@ -2,6 +2,7 @@
 using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core;
@@ -19,7 +20,6 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Light;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Bosses.Xeroc
 {
@@ -159,16 +159,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 set;
             }
 
-            // Piecewise function variables for determining the angular offset of wings when flapping.
+            // Easing curve for determining the angular offset of wings when flapping.
             // Positive rotations = upward flaps.
             // Negative rotations = downward flaps.
-            public static CurveSegment Anticipation => new(EasingType.PolyOut, 0f, -0.4f, 0.65f, 3);
-
-            public static CurveSegment Flap => new(EasingType.PolyIn, 0.5f, Anticipation.EndingHeight, -1.88f, 4);
-
-            public static CurveSegment Rest => new(EasingType.PolyIn, 0.71f, Flap.EndingHeight, 0.59f, 3);
-
-            public static CurveSegment Recovery => new(EasingType.PolyIn, 0.9f, Rest.EndingHeight, -0.4f - Rest.EndingHeight, 2);
+            public static readonly PiecewiseCurve WingFlapAngularMotion = new PiecewiseCurve().
+                Add(new PolynomialEasing(3f), EasingType.Out, 0.25f, 0.5f, -0.4f). // Anticipation.
+                Add(new PolynomialEasing(4f), EasingType.In, -1.62f, 0.71f). // Flap. Descends 1.87 radians (Approximately 107 degrees) in a short period of time.
+                Add(new PolynomialEasing(3f), EasingType.In, -1.03f, 0.9f). // Rest. Helps wings return naturally to the anticipation state, but not completely.
+                Add(new PolynomialEasing(2f), EasingType.In, -0.4f, 1f); // Recovery. By the end of this frame the wings have returned to their starting value of -0.4 radians and are ready for anticipation again.
 
             public void Update(WingMotionState motionState, float animationCompletion, float instanceRatio)
             {
@@ -180,7 +178,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                         WingRotation = (-0.6f).AngleLerp(0.36f - instanceRatio * 0.25f, animationCompletion);
                         break;
                     case WingMotionState.Flap:
-                        WingRotation = PiecewiseAnimation((animationCompletion + instanceRatio * 0.5f) % 1f, Anticipation, Flap, Rest, Recovery);
+                        WingRotation = WingFlapAngularMotion.Evaluate((animationCompletion + instanceRatio * 0.5f) % 1f);
                         break;
                 }
 

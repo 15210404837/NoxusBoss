@@ -333,7 +333,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             Vector2 baseScale = Vector2.One * SkyEyeOpacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * SkyEyeScale;
 
             // Make everything "blink" at first.
-            baseScale.Y *= 1f - CalamityUtils.Convert01To010(GetLerpValue(0.25f, 0.75f, SkyEyeOpacity, true));
+            baseScale.Y *= 1f - Convert01To010(GetLerpValue(0.25f, 0.75f, SkyEyeOpacity, true));
 
             Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.White * glowDissipateFactor, 0f, origin, baseScale * 0.7f, 0, 0f);
             Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.IndianRed * glowDissipateFactor * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);

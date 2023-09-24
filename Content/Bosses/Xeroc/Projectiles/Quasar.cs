@@ -4,6 +4,7 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders;
@@ -72,7 +73,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
 
             // Grow over time.
-            Projectile.scale = CalamityUtils.ExpInEasing(GetLerpValue(0f, 35f, Time, true), 0) * 10f;
+            Projectile.scale = ExpEasing.Default.Evaluate(EasingType.In, GetLerpValue(0f, 35f, Time, true)) * 10f;
 
             // Accelerate towards the target.
             Player target = Main.player[XerocBoss.Myself.target];

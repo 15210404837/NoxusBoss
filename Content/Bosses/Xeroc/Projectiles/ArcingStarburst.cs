@@ -123,7 +123,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Color startingColor = Color.Lerp(Color.White, Color.IndianRed, 0.25f);
             Color middleColor = Color.Lerp(Color.Yellow, Color.Cyan, Lerp(0.35f, 0.95f, Projectile.identity / 14f % 1f));
             Color endColor = Color.Lerp(Color.DeepSkyBlue, Color.Black, 0.35f);
-            Color color = CalamityUtils.MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity;
+            Color color = MulticolorLerp(completionRatio, startingColor, middleColor, endColor) * trailOpacity;
 
             color.A = (byte)(trailOpacity * 255);
             return color * Projectile.Opacity;

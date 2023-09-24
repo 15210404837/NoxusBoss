@@ -94,7 +94,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
                 // Calculate the angle of the eyes to Xeroc's target.
                 bool lookAtTarget = XerocBoss.Myself.ModNPC<XerocBoss>().RobeEyesShouldStareAtTarget;
-                float angleToTarget = Main.player[XerocBoss.Myself.target].AngleFrom(worldPosition) + Pow(CalamityUtils.PerlinNoise2D(Main.GlobalTimeWrappedHourly * 0.2f, 0.3137f, 3, i), 2f) * 2.3f;
+                float angleToTarget = Main.player[XerocBoss.Myself.target].AngleFrom(worldPosition) + Pow(AperiodicSin(Main.GlobalTimeWrappedHourly * 0.2f + i * 14f), 2f) * 2.3f;
                 switch (eyeVariant)
                 {
                     case 0:

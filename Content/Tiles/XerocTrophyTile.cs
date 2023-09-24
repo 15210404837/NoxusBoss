@@ -65,7 +65,7 @@ namespace NoxusBoss.Content.Tiles
 
         public override void HitWire(int i, int j)
         {
-            Tile t = CalamityUtils.ParanoidTileRetrieval(i, j);
+            Tile t = ParanoidTileRetrieval(i, j);
             int left = i - t.WallFrameX / 18 % 3;
             int top = j - t.WallFrameY / 18;
 

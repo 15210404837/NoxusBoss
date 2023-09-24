@@ -111,7 +111,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // 0.375 for p = 4
             // In order to make the entire process add up neatly to MaxSpinAngularVelocity * TelegraphTime, a correction factor of 1 / 0.375 will be necessary.
             float spinInterpolant = GetLerpValue(0f, TelegraphTime, Time, true);
-            float angularVelocity = Pow(CalamityUtils.Convert01To010(spinInterpolant), 4f) * MaxSpinAngularVelocity / 0.375f;
+            float angularVelocity = Pow(Convert01To010(spinInterpolant), 4f) * MaxSpinAngularVelocity / 0.375f;
             Projectile.velocity = Projectile.velocity.RotatedBy(angularVelocity);
             Projectile.rotation = Projectile.velocity.ToRotation();
 

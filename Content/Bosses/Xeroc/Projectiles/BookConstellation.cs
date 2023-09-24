@@ -216,7 +216,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             // Apply the shader.
             var magicCircleShader = ShaderManager.GetShader("MagicCircleShader");
-            CalamityUtils.CalculatePerspectiveMatricies(out Matrix viewMatrix, out Matrix projectionMatrix);
+            CalculatePrimitivePerspectiveMatricies(out Matrix viewMatrix, out Matrix projectionMatrix);
             magicCircleShader.TrySetParameter("orientationRotation", Projectile.rotation);
             magicCircleShader.TrySetParameter("spinRotation", -Main.GlobalTimeWrappedHourly * 3.87f);
             magicCircleShader.TrySetParameter("flip", Projectile.direction == -1f);

@@ -297,11 +297,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
 
         public static int NightmareDeathrayDamage => Main.expertMode ? 750 : 480;
 
-        public static int DebuffDuration_RegularAttack => CalamityUtils.SecondsToFrames(5f);
+        public static int DebuffDuration_RegularAttack => SecondsToFrames(5f);
 
-        public static int DebuffDuration_PowerfulAttack => CalamityUtils.SecondsToFrames(10f);
+        public static int DebuffDuration_PowerfulAttack => SecondsToFrames(10f);
 
-        public static int IdealFightDuration => CalamityUtils.SecondsToFrames(180f);
+        public static int IdealFightDuration => SecondsToFrames(180f);
 
         public static float MaxTimedDRDamageReduction => 0.45f;
 
@@ -497,7 +497,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             // Increment timers.
             AttackTimer++;
             FightLength++;
-        }       
+        }
         #endregion AI
     }
 }

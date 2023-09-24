@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 
 namespace NoxusBoss.Common.Utilities
@@ -30,8 +31,27 @@ namespace NoxusBoss.Common.Utilities
             return start + (angle + start.AngleTo(end)).ToRotationVector2() * A;
         }
 
+        public static int SecondsToFrames(float seconds) => (int)(seconds * 60f);
+
         public static float Sin01(float x) => Sin(x) * 0.5f + 0.5f;
 
         public static float Cos01(float x) => Cos(x) * 0.5f + 0.5f;
+
+        public static float Convert01To010(float x) => Sin(Pi * Clamp(x, 0f, 1f));
+
+        // When two periodic functions are summed, the resulting function is periodic if the ratio of the b/a is rational, given periodic functions f and g:
+        // f(a * x) + g(b * x). However, if the ratio is irrational, then the result has no period.
+        // This is desirable for somewhat random wavy fluctuations.
+        // In this case, pi/1 (or simply pi) and e used, which are indeed irrational numbers.
+        /// <summary>
+        /// Calculates an aperiodic sine. This function only achieves this if <paramref name="a"/> and <paramref name="b"/> are irrational numbers.
+        /// </summary>
+        /// <param name="x">The input value.</param>
+        /// <param name="a">The first irrational coefficient.</param>
+        /// <param name="b">The second irrational coefficient.</param>
+        public static float AperiodicSin(float x, float dx = 0f, float a = Pi, float b = MathHelper.E)
+        {
+            return (Sin(x * a + dx) + Sin(x * b + dx)) * 0.5f;
+        }
     }
 }

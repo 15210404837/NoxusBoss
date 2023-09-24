@@ -126,7 +126,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
         public void CalculateScale()
         {
-            Projectile.scale = CalamityUtils.Convert01To010(Time / Lifetime) * 1.45f;
+            Projectile.scale = Convert01To010(Time / Lifetime) * 1.45f;
             if (Projectile.scale > 1f)
                 Projectile.scale = 1f;
         }

@@ -94,7 +94,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                         SplitTimers[i] = 0;
                 }
 
-                SplitWidths[i] = CalamityUtils.Convert01To010(SplitCompletionRatios[i]) * MaxSplitWidths[i];
+                SplitWidths[i] = Convert01To010(SplitCompletionRatios[i]) * MaxSplitWidths[i];
             }
 
             UseCosmicEffect = AnyProjectiles(ModContent.ProjectileType<SuperCosmicBeam>());

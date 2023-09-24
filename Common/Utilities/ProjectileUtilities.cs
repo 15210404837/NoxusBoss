@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 
 namespace NoxusBoss.Common.Utilities
 {
@@ -74,6 +75,18 @@ namespace NoxusBoss.Common.Utilities
                     return true;
             }
             return false;
+        }
+
+        public static int CountProjectiles(params int[] desiredTypes)
+        {
+            int projectileCount = 0;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                if (Main.projectile[i].active && desiredTypes.Contains(Main.projectile[i].type))
+                    projectileCount++;
+            }
+
+            return projectileCount;
         }
     }
 }

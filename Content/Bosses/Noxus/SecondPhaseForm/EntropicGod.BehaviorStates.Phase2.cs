@@ -1,6 +1,7 @@
 ﻿using CalamityMod;
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -320,7 +321,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
 
             // Orient the laser direction in 3D space.
             // It begins by spinning around, before orienting itself upward and slicing downward, releasing countless spikes.
-            float spinInterpolant = CalamityUtils.PolyInEasing(GetLerpValue(moveIntoBackgroundTime, moveIntoBackgroundTime + 30f, wrappedAttackTimer, true), 3);
+            float spinCompletion = GetLerpValue(moveIntoBackgroundTime, moveIntoBackgroundTime + 30f, wrappedAttackTimer, true);
+            float spinInterpolant = new PolynomialEasing(3f).Evaluate(EasingType.In, spinCompletion);
             float generalSpin = TwoPi * (wrappedAttackTimer - moveIntoBackgroundTime) * spinInterpolant / 90f;
             if (LaserSpinDirection == -1f)
                 generalSpin = -generalSpin - Pi;
@@ -454,7 +456,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             else if (AttackTimer < DefaultTeleportDelay * 2f + handRaiseTime + portalCastTime)
             {
                 float arcInterpolant = GetLerpValue(DefaultTeleportDelay * 2f + handRaiseTime, DefaultTeleportDelay * 2f + handRaiseTime + portalCastTime - 15f, AttackTimer, true);
-                float horizontalArcOffset = CalamityUtils.Convert01To010(arcInterpolant);
+                float horizontalArcOffset = Convert01To010(arcInterpolant);
                 leftHandDestination = NPC.Center + new Vector2(-horizontalArcOffset * 110f - 80f, arcInterpolant * 400f - 200f) * NPC.scale;
                 rightHandDestination = NPC.Center + new Vector2(horizontalArcOffset * 110f + 80f, arcInterpolant * 400f - 200f) * NPC.scale;
 

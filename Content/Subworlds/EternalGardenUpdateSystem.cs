@@ -95,7 +95,7 @@ namespace NoxusBoss.Content.Subworlds
             // Keep the wind strong, so that the plants sway around.
             // This swiftly ceases if Xeroc is present, as though nature is fearful of him.
             if (XerocBoss.Myself is null)
-                Main.windSpeedTarget = Lerp(0.88f, 1.32f, CalamityUtils.AperiodicSin(Main.GameUpdateCount * 0.02f) * 0.5f + 0.5f);
+                Main.windSpeedTarget = Lerp(0.88f, 1.32f, AperiodicSin(Main.GameUpdateCount * 0.02f) * 0.5f + 0.5f);
             else
                 Main.windSpeedTarget = 0f;
             Main.windSpeedCurrent = Lerp(Main.windSpeedCurrent, Main.windSpeedTarget, 0.03f);

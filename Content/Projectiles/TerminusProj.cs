@@ -4,6 +4,7 @@ using CalamityMod.NPCs.Providence;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Particles;
@@ -20,7 +21,6 @@ using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static CalamityMod.CalamityUtils;
 
 namespace NoxusBoss.Content.Projectiles
 {
@@ -101,6 +101,11 @@ namespace NoxusBoss.Content.Projectiles
         public Vector2 EyePupilOffset;
 
         public List<ChargingEnergyStreak> EnergyStreaks = new();
+
+        public static readonly PiecewiseCurve RiseMotionCurve = new PiecewiseCurve().
+            Add(new PolynomialEasing(2f), EasingType.In, -4f, 0.36f). // Ascend motion.
+            Add(new LinearEasing(), EasingType.In, -4f, 0.72f). // Rise without change.
+            Add(new PolynomialEasing(1.5f), EasingType.Out, 0f, 1f); // Slowdown.
 
         // These first three times are roughly synced to the duration of the Terminus chargeup sound, which is around 5.813 seconds (348 frames).
         public static int RiseUpwardTime => 92;
@@ -228,10 +233,7 @@ namespace NoxusBoss.Content.Projectiles
         {
             // Rise upward. At the end of the animation the upward motion ceases.
             float animationCompletion = GetLerpValue(0f, RiseUpwardTime, Time, true);
-            CurveSegment ascend = new(EasingType.PolyIn, 0f, 0f, -4f, 2);
-            CurveSegment riseWithoutChange = new(EasingType.Linear, 0.36f, ascend.EndingHeight, 0f);
-            CurveSegment slowDown = new(EasingType.PolyOut, 0.72f, riseWithoutChange.EndingHeight, -riseWithoutChange.EndingHeight);
-            Projectile.velocity = Vector2.UnitY * PiecewiseAnimation(animationCompletion, ascend, riseWithoutChange, slowDown);
+            Projectile.velocity = Vector2.UnitY * RiseMotionCurve.Evaluate(animationCompletion);
 
             // Periodically create chromatic aberration effects.
             if (Time % 30f == 29f)

@@ -61,7 +61,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return CalamityUtils.CircularHitboxCollision(Projectile.Center, Radius * 0.4f, targetHitbox);
+            return CircularHitboxCollision(Projectile.Center, Radius * 0.4f, targetHitbox);
         }
 
         public override bool PreDraw(ref Color lightColor)
