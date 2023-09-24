@@ -32,5 +32,11 @@ namespace NoxusBoss.Content.Tiles
         }
 
         public override bool CreateDust(int i, int j, ref int type) => false;
+
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        {
+            if (frameX >= 36)
+                Item.NewItem(new EntitySource_TileBreak(i, j), new Point(i, j).ToWorldCoordinates(), ModContent.ItemType<EternalGardenMusicBoxItem>());
+        }
     }
 }
