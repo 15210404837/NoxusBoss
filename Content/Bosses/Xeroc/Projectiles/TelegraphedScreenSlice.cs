@@ -55,7 +55,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 bool clockExists = AnyProjectiles(ModContent.ProjectileType<ClockConstellation>());
                 bool cosmicLaserExists = AnyProjectiles(ModContent.ProjectileType<SuperCosmicBeam>());
                 float sliceWidth = Projectile.width * (clockExists ? 1f : 0.5f) * (cosmicLaserExists ? 0.4f : 1f);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower += 2f;
+
+                // Perform screen split and shake effects.
+                StartShake(2f);
                 LocalScreenSplitSystem.Start(Projectile.Center + Projectile.velocity * LineLength * 0.5f, SliceTime * 2 + 3, Projectile.rotation, sliceWidth);
 
                 if (clockExists)

@@ -70,9 +70,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Create screenshake and play explosion sounds when ready.
             if (Time == 11f)
             {
-                float screenShakePower = GetLerpValue(1600f, 750f, Main.LocalPlayer.Distance(Projectile.Center), true) * 3f;
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower += screenShakePower;
-                
+                StartShakeAtPoint(Projectile.Center, 5f, TwoPi, Vector2.UnitX, 0.1f);
+
                 SoundStyle explosionSound = FromStarConvergenceAttack ? XerocBoss.SupernovaSound : XerocBoss.ExplosionTeleportSound with { Pitch = 0.5f };
                 SoundEngine.PlaySound(explosionSound with { MaxInstances = 3 });
                 ScreenEffectSystem.SetFlashEffect(Projectile.Center, 1f, 30);

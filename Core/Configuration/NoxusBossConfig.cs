@@ -34,7 +34,6 @@ namespace NoxusBoss.Core.Configuration
             }
         }
 
-        // TODO -- Make a custom screen shake system for this.
         [BackgroundColor(224, 127, 180, 192)]
         [DefaultValue(1f)]
         [Range(0f, 1f)]

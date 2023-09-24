@@ -127,8 +127,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 if (XerocBoss.Myself is not null)
                     XerocBoss.Myself.ai[3] = 1f;
 
+                if (OverallShakeIntensity <= 7.5f)
+                    StartShakeAtPoint(Projectile.Center, 4f);
+
                 ScreenEffectSystem.SetBlurEffect(Main.LocalPlayer.Center - Vector2.UnitY * 400f, 1f, 13);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 12f;
                 SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
                 SoundEngine.PlaySound(XerocBoss.SupernovaSound with { Volume = 0.7f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
             }

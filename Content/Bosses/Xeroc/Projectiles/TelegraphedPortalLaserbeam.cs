@@ -121,7 +121,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 }
 
                 SoundEngine.PlaySound(XerocBoss.PortalShootSound with { MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest }, Main.LocalPlayer.Center);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 14f;
+
+                if (OverallShakeIntensity <= 12f)
+                    StartShakeAtPoint(Projectile.Center, 6f, TwoPi, Vector2.UnitX, 0.09f);
             }
 
             Time++;

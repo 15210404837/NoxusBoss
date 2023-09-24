@@ -25,8 +25,6 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
         public ref float Radius => ref Projectile.ai[0];
 
-        public static float DetermineScreenShakePower(float lifetimeCompletionRatio, float distanceFromPlayer) => GetLerpValue(2400f, 1000f, distanceFromPlayer, true) * (1f - lifetimeCompletionRatio) * 5.5f;
-
         public static Color DetermineExplosionColor() => Color.Lerp(Color.MediumSlateBlue, Color.Black, 0.1f);
 
         public static Texture2D ExplosionNoiseTexture => ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons").Value;
@@ -47,8 +45,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
         public override void AI()
         {
             // Do screen shake effects.
-            float distanceFromPlayer = Projectile.Distance(Main.LocalPlayer.Center);
-            Main.LocalPlayer.Calamity().GeneralScreenShakePower = MathF.Max(Main.LocalPlayer.Calamity().GeneralScreenShakePower, DetermineScreenShakePower(1f - Projectile.timeLeft / (float)Lifetime, distanceFromPlayer));
+            if (Projectile.localAI[0] == 0f)
+            {
+                StartShakeAtPoint(Projectile.Center, 7f);
+                Projectile.localAI[0] = 1f;
+            }
 
             // Cause the wave to expand outward, along with its hitbox.
             Radius = Lerp(Radius, MaxRadius, RadiusExpandRateInterpolant);

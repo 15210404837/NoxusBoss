@@ -169,7 +169,7 @@ namespace NoxusBoss.Content.Subworlds
                 GeneralParticleHandler.SpawnParticle(magicBurst);
 
                 // Shake the screen a little bit.
-                ShakeScreen(p.Center, 6f);
+                StartShakeAtPoint(p.Center, 7f);
             }
         }
 

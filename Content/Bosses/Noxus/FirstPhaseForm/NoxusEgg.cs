@@ -264,7 +264,9 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
                     ExpandingChromaticBurstParticle burst = new(NPC.Center, Vector2.Zero, burstColor, 16, 0.1f);
                     GeneralParticleHandler.SpawnParticle(burst);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.7f, 24);
-                    Target.Calamity().GeneralScreenShakePower = 10f;
+
+                    if (OverallShakeIntensity <= 1f)
+                        StartShake(10f);
                 }
             }
             else
@@ -533,7 +535,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
             if (wrappedAttackTimer >= slamDelay && NPC.Bottom.Y >= Target.Bottom.Y + 8f && TileCollision(NPC.BottomLeft - Vector2.UnitY * 108f, NPC.width, 108f, out _) && NPC.velocity.Y != 0f)
             {
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.5f, 10);
-                Target.Calamity().GeneralScreenShakePower = 16f;
+                StartShakeAtPoint(NPC.Center, 15f, TwoPi / 9f, Vector2.UnitY);
 
                 NPC.velocity = Vector2.Zero;
                 AttackTimer += slamDelay + slamTime - wrappedAttackTimer - 32f;
@@ -635,7 +637,9 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
                     GeneralParticleHandler.SpawnParticle(burst);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.3f, 24);
                     ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1f, 10);
-                    Target.Calamity().GeneralScreenShakePower = 10f;
+
+                    if (OverallShakeIntensity <= 1f)
+                        StartShakeAtPoint(NPC.Center, 10f);
                 }
 
                 // Release the dark energy comets.
@@ -646,17 +650,26 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
                     NewProjectileBetter(NPC.Center, Main.rand.NextVector2Circular(40f, 40f), ModContent.ProjectileType<DarkComet>(), 0, 0f);
             }
 
+            // Enter the second phase by transforming into the Entropic God.
             if (AttackTimer >= animationTime)
             {
+                // Create an explosion sound.
                 SoundEngine.PlaySound(ExplosionTeleportSound with { Volume = 3f });
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
+                    // Register the first form as defeated in the bestiary.
                     Main.BestiaryTracker.Kills.RegisterKill(NPC);
+
+                    // Spawn the Entropic God.
                     NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<EntropicGod>(), 1);
+
+                    // Create a wave effect.
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
-                Target.Calamity().GeneralScreenShakePower = 16f;
+                // Shake the screen.
+                StartShakeAtPoint(NPC.Center, 16f);
 
                 NPC.life = 0;
                 NPC.checkDead();

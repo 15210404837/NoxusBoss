@@ -116,16 +116,6 @@ namespace NoxusBoss.Common.Utilities
                 Main.spriteBatch.ExitShaderRegion();
         }
 
-        public static void ShakeScreen(Vector2 shakeCenter, float shakePower, float intensityTaperEndDistance = 2300f, float intensityTaperStartDistance = 1476f)
-        {
-            float distanceToShake = Main.LocalPlayer.Distance(shakeCenter);
-            float desiredScreenShakePower = GetLerpValue(intensityTaperEndDistance, intensityTaperStartDistance, distanceToShake, true) * shakePower;
-
-            // If the desired screen shake power is less than what the player's shake intensity is, ignore it. It would be weird for it to suddenly
-            // drop in intensity.
-            Main.LocalPlayer.Calamity().GeneralScreenShakePower = MathF.Max(Main.LocalPlayer.Calamity().GeneralScreenShakePower, desiredScreenShakePower);
-        }
-
         public static Vector2 WorldSpaceToScreenUV(Vector2 world)
         {
             // Calculate the coordinates relative to the raw screen size. This does not yet account for things like zoom.

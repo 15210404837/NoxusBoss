@@ -41,7 +41,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             {
                 float attackCompletion = AttackTimer / anticipationSoundTime;
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, attackCompletion * 2f + 0.3f, 12);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = Lerp(3f, 9f, attackCompletion) * GetLerpValue(NPC.Distance(Main.LocalPlayer.Center), 3200f, 2400f, true);
+                StartShakeAtPoint(NPC.Center, Lerp(3f, 9f, attackCompletion), TwoPi, null, 0.2f, 3200f, 2400f);
             }
 
             // Make the eye gleam before teleporting.
@@ -79,7 +79,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                     ExpandingChromaticBurstParticle burst = new(NPC.Center + HeadOffset, Vector2.Zero, burstColor, 16, 0.1f);
                     GeneralParticleHandler.SpawnParticle(burst);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
-                    Target.Calamity().GeneralScreenShakePower = 12f;
+                    if (OverallShakeIntensity <= 9f)
+                        StartShakeAtPoint(NPC.Center, 4f);
                 }
 
                 NPC.Center += Main.rand.NextVector2Circular(12.5f, 12.5f);
@@ -180,14 +181,17 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                     ExpandingChromaticBurstParticle burst = new(NPC.Center + HeadOffset, Vector2.Zero, burstColor, 16, 0.1f);
                     GeneralParticleHandler.SpawnParticle(burst);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
-                    Target.Calamity().GeneralScreenShakePower = 15f;
+
+                    if (OverallShakeIntensity <= 13f)
+                        StartShakeAtPoint(NPC.Center, 4f);
                 }
 
                 // Jitter in place violently.
                 NPC.Center += Main.rand.NextVector2Circular(12.5f, 12.5f);
 
                 // Create powerful, lingering screen shake effects.
-                Target.Calamity().GeneralScreenShakePower = 13f;
+                if (OverallShakeIntensity <= 9f)
+                    StartShakeAtPoint(NPC.Center, 4f);
 
                 // Create explosions everywhere near the player.
                 if (Main.netMode != NetmodeID.MultiplayerClient && AttackTimer % 5f == 4f)
@@ -249,7 +253,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
             {
                 float attackCompletion = AttackTimer / attackTransitionDelay;
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, attackCompletion * 2f + 0.3f, 12);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = Lerp(3f, 9f, attackCompletion) * GetLerpValue(NPC.Distance(Main.LocalPlayer.Center), 3200f, 2400f, true);
+                StartShakeAtPoint(NPC.Center, Lerp(3f, 9f, attackCompletion));
             }
 
             // Jitter in place.

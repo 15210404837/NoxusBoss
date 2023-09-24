@@ -96,6 +96,8 @@ namespace NoxusBoss.Content.Projectiles
             set => Projectile.ai[0] = (int)value;
         }
 
+        public ShakeInfo Rumble;
+
         public Vector2 EyePupilOffset;
 
         public List<ChargingEnergyStreak> EnergyStreaks = new();
@@ -173,7 +175,7 @@ namespace NoxusBoss.Content.Projectiles
                 GeneralParticleHandler.SpawnParticle(magicBurst);
 
                 // Shake the screen a little bit.
-                ShakeScreen(Projectile.Center, 5f);
+                SetUniversalRumble(5.6f);
 
                 // Start playing the Terminus chargeup sound.
                 SoundEngine.PlaySound(BossRushEvent.TerminusActivationSound);
@@ -254,7 +256,7 @@ namespace NoxusBoss.Content.Projectiles
             if (Time == 1f)
             {
                 SoundEngine.PlaySound(NoxusEgg.GlitchSound);
-                ShakeScreen(Projectile.Center, 10.5f);
+                StartShakeAtPoint(Projectile.Center, 10.5f);
             }
 
             // Make everything go dim.
@@ -304,7 +306,7 @@ namespace NoxusBoss.Content.Projectiles
             // Make the screen rumble.
             float animationCompletion = GetLerpValue(0f, EnergyChargeTime, Time, true);
             float screenRumblePower = Lerp(4.5f, 8f, animationCompletion);
-            ShakeScreen(Projectile.Center, screenRumblePower);
+            SetUniversalRumble(screenRumblePower);
 
             // Create light sparkles everywhere.
             for (int i = 0; i < 2; i++)
@@ -356,7 +358,7 @@ namespace NoxusBoss.Content.Projectiles
             }
 
             // Make the screen rumble.
-            ShakeScreen(Projectile.Center, 10f);
+            SetUniversalRumble(10f);
 
             // Make the eye fade in.
             EyeOpacity = GetLerpValue(0f, EyeAppearTime, Time, true);

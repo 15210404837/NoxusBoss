@@ -61,7 +61,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer < starRecedeDelay)
             {
                 float screenShakeIntensityInterpolant = Pow(AttackTimer / starRecedeDelay, 1.84f);
-                Target.Calamity().GeneralScreenShakePower = Lerp(2f, 11.5f, screenShakeIntensityInterpolant);
+                SetUniversalRumble(Lerp(2f, 11.5f, screenShakeIntensityInterpolant), TwoPi / 9f, Vector2.UnitY);
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (AttackTimer == starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 4f)
             {
                 SoundEngine.PlaySound(BossRushEvent.Tier2TransitionSound with { Pitch = 0.4f });
-                Target.Calamity().GeneralScreenShakePower = 16f;
+                StartShake(16f);
             }
 
             // Make the seam appear suddenly.
@@ -218,7 +218,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Rip open the seam.
             SeamScale += Pow(GetLerpValue(0f, ripOpenTime, AttackTimer - gripTime - 30f, true), 1.5f) * 250f;
             if (SeamScale >= 2f && HeavenlyBackgroundIntensity <= 0.3f)
-                Target.Calamity().GeneralScreenShakePower = 20f;
+            {
+                if (OverallShakeIntensity <= 11f)
+                    StartShake(8f);
+            }
 
             if (AttackTimer == gripTime + 30f)
                 SoundEngine.PlaySound(BossRushEvent.Tier5TransitionSound);
@@ -293,8 +296,10 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ExpandingChromaticBurstParticle burst = new(EyePosition, Vector2.Zero, burstColor, 16, 0.1f);
                 GeneralParticleHandler.SpawnParticle(burst);
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
-                Target.Calamity().GeneralScreenShakePower = 15f;
                 XerocKeyboardShader.BrightnessIntensity += 0.3f;
+
+                if (OverallShakeIntensity <= 11f)
+                    StartShakeAtPoint(NPC.Center, 5f);
             }
             NPC.Center += Main.rand.NextVector2Circular(12.5f, 12.5f);
 
@@ -493,7 +498,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Create disorienting visual effects.
                 TotalWhiteOverlaySystem.WhiteInterpolant = 1f;
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 2.2f, 150);
-                ShakeScreen(NPC.Center, 15f);
+                StartShakeAtPoint(NPC.Center, 15f);
                 SoundEngine.PlaySound(EarRingingSound with { Volume = 0.12f });
 
                 SelectNextAttack();
@@ -573,7 +578,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ExpandingChromaticBurstParticle burst = new(EyePosition, Vector2.Zero, burstColor, 16, 0.1f);
                 GeneralParticleHandler.SpawnParticle(burst);
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 30);
-                Target.Calamity().GeneralScreenShakePower = 15f;
+
+                if (OverallShakeIntensity <= 11f)
+                    StartShakeAtPoint(NPC.Center, 5f);
             }
 
             // Block the UI and inputs until they return to the title screen.
@@ -634,7 +641,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     SoundEngine.PlaySound(SupernovaSound with { Volume = 3.3f });
                     SoundEngine.PlaySound(ExplosionTeleportSound with { Volume = 4f });
-                    Target.Calamity().GeneralScreenShakePower = 30f;
+                    StartShake(25f);
                     DestroyAllHands();
                     ScreenShatterSystem.CreateShatterEffect(NPC.Center - Main.screenPosition, true);
                     ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 3f, 90);

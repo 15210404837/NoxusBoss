@@ -104,7 +104,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 }
 
                 SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound with { MaxInstances = 1 }, Main.LocalPlayer.Center);
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 7.5f;
+
+                if (OverallShakeIntensity <= 5.4f)
+                    StartShakeAtPoint(Projectile.Center, 2f);
             }
 
             Time++;

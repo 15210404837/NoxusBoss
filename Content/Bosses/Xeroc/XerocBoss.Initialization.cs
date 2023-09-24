@@ -107,7 +107,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             XerocAttackType.BrightStarJumpscares,
 
             // Get the player up close and personal with Xeroc with the true-melee sword attack.
-            XerocAttackType.SwordConstellation2,
+            XerocAttackType.SwordConstellation,
 
             // Return to something a bit slower again with the converging stars. This has a fast end point, however, which should naturally transition to the other attacks.
             XerocAttackType.StarConvergenceAndRedirecting,
@@ -124,7 +124,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             XerocAttackType.StarManagement_CrushIntoQuasar,
 
             // Return to the fast paced cycle with the true melee sword constellation attack again.
-            XerocAttackType.SwordConstellation2,
+            XerocAttackType.SwordConstellation,
 
             // Use the star convergence again, as the cycle repeats.
             XerocAttackType.StarConvergenceAndRedirecting,
@@ -146,7 +146,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             XerocAttackType.SuperCosmicLaserbeam,
             
             // Use the true melle sword attack. This one uses two swords and is a bit faster than the original from the second phase.
-            XerocAttackType.SwordConstellation2,
+            XerocAttackType.SwordConstellation,
         };
 
         public static XerocAttackType[] TestCycle => new[]

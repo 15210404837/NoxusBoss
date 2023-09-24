@@ -303,7 +303,7 @@ Mods: {
 
 				ScreenShakeIntensity: {
 					Label: Screen Shake Intensity
-					Tooltip: 
+					Tooltip:
 						'''
 						Changes the intensity of screen shake effects. At zero, all screen shake effects induced by this mod are disabled.
 						If Calamity's config disallows screen shake, this config is set to zero.

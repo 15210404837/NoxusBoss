@@ -215,13 +215,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             StarManagement_CrushIntoQuasar,
             StarConvergenceAndRedirecting,
             BrightStarJumpscares,
-            SwordConstellation, // This attack is scrapped due to being jank and outclassed by the second variant.
-            SwordConstellation2,
+            SwordConstellation,
 
             // Reality manipulation attacks.
             VergilScreenSlices,
             PunchesWithScreenSlices,
-            HandScreenShatter,
             TimeManipulation,
 
             // Phase transitions.
@@ -712,17 +710,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 case XerocAttackType.SwordConstellation:
                     DoBehavior_SwordConstellation();
                     break;
-                case XerocAttackType.SwordConstellation2:
-                    DoBehavior_SwordConstellation2();
-                    break;
                 case XerocAttackType.VergilScreenSlices:
                     DoBehavior_VergilScreenSlices();
                     break;
                 case XerocAttackType.PunchesWithScreenSlices:
                     DoBehavior_PunchesWithScreenSlices();
-                    break;
-                case XerocAttackType.HandScreenShatter:
-                    DoBehavior_HandScreenShatter();
                     break;
                 case XerocAttackType.TimeManipulation:
                     DoBehavior_TimeManipulation();
@@ -759,7 +751,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (MumbleTimer == 16)
                 {
                     SoundEngine.PlaySound(MumbleSound, Target.Center);
-                    Target.Calamity().GeneralScreenShakePower += 7f;
+                    StartShakeAtPoint(NPC.Center, 7.5f);
                 }
 
                 // Update the position of the teeth to make it look like the mouth is opening.

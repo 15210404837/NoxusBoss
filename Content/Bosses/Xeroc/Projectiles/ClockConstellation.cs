@@ -165,7 +165,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             if (Abs(HourHandRotation - closestHourRotation) <= 0.008f && handAppearInterpolant >= 1f && closestHourRotation != PreviousHourRotation)
             {
                 // Create a clock strike sound and other visuals.
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 10f;
+                StartShakeAtPoint(Projectile.Center, 11f);
                 SoundEngine.PlaySound(XerocBoss.ClockStrikeSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
@@ -182,7 +182,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 if (TollCounter >= 2)
                 {
                     ScreenEffectSystem.SetFlashEffect(Projectile.Center, 3f, 60);
-                    Main.LocalPlayer.Calamity().GeneralScreenShakePower = 16f;
+                    StartShakeAtPoint(Projectile.Center, 16f);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
@@ -231,7 +231,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             float starburstShootSpeed = 2.05f;
             if (Main.netMode != NetmodeID.MultiplayerClient && handAppearInterpolant >= 0.75f && Time % starburstReleaseRate == 9f && !TimeIsStopped && TollCounter < 2)
             {
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower = 5f;
+                StartShakeAtPoint(Projectile.Center, 3.6f);
                 SoundEngine.PlaySound(XerocBoss.SunFireballShootSound, Projectile.Center);
 
                 float shootOffsetAngle = Main.rand.NextBool() ? Pi / starburstCount : 0f;

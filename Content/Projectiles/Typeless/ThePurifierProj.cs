@@ -114,7 +114,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             Projectile.Center += Main.rand.NextVector2Circular(1f, 1f) * jitter;
 
             // Shake the screen.
-            Main.LocalPlayer.Calamity().GeneralScreenShakePower = AnimationCompletion * 10f;
+            SetUniversalRumble(AnimationCompletion * 10f);
 
             // Create chromatic aberration effects.
             if (Time % 20f == 19f)

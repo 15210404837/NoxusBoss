@@ -136,10 +136,14 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                         NewProjectileBetter(NPC.Center, (TwoPi * i / cometCount).ToRotationVector2() * 4.4f, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                 }
 
+                // Reset afterimages.
                 for (int i = 0; i < NPC.oldPos.Length; i++)
                     NPC.oldPos[i] = Vector2.Zero;
 
-                Target.Calamity().GeneralScreenShakePower = 15f;
+                // Shake the screen.
+                StartShakeAtPoint(NPC.Center, 15f);
+
+                // Perform the charge movement.
                 NPC.velocity = TeleportDirection * maxChargeSpeed * 0.75f;
 
                 // Charge in the opposite direction if the player has gone behind the portal.
@@ -280,7 +284,9 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                     CreateTwinkle(NPC.Center + Main.rand.NextVector2Circular(30f, 30f), Vector2.One * 1.35f);
 
                 // Make the screen shake as the wait continues.
-                Target.Calamity().GeneralScreenShakePower = GetLerpValue(delayBeforeInvisible, delayBeforeInvisible + twinkleHoverTime, AttackTimer, true) * 8f + 1f;
+                float maxScreenShake = GetLerpValue(delayBeforeInvisible, delayBeforeInvisible + twinkleHoverTime, AttackTimer, true) * 8f + 1f;
+                if (OverallShakeIntensity < maxScreenShake - 2f)
+                    StartShakeAtPoint(NPC.Center, 2f);
             }
 
             // Charge very, very, VERY quickly at the target.
@@ -296,7 +302,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                     SoundEngine.PlaySound(JumpscareSound);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 20);
                     ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1.3f, 60);
-                    Target.Calamity().GeneralScreenShakePower = 15f;
+                    StartShakeAtPoint(NPC.Center, 16f);
                 }
 
                 // Get close and make the fog dissipate.

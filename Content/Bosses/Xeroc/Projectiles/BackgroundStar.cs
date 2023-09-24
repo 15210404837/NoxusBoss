@@ -102,7 +102,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
                 if (ZPosition <= -0.92f)
                 {
-                    Main.LocalPlayer.Calamity().GeneralScreenShakePower = 7f;
+                    if (OverallShakeIntensity < 8f)
+                        StartShakeAtPoint(Projectile.Center, 3f);
+
                     SoundEngine.PlaySound(XerocBoss.SupernovaSound, Projectile.Center);
                     SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound, Projectile.Center);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -120,7 +122,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                             NewProjectileBetter(WorldDestination, sparkVelocity, ModContent.ProjectileType<SlowSolarSpark>(), XerocBoss.StarburstDamage, 0f);
                         }
 
-                        Main.LocalPlayer.Calamity().GeneralScreenShakePower = 11f;
                         XerocSky.HeavenlyBackgroundIntensity += 1.5f;
                     }
 

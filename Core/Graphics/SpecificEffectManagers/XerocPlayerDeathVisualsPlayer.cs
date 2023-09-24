@@ -202,7 +202,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
                 // Create burst effects.
                 ScreenEffectSystem.SetFlashEffect(Player.Center - Vector2.UnitY * 500f, 0.8f, 60);
-                ShakeScreen(Player.Center - Vector2.UnitY * 500f, 9f);
+                StartShake(9.6f);
 
                 TakePlayerScreenshot = true;
                 damageSource = PlayerDeathReason.ByCustomReason(Language.GetText($"Mods.NoxusBoss.PlayerDeathMessages.Xeroc{Main.rand.Next(1, 18)}").Format(Player.name));

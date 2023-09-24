@@ -283,7 +283,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Create some screen imapct effects to add to the intensity.
             Vector2 barCenter = (rageBarPositionWorld + adrenalineBarPositionWorld) * 0.5f;
 
-            Main.LocalPlayer.Calamity().GeneralScreenShakePower = 15f;
+            StartShake(15f);
             ScreenEffectSystem.SetChromaticAberrationEffect(barCenter, 1.6f, 45);
             ScreenEffectSystem.SetFlashEffect(barCenter, 3f, 60);
 

@@ -18,8 +18,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public ref float Radius => ref Projectile.ai[0];
 
-        public static float DetermineScreenShakePower(float lifetimeCompletionRatio, float distanceFromPlayer) => GetLerpValue(2400f, 1000f, distanceFromPlayer, true) * (1f - lifetimeCompletionRatio) * 5.5f;
-
         public static Color DetermineExplosionColor()
         {
             Color c = Color.Lerp(Color.IndianRed, Color.Wheat, 0.24f);
@@ -48,12 +46,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             if (Projectile.localAI[0] == 0f)
             {
                 RadialScreenShoveSystem.Start(Projectile.Center, 20);
+                StartShakeAtPoint(Projectile.Center, 6f);
                 Projectile.localAI[0] = 1f;
             }
-
-            // Do screen shake effects.
-            float distanceFromPlayer = Projectile.Distance(Main.LocalPlayer.Center);
-            Main.LocalPlayer.Calamity().GeneralScreenShakePower = MathF.Max(Main.LocalPlayer.Calamity().GeneralScreenShakePower, DetermineScreenShakePower(1f - Projectile.timeLeft / (float)Lifetime, distanceFromPlayer));
 
             // Cause the wave to expand outward, along with its hitbox.
             Radius = Lerp(Radius, 3200f, 0.039f);

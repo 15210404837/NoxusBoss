@@ -203,7 +203,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.PreFightForm
             {
                 SoundEngine.PlaySound(EntropicGod.ExplosionTeleportSound);
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.5f, 10);
-                PlayerToFollow.Calamity().GeneralScreenShakePower = 16f;
+                StartShakeAtPoint(NPC.Center, 16f);
 
                 NPC.velocity = Vector2.Zero;
                 CurrentState = NoxusEggAIType.GetUp;
@@ -309,7 +309,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.PreFightForm
                 }
 
                 // Do some screen shake.
-                PlayerToFollow.Calamity().GeneralScreenShakePower = 9f;
+                if (OverallShakeIntensity <= 9f)
+                    StartShakeAtPoint(NPC.Center, 6f);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient && AITimer < glitchMaximizationDelay)
                 {

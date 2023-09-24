@@ -202,7 +202,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             if (!NoxusBossConfig.Instance.ScreenShatterEffects)
             {
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower += 11f;
+                StartShake(11f);
                 return;
             }
 
@@ -218,7 +218,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             if (!NoxusBossConfig.Instance.ScreenShatterEffects)
             {
-                Main.LocalPlayer.Calamity().GeneralScreenShakePower += 11f;
+                StartShake(11f);
                 return;
             }
 

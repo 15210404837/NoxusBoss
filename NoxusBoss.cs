@@ -1,6 +1,7 @@
 ﻿global using static System.MathF;
 global using static Microsoft.Xna.Framework.MathHelper;
 global using static NoxusBoss.Common.Utilities.Utilities;
+global using static NoxusBoss.Core.Graphics.SpecificEffectManagers.ScreenShakeSystem;
 global using static Terraria.Utils;
 using Terraria;
 using Terraria.ID;

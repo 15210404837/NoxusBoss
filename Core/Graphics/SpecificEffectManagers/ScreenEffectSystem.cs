@@ -213,6 +213,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // This draws over the blur, so doing them together isn't really ideal.
             else if (FlashActive)
             {
+                if (FlashLifetimeRatio >= 1f)
+                    FlashIntensity = 0f;
+
                 // Draw the screen contents to the blur render target.
                 FlashRenderTarget.SwapToRenderTarget();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);

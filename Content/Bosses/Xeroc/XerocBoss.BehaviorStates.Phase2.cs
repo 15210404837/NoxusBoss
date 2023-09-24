@@ -122,7 +122,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ScreenShatterSystem.CreateShatterEffect(lineSegments.ToArray(), 2);
                 SoundEngine.PlaySound(ExplosionTeleportSound);
                 XerocKeyboardShader.BrightnessIntensity = 1f;
-                Target.Calamity().GeneralScreenShakePower = 15f;
+                StartShake(15f);
             }
 
             // Make the background come back.
@@ -367,9 +367,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         SoundEngine.PlaySound(SliceSound);
                         SoundEngine.PlaySound(ExplosionTeleportSound);
-                        leftHand.Velocity *= -0.3f;
-                        rightHand.Velocity *= -0.3f;
-                        Target.Calamity().GeneralScreenShakePower = 11f;
+                        leftHand.Velocity *= -0.14f;
+                        rightHand.Velocity *= -0.14f;
+                        StartShake(11f);
 
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
@@ -736,7 +736,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     // Play sounds and create visuals.
                     SoundEngine.PlaySound(FastHandMovementSound);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.6f, 12);
-                    Target.Calamity().GeneralScreenShakePower = 5f;
+
+                    StartShakeAtPoint(NPC.Center, 5.5f);
                 }
 
                 // Shove stars. This isn't done all at once for more impact.
@@ -843,175 +844,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_SwordConstellation()
         {
             int constellationConvergeTime = SwordConstellation.ConvergeTime;
-            int animationTime = 72;
-            int impactFireballCount = 11;
-            int slashCount = 5;
-            float wrappedAttackTimer = (AttackTimer - constellationConvergeTime) % animationTime;
-            float handSpeedFactor = 300f;
-            float impactFireballShootSpeed = 30f;
-            float maxHoverSpeed = 19.5f;
-            float hoverAcceleration = 0.135f;
-            Vector2 handHoverOffset = NPC.Center;
-            ref float swordRotation = ref NPC.ai[2];
-            ref float slashOpacity = ref NPC.ai[3];
-
-            // Flap wings.
-            UpdateWings(AttackTimer / 45f % 1f);
-
-            // Easing time!
-            CurveSegment slowStart = new(PolyOutEasing, 0f, Pi, -Pi, 2);
-            CurveSegment swingFast = new(PolyOutEasing, 0.5f, slowStart.EndingHeight, Pi + 0.8f, 3);
-            CurveSegment endSwing = new(PolyInEasing, 0.8f, swingFast.EndingHeight, Pi - swingFast.EndingHeight, 5);
-
-            // Summon the sword constellation, along with a single hand to wield it on the first frame.
-            // Also teleport above the target.
-            if (AttackTimer == 1f)
-            {
-                TeleportTo(Target.Center - Vector2.UnitY * 300f);
-
-                // Apply visual and sound effects.
-                Target.Calamity().GeneralScreenShakePower = 9f;
-                SoundEngine.PlaySound(ExplosionTeleportSound);
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, -1f);
-                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 0f, 1f);
-                }
-
-                // Play a sound to accompany the converging stars.
-                SoundEngine.PlaySound(StarConvergenceFastSound);
-
-                // Play mumble sounds.
-                PerformMumble();
-            }
-
-            // Increment the slash counter.
-            if (wrappedAttackTimer == 1f)
-            {
-                SwordSlashCounter++;
-                NPC.netUpdate = true;
-            }
-
-            if (SwordSlashCounter >= slashCount + 1f)
-            {
-                // Destroy the swords.
-                var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
-                foreach (Projectile sword in swords)
-                {
-                    for (int i = 0; i < 19; i++)
-                    {
-                        int gasLifetime = Main.rand.Next(20, 24);
-                        float scale = 2.3f;
-                        Vector2 gasSpawnPosition = sword.Center + Main.rand.NextVector2Circular(150f, 150f) * NPC.scale;
-                        Vector2 gasVelocity = Main.rand.NextVector2Circular(9f, 9f) - Vector2.UnitY * 7.25f;
-                        Color gasColor = Color.Lerp(Color.IndianRed, Color.Coral, Main.rand.NextFloat(0.6f));
-                        Particle gas = new HeavySmokeParticle(gasSpawnPosition, gasVelocity, gasColor, gasLifetime, scale, 1f, 0f, true);
-                        GeneralParticleHandler.SpawnParticle(gas);
-                    }
-                    sword.Kill();
-                }
-
-                SelectNextAttack();
-                DestroyAllHands();
-                return;
-            }
-
-            // Move into the background somewhat.
-            ZPosition = Lerp(ZPosition, 1.3f, 0.1f);
-
-            // Animate the slash.
-            float animationCompletion = wrappedAttackTimer / animationTime;
-            if (AttackTimer <= constellationConvergeTime)
-                animationCompletion = 0f;
-
-            // Attempt to hover above the target.
-            float hoverSpeed = Remap(AttackTimer, constellationConvergeTime - 100f, constellationConvergeTime, 2f, maxHoverSpeed);
-            Vector2 hoverDestination = Target.Center - Vector2.UnitY * 300f;
-            NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.004f);
-            NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * hoverSpeed, hoverAcceleration);
-
-            // Calculate sword direction values.
-            float anticipationAngle = PiecewiseAnimation(animationCompletion, slowStart, swingFast, endSwing) - PiOver2;
-            handHoverOffset = anticipationAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(1050f, 450f);
-            swordRotation = handHoverOffset.ToRotation() + PiOver2;
-
-            // Update teeth in accordance with the sword animation completion.
-            PerformTeethChomp(animationCompletion, 0.55f);
-
-            // Create some impact effects when the stars finish congregating.
-            if (AttackTimer == constellationConvergeTime)
-            {
-                SoundEngine.PlaySound(ExplosionTeleportSound);
-                SoundEngine.PlaySound(SupernovaSound);
-                Target.Calamity().GeneralScreenShakePower = 9.25f;
-                ScreenEffectSystem.SetBlurEffect(NPC.Center, 1f, 15);
-
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center + handHoverOffset, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-            }
-
-            // Make the slash trail appear if necessay.
-            bool slashing = animationCompletion >= 0.5f && animationCompletion < 0.68f;
-            slashOpacity = Clamp(slashOpacity + slashing.ToDirectionInt() * 0.25f, 0f, 1f);
-
-            // Play slash sounds.
-            if (animationCompletion >= 0.54f && animationCompletion <= 0.55f)
-            {
-                SoundEngine.PlaySound(SwordSlashSound);
-                Target.Calamity().GeneralScreenShakePower = 8.5f;
-                ScreenEffectSystem.SetFlashEffect(NPC.Center, 1f, 30);
-            }
-
-            // Create impact projectiles when the two swords collide.
-            if (animationCompletion >= 0.62f && animationCompletion <= 0.63f)
-            {
-                SoundEngine.PlaySound(SunFireballShootSound, NPC.Center);
-                Vector2 impactPoint = NPC.Center + Vector2.UnitY * handHoverOffset.Length() * 1.5f;
-
-                RadialScreenShoveSystem.Start(impactPoint, 30);
-
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    for (int i = 0; i < impactFireballCount; i++)
-                    {
-                        Vector2 fireballShootVelocity = (TwoPi * i / impactFireballCount).ToRotationVector2() * impactFireballShootSpeed + Main.rand.NextVector2Circular(4f, 4f);
-                        fireballShootVelocity = Vector2.Lerp(fireballShootVelocity, (Target.Center - impactPoint) * 0.01f, 0.6f);
-
-                        NewProjectileBetter(impactPoint, fireballShootVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
-                    }
-                }
-            }
-
-            // Move the hands, keeping the sword attached to it.
-            if (Hands.Count >= 2)
-            {
-                Hands[0].ShouldOpen = false;
-                Hands[0].ScaleFactor = 2f;
-                DefaultHandDrift(Hands[0], NPC.Center + handHoverOffset * new Vector2(-1f, 1f), handSpeedFactor);
-
-                Hands[1].ShouldOpen = false;
-                Hands[1].ScaleFactor = 2f;
-                DefaultHandDrift(Hands[1], NPC.Center + handHoverOffset, handSpeedFactor);
-
-                var swords = AllProjectilesByID(ModContent.ProjectileType<SwordConstellation>());
-                foreach (Projectile sword in swords)
-                {
-                    float swordSide = sword.ModProjectile<SwordConstellation>().SwordSide;
-                    int handIndex = swordSide == 1f ? 1 : 0;
-
-                    // The swordRotation variable is used here instead of the rotation value stored in the sword's AI because this would have a one-frame discrepancy and
-                    // cause the sword to look like it's dragging behind a bit during slashes.
-                    sword.Center = Hands[handIndex].Center + (swordRotation * swordSide - PiOver2).ToRotationVector2() * sword.scale * (sword.width * 0.5f + 20f);
-                }
-            }
-        }
-
-        public void DoBehavior_SwordConstellation2()
-        {
-            int constellationConvergeTime = SwordConstellation.ConvergeTime;
             int animationTime = 58 - SwordSlashCounter * 5;
             int slashCount = 5;
             int teleportVisualsTime = 17;
@@ -1060,7 +892,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 TeleportTo(Target.Center + Main.rand.NextVector2CircularEdge(340f, 340f));
 
                 // Apply visual and sound effects.
-                Target.Calamity().GeneralScreenShakePower = 9f;
+                StartShakeAtPoint(NPC.Center, 9f);
                 SoundEngine.PlaySound(ExplosionTeleportSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);

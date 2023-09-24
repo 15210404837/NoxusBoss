@@ -98,7 +98,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             AnimationTimer = 1;
             AnimationDelay = 1;
-            ShakeScreen(Main.LocalPlayer.Center - Vector2.UnitY * 450f, 9f);
+            StartShake(9f);
             ScreenEffectSystem.SetChromaticAberrationEffect(Main.LocalPlayer.Center - Vector2.UnitY * 450f, 1.5f, 40);
         }
     }

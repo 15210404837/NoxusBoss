@@ -86,7 +86,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     {
                         Volume = 4f
                     });
-                    Target.Calamity().GeneralScreenShakePower = 11f;
+                    StartShakeAtPoint(NPC.Center, 6f);
                 }
             }
 
@@ -190,9 +190,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             if (GeneralHoverOffset == Vector2.Zero || (NPC.WithinRange(Target.Center + GeneralHoverOffset, Target.velocity.Length() * 2f + 90f) && AttackTimer % 20f == 0f))
             {
                 // Make the screen rumble a little bit.
-                if (Target.Calamity().GeneralScreenShakePower <= 1f)
+                if (OverallShakeIntensity <= 1f)
                 {
-                    Target.Calamity().GeneralScreenShakePower = 7.5f;
+                    StartShakeAtPoint(NPC.Center, 6.5f);
                     SoundEngine.PlaySound(SuddenMovementSound);
                 }
 
@@ -207,7 +207,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 // Create a light explosion and initial spread of starbursts on the first frame.
                 if (postTeleportAttackTimer == shootDelay)
                 {
-                    Target.Calamity().GeneralScreenShakePower = 16f;
+                    StartShakeAtPoint(NPC.Center, 10f);
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
@@ -237,12 +237,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 ScreenEffectSystem.SetChromaticAberrationEffect(EyePosition, starburstInterpolant * 3f, 10);
 
                 if (Main.rand.NextBool(3))
+                {
                     SoundEngine.PlaySound(SunFireballShootSound with
                     {
                         MaxInstances = 100,
                         Volume = 0.5f,
                         Pitch = -0.2f
                     });
+                }
 
                 // Create bloom on Xeroc's pupil.
                 StrongBloom bloom = new(PupilPosition, Vector2.Zero, Color.Red * starburstInterpolant, 0.8f, 32);
@@ -621,7 +623,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (AttackTimer == 1f)
                 {
                     TeleportTo(hoverDestination);
-                    ShakeScreen(NPC.Center, 8f);
+                    StartShakeAtPoint(NPC.Center, 8f);
                 }
 
                 // Fade in.
@@ -691,7 +693,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     SoundEngine.PlaySound(SuddenMovementSound);
                     ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.5f, 10);
-                    ShakeScreen(NPC.Center, 5f);
+                    StartShakeAtPoint(NPC.Center, 5f);
                 }
 
                 return;
@@ -835,7 +837,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     NewProjectileBetter(star.Center, Vector2.Zero, ModContent.ProjectileType<Supernova>(), 0, 0f);
                     NewProjectileBetter(star.Center, Vector2.Zero, ModContent.ProjectileType<Quasar>(), QuasarDamage, 0f);
                 }
-                Target.Calamity().GeneralScreenShakePower = 18f;
+                StartShakeAtPoint(star.Center, 20f);
                 ScreenEffectSystem.SetChromaticAberrationEffect(star.Center, 1.5f, 54);
                 XerocKeyboardShader.BrightnessIntensity = 1f;
 
