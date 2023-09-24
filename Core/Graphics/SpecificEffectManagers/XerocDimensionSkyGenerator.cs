@@ -79,8 +79,16 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 HeavenlyBackgroundIntensity = Clamp(HeavenlyBackgroundIntensity - 0.02f, 0f, 1f);
 
             // Don't bother doing anything if the background should not be drawn, for performance reasons.
+            bool backgroundInactive = HeavenlyBackgroundIntensity <= 0f;
+            if (XerocBoss.Myself is not null)
+            {
+                var xerocAttack = XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack;
+                if (xerocAttack == XerocBoss.XerocAttackType.Awaken || xerocAttack == XerocBoss.XerocAttackType.OpenScreenTear || xerocAttack == XerocBoss.XerocAttackType.RoarAnimation)
+                    backgroundInactive = false;
+            }
+
             bool usingXerocMenu = Main.gameMenu && MenuLoader.CurrentMenu == XerocDimensionMainMenu.Instance;
-            if (HeavenlyBackgroundIntensity <= 0f && !usingXerocMenu && DivineMonolithIntensity <= 0f && !DeificTouch.UsingEffect)
+            if (backgroundInactive && !usingXerocMenu && DivineMonolithIntensity <= 0f && !DeificTouch.UsingEffect)
                 return;
 
             // Ensure that the target has the correct screen size.

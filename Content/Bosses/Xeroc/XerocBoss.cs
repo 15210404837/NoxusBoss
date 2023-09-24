@@ -3,6 +3,7 @@ using System.IO;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Xeroc.Projectiles;
+using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.Primitives;
@@ -604,6 +605,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 SoundMufflingSystem.EarRingingIntensity = 0f;
                 SoundMufflingSystem.MuffleFactor = 1f;
                 MusicVolumeManipulationSystem.MusicMuffleFactor = 0f;
+                XerocSky.KaleidoscopeInterpolant = 0f;
+                XerocSky.HeavenlyBackgroundIntensity = 0f;
+                XerocSky.SeamScale = 0f;
                 NPC.active = false;
             }
 

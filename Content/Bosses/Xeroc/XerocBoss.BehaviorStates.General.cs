@@ -277,6 +277,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Bring the music.
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Xeroc");
+            Music = MusicLoader.GetMusicSlot(ModLoader.GetMod("CalamityModMusic"), "Sounds/Music/BossRushTier2");
             SceneEffectPriority = SceneEffectPriority.BossHigh;
 
             // Flap wings.

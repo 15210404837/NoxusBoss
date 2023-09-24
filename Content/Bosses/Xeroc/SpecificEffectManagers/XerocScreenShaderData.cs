@@ -21,7 +21,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             Shader.Parameters["seamBrightness"].SetValue(0.029f);
             Shader.Parameters["warpIntensity"].SetValue(0.016f);
             Shader.Parameters["offsetsAreAllowed"].SetValue(XerocSky.HeavenlyBackgroundIntensity <= 0.01f);
-            UseOpacity(1f - XerocSky.HeavenlyBackgroundIntensity + 0.001f);
+            UseOpacity(Clamp(1f - XerocSky.HeavenlyBackgroundIntensity + 0.001f, 0.001f, 1f));
             UseTargetPosition(Main.LocalPlayer.Center);
             UseColor(Color.Transparent);
             UseIntensity(XerocSky.SeamScale * GetLerpValue(0.5f, 0.1f, XerocSky.HeavenlyBackgroundIntensity, true));

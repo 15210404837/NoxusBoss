@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics.Shaders;
+using ReLogic.Content;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -102,7 +103,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 direction = SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically;
 
             // Collect the light texture and calculate how much it needs to be scaled by to cover the entire screen.
-            Texture2D theOriginalLight = ModContent.Request<Texture2D>($"NoxusBoss/Assets/ExtraTextures/TheOriginalLight/frame{lightFrame}").Value;
+            Texture2D theOriginalLight = ModContent.Request<Texture2D>($"NoxusBoss/Assets/ExtraTextures/TheOriginalLight/frame{lightFrame}", AssetRequestMode.ImmediateLoad).Value;
             lightScale = new Vector2(Main.screenWidth, Main.screenHeight) / theOriginalLight.Size() * 1.05f;
 
             // Draw the base background.
