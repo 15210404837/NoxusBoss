@@ -46,7 +46,7 @@ namespace NoxusBoss.Core.GlobalItems
         {
             ResetEffectsEvent?.Invoke(this);
 
-            // Prevent players from breaking the plants with tiles in the subworld.
+            // Prevent players from breaking the plants with swords and projectiles in the subworld.
             if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
                 Player.dontHurtNature = true;
         }
