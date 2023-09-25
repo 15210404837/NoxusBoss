@@ -45,6 +45,10 @@ namespace NoxusBoss.Core.GlobalItems
         public override void ResetEffects()
         {
             ResetEffectsEvent?.Invoke(this);
+
+            // Prevent players from breaking the plants with tiles in the subworld.
+            if (EternalGardenUpdateSystem.WasInSubworldLastUpdateFrame)
+                Player.dontHurtNature = true;
         }
 
         public override void SaveData(TagCompound tag)
