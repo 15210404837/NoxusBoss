@@ -76,7 +76,7 @@ namespace NoxusBoss.Core.GlobalItems
             if (npc.type == ModContent.NPCType<PrimordialWyrmHead>())
             {
                 bool showBRStarterItemInBestiary = ModReferences.Infernum is not null;
-                npcLoot.AddIf(() => InfernumCompatibilitySystem.InfernumModeIsActive, ModContent.ItemType<BossRushStarter>(), 1, 1, 1, showBRStarterItemInBestiary);
+                npcLoot.AddIf(() => InfernumCompatibilitySystem.InfernumModeIsActive, ModContent.ItemType<Terminal>(), 1, 1, 1, showBRStarterItemInBestiary);
             }
         }
 

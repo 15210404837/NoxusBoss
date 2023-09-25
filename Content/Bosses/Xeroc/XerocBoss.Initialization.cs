@@ -190,7 +190,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // That is all. Goodbye.
             // No, I will not entertain Master Mode or the difficulty seeds.
-            if (CalamityWorld.death)
+            if (CommonCalamityVariables.DeathModeActive)
                 NPC.lifeMax = 13767256;
 
             if (Main.expertMode)

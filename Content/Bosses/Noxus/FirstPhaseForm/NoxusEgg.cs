@@ -11,6 +11,7 @@ using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -58,7 +59,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
 
         public static readonly SoundStyle GlitchSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusGlitch") with { PitchVariance = 0.2f, Volume = 1.3f, MaxInstances = 8 };
 
-        public static readonly SoundStyle OminousSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusEggOminousIntroduction");
+        public static readonly SoundStyle OminousSound = new("NoxusBoss/Assets/Sounds/Custom/Noxus/NoxusEggOminousIntroduction");
 
         public const float DefaultDR = 0.7f;
 
@@ -362,7 +363,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
 
             if (Main.expertMode)
                 teleportRate -= 3;
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
                 cometShootSpeed += 0.4f;
 
             // Disable contact damage. It is not relevant for this attack.
@@ -435,7 +436,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
                 portalSummonRate -= 2;
                 portalSummonTime += 30;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
                 portalSummonTime += 30;
 
             // Disable contact damage. It is not relevant for this attack.
@@ -482,7 +483,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.FirstPhaseForm
                     hoverTime -= 3;
                 sitInPlaceTime -= 3;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
             {
                 slamCount++;
 

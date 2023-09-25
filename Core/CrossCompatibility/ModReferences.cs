@@ -4,6 +4,12 @@ namespace NoxusBoss.Core.CrossCompatibility
 {
     public class ModReferences : ModSystem
     {
+        public static Mod BaseCalamity
+        {
+            get;
+            private set;
+        }
+
         public static Mod BossChecklist
         {
             get;
@@ -46,6 +52,8 @@ namespace NoxusBoss.Core.CrossCompatibility
             // Check for relevant mods.
             if (ModLoader.TryGetMod("BossChecklist", out Mod bcl))
                 BossChecklist = bcl;
+            if (ModLoader.TryGetMod("CalamityMod", out Mod cal))
+                BaseCalamity = cal;
             if (ModLoader.TryGetMod("CalamityHunt", out Mod calHunt))
                 CalamityHunt = calHunt;
             if (ModLoader.TryGetMod("InfernumMode", out Mod inf))

@@ -118,7 +118,7 @@ Mods: {
 				Tooltip: ""
 			}
 
-			BossRushStarter: {
+			Terminal: {
 				DisplayName: Terminal
 				Tooltip:
 					'''

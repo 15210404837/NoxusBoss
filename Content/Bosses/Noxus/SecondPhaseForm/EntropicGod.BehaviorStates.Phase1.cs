@@ -2,6 +2,7 @@
 using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -236,7 +237,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 initialChargeSpeed += 1.2f;
                 fireballShootSpeed += 2f;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
             {
                 fireballShootRate--;
                 chargeAcceleration += 0.032f;

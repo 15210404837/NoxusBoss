@@ -15,6 +15,7 @@ using static NoxusBoss.Core.WorldSaveSystem;
 using NoxusBoss.Assets.Fonts;
 using Terraria.Localization;
 using NoxusBoss.Core.Fixes;
+using NoxusBoss.Core.CrossCompatibility;
 
 namespace NoxusBoss.Content.Subworlds
 {
@@ -88,7 +89,7 @@ namespace NoxusBoss.Content.Subworlds
             }
 
             // Draw a pure-white background. Immediate loading is used for the texture because without it there's a tiny, jarring delay before the white background appears where the regular
-            // tile screen is revealed momentarily.
+            // title screen is revealed momentarily.
             Texture2D pixel = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Pixel", AssetRequestMode.ImmediateLoad).Value;
             Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 1.45f / pixel.Size();
             Main.spriteBatch.Draw(pixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White, 0f, pixel.Size() * 0.5f, pixelScale, 0, 0f);
@@ -118,10 +119,12 @@ namespace NoxusBoss.Content.Subworlds
                 savedWorldData["HasMetXeroc"] = true;
 
             // Save difficulty data. This is self-explanatory.
-            if (CalamityWorld.revenge)
-                savedWorldData["RevengeanceMode"] = CalamityWorld.revenge;
-            if (CalamityWorld.death)
-                savedWorldData["DeathMode"] = CalamityWorld.death;
+            bool revengeanceMode = CommonCalamityVariables.RevengeanceModeActive;
+            bool deathMode = CommonCalamityVariables.RevengeanceModeActive;
+            if (revengeanceMode)
+                savedWorldData["RevengeanceMode"] = revengeanceMode;
+            if (deathMode)
+                savedWorldData["DeathMode"] = deathMode;
 
             // Save death data. When the player returns to the subworld this will decide how many Starbearers will appear in the garden.
             savedWorldData["XerocDeathCount"] = XerocDeathCount;
@@ -134,8 +137,8 @@ namespace NoxusBoss.Content.Subworlds
             HasDefeatedXeroc = savedWorldData.ContainsKey("HasDefeatedXeroc");
             HasMetXeroc = savedWorldData.ContainsKey("HasMetXeroc");
 
-            CalamityWorld.revenge = savedWorldData.ContainsKey("RevengeanceMode");
-            CalamityWorld.death = savedWorldData.ContainsKey("DeathMode");
+            CommonCalamityVariables.RevengeanceModeActive = savedWorldData.ContainsKey("RevengeanceMode");
+            CommonCalamityVariables.DeathModeActive = savedWorldData.ContainsKey("DeathMode");
 
             XerocDeathCount = savedWorldData.GetInt("XerocDeathCount");
         }

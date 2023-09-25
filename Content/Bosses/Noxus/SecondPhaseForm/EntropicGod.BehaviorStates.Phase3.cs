@@ -5,6 +5,7 @@ using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -41,7 +42,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 cometCount += 2;
                 initialPortalExistTime -= 10;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
             {
                 teleportDelay -= 5;
                 aimedDashCount += 2;
@@ -193,7 +194,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 twinkleCount--;
                 delayPerTwinkle -= 2;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
             {
                 twinkleCount--;
                 delayPerTwinkle--;

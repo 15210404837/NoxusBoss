@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Items.SummonItems
 {
-    public class BossRushStarter : ModItem
+    public class Terminal : ModItem
     {
         public override void SetStaticDefaults() => Item.ResearchUnlockCount = 1;
 

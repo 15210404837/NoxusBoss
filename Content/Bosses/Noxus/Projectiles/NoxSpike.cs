@@ -4,6 +4,7 @@ using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm;
+using NoxusBoss.Core.CrossCompatibility;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -21,7 +22,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
         {
             get
             {
-                if (CalamityWorld.revenge)
+                if (CommonCalamityVariables.RevengeanceModeActive)
                     return 30;
                 if (Main.expertMode)
                     return 33;

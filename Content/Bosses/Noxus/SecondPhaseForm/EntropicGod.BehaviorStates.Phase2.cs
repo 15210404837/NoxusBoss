@@ -3,6 +3,7 @@ using CalamityMod.World;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Bosses.Noxus.Projectiles;
+using NoxusBoss.Core.CrossCompatibility;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -30,7 +31,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 hoverTime -= 8;
                 fireballShootSpeed += 3f;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
                 fireballShootSpeed += 3.5f;
 
             Vector2 leftHandDestination = NPC.Center + Hands[0].DefaultOffset * NPC.scale;
@@ -144,7 +145,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 portalExistTime -= 5;
                 fireballShootSpeed += 3f;
             }
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
             {
                 chargeCount++;
                 fireballShootSpeed += 3.5f;
@@ -537,7 +538,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
                 maxSpinSpeed *= 1.333f;
             }
 
-            if (CalamityWorld.revenge)
+            if (CommonCalamityVariables.RevengeanceModeActive)
             {
                 spinTime -= 5;
                 startingChargeSpeed += 0.95f;

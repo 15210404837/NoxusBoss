@@ -144,7 +144,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SecondPhaseForm
 
             // That is all. Goodbye.
             // No, I will not entertain Master Mode or the difficulty seeds.
-            if (CalamityWorld.death)
+            if (CommonCalamityVariables.DeathModeActive)
                 NPC.lifeMax = 12477600;
 
             if (Main.expertMode)
