@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using CalamityMod;
+﻿using CalamityMod;
 using CalamityMod.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.GlobalItems;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
@@ -14,24 +13,22 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class SuperCosmicBeam : ModProjectile, IDrawPixelated
+    public class SuperCosmicBeam : BasePrimitiveLaserbeam, IDrawPixelated
     {
-        public PrimitiveTrailCopy LaserDrawer
-        {
-            get;
-            private set;
-        }
+        // This laser should be drawn with pixelation, and as such should not be drawn manually via the base projectile.
+        public override bool UseStandardDrawing => false;
 
-        public ref float Time => ref Projectile.ai[0];
+        public static int DefaultLifetime => 540;
 
-        public ref float LaserLengthFactor => ref Projectile.ai[1];
+        public override int LaserPointCount => 45;
 
-        public static int LaserLifetime => 540;
+        public override float LaserExtendSpeedInterpolant => 0.15f;
 
-        public static float MaxLaserLength => 9400f;
+        public override float MaxLaserLength => 9400f;
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override ManagedShader LaserShader => ShaderManager.GetShader("XerocCosmicLaserShader");
 
+        // Since this laserbeam is super big, ensure that it doesn't get pruned based on distance from the camera.
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
 
         public override void SetDefaults()
@@ -47,31 +44,29 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.Calamity().DealsDefenseDamage = true;
         }
 
-        public override void AI()
+        // This uses PreAI instead of PostAI to ensure that the AI hook uses the correct, updated velocity when deciding Projectile.rotation.
+        public override bool PreAI()
         {
-            // Stick to Xeroc if possible.
+            // Check if Xeroc is present. If he isn't, disappear immediately.
             if (XerocBoss.Myself is null)
             {
                 Projectile.Kill();
-                return;
+                return false;
             }
 
-            // Define the laser's direction.
-            Projectile.rotation = XerocBoss.Myself.ai[2];
-            Projectile.velocity = Projectile.rotation.ToRotationVector2();
+            // Stick to Xeroc.
             Projectile.Center = XerocBoss.Myself.Center + Projectile.velocity * 300f;
 
-            // Fade in.
-            LaserLengthFactor = Clamp(LaserLengthFactor + 0.15f, 0f, 1f);
+            // Inherit the direction of the laser from Xeroc's direction angle AI value.
+            Projectile.velocity = XerocBoss.Myself.ai[2].ToRotationVector2();
+
+            // Grow at the start of the laser's lifetime and shrink again at the end of it.
+            Projectile.scale = GetLerpValue(0f, 12f, Time, true) * GetLerpValue(0f, 12f, LaserShootTime - Time, true);
+
+            // Rapidly fade in.
             Projectile.Opacity = Clamp(Projectile.Opacity + 0.1f, 0f, 1f);
 
-            // Decide the scale of the laser.
-            Projectile.scale = GetLerpValue(0f, 12f, Time, true) * GetLerpValue(0f, 12f, LaserLifetime - Time, true);
-
-            if (Time >= LaserLifetime)
-                Projectile.Kill();
-
-            Time++;
+            return true;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -80,14 +75,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             if (Time <= 22f)
                 return false;
 
-            float _ = 0f;
-            Vector2 start = Projectile.Center;
-            Vector2 end = Projectile.Center + Projectile.velocity * LaserLengthFactor * MaxLaserLength;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
+            return base.Colliding(projHitbox, targetHitbox);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            // Allow the target to be hit multiple times in rapid succession, similar to Sans' low iframes hit effect.
             target.GetModPlayer<NoxusPlayer>().ImmuneTimeOverride = 7;
 
             // Release on-hit particles.
@@ -113,29 +106,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             GeneralParticleHandler.SpawnParticle(circle);
         }
 
-        public float LaserWidthFunction(float completionRatio) => Projectile.scale * Projectile.width;
+        public override float LaserWidthFunction(float completionRatio) => Projectile.scale * Projectile.width;
 
-        public Color LaserColorFunction(float completionRatio) => new Color(53, 18, 100) * GetLerpValue(0f, 0.12f, completionRatio, true) * Projectile.Opacity;
+        public override Color LaserColorFunction(float completionRatio) => new Color(53, 18, 100) * GetLerpValue(0f, 0.12f, completionRatio, true) * Projectile.Opacity;
 
-        public void DrawWithPixelation()
+        public override void PrepareLaserShader(ManagedShader laserShader)
         {
-            // Initialize the laser drawer.
-            var laserShader = ShaderManager.GetShader("XerocCosmicLaserShader");
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
-
-            // Calculate laser control points.
-            Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
-            List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(16, LaserLengthFactor * MaxLaserLength, laserDirection);
-
-            // Draw the laser.
             laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
             laserShader.TrySetParameter("scrollSpeedFactor", 1.3f);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"), 1);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 2);
             laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/BurnNoise"), 3);
-            LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, 45);
         }
 
-        public override bool ShouldUpdatePosition() => false;
+        public void DrawWithPixelation() => DrawLaser();
     }
 }

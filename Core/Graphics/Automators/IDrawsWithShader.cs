@@ -6,7 +6,7 @@ namespace NoxusBoss.Core.Graphics.Automators
     {
         public float LayeringPriority => 0f;
 
-        public bool DrawAdditiveShader => false;
+        public bool ShaderShouldDrawAdditively => false;
 
         public void DrawWithShader(SpriteBatch spriteBatch);
     }

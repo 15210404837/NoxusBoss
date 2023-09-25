@@ -505,11 +505,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public static readonly SoundStyle MumbleSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocMumble", 7) with { Volume = 0.89f };
 
-        public static readonly SoundStyle Phase3TransitionLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPhase3Transition");
+        public static readonly SoundStyle Phase3TransitionLoopSound = new("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPhase3Transition");
 
         public static readonly SoundStyle PortalCastSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalCast") with { Volume = 1.2f };
 
-        public static readonly SoundStyle PortalShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalShoot") with { Volume = 1.32f, PitchVariance = 0.18f };
+        public static readonly SoundStyle PortalShootSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/XerocPortalShoot") with { Volume = 1.32f, PitchVariance = 0.18f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest };
 
         public static readonly SoundStyle QuasarLoopSound = new SoundStyle("NoxusBoss/Assets/Sounds/Custom/Xeroc/QuasarLoopSound") with { Volume = 1.2f };
 

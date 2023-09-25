@@ -48,11 +48,11 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 return p.active && p.ModProjectile is IDrawsWithShader drawer;
             }).Select(p => p.ModProjectile as IDrawsWithShader).OrderBy(i => i.LayeringPriority).ToList();
 
-            foreach (var drawer in orderedDrawers.Where(d => !d.DrawAdditiveShader))
+            foreach (var drawer in orderedDrawers.Where(d => !d.ShaderShouldDrawAdditively))
                 drawer.DrawWithShader(Main.spriteBatch);
 
             Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
-            foreach (var drawer in orderedDrawers.Where(d => d.DrawAdditiveShader))
+            foreach (var drawer in orderedDrawers.Where(d => d.ShaderShouldDrawAdditively))
                 drawer.DrawWithShader(Main.spriteBatch);
         }
 

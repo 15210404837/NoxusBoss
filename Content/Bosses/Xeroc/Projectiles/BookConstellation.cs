@@ -57,7 +57,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.netImportant = true;
-            Projectile.timeLeft = ConvergeTime + SuperCosmicBeam.LaserLifetime + 175;
+            Projectile.timeLeft = ConvergeTime + SuperCosmicBeam.DefaultLifetime + 175;
         }
 
         public override void AI()

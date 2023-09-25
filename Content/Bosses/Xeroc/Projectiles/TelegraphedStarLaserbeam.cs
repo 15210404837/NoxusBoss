@@ -4,9 +4,9 @@ using System.Linq;
 using CalamityMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -15,35 +15,27 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class TelegraphedStarLaserbeam : ModProjectile, IDrawsWithShader
+    public class TelegraphedStarLaserbeam : BaseTelegraphedPrimitiveLaserbeam, IDrawsWithShader
     {
-        public PrimitiveTrailCopy TelegraphDrawer
-        {
-            get;
-            private set;
-        }
+        public ref float MaxSpinAngularVelocity => ref Projectile.ai[2];
 
-        public PrimitiveTrailCopy LaserDrawer
-        {
-            get;
-            private set;
-        }
+        // This laser should be drawn in the DrawWithShader interface, and as such should not be drawn manually via the base projectile.
+        public override bool UseStandardDrawing => false;
 
-        public bool DrawAdditiveShader => true;
+        // This is used by the IDrawsWithShader to ensure that this projectile's drawing via DrawWithShader is performed under the Additive blend state.
+        public bool ShaderShouldDrawAdditively => true;
 
-        public ref float TelegraphTime => ref Projectile.ai[0];
+        public override int TelegraphPointCount => 47;
 
-        public ref float MaxSpinAngularVelocity => ref Projectile.ai[1];
+        public override int LaserPointCount => 21;
 
-        public ref float Time => ref Projectile.localAI[0];
+        public override float MaxLaserLength => 5000f;
 
-        public ref float LaserLengthFactor => ref Projectile.localAI[1];
+        public override float LaserExtendSpeedInterpolant => 0.085f;
 
-        public static int LaserShootTime => 32;
+        public override ManagedShader TelegraphShader => ShaderManager.GetShader("SideStreakShader");
 
-        public static float MaxLaserLength => 5000f;
-
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override ManagedShader LaserShader => ShaderManager.GetShader("XerocStarLaserShader");
 
         public override void SetDefaults()
         {
@@ -67,20 +59,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             LaserLengthFactor = reader.ReadSingle();
         }
 
-        public override void AI()
+        // This uses PreAI instead of PostAI to ensure that the AI hook uses the correct, updated velocity when deciding Projectile.rotation.
+        public override bool PreAI()
         {
-            // Stick to a star if possible.
+            // Stick to a star if possible. If there is no star, die immediately.
             List<Projectile> stars = AllProjectilesByID(ModContent.ProjectileType<ControlledStar>()).ToList();
             if (XerocSky.ManualSunScale >= 1.1f)
                 Projectile.Center = XerocSky.ManualSunDrawPosition + Main.screenPosition;
             else if (stars.Any())
                 Projectile.Center = stars.First().Center;
             else
+            {
                 Projectile.Kill();
-
-            // Make the laser extend after the telegraph has vanished.
-            if (Time >= TelegraphTime)
-                LaserLengthFactor = Lerp(LaserLengthFactor, 1f, 0.08f);
+                return false;
+            }
 
             // This is calculated as necessary to ensure that a turn of exactly MaxSpinAngularVelocity * TelegraphTime is achieved
             // during the telegraph. This will use a turning factor based on the Convert01To010 function, or sin(pi * x)^p
@@ -113,97 +105,75 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             float spinInterpolant = GetLerpValue(0f, TelegraphTime, Time, true);
             float angularVelocity = Pow(Convert01To010(spinInterpolant), 4f) * MaxSpinAngularVelocity / 0.375f;
             Projectile.velocity = Projectile.velocity.RotatedBy(angularVelocity);
-            Projectile.rotation = Projectile.velocity.ToRotation();
 
-            // Define the universal opacity.
+            // Fade out when the laser is about to die.
             Projectile.Opacity = GetLerpValue(TelegraphTime + LaserShootTime - 1f, TelegraphTime + LaserShootTime - 12f, Time, true);
 
-            if (Time >= TelegraphTime + LaserShootTime)
-                Projectile.Kill();
-
-            // Apply screen impact effects when the laser fires.
-            if (Time == TelegraphTime - 1f)
-            {
-                if (XerocBoss.Myself is not null)
-                    XerocBoss.Myself.ai[3] = 1f;
-
-                if (OverallShakeIntensity <= 7.5f)
-                    StartShakeAtPoint(Projectile.Center, 4f);
-
-                ScreenEffectSystem.SetBlurEffect(Main.LocalPlayer.Center - Vector2.UnitY * 400f, 1f, 13);
-                SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
-                SoundEngine.PlaySound(XerocBoss.SupernovaSound with { Volume = 0.7f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
-            }
-
-            Time++;
+            return true;
         }
 
-        public float TelegraphWidthFunction(float completionRatio) => Projectile.Opacity * Projectile.width;
+        public override void OnLaserFire()
+        {
+            // Inform Xeroc that the laser has fired.
+            if (XerocBoss.Myself is not null)
+                XerocBoss.Myself.ai[3] = 1f;
 
-        public Color TelegraphColorFunction(float completionRatio)
+            // Shake the screen.
+            if (OverallShakeIntensity <= 7.5f)
+                StartShakeAtPoint(Projectile.Center, 4f);
+
+            // Blur the screen for a short moment.
+            ScreenEffectSystem.SetBlurEffect(Main.LocalPlayer.Center - Vector2.UnitY * 400f, 1f, 13);
+
+            // Play explosion sounds.
+            SoundEngine.PlaySound(XerocBoss.ExplosionTeleportSound);
+            SoundEngine.PlaySound(XerocBoss.SupernovaSound with { Volume = 0.7f, MaxInstances = 1, SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest });
+        }
+
+        public override float TelegraphWidthFunction(float completionRatio) => Projectile.Opacity * Projectile.width;
+
+        public override Color TelegraphColorFunction(float completionRatio)
         {
             float timeFadeOpacity = GetLerpValue(TelegraphTime - 1f, TelegraphTime - 7f, Time, true) * GetLerpValue(0f, TelegraphTime - 15f, Time, true);
             float endFadeOpacity = GetLerpValue(0f, 0.15f, completionRatio, true) * GetLerpValue(1f, 0.67f, completionRatio, true);
             return Color.LightGoldenrodYellow * endFadeOpacity * timeFadeOpacity * Projectile.Opacity * 0.26f;
         }
 
-        public float LaserWidthFunction(float completionRatio) => Projectile.Opacity * Projectile.width;
+        public override float LaserWidthFunction(float completionRatio) => Projectile.Opacity * Projectile.width;
 
-        public Color LaserColorFunction(float completionRatio) => Color.OrangeRed * GetLerpValue(LaserShootTime - 1f, LaserShootTime - 8f, Time - TelegraphTime, true) * Projectile.Opacity;
+        public override Color LaserColorFunction(float completionRatio) => Color.OrangeRed * GetLerpValue(LaserShootTime - 1f, LaserShootTime - 8f, Time - TelegraphTime, true) * Projectile.Opacity;
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        public override void PrepareTelegraphShader(ManagedShader telegraphShader)
         {
-            if (Time <= TelegraphTime)
-                return false;
+            telegraphShader.TrySetParameter("generalOpacity", Projectile.Opacity);
+        }
 
-            float _ = 0f;
-            Vector2 start = Projectile.Center;
-            Vector2 end = start + Projectile.velocity * LaserLengthFactor * MaxLaserLength;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.Opacity * Projectile.width * 0.9f, ref _);
+        public override void PrepareLaserShader(ManagedShader laserShader)
+        {
+            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
         }
 
         public void DrawWithShader(SpriteBatch spriteBatch)
         {
-            // Initialize primitive drawers.
-            var telegraphShader = ShaderManager.GetShader("SideStreakShader");
-            var laserShader = ShaderManager.GetShader("XerocStarLaserShader");
-            TelegraphDrawer ??= new(TelegraphWidthFunction, TelegraphColorFunction, null, true, telegraphShader);
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, laserShader);
-
-            // Draw the telegraph at first.
-            Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
-            if (Time <= TelegraphTime)
+            // Draw a backglow for the laser if it's being fired.
+            if (Time >= TelegraphTime)
             {
-                // Calculate telegraph control points. The key difference between this and the laser is that the telegraph always reaches out by the laser's maximum distance, while the laser bursts out a bit initially.
-                List<Vector2> telegraphControlPoints = Projectile.GetLaserControlPoints(6, MaxLaserLength, laserDirection);
-
-                telegraphShader.TrySetParameter("generalOpacity", Projectile.Opacity);
-                TelegraphDrawer.Draw(telegraphControlPoints, -Main.screenPosition, 47);
-                return;
+                DrawBloomLineTelegraph(Projectile.Center - Main.screenPosition, new()
+                {
+                    LineRotation = -Projectile.rotation,
+                    Opacity = Sqrt(Projectile.Opacity),
+                    WidthFactor = 0.001f,
+                    LightStrength = 0.2f,
+                    MainColor = Color.Wheat,
+                    DarkerColor = Color.SaddleBrown,
+                    BloomIntensity = Projectile.Opacity * 0.8f + 0.35f,
+                    BloomOpacity = Projectile.Opacity,
+                    Scale = Vector2.One * LaserLengthFactor * MaxLaserLength
+                });
             }
 
-            // Draw a backglow for the laser.
-            DrawBloomLineTelegraph(Projectile.Center - Main.screenPosition, new()
-            {
-                LineRotation = -Projectile.rotation,
-                Opacity = Sqrt(Projectile.Opacity),
-                WidthFactor = 0.001f,
-                LightStrength = 0.2f,
-                MainColor = Color.Wheat,
-                DarkerColor = Color.SaddleBrown,
-                BloomIntensity = Projectile.Opacity * 0.8f + 0.35f,
-                BloomOpacity = Projectile.Opacity,
-                Scale = Vector2.One * LaserLengthFactor * MaxLaserLength
-            });
-
-            // Calculate laser control points.
-            List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(8, LaserLengthFactor * MaxLaserLength, laserDirection);
-
-            // Draw the laser after the telegraph has ceased.
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
-            LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, 21);
+            // Draw the regular telegraph/laser stuff.
+            DrawTelegraphOrLaser();
         }
-
-        public override bool ShouldUpdatePosition() => false;
     }
 }

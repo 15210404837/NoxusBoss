@@ -112,7 +112,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
         public void DoBehavior_SuperCosmicLaserbeam()
         {
             int attackDelay = BookConstellation.ConvergeTime + 150;
-            int shootTime = SuperCosmicBeam.LaserLifetime;
+            int shootTime = SuperCosmicBeam.DefaultLifetime;
             int realityTearReleaseRate = 75;
             ref float laserDirection = ref NPC.ai[2];
 
@@ -185,7 +185,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-                    NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f);
+                    NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f, -1, 0f, SuperCosmicBeam.DefaultLifetime);
                 }
             }
 

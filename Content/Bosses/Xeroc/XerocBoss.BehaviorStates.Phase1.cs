@@ -406,7 +406,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             int starGrowTime = ControlledStar.GrowToFullSizeTime;
             int attackDelay = starGrowTime + 40;
             int flareShootCount = 5;
-            int shootTime = 450;
+            int laserShootTime = 32;
+            int attackDuration = 450;
             int starburstReleaseRate = 35;
             int starburstCount = 16;
             int teleportVisualsTime = 20;
@@ -418,7 +419,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             {
                 attackDelay -= 10;
                 flareShootCount--;
-                shootTime -= 90;
+                attackDuration -= 90;
             }
 
             // Make the robe's eyes stare at the target.
@@ -566,14 +567,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 {
                     // Create the flares.
                     int flareCount = (int)(flareShootCounter * 2f) + 2;
-                    int flareTelegraphTime = (int)Remap(AttackTimer - attackDelay, 0f, 300f, 23f, 60f) + TelegraphedStarLaserbeam.LaserShootTime;
+                    int flareTelegraphTime = (int)Remap(AttackTimer - attackDelay, 0f, 300f, 23f, 60f) + laserShootTime;
                     float flareSpinDirection = (flareShootCounter % 2f == 0f).ToDirectionInt();
                     float flareSpinCoverage = PiOver2 * flareSpinDirection;
                     Vector2 directionToTarget = star.SafeDirectionTo(Target.Center);
                     for (int i = 0; i < flareCount; i++)
                     {
                         Vector2 flareDirection = directionToTarget.RotatedBy(TwoPi * i / flareCount);
-                        NewProjectileBetter(star.Center, flareDirection, ModContent.ProjectileType<TelegraphedStarLaserbeam>(), StarDamage, 0f, -1, flareTelegraphTime, flareSpinCoverage / flareTelegraphTime);
+                        NewProjectileBetter(star.Center, flareDirection, ModContent.ProjectileType<TelegraphedStarLaserbeam>(), StarDamage, 0f, -1, flareTelegraphTime, laserShootTime, flareSpinCoverage / flareTelegraphTime);
                     }
 
                     flareShootCounter++;
@@ -581,7 +582,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 }
             }
 
-            if (AttackTimer >= attackDelay + shootTime)
+            if (AttackTimer >= attackDelay + attackDuration)
                 SelectNextAttack();
         }
 

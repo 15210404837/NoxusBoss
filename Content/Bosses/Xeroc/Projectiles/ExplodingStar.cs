@@ -14,7 +14,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
     public class ExplodingStar : ModProjectile, IDrawsWithShader
     {
-        public bool DrawAdditiveShader => true;
+        public bool ShaderShouldDrawAdditively => true;
 
         public static bool FromStarConvergenceAttack => XerocBoss.Myself is not null && XerocBoss.Myself.ModNPC<XerocBoss>().CurrentAttack == XerocBoss.XerocAttackType.StarConvergenceAndRedirecting;
 
