@@ -98,7 +98,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // This is exactly what the purpose of a definite integral is, interestingly! In order to figure out what that 0.622 approaches as N approaches infinity, we can do some
             // calculus to find the exact value, like so:
 
-            // ∫(0, 1) sin(x * pi)^p =
+            // ∫(0, 1) sin(x * pi)^p * dx =
             // 1 / pi * ∫(0, pi) sin(x)^p =
             // 0.375 for p = 4
             // In order to make the entire process add up neatly to MaxSpinAngularVelocity * TelegraphTime, a correction factor of 1 / 0.375 will be necessary.
