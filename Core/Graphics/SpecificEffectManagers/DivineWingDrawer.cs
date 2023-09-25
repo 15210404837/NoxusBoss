@@ -11,6 +11,8 @@ using Terraria.Graphics.Shaders;
 using NoxusBoss.Content.Bosses.Xeroc;
 using NoxusBoss.Content.Items.Accessories.Wings;
 using NoxusBoss.Core.Graphics.Automators;
+using CalamityMod;
+using Terraria.ID;
 
 namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 {
@@ -121,7 +123,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             gd.Clear(Color.Transparent);
 
             // Draw the contents of the previous frame to the target.
-            Main.spriteBatch.Draw(AfterimageTargetPrevious, Vector2.Zero, Color.White);
+            bool probablyUsingSniperEffects = Main.LocalPlayer.scope || Main.LocalPlayer.ActiveItem().type == ItemID.SniperRifle || Main.LocalPlayer.ActiveItem().type == ItemID.Binoculars;
+            if (!probablyUsingSniperEffects || CameraPanSystem.UnmodifiedCameraPosition.WithinRange(Main.screenPosition, Main.LocalPlayer.velocity.Length() + 60f))
+                Main.spriteBatch.Draw(AfterimageTargetPrevious, Vector2.Zero, Color.White);
 
             // Draw player wings.
             DrawPlayerWingsToTarget();
@@ -137,13 +141,14 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public static void DrawPlayerWingsToTarget()
         {
             // Prepare the wing psychedelic shader.
-            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap").Value;
             var wingShader = ShaderManager.GetShader("XerocPsychedelicWingShader");
             wingShader.TrySetParameter("colorShift", XerocBoss.WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
             wingShader.TrySetParameter("normalMapZoom", new Vector2(0.7f, 0.4f));
             wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
+            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap"), 2);
+            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/XerocWingTextureOffsetMap"), 3);
             wingShader.Apply();
 
             for (int i = 0; i < Main.maxPlayers; i++)

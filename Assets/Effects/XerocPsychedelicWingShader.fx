@@ -1,6 +1,7 @@
-sampler uImage0 : register(s0);
-sampler uImage1 : register(s1);
-sampler uImage2 : register(s2);
+sampler baseTexture : register(s0);
+sampler genralNoiseMap : register(s1);
+sampler normalMap : register(s2);
+sampler warpSamplingOffsetMap : register(s3);
 
 float globalTime;
 float3 colorShift;
@@ -25,14 +26,17 @@ float TriangleWave(float x)
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
-    float4 color = tex2D(uImage0, coords) * sampleColor;
+    // Calculate the base color relative to the tinting sample color and the base texture's color at the given pixel.
+    float4 color = tex2D(baseTexture, coords) * sampleColor;
+    
     float distanceFromEdge = length(coords - float2(1, 0.5));
     
-    // Calculate values for the warp noise that will be applied to the palette colors.
-    float warpAngle = tex2D(uImage1, coords * 1.3 + float2(globalTime * 0.2, 0)).r * 16;
-    float2 warpNoiseOffset = float2(TriangleWave(warpAngle + 1.57), TriangleWave(warpAngle));
-    float psychedelicInterpolant = tex2D(uImage1, coords * 0.9 + warpNoiseOffset * 0.023).r * 1.45;
-    float brightnessInterpolant = tex2D(uImage1, coords * 2.5 - warpNoiseOffset * 0.055).r;
+    // Calculate values from the warp noise that will be applied to the palette sampling position.
+    // They are designed in such a way that the offsets give the texture a viscous feel, which is very important for the overall
+    // psychedelic effect of these wings.
+    float2 warpNoiseOffset = tex2D(warpSamplingOffsetMap, coords * 1.3 + float2(globalTime * 0.2, 0)).rg;
+    float psychedelicInterpolant = tex2D(genralNoiseMap, coords * 0.9 + warpNoiseOffset * 0.023).r * 1.45;
+    float brightnessInterpolant = tex2D(genralNoiseMap, coords * 2.5 - warpNoiseOffset * 0.055).r;
     
     // Calculate the base psychedelic color from the warp noise.
     float3 psychedelicColor = Palette(psychedelicInterpolant, colorShift, float3(0.5, 0.5, 0.2), float3(1, 1, 1), float3(0, 0.333, 0.667)) * 0.8;
@@ -43,10 +47,11 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
     // Calculate ring-based brightness values.
     float ringBrightness = clamp(0.2 / TriangleWave(globalTime * 0.6 - distanceFromEdge * 2), 0, 2.7) + 1;
     
+    // Begin calculating the final result.
     float4 result = lerp(color, psychedelicColor4, color.r * 0.8) * ringBrightness;
     
     // Apply the normal map to the result to apply texturing.
-    float3 normal = normalize(tex2D(uImage2, coords * normalMapZoom).xyz * 2 - 1);
+    float3 normal = normalize(tex2D(normalMap, coords * normalMapZoom).xyz * 2 - 1);
     float brightness = pow(saturate(dot(lightDirection, normal)), normalMapCrispness);
     result.rgb *= brightness;
     

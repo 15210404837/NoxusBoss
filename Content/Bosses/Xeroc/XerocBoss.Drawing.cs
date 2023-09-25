@@ -169,13 +169,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             }
 
             // Prepare the wing psychedelic shader.
-            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap").Value;
             var wingShader = ShaderManager.GetShader("XerocPsychedelicWingShader");
             wingShader.TrySetParameter("colorShift", WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
             wingShader.TrySetParameter("normalMapZoom", new Vector2(0.7f, 0.4f));
             wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
+            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap"), 2);
+            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/XerocWingTextureOffsetMap"), 3);
             wingShader.Apply();
 
             for (int i = 0; i < Wings.Length; i++)
