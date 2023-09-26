@@ -146,9 +146,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
             wingShader.TrySetParameter("normalMapZoom", new Vector2(0.7f, 0.4f));
-            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
+            wingShader.SetTexture(TurbulentNoise, 1);
             wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap"), 2);
-            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/XerocWingTextureOffsetMap"), 3);
+            wingShader.SetTexture(PsychedelicWingTextureOffsetMap, 3);
             wingShader.Apply();
 
             for (int i = 0; i < Main.maxPlayers; i++)
@@ -183,7 +183,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             var afterimageShader = ShaderManager.GetShader("XerocPsychedelicAfterimageShader");
             afterimageShader.TrySetParameter("uScreenResolution", new Vector2(Main.screenWidth, Main.screenHeight));
             afterimageShader.TrySetParameter("warpSpeed", 0.00028f);
-            afterimageShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
+            afterimageShader.SetTexture(TurbulentNoise, 1);
             afterimageShader.Apply();
 
             Main.spriteBatch.Draw(AfterimageTarget, Vector2.Zero, Color.White);

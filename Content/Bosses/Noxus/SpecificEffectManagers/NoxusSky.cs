@@ -257,7 +257,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             {
                 Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
 
-                DrawBackground(Color.Lerp(Color.MidnightBlue, Color.Pink, 0.3f), 2f, 1f, 1f, ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"));
+                DrawBackground(Color.Lerp(Color.MidnightBlue, Color.Pink, 0.3f), 2f, 1f, 1f, TurbulentNoise);
                 DrawBackground(Color.Lerp(Color.Lerp(Color.BlueViolet, Color.Indigo, 0.3f), Color.DarkGray, 0.2f), 0.6f);
 
                 Main.spriteBatch.ExitShaderRegion();
@@ -266,7 +266,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             DrawRubble(minDepth, maxDepth);
         }
 
-        public static void DrawBackground(Color color, float localIntensity = 1f, float scrollSpeed = 1f, float noiseZoom = 1f, Asset<Texture2D> texture = null)
+        public static void DrawBackground(Color color, float localIntensity = 1f, float scrollSpeed = 1f, float noiseZoom = 1f, Texture2D texture = null)
         {
             // Make the background colors more muted based on how strong the fog is.
             if (EntropicGod.Myself is not null)
@@ -277,9 +277,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
                 color = Color.Lerp(color, Color.DarkGray, colorDarknessInterpolant * 0.7f);
             }
 
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Pixel").Value;
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            Vector2 textureArea = screenArea / pixel.Size();
+            Vector2 textureArea = screenArea / WhitePixel.Size();
 
             var backgroundShader = ShaderManager.GetShader("NoxusBackgroundShader");
             backgroundShader.TrySetParameter("luminanceThreshold", 0.9f);
@@ -292,25 +291,24 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
             backgroundShader.TrySetParameter("flashNoiseZoom", 0.02f);
             backgroundShader.TrySetParameter("screenPosition", Main.screenPosition);
             backgroundShader.TrySetParameter("backgroundColor", color.ToVector3());
-            backgroundShader.SetTexture(texture ?? ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1);
-            backgroundShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 2);
+            backgroundShader.SetTexture(texture ?? DendriticNoiseZoomedOut, 1);
+            backgroundShader.SetTexture(WavyBlotchNoise, 2);
             backgroundShader.Apply();
-            Main.spriteBatch.Draw(pixel, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, textureArea, 0, 0f);
+            Main.spriteBatch.Draw(WhitePixel, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, textureArea, 0, 0f);
         }
 
         public void DrawFog()
         {
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Pixel").Value;
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            Vector2 textureArea = screenArea / pixel.Size();
+            Vector2 textureArea = screenArea / WhitePixel.Size();
 
             var backgroundShader = ShaderManager.GetShader("DarkFogShader");
             backgroundShader.TrySetParameter("fogCenter", (fogCenter - Main.screenPosition) / screenArea);
             backgroundShader.TrySetParameter("screenResolution", screenArea);
             backgroundShader.TrySetParameter("fogTravelDistance", fogSpreadDistance);
-            backgroundShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Smudges"), 1);
+            backgroundShader.SetTexture(SmudgeNoise, 1);
             backgroundShader.Apply();
-            Main.spriteBatch.Draw(pixel, Vector2.Zero, null, FogColor * FogIntensity, 0f, Vector2.Zero, textureArea, 0, 0f);
+            Main.spriteBatch.Draw(WhitePixel, Vector2.Zero, null, FogColor * FogIntensity, 0f, Vector2.Zero, textureArea, 0, 0f);
         }
 
         public void DrawRubble(float minDepth, float maxDepth)

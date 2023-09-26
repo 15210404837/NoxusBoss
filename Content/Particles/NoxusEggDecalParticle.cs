@@ -20,7 +20,7 @@ namespace NoxusBoss.Content.Particles
 
         public override bool Important => true;
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public NoxusEggDecalParticle(Vector2 position, float rotation, Color color, int lifetime, float scale)
         {

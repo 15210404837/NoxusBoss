@@ -54,8 +54,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         public static void DrawBackground()
         {
-            Texture2D cosmicTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos").Value;
-            Main.spriteBatch.Draw(cosmicTexture, Vector2.Zero, null, new(14, 14, 14), 0f, Vector2.Zero, 5f, 0, 0f);
+            Main.spriteBatch.Draw(CosmosTexture, Vector2.Zero, null, new(14, 14, 14), 0f, Vector2.Zero, 5f, 0, 0f);
         }
 
         public static void DrawEyes()

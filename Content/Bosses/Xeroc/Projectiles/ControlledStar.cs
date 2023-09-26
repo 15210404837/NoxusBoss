@@ -18,7 +18,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public static float MaxScale => 4.5f;
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -60,10 +60,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         {
             Main.spriteBatch.EnterShaderRegion(BlendState.Additive);
 
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-            Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise").Value;
-            Texture2D noise2 = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise").Value;
-
             Color starColor = Color.Lerp(Color.Yellow, Color.IndianRed, 0.8f);
             starColor = Color.Lerp(starColor, Color.Wheat, UnstableOverlayInterpolant * 0.7f);
 
@@ -74,24 +70,23 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             fireballShader.TrySetParameter("zoom", 0.0004f);
             fireballShader.TrySetParameter("dist", 60f);
             fireballShader.TrySetParameter("opacity", Projectile.Opacity);
-            fireballShader.SetTexture(noise, 1);
-            fireballShader.SetTexture(noise2, 2);
+            fireballShader.SetTexture(FireNoise, 1);
+            fireballShader.SetTexture(TurbulentNoise, 2);
             fireballShader.Apply();
 
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.5f, 0, 0f);
+            Main.spriteBatch.Draw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, InvisiblePixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.5f, 0, 0f);
 
             fireballShader.TrySetParameter("mainColor", Color.Wheat.ToVector3() * Projectile.Opacity * 0.6f);
             fireballShader.Apply();
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.31f, 0, 0f);
+            Main.spriteBatch.Draw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, InvisiblePixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.31f, 0, 0f);
 
             // Draw a pure white overlay over the fireball if instructed.
             if (UnstableOverlayInterpolant >= 0.2f)
             {
                 Main.pixelShader.CurrentTechnique.Passes[0].Apply();
 
-                Texture2D glow = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
                 float glowPulse = Sin(Main.GlobalTimeWrappedHourly * UnstableOverlayInterpolant * 55f) * UnstableOverlayInterpolant * 0.35f;
-                Main.spriteBatch.Draw(glow, Projectile.Center - Main.screenPosition, null, Color.White * UnstableOverlayInterpolant, Projectile.rotation, glow.Size() * 0.5f, Projectile.scale * 0.7f + glowPulse, 0, 0f);
+                Main.spriteBatch.Draw(BloomCircle, Projectile.Center - Main.screenPosition, null, Color.White * UnstableOverlayInterpolant, Projectile.rotation, BloomCircle.Size() * 0.5f, Projectile.scale * 0.7f + glowPulse, 0, 0f);
             }
 
             Main.spriteBatch.ExitShaderRegion();

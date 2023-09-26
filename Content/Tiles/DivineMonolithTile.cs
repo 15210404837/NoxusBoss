@@ -111,10 +111,8 @@ namespace NoxusBoss.Content.Tiles
             {
                 float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 0.4f + (i * 0.9444f + j * 0.3768f) % TwoPi;
                 Vector2 glowDrawPosition = drawPosition + new Vector2(17f, 6f);
-                Texture2D backglow = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
-                Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-                spriteBatch.Draw(bloomFlare, glowDrawPosition, null, Color.Cyan with { A = 0 } * 0.4f, bloomFlareRotation, bloomFlare.Size() * 0.5f, 0.05f, 0, 0f);
-                spriteBatch.Draw(backglow, glowDrawPosition, null, Color.Purple with { A = 0 } * 0.8f, 0f, backglow.Size() * 0.5f, 0.4f, 0, 0f);
+                spriteBatch.Draw(BloomFlare, glowDrawPosition, null, Color.Cyan with { A = 0 } * 0.4f, bloomFlareRotation, BloomFlare.Size() * 0.5f, 0.05f, 0, 0f);
+                spriteBatch.Draw(BloomCircleSmall, glowDrawPosition, null, Color.Purple with { A = 0 } * 0.8f, 0f, BloomCircleSmall.Size() * 0.5f, 0.4f, 0, 0f);
             }
 
             return false;

@@ -9,7 +9,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 {
     public class GroundStompShock : ModProjectile, IDrawsOverTiles
     {
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -33,12 +33,10 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             spriteBatch.SetBlendState(BlendState.Additive);
 
             Vector2 drawPosition = Projectile.Center - Main.screenPosition + Vector2.UnitY * 24f;
-            Texture2D zap = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/ZapTrail").Value;
-            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Draw a purple backglow.
-            spriteBatch.Draw(backglowTexture, drawPosition, null, Color.BlueViolet * Projectile.Opacity, 0f, backglowTexture.Size() * 0.5f, Projectile.scale * 0.56f, 0, 0f);
-            spriteBatch.Draw(backglowTexture, drawPosition, null, Color.SlateBlue * Projectile.Opacity * 0.67f, 0f, backglowTexture.Size() * 0.5f, Projectile.scale * 0.72f, 0, 0f);
+            spriteBatch.Draw(BloomCircle, drawPosition, null, Color.BlueViolet * Projectile.Opacity, 0f, BloomCircle.Size() * 0.5f, Projectile.scale * 0.56f, 0, 0f);
+            spriteBatch.Draw(BloomCircle, drawPosition, null, Color.SlateBlue * Projectile.Opacity * 0.67f, 0f, BloomCircle.Size() * 0.5f, Projectile.scale * 0.72f, 0, 0f);
             spriteBatch.ResetBlendState();
 
             // Draw strong bluish pink lightning zaps above the ground.
@@ -50,8 +48,8 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
                 Color lightningColor = Color.Lerp(Color.SlateBlue, Color.Fuchsia, RandomFloat(ref lightningSeed) * -0.22f) * Projectile.Opacity;
                 lightningColor.A = 0;
 
-                spriteBatch.Draw(zap, drawPosition, null, lightningColor, lightningRotation, zap.Size() * Vector2.UnitY * 0.5f, lightningScale, 0, 0f);
-                spriteBatch.Draw(zap, drawPosition, null, lightningColor * 0.3f, lightningRotation, zap.Size() * Vector2.UnitY * 0.5f, lightningScale * new Vector2(1f, 1.1f), 0, 0f);
+                spriteBatch.Draw(StreakLightning, drawPosition, null, lightningColor, lightningRotation, StreakLightning.Size() * Vector2.UnitY * 0.5f, lightningScale, 0, 0f);
+                spriteBatch.Draw(StreakLightning, drawPosition, null, lightningColor * 0.3f, lightningRotation, StreakLightning.Size() * Vector2.UnitY * 0.5f, lightningScale * new Vector2(1f, 1.1f), 0, 0f);
             }
         }
 

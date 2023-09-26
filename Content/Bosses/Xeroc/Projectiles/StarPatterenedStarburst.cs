@@ -209,7 +209,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
 
             // Draw a flame trail.
-            fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
+            fireTrailShader.SetTexture(StreakMagma, 1);
             TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 4);
         }
 

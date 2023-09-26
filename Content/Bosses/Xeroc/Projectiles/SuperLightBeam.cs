@@ -26,7 +26,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public static float MaxLaserLength => 5000f;
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
 
@@ -112,7 +112,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             // Draw the laser.
             laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 1);
+            laserShader.SetTexture(FireNoise, 1);
             LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, 41);
         }
 

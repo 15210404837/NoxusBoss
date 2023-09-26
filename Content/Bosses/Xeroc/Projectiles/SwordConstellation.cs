@@ -162,7 +162,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawBloomFlare(Vector2 drawPosition, float colorInterpolant, float scale, int index)
         {
-            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
             Color bloomFlareColor1 = Color.Lerp(Color.SkyBlue, Color.Orange, colorInterpolant);
             Color bloomFlareColor2 = Color.Lerp(Color.Cyan, Color.White, colorInterpolant);
@@ -176,8 +175,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             float scaleFactor = Lerp(0.75f, 1.25f, Cos01(Main.GlobalTimeWrappedHourly * 6f + scaleFactorPhaseShift));
             scale *= scaleFactor;
 
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor1 with { A = 0 } * Projectile.Opacity * 0.33f, bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.11f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor2 with { A = 0 } * Projectile.Opacity * 0.41f, -bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.08f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, drawPosition, null, bloomFlareColor1 with { A = 0 } * Projectile.Opacity * 0.33f, bloomFlareRotation, BloomFlare.Size() * 0.5f, scale * 0.11f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, drawPosition, null, bloomFlareColor2 with { A = 0 } * Projectile.Opacity * 0.41f, -bloomFlareRotation, BloomFlare.Size() * 0.5f, scale * 0.08f, 0, 0f);
         }
 
         public void DrawStar(Vector2 drawPosition, float colorInterpolant, float scale, int index)
@@ -258,7 +257,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
 
             var slashShader = GameShaders.Misc["CalamityMod:ExobladeSlash"];
-            slashShader.SetShaderTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Cracks"));
+            slashShader.SetShaderTexture(ModContent.Request<Texture2D>($"{GreyscaleTexturesPath}/CrackedNoise"));
             slashShader.UseColor(Color.DeepSkyBlue);
             slashShader.UseSecondaryColor(Color.Transparent);
             slashShader.Shader.Parameters["fireColor"].SetValue(Color.White.ToVector3());
@@ -281,7 +280,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             DrawAfterimageTrail(SlashDrawer, Projectile, Projectile.oldPos, SlashOpacity, SwordSide, UsePositionCacheForTrail);
 
             // Draw the bloom behind the blade.
-            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             Effect telegraphShader = Terraria.Graphics.Effects.Filters.Scene["CalamityMod:SpreadTelegraph"].GetShader().Shader;
             telegraphShader.Parameters["centerOpacity"].SetValue(1.5f);
             telegraphShader.Parameters["mainOpacity"].SetValue(Sqrt(SlashOpacity));
@@ -292,7 +290,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             telegraphShader.Parameters["edgeBlendStrength"].SetValue(3f);
             telegraphShader.CurrentTechnique.Passes[0].Apply();
 
-            Main.EntitySpriteDraw(invisible, Projectile.Center - Main.screenPosition, null, Color.White, 0f, invisible.Size() * 0.5f, 800f, 0, 0);
+            Main.EntitySpriteDraw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, Color.White, 0f, InvisiblePixel.Size() * 0.5f, 800f, 0, 0);
             Main.spriteBatch.ExitShaderRegion();
 
             // Draw the stars that compose the blade.

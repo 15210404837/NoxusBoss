@@ -121,7 +121,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             cosmicShader.TrySetParameter("colorChangeStrength1", 0.6f);
             cosmicShader.TrySetParameter("colorChangeStrength2", 0.81f);
             cosmicShader.SetTexture(KalisetFractal, 1, SamplerState.AnisotropicWrap);
-            cosmicShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2, SamplerState.AnisotropicWrap);
+            cosmicShader.SetTexture(TurbulentNoise, 2, SamplerState.AnisotropicWrap);
             cosmicShader.Apply();
 
             Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Vector2.Zero, null, Color.White * 0.35f, 0f, Vector2.Zero, scale, 0, 0f);

@@ -40,10 +40,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
 
         public override void Apply()
         {
-            var overlay = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/DivineLight").Value;
-            if (LocalScreenSplitSystem.UseCosmicEffect)
-                overlay = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos").Value;
-
+            var overlay = LocalScreenSplitSystem.UseCosmicEffect ? CosmosTexture : DivineLightTexture;
             PrepareShaderParameters(overlay);
             base.Apply();
         }

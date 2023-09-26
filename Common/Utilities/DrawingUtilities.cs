@@ -44,12 +44,11 @@ namespace NoxusBoss.Common.Utilities
             start -= Main.screenPosition;
             end -= Main.screenPosition;
 
-            Texture2D line = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Lines/BloomLine").Value;
             float rotation = (end - start).ToRotation() + PiOver2;
-            Vector2 scale = new Vector2(width, Vector2.Distance(start, end)) / line.Size();
-            Vector2 origin = new(line.Width / 2f, line.Height);
+            Vector2 scale = new Vector2(width, Vector2.Distance(start, end)) / BloomLineTexture.Size();
+            Vector2 origin = new(BloomLineTexture.Width * 0.5f, BloomLineTexture.Height);
 
-            spriteBatch.Draw(line, start, null, color, rotation, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(BloomLineTexture, start, null, color, rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
         public static void SwapToRenderTarget(this RenderTarget2D renderTarget, Color? flushColor = null)
@@ -108,11 +107,10 @@ namespace NoxusBoss.Common.Utilities
         public static void DrawBloomLineTelegraph(Vector2 drawPosition, BloomLineDrawInfo drawInfo, bool resetSpritebatch = true, Vector2? resolution = null)
         {
             // Claim texture and shader data in easy to use local variables.
-            Texture2D invisible = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             Effect laserScopeEffect = Filters.Scene["CalamityMod:PixelatedSightLine"].GetShader().Shader;
 
             // Prepare all parameters for the shader in anticipation that they will go the GPU for shader effects.
-            laserScopeEffect.Parameters["sampleTexture2"].SetValue(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/CertifiedCrustyNoise").Value);
+            laserScopeEffect.Parameters["sampleTexture2"].SetValue(CrustyNoise);
             laserScopeEffect.Parameters["noiseOffset"].SetValue(Main.GameUpdateCount * -0.004f);
             laserScopeEffect.Parameters["mainOpacity"].SetValue(drawInfo.Opacity);
             laserScopeEffect.Parameters["Resolution"].SetValue(resolution ?? Vector2.One * 425f);
@@ -131,7 +129,7 @@ namespace NoxusBoss.Common.Utilities
             laserScopeEffect.CurrentTechnique.Passes[0].Apply();
 
             // Draw the texture with the shader and flush the results to the GPU, clearing the shader effect for any successive draw calls.
-            Main.spriteBatch.Draw(invisible, drawPosition, null, Color.White, 0f, invisible.Size() * 0.5f, drawInfo.Scale, SpriteEffects.None, 0f);
+            Main.spriteBatch.Draw(InvisiblePixel, drawPosition, null, Color.White, 0f, InvisiblePixel.Size() * 0.5f, drawInfo.Scale, SpriteEffects.None, 0f);
             if (resetSpritebatch)
                 Main.spriteBatch.ExitShaderRegion();
         }

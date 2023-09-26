@@ -181,7 +181,6 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             var galaxyShader = ShaderManager.GetShader("GalaxyShader");
             var gd = Main.instance.GraphicsDevice;
-            Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/MoltenNoise").Value;
             Vector2 scalingFactor = new(gd.DisplayMode.Width / 2560f, gd.DisplayMode.Height / 1440f);
 
             // Draw galaxies in the sky.
@@ -227,8 +226,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 galaxyColor1.G /= 2;
                 galaxyColor2.G /= 3;
 
-                Main.spriteBatch.Draw(noise, galaxySpawnPosition, null, galaxyColor1, 0f, noise.Size() * 0.5f, baseGalaxyScale, 0, 0f);
-                Main.spriteBatch.Draw(noise, galaxySpawnPosition, null, galaxyColor2, 0f, noise.Size() * 0.5f, baseGalaxyScale * 0.8f, 0, 0f);
+                Main.spriteBatch.Draw(MoltenNoise, galaxySpawnPosition, null, galaxyColor1, 0f, MoltenNoise.Size() * 0.5f, baseGalaxyScale, 0, 0f);
+                Main.spriteBatch.Draw(MoltenNoise, galaxySpawnPosition, null, galaxyColor2, 0f, MoltenNoise.Size() * 0.5f, baseGalaxyScale * 0.8f, 0, 0f);
                 tries = 0;
 
                 galaxyPositions.Add(galaxySpawnPosition);

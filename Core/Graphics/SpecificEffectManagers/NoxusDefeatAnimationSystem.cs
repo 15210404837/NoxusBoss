@@ -68,9 +68,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             Main.spriteBatch.Begin();
 
             // Draw the white overlay.
-            Texture2D pixel = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Pixel").Value;
-            Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 2f / pixel.Size();
-            Main.spriteBatch.Draw(pixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White * whiteOverlayOpacity, 0f, pixel.Size() * 0.5f, pixelScale, 0, 0f);
+            Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 2f / WhitePixel.Size();
+            Main.spriteBatch.Draw(WhitePixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White * whiteOverlayOpacity, 0f, WhitePixel.Size() * 0.5f, pixelScale, 0, 0f);
 
             // Draw the text that directs the player to seek the Terminus.
             var font = FontRegistry.Instance.XerocText;

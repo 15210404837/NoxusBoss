@@ -21,7 +21,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
 
         public ref float Time => ref Projectile.ai[1];
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetStaticDefaults()
         {

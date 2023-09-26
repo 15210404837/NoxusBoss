@@ -49,7 +49,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public ref float ReboundCountdown => ref Projectile.ai[1];
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -177,7 +177,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Main.spriteBatch.EnterShaderRegion();
 
             Vector2 scale = Vector2.One * Projectile.width * Projectile.scale * 0.24f;
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
 
             var blackHoleShader = ShaderManager.GetShader("BlackHoleShader");
             blackHoleShader.TrySetParameter("spriteSize", scale);
@@ -186,11 +185,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             blackHoleShader.TrySetParameter("spiralSpinSpeed", 7f);
             blackHoleShader.TrySetParameter("generalOpacity", Projectile.Opacity);
             blackHoleShader.TrySetParameter("transformation", Matrix.CreateScale(1.1f, Projectile.width / (float)Projectile.height, 1f));
-            blackHoleShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 1);
+            blackHoleShader.SetTexture(DendriticNoiseZoomedOut, 1);
             blackHoleShader.Apply();
 
             Color quasarColor = Color.Lerp(Color.Orange, Color.Wheat, XerocSky.KaleidoscopeInterpolant);
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, quasarColor * Projectile.Opacity, Projectile.rotation, pixel.Size() * 0.5f, scale, 0, 0f);
+            Main.spriteBatch.Draw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, quasarColor * Projectile.Opacity, Projectile.rotation, InvisiblePixel.Size() * 0.5f, scale, 0, 0f);
 
             Main.spriteBatch.SetBlendState(BlendState.Additive);
 
@@ -213,20 +212,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
             foreach (EnergySuckParticle particle in Particles)
             {
-                Texture2D tex = ModContent.Request<Texture2D>("CalamityMod/Particles/Light").Value;
-                Texture2D bloomTex = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
-
                 float squish = 0.21f;
                 float rotation = particle.Velocity.ToRotation();
-                Vector2 origin = tex.Size() * 0.5f;
+                Vector2 origin = BloomCircleSmall.Size() * 0.5f;
                 Vector2 scale = new(baseScale - baseScale * squish * 0.3f, baseScale * squish);
-                float properBloomSize = tex.Height / (float)bloomTex.Height;
-
                 Vector2 drawPosition = particle.Center - Main.screenPosition;
 
-                Main.spriteBatch.Draw(bloomTex, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity * 0.8f, rotation, bloomTex.Size() * 0.5f, scale * properBloomSize * 2f, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(tex, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity, rotation, origin, scale * 1.1f, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(tex, drawPosition, null, Color.White * particle.Opacity * Projectile.Opacity * 0.9f, rotation, origin, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(BloomCircleSmall, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity * 0.8f, rotation, origin, scale * 0.32f, 0, 0f);
+                Main.spriteBatch.Draw(BloomCircleSmall, drawPosition, null, particle.DrawColor * particle.Opacity * Projectile.Opacity, rotation, origin, scale * 0.27f, 0, 0f);
+                Main.spriteBatch.Draw(BloomCircleSmall, drawPosition, null, Color.White * particle.Opacity * Projectile.Opacity * 0.9f, rotation, origin, scale * 0.24f, 0, 0f);
             }
         }
 

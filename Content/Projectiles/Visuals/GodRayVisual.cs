@@ -22,7 +22,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public static Color ColorAccent => Color.Magenta;
 
-        public override string Texture => "NoxusBoss/Assets/ExtraTextures/Pixel";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 3200;
 
@@ -82,8 +82,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         {
             // Collect the shader and draw data for later.
             var godRayShader = ShaderManager.GetShader("GodRayShader");
-            Texture2D pixel = ModContent.Request<Texture2D>(Texture).Value;
-            Vector2 textureArea = new Vector2(Projectile.width, Height) / pixel.Size();
+            Vector2 textureArea = new Vector2(Projectile.width, Height) / WhitePixel.Size();
 
             // Apply the god ray shader.
             godRayShader.TrySetParameter("noise1Zoom", 0.18f);
@@ -94,7 +93,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             godRayShader.TrySetParameter("noiseOpacityPower", 2f);
             godRayShader.TrySetParameter("bottomBrightnessIntensity", 0.2f);
             godRayShader.TrySetParameter("colorAccent", ColorAccent.ToVector4() * Projectile.Opacity * 0.14f);
-            godRayShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/Perlin"), 1);
+            godRayShader.SetTexture(PerlinNoise, 1);
             godRayShader.Apply();
 
             // Draw a large white rectangle based on the hitbox of the ray.
@@ -104,7 +103,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             float brightnessInterpolant = brightnessFadeIn * brightnessFadeOut;
             float brightness = Lerp(0.003f, 0.5f, brightnessInterpolant);
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Main.spriteBatch.Draw(pixel, drawPosition, null, Projectile.GetAlpha(MainColor) * brightness, Projectile.rotation, pixel.Size() * new Vector2(0.5f, 1f), textureArea, 0, 0f);
+            Main.spriteBatch.Draw(WhitePixel, drawPosition, null, Projectile.GetAlpha(MainColor) * brightness, Projectile.rotation, WhitePixel.Size() * new Vector2(0.5f, 1f), textureArea, 0, 0f);
 
             // Draw the vignette over the player's screen.
             DrawVignette(brightnessInterpolant);
@@ -119,14 +118,13 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             vignetteShader.TrySetParameter("vignetteBrightness", Lerp(3f, 20f, brightnessInterpolant));
             vignetteShader.TrySetParameter("primaryColor", Color.Lerp(Color.Red, Color.Orange, 0.25f).ToVector4() * 1.2f);
             vignetteShader.TrySetParameter("secondaryColor", Color.White.ToVector4() * 0.54f);
-            vignetteShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/CrackedNoise"), 1);
+            vignetteShader.SetTexture(CrackedNoise, 1);
             vignetteShader.Apply();
 
-            Texture2D pixel = ModContent.Request<Texture2D>(Texture).Value;
             Color vignetteColor = Projectile.GetAlpha(Color.White) * brightnessInterpolant * GetLerpValue(800f, 308f, Distance(Projectile.Center.X, Main.LocalPlayer.Center.X)) * 0.67f;
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
-            Vector2 textureArea = screenArea / pixel.Size();
-            Main.spriteBatch.Draw(pixel, screenArea * 0.5f, null, vignetteColor, 0f, pixel.Size() * 0.5f, textureArea, 0, 0f);
+            Vector2 textureArea = screenArea / WhitePixel.Size();
+            Main.spriteBatch.Draw(WhitePixel, screenArea * 0.5f, null, vignetteColor, 0f, WhitePixel.Size() * 0.5f, textureArea, 0, 0f);
         }
 
         // Manual drawing is not necessary.

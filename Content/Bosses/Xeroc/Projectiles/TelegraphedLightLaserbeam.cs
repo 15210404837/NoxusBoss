@@ -106,7 +106,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override void PrepareLaserShader(ManagedShader laserShader)
         {
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
+            laserShader.SetTexture(WavyBlotchNoise, 1);
         }
 
         public void DrawWithPixelation() => DrawTelegraphOrLaser();

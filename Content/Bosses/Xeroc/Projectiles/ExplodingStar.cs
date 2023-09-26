@@ -26,7 +26,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public ref float StarburstShootSpeedFactor => ref Projectile.ai[1];
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -112,10 +112,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawWithShader(SpriteBatch spriteBatch)
         {
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-            Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise").Value;
-            Texture2D noise2 = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise").Value;
-
             float colorInterpolant = GetLerpValue(3000f, 32000f, Temperature, true);
             Color starColor = MulticolorLerp(colorInterpolant, Color.Red, Color.Orange, Color.Yellow);
             starColor = Color.Lerp(starColor, Color.IndianRed, 0.32f);
@@ -127,15 +123,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             fireballShader.TrySetParameter("zoom", 0.0004f);
             fireballShader.TrySetParameter("dist", 60f);
             fireballShader.TrySetParameter("opacity", Projectile.Opacity);
-            fireballShader.SetTexture(noise, 1);
-            fireballShader.SetTexture(noise2, 2);
+            fireballShader.SetTexture(FireNoise, 1);
+            fireballShader.SetTexture(TurbulentNoise, 2);
             fireballShader.Apply();
 
-            spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.3f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, InvisiblePixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.3f, SpriteEffects.None, 0f);
 
             fireballShader.TrySetParameter("mainColor", Color.Wheat.ToVector3() * Projectile.Opacity * 0.6f);
             fireballShader.Apply();
-            spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, pixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.08f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, InvisiblePixel.Size() * 0.5f, Projectile.width * Projectile.scale * 1.08f, SpriteEffects.None, 0f);
         }
     }
 }

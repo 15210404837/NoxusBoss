@@ -30,7 +30,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public ref float LoopInterpolant => ref Projectile.ai[1];
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetStaticDefaults()
         {
@@ -115,7 +115,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public void PrepareShader()
         {
-            Shader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
+            Shader.SetTexture(StreakBloomLine, 1);
         }
 
         public override bool PreDraw(ref Color lightColor)

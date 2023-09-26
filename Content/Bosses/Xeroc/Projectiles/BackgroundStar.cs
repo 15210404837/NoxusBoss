@@ -160,7 +160,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawBloomFlare()
         {
-            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
             float scale = Pow(Projectile.scale, 0.77f);
 
@@ -169,8 +168,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Color bloomFlareColor2 = Color.Lerp(Color.Cyan, Color.White, colorInterpolant % 0.6f) with { A = 0 } * Projectile.Opacity * 0.81f;
 
             Vector2 bloomFlareDrawPosition = Projectile.Center - Main.screenPosition;
-            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.13f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.146f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, BloomFlare.Size() * 0.5f, scale * 0.13f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, BloomFlare.Size() * 0.5f, scale * 0.146f, 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -201,7 +200,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 return;
 
             // Draw a flame trail.
-            fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
+            fireTrailShader.SetTexture(StreakMagma, 1);
             TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
         }
     }

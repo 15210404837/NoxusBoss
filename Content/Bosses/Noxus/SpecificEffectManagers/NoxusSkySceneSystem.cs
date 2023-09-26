@@ -95,11 +95,9 @@ namespace NoxusBoss.Content.Bosses.Noxus.SpecificEffectManagers
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.EffectMatrix);
 
-                Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-                Texture2D corona = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/Corona").Value;
-                Main.spriteBatch.Draw(corona, sunPosition, null, Color.Wheat * EclipseDarknessInterpolant * 0.58f, Main.GlobalTimeWrappedHourly * 0.03f, corona.Size() * 0.5f, 0.26f, 0, 0f);
-                Main.spriteBatch.Draw(bloomFlare, sunPosition, null, Color.LightGoldenrodYellow * EclipseDarknessInterpolant * 0.5f, Main.GlobalTimeWrappedHourly * 1.2f, bloomFlare.Size() * 0.5f, 0.3f, 0, 0f);
-                Main.spriteBatch.Draw(bloomFlare, sunPosition, null, Color.LightGoldenrodYellow * EclipseDarknessInterpolant * 0.4f, Main.GlobalTimeWrappedHourly * -0.92f, bloomFlare.Size() * 0.5f, 0.25f, 0, 0f);
+                Main.spriteBatch.Draw(CoronaTexture, sunPosition, null, Color.Wheat * EclipseDarknessInterpolant * 0.58f, Main.GlobalTimeWrappedHourly * 0.03f, CoronaTexture.Size() * 0.5f, 0.26f, 0, 0f);
+                Main.spriteBatch.Draw(BloomFlare, sunPosition, null, Color.LightGoldenrodYellow * EclipseDarknessInterpolant * 0.5f, Main.GlobalTimeWrappedHourly * 1.2f, BloomFlare.Size() * 0.5f, 0.3f, 0, 0f);
+                Main.spriteBatch.Draw(BloomFlare, sunPosition, null, Color.LightGoldenrodYellow * EclipseDarknessInterpolant * 0.4f, Main.GlobalTimeWrappedHourly * -0.92f, BloomFlare.Size() * 0.5f, 0.25f, 0, 0f);
             }
 
             // Draw the egg with a moderate amount of blur.

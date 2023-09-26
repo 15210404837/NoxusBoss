@@ -25,11 +25,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
         public ref float Radius => ref Projectile.ai[0];
 
-        public static Color DetermineExplosionColor() => Color.Lerp(Color.MediumSlateBlue, Color.Black, 0.1f);
-
-        public static Texture2D ExplosionNoiseTexture => ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons").Value;
-
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -68,10 +64,10 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
         {
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearWrap, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-            DrawData explosionDrawData = new(ExplosionNoiseTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * Projectile.Opacity);
+            DrawData explosionDrawData = new(DendriticNoise, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * Projectile.Opacity);
 
             var shockwaveShader = ShaderManager.GetShader("ShockwaveShader");
-            shockwaveShader.TrySetParameter("shockwaveColor", DetermineExplosionColor().ToVector3());
+            shockwaveShader.TrySetParameter("shockwaveColor", Color.Lerp(Color.MediumSlateBlue, Color.Black, 0.1f).ToVector3());
             shockwaveShader.TrySetParameter("screenSize", new Vector2(Main.screenWidth, Main.screenHeight));
             shockwaveShader.TrySetParameter("explosionDistance", Radius * Projectile.scale * 0.5f);
             shockwaveShader.TrySetParameter("projectilePosition", Projectile.Center - Main.screenPosition);

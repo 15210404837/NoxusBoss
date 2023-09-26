@@ -121,7 +121,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         private static void PrepareNoiseShader()
         {
             var glitchShader = ShaderManager.GetShader("GlitchShader");
-            glitchShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/SharpNoise"), 1);
+            glitchShader.SetTexture(SharpNoise, 1);
             glitchShader.TrySetParameter("coordinateZoomFactor", Vector2.One * 0.5f);
             glitchShader.TrySetParameter("glitchInterpolant", GlitchIntensity);
             glitchShader.Apply();

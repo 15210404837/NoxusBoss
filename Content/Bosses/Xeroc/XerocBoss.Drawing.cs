@@ -174,9 +174,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
             wingShader.TrySetParameter("normalMapZoom", new Vector2(0.7f, 0.4f));
-            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
+            wingShader.SetTexture(TurbulentNoise, 1);
             wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocWingNormalMap"), 2);
-            wingShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/XerocWingTextureOffsetMap"), 3);
+            wingShader.SetTexture(PsychedelicWingTextureOffsetMap, 3);
             wingShader.Apply();
 
             for (int i = 0; i < Wings.Length; i++)
@@ -232,7 +232,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 if (hand.TrailOpacity >= 0.01f)
                 {
                     // Draw a flame trail.
-                    ShaderManager.GetShader("GenericFlameTrail").SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/ScarletDevilStreak"), 1);
+                    ShaderManager.GetShader("GenericFlameTrail").SetTexture(StreakFlamelash, 1);
                     hand.HandTrailDrawer.Draw(hand.OldCenters.Take(25), -screenPos, 45);
                 }
 
@@ -354,7 +354,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Collect textures.
             Texture2D pixel = TextureAssets.MagicPixel.Value;
             Texture2D backlightTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocBacklight").Value;
-            Texture2D overlayTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Draw the bright backlight.
             Vector2 censorScale = Vector2.One * TeleportVisualsAdjustedScale * new Vector2(200f, 340f) / pixel.Size();
@@ -382,7 +381,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draaw the universal overlay if necessary.
             Vector2 overlayScale = Vector2.One * Lerp(0.1f, 15f, UniversalBlackOverlayInterpolant);
             for (int i = 0; i < 3; i++)
-                Main.spriteBatch.Draw(overlayTexture, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, (ZPosition <= -0.7f ? Color.Transparent : Color.Black) * Sqrt(UniversalBlackOverlayInterpolant), 0f, overlayTexture.Size() * 0.5f, overlayScale, 0, 0f);
+                Main.spriteBatch.Draw(BloomCircle, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, (ZPosition <= -0.7f ? Color.Transparent : Color.Black) * Sqrt(UniversalBlackOverlayInterpolant), 0f, BloomCircle.Size() * 0.5f, overlayScale, 0, 0f);
 
             // Draw congratulatory text if necessary.
             if (DrawCongratulatoryText)
@@ -405,7 +404,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Collect textures.
             Texture2D outlineTexture1 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline1").Value;
             Texture2D outlineTexture2 = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/TeethOutline2").Value;
-            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
 
             // Calculate draw values.
             Vector2 teethScale = TeleportVisualsAdjustedScale * 0.85f;
@@ -414,7 +412,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             teethColor *= NPC.Opacity * (1f - UniversalBlackOverlayInterpolant) * 0.9f;
 
             // Draw a black circle behind the teeth so that background isn't revealed behind them.
-            Main.spriteBatch.Draw(backglowTexture, outlineDrawPosition, null, (Color.Black * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)), 0f, backglowTexture.Size() * 0.5f, new Vector2(0.54f, 0.5f) * TeleportVisualsAdjustedScale, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, outlineDrawPosition, null, (Color.Black * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant)), 0f, BloomCircle.Size() * 0.5f, new Vector2(0.54f, 0.5f) * TeleportVisualsAdjustedScale, 0, 0f);
 
             // Draw the teeth outlines.
             Main.spriteBatch.Draw(outlineTexture1, outlineDrawPosition + Vector2.UnitY.RotatedBy(NPC.rotation) * TopTeethOffset * teethScale * 0.4f, null, teethColor, NPC.rotation, outlineTexture1.Size() * new Vector2(0.5f, 1f), teethScale, 0, 0f);
@@ -456,23 +454,20 @@ namespace NoxusBoss.Content.Bosses.Xeroc
             // Draw a glowing orb before the eye.
             float universalOpacity = Pow(ZPositionOpacity, 0.7f) * NPC.Opacity * (1f - UniversalBlackOverlayInterpolant);
             float glowDissipateFactor = Remap(NPC.Opacity, 0.2f, 1f, 1f, 0.74f) * 0.32f;
-            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
-            Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-            Texture2D spiresTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/XerocSpires").Value;
-            Vector2 origin = backglowTexture.Size() * 0.5f;
+            Vector2 backglowOrigin = BloomCircle.Size() * 0.5f;
             Vector2 baseScale = Vector2.One * NPC.Opacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * 0.6f;
             baseScale *= MathF.Min(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y);
 
-            Main.spriteBatch.Draw(backglowTexture, EyePosition - screenPos, null, Color.White * glowDissipateFactor * universalOpacity, 0f, origin, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, EyePosition - screenPos, null, Color.IndianRed * glowDissipateFactor * universalOpacity * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, EyePosition - screenPos, null, Color.Coral * glowDissipateFactor * universalOpacity * 0.3f, 0f, origin, baseScale * 1.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, EyePosition - screenPos, null, Color.White * glowDissipateFactor * universalOpacity, 0f, backglowOrigin, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, EyePosition - screenPos, null, Color.IndianRed * glowDissipateFactor * universalOpacity * 0.4f, 0f, backglowOrigin, baseScale * 1.2f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, EyePosition - screenPos, null, Color.Coral * glowDissipateFactor * universalOpacity * 0.3f, 0f, backglowOrigin, baseScale * 1.7f, 0, 0f);
 
             // Draw a bloom flare over the orb.
-            Main.spriteBatch.Draw(bloomFlareTexture, EyePosition - screenPos, null, Color.LightCoral * glowDissipateFactor * universalOpacity * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, bloomFlareTexture.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlareTexture, EyePosition - screenPos, null, Color.Coral * glowDissipateFactor * universalOpacity * 0.6f, Main.GlobalTimeWrappedHourly * -0.26f, bloomFlareTexture.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, EyePosition - screenPos, null, Color.LightCoral * glowDissipateFactor * universalOpacity * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, BloomFlare.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, EyePosition - screenPos, null, Color.Coral * glowDissipateFactor * universalOpacity * 0.6f, Main.GlobalTimeWrappedHourly * -0.26f, BloomFlare.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
 
             // Draw the spires over the bloom flare.
-            Main.spriteBatch.Draw(spiresTexture, EyePosition - screenPos, null, Color.White * glowDissipateFactor * universalOpacity, NPC.rotation, spiresTexture.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
+            Main.spriteBatch.Draw(ChromaticSpires, EyePosition - screenPos, null, Color.White * glowDissipateFactor * universalOpacity, NPC.rotation, ChromaticSpires.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
 
             // Draw the eye.
             Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocEye").Value;
@@ -500,8 +495,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, telegraphShader, Main.GameViewMatrix.TransformationMatrix);
 
-                Texture2D texture = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-                Main.EntitySpriteDraw(texture, PupilPosition - screenPos, null, Color.White, PupilOffset.ToRotation(), texture.Size() * 0.5f, 5000f, 0, 0);
+                Main.EntitySpriteDraw(InvisiblePixel, PupilPosition - screenPos, null, Color.White, PupilOffset.ToRotation(), InvisiblePixel.Size() * 0.5f, 5000f, 0, 0);
 
                 if (CurrentAttack == XerocAttackType.SwordConstellation)
                 {
@@ -518,7 +512,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
                     Main.spriteBatch.End();
                     Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, telegraphShader, Main.GameViewMatrix.TransformationMatrix);
 
-                    Main.EntitySpriteDraw(texture, PupilPosition - screenPos, null, Color.White, PupilOffset.ToRotation(), texture.Size() * 0.5f, 2000f, 0, 0);
+                    Main.EntitySpriteDraw(InvisiblePixel, PupilPosition - screenPos, null, Color.White, PupilOffset.ToRotation(), InvisiblePixel.Size() * 0.5f, 2000f, 0, 0);
                 }
 
                 Main.spriteBatch.End();

@@ -90,9 +90,8 @@ namespace NoxusBoss.Content.Subworlds
 
             // Draw a pure-white background. Immediate loading is used for the texture because without it there's a tiny, jarring delay before the white background appears where the regular
             // title screen is revealed momentarily.
-            Texture2D pixel = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Pixel", AssetRequestMode.ImmediateLoad).Value;
-            Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 1.45f / pixel.Size();
-            Main.spriteBatch.Draw(pixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White, 0f, pixel.Size() * 0.5f, pixelScale, 0, 0f);
+            Vector2 pixelScale = new Vector2(Main.screenWidth, Main.screenHeight) * 1.45f / WhitePixel.Size();
+            Main.spriteBatch.Draw(WhitePixel, new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f, null, Color.White, 0f, WhitePixel.Size() * 0.5f, pixelScale, 0, 0f);
 
             // Draw the text.
             Vector2 drawPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - font.MeasureString(text) * 0.5f;

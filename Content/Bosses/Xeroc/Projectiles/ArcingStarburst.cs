@@ -134,7 +134,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public void AdditiveDraw(SpriteBatch spriteBatch)
         {
             // Draw the bloom flare.
-            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
 
             Color baseColor1 = Color.Turquoise;
@@ -143,8 +142,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Color bloomFlareColor2 = baseColor2 with { A = 0 } * Projectile.Opacity * 0.54f;
 
             Vector2 bloomFlareDrawPosition = Projectile.Center - Main.screenPosition;
-            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, Projectile.scale * 0.08f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, Projectile.scale * 0.096f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, BloomFlare.Size() * 0.5f, Projectile.scale * 0.08f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, BloomFlare.Size() * 0.5f, Projectile.scale * 0.096f, 0, 0f);
 
             // Draw the star.
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
@@ -160,7 +159,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
 
             // Draw a flame trail.
-            fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
+            fireTrailShader.SetTexture(StreakMagma, 1);
             TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
         }
     }

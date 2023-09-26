@@ -407,7 +407,7 @@ namespace NoxusBoss.Content.Projectiles
         {
             // Configure the streak shader's texture.
             var streakShader = ShaderManager.GetShader("GenericTrailStreak");
-            streakShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
+            streakShader.SetTexture(StreakBloomLine, 1);
 
             // Draw energy streaks as primitives.
             Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f - Main.screenPosition;
@@ -442,25 +442,22 @@ namespace NoxusBoss.Content.Projectiles
             if (!Main.dayTime)
                 glowDissipateFactor *= 1.5f;
 
-            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
-            Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-            Texture2D spiresTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/XerocSpires").Value;
-            Vector2 origin = backglowTexture.Size() * 0.5f;
+            Vector2 backglowOrigin = BloomCircle.Size() * 0.5f;
             Vector2 baseScale = Vector2.One * EyeOpacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * Projectile.scale;
 
             // Make everything "blink" at first.
             baseScale.Y *= 1f - Convert01To010(GetLerpValue(0.25f, 0.75f, EyeOpacity, true));
 
-            Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.White * glowDissipateFactor, 0f, origin, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.IndianRed * glowDissipateFactor * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.Coral * glowDissipateFactor * 0.3f, 0f, origin, baseScale * 1.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, eyePosition, null, Color.White * glowDissipateFactor, 0f, backglowOrigin, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, eyePosition, null, Color.IndianRed * glowDissipateFactor * 0.4f, 0f, backglowOrigin, baseScale * 1.2f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, eyePosition, null, Color.Coral * glowDissipateFactor * 0.3f, 0f, backglowOrigin, baseScale * 1.7f, 0, 0f);
 
             // Draw a bloom flare over the orb.
-            Main.spriteBatch.Draw(bloomFlareTexture, eyePosition, null, Color.LightCoral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, bloomFlareTexture.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlareTexture, eyePosition, null, Color.Coral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * -0.26f, bloomFlareTexture.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, eyePosition, null, Color.LightCoral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, BloomFlare.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, eyePosition, null, Color.Coral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * -0.26f, BloomFlare.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
 
             // Draw the spires over the bloom flare.
-            Main.spriteBatch.Draw(spiresTexture, eyePosition, null, Color.White * glowDissipateFactor, 0f, spiresTexture.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
+            Main.spriteBatch.Draw(ChromaticSpires, eyePosition, null, Color.White * glowDissipateFactor, 0f, ChromaticSpires.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
 
             // Draw the eye.
             Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocEye").Value;

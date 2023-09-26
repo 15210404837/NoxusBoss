@@ -47,7 +47,7 @@ namespace NoxusBoss.Common.BaseEntities
 
         public ref float LaserLengthFactor => ref Projectile.localAI[1];
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public abstract void PrepareLaserShader(ManagedShader laserShader);
 

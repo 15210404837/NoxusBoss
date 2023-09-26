@@ -51,8 +51,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         public override void Apply()
         {
-            Main.instance.GraphicsDevice.Textures[1] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise").Value;
-            Main.instance.GraphicsDevice.Textures[2] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise").Value;
+            Main.instance.GraphicsDevice.Textures[1] = FireNoise;
+            Main.instance.GraphicsDevice.Textures[2] = WavyBlotchNoise;
             Shader.Parameters["clockCenter"].SetValue(WorldSpaceToScreenUV(ClockCenter));
             UseColor(Color.LightCoral);
             UseSecondaryColor(Color.Orange * 0.4f);

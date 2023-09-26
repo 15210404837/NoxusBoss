@@ -352,8 +352,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public override bool PreDraw(ref Color lightColor)
         {
             // Store textures for efficiency.
-            bloomCircle ??= ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight", AssetRequestMode.ImmediateLoad).Value;
-            bloomFlare ??= ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare", AssetRequestMode.ImmediateLoad).Value;
+            bloomCircle ??= BloomCircle;
+            bloomFlare ??= BloomFlare;
             starTexture ??= ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
 
             ulong starSeed = (ulong)Projectile.identity * 674uL + 25uL;

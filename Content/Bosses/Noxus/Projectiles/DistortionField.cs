@@ -14,7 +14,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
     {
         public ref float Time => ref Projectile.ai[0];
 
-        public override string Texture => "NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/HollowCircleSoftEdge";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -57,10 +57,9 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
         {
             Main.spriteBatch.SetBlendState(BlendState.Additive);
 
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
-            Vector2 scale = Projectile.Size / texture.Size() * 1.4f;
-            Main.spriteBatch.Draw(texture, drawPosition, null, Projectile.GetAlpha(Color.MediumPurple), Projectile.rotation, texture.Size() * 0.5f, scale, 0, 0f);
+            Vector2 scale = Projectile.Size / HollowCircleSoftEdge.Size() * 1.4f;
+            Main.spriteBatch.Draw(HollowCircleSoftEdge, drawPosition, null, Projectile.GetAlpha(Color.MediumPurple), Projectile.rotation, HollowCircleSoftEdge.Size() * 0.5f, scale, 0, 0f);
             Main.spriteBatch.ExitShaderRegion();
 
             return false;

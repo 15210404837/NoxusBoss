@@ -227,7 +227,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
         {
             // Configure the streak shader's texture.
             var streakShader = ShaderManager.GetShader("GenericTrailStreak");
-            streakShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Trails/BasicTrail"), 1);
+            streakShader.SetTexture(StreakBloomLine, 1);
 
             // Draw energy streaks as primitives.
             Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f - Main.screenPosition;

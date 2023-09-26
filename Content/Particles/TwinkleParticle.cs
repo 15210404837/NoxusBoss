@@ -61,13 +61,12 @@ namespace NoxusBoss.Content.Particles
         {
             int instanceCount = TotalStarPoints / 2;
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             Vector2 scale = ScaleFactor * Opacity * 0.1f;
             scale *= Sin(Main.GlobalTimeWrappedHourly * 30f + Time * 0.08f) * 0.125f + 1f;
 
             // Draw the bloom flare.
-            spriteBatch.Draw(bloomFlare, Position - Main.screenPosition, null, Color * Opacity, Rotation - Main.GlobalTimeWrappedHourly * 5f, bloomFlare.Size() * 0.5f, scale * 0.42f, 0, 0f);
-            spriteBatch.Draw(bloomFlare, Position - Main.screenPosition, null, Color * Opacity, Rotation + Main.GlobalTimeWrappedHourly * 5f, bloomFlare.Size() * 0.5f, scale * 0.42f, 0, 0f);
+            spriteBatch.Draw(BloomFlare, Position - Main.screenPosition, null, Color * Opacity, Rotation - Main.GlobalTimeWrappedHourly * 5f, BloomFlare.Size() * 0.5f, scale * 0.42f, 0, 0f);
+            spriteBatch.Draw(BloomFlare, Position - Main.screenPosition, null, Color * Opacity, Rotation + Main.GlobalTimeWrappedHourly * 5f, BloomFlare.Size() * 0.5f, scale * 0.42f, 0, 0f);
 
             // Draw the points of the twinkle.
             for (int i = 0; i < instanceCount; i++)

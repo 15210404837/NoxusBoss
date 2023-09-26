@@ -70,7 +70,7 @@ namespace NoxusBoss.Core.Graphics.Shaders
             UseTargetPosition(WorldSpaceToScreenUV(TerminusPosition));
             UseIntensity(DarknessIntensity * 0.3f);
             UseColor(Color.Transparent);
-            Main.instance.GraphicsDevice.Textures[1] = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons").Value;
+            Main.instance.GraphicsDevice.Textures[1] = DendriticNoise;
             Main.instance.GraphicsDevice.SamplerStates[1] = SamplerState.LinearWrap;
             Shader.Parameters["darknessInterpolantStart"]?.SetValue(0.2f);
             Shader.Parameters["darknessInterpolantEnd"]?.SetValue(0.23f);

@@ -58,10 +58,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 return;
 
             // Draw the line overlay over the screen.
-            Texture2D line = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/FadedLine").Value;
             Vector2 drawCenter = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f - Vector2.UnitY * 80f;
-            Vector2 lineScale = new(Main.screenWidth / line.Width * 1.8f, 1.4f);
-            Main.spriteBatch.Draw(line, drawCenter, null, Color.Black * opacity * 0.75f, 0f, line.Size() * 0.5f, lineScale, 0, 0f);
+            Vector2 lineScale = new(Main.screenWidth / FadedLine.Width * 1.8f, 1.4f);
+            Main.spriteBatch.Draw(FadedLine, drawCenter, null, Color.Black * opacity * 0.75f, 0f, FadedLine.Size() * 0.5f, lineScale, 0, 0f);
 
             // Draw the special text.
             string text = Language.GetTextValue("Mods.NoxusBoss.Dialog.CattailText");

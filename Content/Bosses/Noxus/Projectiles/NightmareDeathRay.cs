@@ -52,7 +52,7 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
 
         public const float MaxLaserLength = 4600f;
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetDefaults()
         {
@@ -186,27 +186,25 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
         public void DrawFrontGlow()
         {
             float pulse = Cos(Main.GlobalTimeWrappedHourly * 36f);
-            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
-            Vector2 origin = backglowTexture.Size() * 0.5f;
+            Vector2 origin = BloomCircle.Size() * 0.5f;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.scale * 20f;
             Vector2 baseScale = new Vector2(1f + pulse * 0.05f, 1f) * Projectile.scale * 0.7f;
-            Main.spriteBatch.Draw(backglowTexture, drawPosition, null, Color.White, 0f, origin, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, drawPosition, null, Color.Violet * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, drawPosition, null, Color.Blue * 0.3f, 0f, origin, baseScale * 1.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, drawPosition, null, Color.White, 0f, origin, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, drawPosition, null, Color.Violet * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, drawPosition, null, Color.Blue * 0.3f, 0f, origin, baseScale * 1.7f, 0, 0f);
         }
 
         public void DrawBloomFlare()
         {
-            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition + Vector2.UnitY * Projectile.scale * 20f;
             Color bloomFlareColor = Color.Lerp(Color.Wheat, Color.Blue, 0.7f);
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.76f;
             float bloomFlareScale = Projectile.scale * 0.4f;
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor, -bloomFlareRotation, bloomFlare.Size() * 0.5f, bloomFlareScale, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, drawPosition, null, bloomFlareColor, -bloomFlareRotation, BloomFlare.Size() * 0.5f, bloomFlareScale, 0, 0f);
 
             bloomFlareColor = Color.Lerp(Color.Wheat, Main.hslToRgb((Main.GlobalTimeWrappedHourly * 0.2f + 0.5f) % 1f, 1f, 0.55f), 0.7f);
             bloomFlareColor = Color.Lerp(bloomFlareColor, Color.Magenta, 0.63f);
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor, bloomFlareRotation, bloomFlare.Size() * 0.5f, bloomFlareScale, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, drawPosition, null, bloomFlareColor, bloomFlareRotation, BloomFlare.Size() * 0.5f, bloomFlareScale, 0, 0f);
         }
 
         public void DrawLaser()
@@ -214,11 +212,11 @@ namespace NoxusBoss.Content.Bosses.Noxus.Projectiles
             var laserShader = ShaderManager.GetShader("NoxusLaserShader");
             BeamDrawer ??= new PrimitiveTrail3D(WidthFunction, ColorFunction, null, true, laserShader);
 
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakNightmareDeathray"), 1);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakNightmareDeathrayLightning"), 2, SamplerState.LinearWrap);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakNightmareDeathrayOverlay"), 3, SamplerState.LinearWrap);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons"), 4);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/ViscousNoise"), 5);
+            laserShader.SetTexture(StreakNightmareDeathray, 1);
+            laserShader.SetTexture(StreakLightning, 2, SamplerState.LinearWrap);
+            laserShader.SetTexture(StreakNightmareDeathrayOverlay, 3, SamplerState.LinearWrap);
+            laserShader.SetTexture(DendriticNoise, 4);
+            laserShader.SetTexture(ViscousNoise, 5);
 
             if (Time >= 2f)
             {

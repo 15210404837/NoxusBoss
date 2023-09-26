@@ -64,17 +64,16 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             portalShader.TrySetParameter("spaceBrightness", GetLerpValue(0.7f, 0.82f, ScreenEffectSystem.FlashIntensity, true) * 150f + 1.5f);
             portalShader.TrySetParameter("spaceTextureZoom", Vector2.One * 0.55f);
             portalShader.TrySetParameter("spaceTextureOffset", Vector2.UnitX * Projectile.identity * 0.156f);
-            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/LemniscateDistanceLookup"), 1);
-            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 2);
+            portalShader.SetTexture(LemniscateDistanceLookup, 1);
+            portalShader.SetTexture(TurbulentNoise, 2);
             portalShader.SetTexture(ModContent.Request<Texture2D>(Texture), 3);
-            portalShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/Perlin"), 4);
-            portalShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/Spikes"), 5);
+            portalShader.SetTexture(PerlinNoise, 4);
+            portalShader.SetTexture(SpikesTexture, 5);
             portalShader.Apply();
 
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/Pixel").Value;
-            Vector2 textureArea = Projectile.Size / pixel.Size() * MaxScale;
+            Vector2 textureArea = Projectile.Size / WhitePixel.Size() * MaxScale;
             textureArea *= 1f + Cos(Main.GlobalTimeWrappedHourly * 15f + Projectile.identity) * 0.013f;
-            spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.IndianRed), Projectile.rotation, pixel.Size() * 0.5f, textureArea, 0, 0f);
+            spriteBatch.Draw(WhitePixel, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.IndianRed), Projectile.rotation, WhitePixel.Size() * 0.5f, textureArea, 0, 0f);
         }
 
         public override bool ShouldUpdatePosition() => false;

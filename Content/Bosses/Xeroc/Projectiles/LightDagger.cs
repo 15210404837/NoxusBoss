@@ -66,9 +66,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public void DrawAdditive(SpriteBatch spriteBatch)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Texture2D bloom = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
-
             if (Time <= TelegraphTime)
                 DrawTelegraph();
 
@@ -86,11 +83,12 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Color mainColor = Color.Lerp(c1, c2, Sin01(TwoPi * HueInterpolant + Main.GlobalTimeWrappedHourly * 2f)) * bloomOpacity;
             Color secondaryColor = Color.Lerp(c1, c2, Sin01(TwoPi * (1f - HueInterpolant) + Main.GlobalTimeWrappedHourly * 2f)) * bloomOpacity;
 
-            Main.EntitySpriteDraw(bloom, Projectile.oldPos[1] + Projectile.Size * 0.5f - Main.screenPosition, null, mainColor, 0f, bloom.Size() * 0.5f, Projectile.scale * 1.32f, 0, 0);
-            Main.EntitySpriteDraw(bloom, Projectile.oldPos[2] + Projectile.Size * 0.5f - Main.screenPosition, null, secondaryColor, 0f, bloom.Size() * 0.5f, Projectile.scale * 0.34f, 0, 0);
+            Main.EntitySpriteDraw(BloomCircleSmall, Projectile.oldPos[1] + Projectile.Size * 0.5f - Main.screenPosition, null, mainColor, 0f, BloomCircleSmall.Size() * 0.5f, Projectile.scale * 1.32f, 0, 0);
+            Main.EntitySpriteDraw(BloomCircleSmall, Projectile.oldPos[2] + Projectile.Size * 0.5f - Main.screenPosition, null, secondaryColor, 0f, BloomCircleSmall.Size() * 0.5f, Projectile.scale * 0.34f, 0, 0);
 
             // Make the dagger appear near the end of the telegraph fade-in.
             float daggerOffsetFactor = Projectile.velocity.Length() * 0.2f;
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             for (int i = 0; i < 30; i++)
             {
                 float daggerScale = Lerp(1f, 0.48f, i / 29f) * Projectile.scale;

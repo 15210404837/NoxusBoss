@@ -80,7 +80,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             var afterimageShader = ShaderManager.GetShader("XerocPsychedelicAfterimageShader");
             afterimageShader.TrySetParameter("uScreenResolution", new Vector2(Main.screenWidth, Main.screenHeight));
             afterimageShader.TrySetParameter("warpSpeed", 0.0008f);
-            afterimageShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/TurbulentNoise"), 1);
+            afterimageShader.SetTexture(TurbulentNoise, 1);
             afterimageShader.Apply();
 
             Main.spriteBatch.Draw(AfterimageTarget, Vector2.Zero, Color.White);

@@ -96,12 +96,11 @@ namespace NoxusBoss.Content.Projectiles.Pets
         public void AdditiveDraw(SpriteBatch spriteBatch)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Texture2D backglow = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
 
             // Draw the backglow.
             Vector2 backglowDrawPosition = Projectile.Center - Main.screenPosition;
-            Main.EntitySpriteDraw(backglow, backglowDrawPosition, null, Projectile.GetAlpha(Color.HotPink) * 0.6f, 0f, backglow.Size() * 0.5f, Projectile.scale * 1.1f, 0, 0);
-            Main.EntitySpriteDraw(backglow, backglowDrawPosition, null, Projectile.GetAlpha(Color.IndianRed) * 0.4f, 0f, backglow.Size() * 0.5f, Projectile.scale * 2f, 0, 0);
+            Main.EntitySpriteDraw(BloomCircleSmall, backglowDrawPosition, null, Projectile.GetAlpha(Color.HotPink) * 0.6f, 0f, BloomCircleSmall.Size() * 0.5f, Projectile.scale * 1.1f, 0, 0);
+            Main.EntitySpriteDraw(BloomCircleSmall, backglowDrawPosition, null, Projectile.GetAlpha(Color.IndianRed) * 0.4f, 0f, BloomCircleSmall.Size() * 0.5f, Projectile.scale * 2f, 0, 0);
 
             // Draw the eye trail.
             for (int i = Projectile.oldPos.Length - 1; i >= 0; i--)

@@ -326,25 +326,22 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
             // Draw a glowing orb over the moon.
             float glowDissipateFactor = Remap(SkyEyeOpacity, 0.2f, 1f, 1f, 0.74f);
-            Texture2D backglowTexture = ModContent.Request<Texture2D>("CalamityMod/Skies/XerocLight").Value;
-            Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-            Texture2D spiresTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/XerocSpires").Value;
-            Vector2 origin = backglowTexture.Size() * 0.5f;
+            Vector2 backglowOrigin = BloomCircle.Size() * 0.5f;
             Vector2 baseScale = Vector2.One * SkyEyeOpacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * SkyEyeScale;
 
             // Make everything "blink" at first.
             baseScale.Y *= 1f - Convert01To010(GetLerpValue(0.25f, 0.75f, SkyEyeOpacity, true));
 
-            Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.White * glowDissipateFactor, 0f, origin, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.IndianRed * glowDissipateFactor * 0.4f, 0f, origin, baseScale * 1.2f, 0, 0f);
-            Main.spriteBatch.Draw(backglowTexture, eyePosition, null, Color.Coral * glowDissipateFactor * 0.3f, 0f, origin, baseScale * 1.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, eyePosition, null, Color.White * glowDissipateFactor, 0f, backglowOrigin, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, eyePosition, null, Color.IndianRed * glowDissipateFactor * 0.4f, 0f, backglowOrigin, baseScale * 1.2f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircle, eyePosition, null, Color.Coral * glowDissipateFactor * 0.3f, 0f, backglowOrigin, baseScale * 1.7f, 0, 0f);
 
             // Draw a bloom flare over the orb.
-            Main.spriteBatch.Draw(bloomFlareTexture, eyePosition, null, Color.LightCoral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, bloomFlareTexture.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlareTexture, eyePosition, null, Color.Coral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * -0.26f, bloomFlareTexture.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, eyePosition, null, Color.LightCoral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, BloomFlare.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, eyePosition, null, Color.Coral * glowDissipateFactor * 0.6f, Main.GlobalTimeWrappedHourly * -0.26f, BloomFlare.Size() * 0.5f, baseScale * 0.7f, 0, 0f);
 
             // Draw the spires over the bloom flare.
-            Main.spriteBatch.Draw(spiresTexture, eyePosition, null, Color.White * glowDissipateFactor, 0f, spiresTexture.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
+            Main.spriteBatch.Draw(ChromaticSpires, eyePosition, null, Color.White * glowDissipateFactor, 0f, ChromaticSpires.Size() * 0.5f, baseScale * 0.8f, 0, 0f);
 
             // Draw the eye.
             Texture2D eyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Parts/XerocEye").Value;
@@ -370,12 +367,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
             if (realisticStarInterpolant >= 0.01f)
             {
                 // Draw a bloom flare behind the sun.
-                Texture2D bloomFlareTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-                Main.spriteBatch.Draw(bloomFlareTexture, sunDrawPosition, null, Color.LightCoral * realisticStarInterpolant * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, bloomFlareTexture.Size() * 0.5f, ManualSunScale * 0.18f, 0, 0f);
-                Main.spriteBatch.Draw(bloomFlareTexture, sunDrawPosition, null, Color.Coral * realisticStarInterpolant * 0.8f, Main.GlobalTimeWrappedHourly * -0.26f, bloomFlareTexture.Size() * 0.5f, ManualSunScale * 0.18f, 0, 0f);
-
-                Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
-                Texture2D noise = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void").Value;
+                Main.spriteBatch.Draw(BloomFlare, sunDrawPosition, null, Color.LightCoral * realisticStarInterpolant * 0.6f, Main.GlobalTimeWrappedHourly * 0.4f, BloomFlare.Size() * 0.5f, ManualSunScale * 0.18f, 0, 0f);
+                Main.spriteBatch.Draw(BloomFlare, sunDrawPosition, null, Color.Coral * realisticStarInterpolant * 0.8f, Main.GlobalTimeWrappedHourly * -0.26f, BloomFlare.Size() * 0.5f, ManualSunScale * 0.18f, 0, 0f);
 
                 Color sunColor = Color.Lerp(Color.Orange, Color.Red, 0.32f);
                 float sunScale = ManualSunScale * Intensity * 67f;
@@ -387,14 +380,14 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
                 fireballShader.TrySetParameter("zoom", 0.0004f);
                 fireballShader.TrySetParameter("dist", 60f);
                 fireballShader.TrySetParameter("opacity", ManualSunOpacity * realisticStarInterpolant * Intensity * 0.9f);
-                fireballShader.SetTexture(noise, 1);
-                fireballShader.SetTexture(pixel, 2);
+                fireballShader.SetTexture(VoidTexture, 1);
+                fireballShader.SetTexture(InvisiblePixel, 2);
 
-                Main.spriteBatch.Draw(pixel, sunDrawPosition, null, Color.White, 0f, pixel.Size() * 0.5f, sunScale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(InvisiblePixel, sunDrawPosition, null, Color.White, 0f, InvisiblePixel.Size() * 0.5f, sunScale, SpriteEffects.None, 0f);
 
                 fireballShader.TrySetParameter("mainColor", Color.Wheat.ToVector3() * ManualSunOpacity * realisticStarInterpolant * 0.5f);
                 fireballShader.Apply();
-                Main.spriteBatch.Draw(pixel, sunDrawPosition, null, Color.White, 0f, pixel.Size() * 0.5f, sunScale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(InvisiblePixel, sunDrawPosition, null, Color.White, 0f, InvisiblePixel.Size() * 0.5f, sunScale, SpriteEffects.None, 0f);
             }
         }
 

@@ -114,9 +114,9 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         {
             laserShader.TrySetParameter("uStretchReverseFactor", 0.15f);
             laserShader.TrySetParameter("scrollSpeedFactor", 1.3f);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Cosmos"), 1);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/FireNoise"), 2);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/BurnNoise"), 3);
+            laserShader.SetTexture(CosmosTexture, 1);
+            laserShader.SetTexture(FireNoise, 2);
+            laserShader.SetTexture(BurnNoise, 3);
         }
 
         public void DrawWithPixelation() => DrawLaser();

@@ -20,7 +20,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public int ShotProjectileTelegraphTime => (int)(TelegraphTime * 2f - 14f);
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 20000;
 

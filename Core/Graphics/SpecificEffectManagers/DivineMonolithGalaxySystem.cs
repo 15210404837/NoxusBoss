@@ -123,7 +123,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
                     // Draw the main galaxy.
                     float galaxyScale = g.Scale * 1.56f + Pow(g.LifetimeCompletion, 1.7f) * 19f;
-                    Texture2D galaxyTexture = ModContent.Request<Texture2D>($"NoxusBoss/Assets/ExtraTextures/Galaxy{g.Variant + 1}").Value;
+                    Texture2D galaxyTexture = ModContent.Request<Texture2D>($"NoxusBoss/Assets/ExtraTextures/Galaxies/Galaxy{g.Variant + 1}").Value;
                     Vector2 galaxyDrawPosition = g.Center - Main.screenPosition;
                     Main.spriteBatch.Draw(galaxyTexture, galaxyDrawPosition, null, g.GeneralColor * g.Opacity, 0f, galaxyTexture.Size() * 0.5f, galaxyScale, 0, 0f);
 

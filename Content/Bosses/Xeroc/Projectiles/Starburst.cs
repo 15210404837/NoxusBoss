@@ -128,8 +128,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public static void DrawStarburstBloomFlare(Projectile projectile, float opacityFactor = 1f)
         {
-            Texture2D bloomFlare = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-            Texture2D backglow = ModContent.Request<Texture2D>("CalamityMod/Particles/BloomCircle").Value;
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + projectile.identity;
 
             Color baseColor1 = ClockConstellation.TimeIsStopped ? Color.Turquoise : Color.Yellow;
@@ -162,18 +160,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 A = 0
             } * projectile.Opacity * opacityFactor * 0.45f;
             Vector2 bloomFlareDrawPosition = projectile.Center - Main.screenPosition;
-            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.08f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, bloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, bloomFlareDrawPosition, null, bloomFlareColor1, bloomFlareRotation, BloomFlare.Size() * 0.5f, projectile.scale * 0.08f, 0, 0f);
+            Main.spriteBatch.Draw(BloomFlare, bloomFlareDrawPosition, null, bloomFlareColor2, -bloomFlareRotation, BloomFlare.Size() * 0.5f, projectile.scale * 0.096f, 0, 0f);
 
             // Draw the backglow.
-            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Red with
+            Main.spriteBatch.Draw(BloomCircleSmall, bloomFlareDrawPosition, null, Color.Red with
             {
                 A = 0
-            } * backglowOpacityFactor * 0.5f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
-            Main.spriteBatch.Draw(backglow, bloomFlareDrawPosition, null, Color.Wheat with
+            } * backglowOpacityFactor * 0.5f, 0f, BloomCircleSmall.Size() * 0.5f, projectile.scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(BloomCircleSmall, bloomFlareDrawPosition, null, Color.Wheat with
             {
                 A = 0
-            } * backglowOpacityFactor * 0.4f, 0f, backglow.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
+            } * backglowOpacityFactor * 0.4f, 0f, BloomCircleSmall.Size() * 0.5f, projectile.scale * 0.8f, 0, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -214,7 +212,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
 
             // Draw a flame trail.
-            fireTrailShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/TrailStreaks/StreakMagma"), 1);
+            fireTrailShader.SetTexture(StreakMagma, 1);
             TrailDrawer.Draw(Projectile.oldPos.Take(8), Projectile.Size * 0.5f - Main.screenPosition, 9);
         }
 

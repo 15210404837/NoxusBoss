@@ -15,7 +15,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.SpecificEffectManagers
 
         public override void Apply()
         {
-            Main.instance.GraphicsDevice.Textures[1] = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/DivineLight").Value;
+            Main.instance.GraphicsDevice.Textures[1] = DivineLightTexture;
             Shader.Parameters["seamAngle"].SetValue(XerocSky.SeamAngle);
             Shader.Parameters["seamSlope"].SetValue(XerocSky.SeamSlope);
             Shader.Parameters["seamBrightness"].SetValue(0.029f);

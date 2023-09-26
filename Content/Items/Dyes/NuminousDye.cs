@@ -27,7 +27,7 @@ namespace NoxusBoss.Content.Items.Dyes
             if (!Main.dedServ)
             {
                 Effect shader = ModContent.Request<Effect>("NoxusBoss/Assets/Effects/NuminousDyeShader", AssetRequestMode.ImmediateLoad).Value;
-                Asset<Texture2D> dyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/NuminousDyeTexture", AssetRequestMode.ImmediateLoad);
+                Asset<Texture2D> dyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/Dyes/NuminousDyeTexture", AssetRequestMode.ImmediateLoad);
                 GameShaders.Armor.BindShader(Type, new ArmorShaderData(new Ref<Effect>(shader), ManagedShader.DefaultPassName)).UseImage(dyeTexture);
             }
         }

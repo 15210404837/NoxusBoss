@@ -17,7 +17,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public static int Lifetime => 480;
 
-        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
+        public override string Texture => InvisiblePixelPath;
 
         public override void SetStaticDefaults() => ProjectileID.Sets.DrawScreenCheckFluff[Type] = 25000;
 
@@ -72,19 +72,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         {
             Main.spriteBatch.EnterShaderRegion();
 
-            Texture2D pixel = ModContent.Request<Texture2D>("CalamityMod/Projectiles/InvisibleProj").Value;
             var fireballShader = ShaderManager.GetShader("SupernovaShader");
             fireballShader.TrySetParameter("supernovaColor1", Color.Orange.ToVector3());
             fireballShader.TrySetParameter("supernovaColor2", Color.Red.ToVector3());
             fireballShader.TrySetParameter("generalOpacity", Projectile.Opacity);
             fireballShader.TrySetParameter("scale", Projectile.scale);
             fireballShader.TrySetParameter("brightness", GetLerpValue(20f, 4f, Projectile.scale, true) * 2f + 1.25f);
-            fireballShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
-            fireballShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 2);
-            fireballShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Void"), 3);
+            fireballShader.SetTexture(WavyBlotchNoise, 1);
+            fireballShader.SetTexture(DendriticNoiseZoomedOut, 2);
+            fireballShader.SetTexture(VoidTexture, 3);
             fireballShader.Apply();
 
-            Main.spriteBatch.Draw(pixel, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.42f, Projectile.rotation, pixel.Size() * 0.5f, Projectile.scale * 400f, 0, 0f);
+            Main.spriteBatch.Draw(InvisiblePixel, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.42f, Projectile.rotation, InvisiblePixel.Size() * 0.5f, Projectile.scale * 400f, 0, 0f);
 
             Main.spriteBatch.ExitShaderRegion();
             return false;

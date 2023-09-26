@@ -134,8 +134,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             laserShader.TrySetParameter("darknessScrollOffset", Vector2.UnitY * (Projectile.identity * 0.3358f % 1f));
             laserShader.TrySetParameter("brightnessScrollOffset", Vector2.UnitY * (Projectile.identity * 0.3747f % 1f));
             laserShader.TrySetParameter("drawAdditively", drawAdditively);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/WavyBlotchNoise"), 1);
-            laserShader.SetTexture(ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/GreyscaleGradients/Neurons2"), 2);
+            laserShader.SetTexture(WavyBlotchNoise, 1);
+            laserShader.SetTexture(DendriticNoiseZoomedOut, 2);
         }
 
         public void DrawWithPixelation() => DrawTelegraphOrLaser();
@@ -152,20 +152,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             float glimmerOpacity = Pow(GetLerpValue(0f, 0.32f, glimmerCompletion, true), 2f) * 0.5f;
             float glimmerRotation = Lerp(PiOver4, Pi * 4f + PiOver4, Pow(glimmerCompletion, 0.15f));
 
-            // Acquire textures.
-            Texture2D star = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/FourPointedStar").Value;
-            Texture2D backglow = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/BloomFlare").Value;
-            Texture2D circularGlow = ModContent.Request<Texture2D>("CalamityMod/Particles/HollowCircleHardEdge").Value;
-
             // Draw the glimmer.
             Vector2 glimmerDrawPosition = Projectile.Center - Main.screenPosition;
             Color glimmerDrawColor = Projectile.GetAlpha(Color.Wheat) * glimmerOpacity;
             Color circularGlowDrawColor = Projectile.GetAlpha(Color.Pink) * glimmerOpacity;
-            spriteBatch.Draw(star, glimmerDrawPosition, null, glimmerDrawColor, glimmerRotation, star.Size() * 0.5f, glimmerScale, 0, 0f);
-            spriteBatch.Draw(backglow, glimmerDrawPosition, null, glimmerDrawColor * 0.3f, glimmerRotation, backglow.Size() * 0.5f, glimmerScale * 1.5f, 0, 0f);
+            spriteBatch.Draw(FourPointedStarTexture, glimmerDrawPosition, null, glimmerDrawColor, glimmerRotation, FourPointedStarTexture.Size() * 0.5f, glimmerScale, 0, 0f);
+            spriteBatch.Draw(BloomFlare, glimmerDrawPosition, null, glimmerDrawColor * 0.3f, glimmerRotation, BloomFlare.Size() * 0.5f, glimmerScale * 1.5f, 0, 0f);
 
             // Draw the circular glow.
-            spriteBatch.Draw(circularGlow, glimmerDrawPosition, null, circularGlowDrawColor, Projectile.velocity.ToRotation(), circularGlow.Size() * 0.5f, glimmerScale * new Vector2(0.9f, 1.25f), 0, 0f);
+            spriteBatch.Draw(HollowCircleSoftEdge, glimmerDrawPosition, null, circularGlowDrawColor, Projectile.velocity.ToRotation(), HollowCircleSoftEdge.Size() * 0.5f, glimmerScale * new Vector2(0.9f, 1.25f), 0, 0f);
         }
     }
 }
