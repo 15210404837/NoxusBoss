@@ -45,26 +45,20 @@ namespace NoxusBoss.Content.Projectiles.Typeless
         {
             // Create gas.
             float particleScale = GetLerpValue(0f, 25f, Time, true) + (Time - 32f) * 0.008f + Main.rand.NextFloat(0.075f);
-            if (Main.rand.NextBool(4))
-            {
-                Color particleColor = Color.Lerp(Color.MediumPurple, Color.DarkBlue, Main.rand.NextFloat(0.7f));
-                var particle = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.1f + Main.rand.NextVector2Circular(0.9f, 0.9f), particleColor, 15, particleScale, particleScale * 0.6f, 0.05f, true, 0f, true)
-                {
-                    Rotation = Main.rand.NextFloat(TwoPi)
-                };
-                GeneralParticleHandler.SpawnParticle(particle);
-            }
+            Color particleColor = Color.Lerp(Color.MediumPurple, Color.DarkBlue, Main.rand.NextFloat(0.7f));
+            var particle = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.1f + Main.rand.NextVector2Circular(0.9f, 0.9f), particleColor, 10, particleScale * 0.85f, particleScale * 0.5f, 0f, true, 0f, true);
+            GeneralParticleHandler.SpawnParticle(particle);
 
             // Create more gas.
             for (int i = 0; i < 2; i++)
             {
-                if (!Main.rand.NextBool(8))
+                if (!Main.rand.NextBool(5))
                     continue;
 
                 Color smokeColor = Color.Lerp(Color.MediumPurple, Color.Blue, Main.rand.NextFloat(0.8f));
                 smokeColor.A = 0;
 
-                var smoke = new SmallSmokeParticle(Projectile.Center, Projectile.velocity * 0.04f + particleScale * Main.rand.NextVector2Circular(8.5f, 8.5f), smokeColor * 0.9f, smokeColor * 0.32f, particleScale * 2.5f, 100f, Main.rand.NextFloatDirection() * 0.02f)
+                var smoke = new SmallSmokeParticle(Projectile.Center, Projectile.velocity * 0.04f + particleScale * Main.rand.NextVector2Circular(8.5f, 8.5f), smokeColor * 0.9f, smokeColor * 0.4f, particleScale * 2.5f, 50f, Main.rand.NextFloatDirection() * 0.02f)
                 {
                     Rotation = Main.rand.NextFloat(TwoPi),
                 };
