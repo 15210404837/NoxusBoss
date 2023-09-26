@@ -37,19 +37,39 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
             Projectile.MaxUpdates = 9;
-            Projectile.timeLeft = Projectile.MaxUpdates * 20;
+            Projectile.timeLeft = Projectile.MaxUpdates * 13;
             CooldownSlot = ImmunityCooldownID.Bosses;
         }
 
         public override void AI()
         {
             // Create gas.
-            float particleScale = GetLerpValue(0f, 32f, Time, true);
-            var particle = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.1f + Main.rand.NextVector2Circular(0.9f, 0.9f), Color.MediumPurple, 15, particleScale, particleScale * 0.4f, 0.05f, true, 0f, true)
+            float particleScale = GetLerpValue(0f, 25f, Time, true) + (Time - 32f) * 0.008f + Main.rand.NextFloat(0.075f);
+            if (Main.rand.NextBool(4))
             {
-                Rotation = Main.rand.NextFloat(TwoPi)
-            };
-            GeneralParticleHandler.SpawnParticle(particle);
+                Color particleColor = Color.Lerp(Color.MediumPurple, Color.DarkBlue, Main.rand.NextFloat(0.7f));
+                var particle = new HeavySmokeParticle(Projectile.Center, Projectile.velocity * 0.1f + Main.rand.NextVector2Circular(0.9f, 0.9f), particleColor, 15, particleScale, particleScale * 0.6f, 0.05f, true, 0f, true)
+                {
+                    Rotation = Main.rand.NextFloat(TwoPi)
+                };
+                GeneralParticleHandler.SpawnParticle(particle);
+            }
+
+            // Create more gas.
+            for (int i = 0; i < 2; i++)
+            {
+                if (!Main.rand.NextBool(8))
+                    continue;
+
+                Color smokeColor = Color.Lerp(Color.MediumPurple, Color.Blue, Main.rand.NextFloat(0.8f));
+                smokeColor.A = 0;
+
+                var smoke = new SmallSmokeParticle(Projectile.Center, Projectile.velocity * 0.04f + particleScale * Main.rand.NextVector2Circular(8.5f, 8.5f), smokeColor * 0.9f, smokeColor * 0.32f, particleScale * 2.5f, 100f, Main.rand.NextFloatDirection() * 0.02f)
+                {
+                    Rotation = Main.rand.NextFloat(TwoPi),
+                };
+                GeneralParticleHandler.SpawnParticle(smoke);
+            }
 
             // Get rid of the player if the spray was reflected by Xeroc and it touches the player.
             if (PlayerHasMadeIncalculableMistake && Projectile.Hitbox.Intersects(Main.player[Projectile.owner].Hitbox) && Main.netMode == NetmodeID.SinglePlayer && Time >= 20f)

@@ -49,7 +49,7 @@ namespace NoxusBoss.Content.Items.MiscOPTools
             Item.noMelee = true;
 
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.UseSound = SoundID.Item20 with { MaxInstances = 50, Volume = 0.3f };
+            Item.UseSound = SoundID.DD2_BookStaffCast with { MaxInstances = 50, Volume = 0.3f, PitchVariance = 0.2f };
 
             Item.value = CalamityGlobalItem.RarityHotPinkBuyPrice;
             Item.rare = ModContent.RarityType<CalamityRed>();
@@ -60,7 +60,7 @@ namespace NoxusBoss.Content.Items.MiscOPTools
 
         public override Vector2? HoldoutOffset()
         {
-            return new(0f, 4f);
+            return new(0f, 4.5f);
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
