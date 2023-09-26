@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.ShapeCurves;
-using ReLogic.Content;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -14,9 +13,17 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class ClockConstellation : ModProjectile
+    public class ClockConstellation : BaseXerocConstellationProjectile
     {
-        private ShapeCurve clockShape
+        public override int ConvergeTime => 300;
+
+        public override int StarDrawIncrement => 2;
+
+        public override float StarConvergenceSpeed => 0.00036f;
+
+        public override float StarRandomOffsetFactor => 1f;
+
+        protected override ShapeCurve constellationShape
         {
             get
             {
@@ -25,15 +32,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
         }
 
-        private Texture2D bloomFlare;
+        public override Color DecidePrimaryBloomFlareColor(float colorVariantInterpolant)
+        {
+            return Color.Lerp(Color.Red, Color.Yellow, Pow(colorVariantInterpolant, 2f)) * 0.33f;
+        }
 
-        private Texture2D bloomCircle;
-
-        private Texture2D starTexture;
-
-        // This stores the clockShape property in a field for performance reasons every frame, since the underlying getter method used there can be straining when done
-        // many times per frame, due to looping.
-        public ShapeCurve ClockShape;
+        public override Color DecideSecondaryBloomFlareColor(float colorVariantInterpolant)
+        {
+            return Color.Lerp(Color.Orange, Color.White, colorVariantInterpolant) * 0.4f;
+        }
 
         public SlotId TickSound;
 
@@ -42,10 +49,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public int TollCounter;
 
         public float PreviousHourRotation = -10f;
-
-        public float StarScaleFactor => Remap(Time, 150f, 300f, 1f, 2.6f);
-
-        public static int ConvergeTime => 300;
 
         public static float StarburstEjectDistance => 560f;
 
@@ -58,17 +61,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
         public ref float HourHandRotation => ref Projectile.ai[0];
 
         public ref float MinuteHandRotation => ref Projectile.ai[1];
-
-        public ref float Time => ref Projectile.localAI[1];
-
-        public override string Texture => $"Terraria/Images/Extra_89";
-
-        public override void SetStaticDefaults()
-        {
-            ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
-            ProjectileID.Sets.DrawScreenCheckFluff[Type] = 10000;
-        }
 
         public override void SetDefaults()
         {
@@ -95,20 +87,13 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             PreviousHourRotation = reader.ReadSingle();
         }
 
-        public override void AI()
+        public override void PostAI()
         {
             // Fade in at first. If the final toll has happened, fade out.
             if (TollCounter >= 2)
                 Projectile.Opacity = Clamp(Projectile.Opacity - 0.01f, 0f, 1f);
             else
                 Projectile.Opacity = GetLerpValue(0f, 45f, Time, true);
-
-            // Die if Xeroc is not present.
-            if (XerocBoss.Myself is null)
-            {
-                Projectile.Kill();
-                return;
-            }
 
             // Make the time restart delay go down.
             TimeIsStopped = false;
@@ -145,9 +130,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 float approachSpeed = Pow(GetLerpValue(ConvergeTime, 0f, Time, true), 2f) * 19f + 3f;
                 Projectile.velocity = Projectile.SafeDirectionTo(target.Center) * approachSpeed;
             }
-
-            // Store the clock shape.
-            ClockShape = clockShape;
 
             // Make the hands move quickly as they fade in before moving more gradually.
             // This cause a time stop if the hour hand reaches a new hour and the clock has completely faded in.
@@ -221,7 +203,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 s.Volume = Projectile.Opacity * handAppearInterpolant * 1.4f;
 
                 // Make the sound temporarily stop if time is stopped.
-                if (TimeIsStopped || Time <= ConvergeTime - 135f || TollCounter >= 2)
+                if (TimeIsStopped || Time <= ConvergeTime * 0.65f || TollCounter >= 2)
                     s.Stop();
             }
 
@@ -248,97 +230,43 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             int totalMinutes = hour * 60 + minute;
             Main.dayTime = true;
             Main.time = totalMinutes * 60 - 16200f;
-
-            Time++;
-        }
-
-        public float GetStarMovementInterpolant(int index)
-        {
-            int starPrepareStartTime = (int)(index * ConvergeTime / 2780f) + 10;
-            return Pow(GetLerpValue(starPrepareStartTime, starPrepareStartTime + 54f, Time, true), 0.68f);
-        }
-
-        public Vector2 GetStarPosition(int index)
-        {
-            // Calculate the seed for the starting spots of the clock's stars. This is randomized based on both projectile index and star index, so it should be
-            // pretty unique across the fight.
-            ulong starSeed = (ulong)Projectile.identity * 113uL + (ulong)index * 602uL + 54uL;
-
-            // Orient the stars in such a way that they come from the background in random spots.
-            Vector2 starDirectionFromCenter = (ClockShape.ShapePoints[index] - ClockShape.Center).SafeNormalize(Vector2.UnitY);
-            Vector2 randomOffset = new(Lerp(-1350f, 1350f, RandomFloat(ref starSeed)), Lerp(-920f, 920f, RandomFloat(ref starSeed)));
-            Vector2 startingSpot = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + starDirectionFromCenter * 500f + randomOffset;
-            Vector2 clockPosition = ClockShape.ShapePoints[index] + Projectile.Center - Main.screenPosition;
-
-            // Apply a tiny, random offset to the clock position.
-            clockPosition += Lerp(-TwoPi, TwoPi, RandomFloat(ref starSeed)).ToRotationVector2() * Lerp(1.5f, 5.3f, RandomFloat(ref starSeed));
-
-            return Vector2.Lerp(startingSpot, clockPosition, GetStarMovementInterpolant(index));
         }
 
         public void DrawBloom()
         {
+            // Calculate colors.
             Color bloomCircleColor = Projectile.GetAlpha(Color.Orange) * 0.3f;
-            Vector2 bloomDrawPosition = Projectile.Center - Main.screenPosition;
+            Color bloomFlareColor = Projectile.GetAlpha(Color.LightCoral) * 0.64f;
 
-            // Draw the bloom circle.
-            Main.spriteBatch.Draw(bloomCircle, bloomDrawPosition, null, bloomCircleColor, 0f, bloomCircle.Size() * 0.5f, 5f, 0, 0f);
+            // Draw the bloom backglow.
+            Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+            Main.spriteBatch.Draw(bloomCircle, drawPosition, null, bloomCircleColor, 0f, bloomCircle.Size() * 0.5f, 5f, 0, 0f);
 
             // Draw bloom flares that go in opposite rotations.
             float bloomFlareRotation = Main.GlobalTimeWrappedHourly * -0.4f;
-            Color bloomFlareColor = Projectile.GetAlpha(Color.LightCoral) * 0.64f;
-            Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation * -0.7f, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
-        }
-
-        public void DrawBloomFlare(Vector2 drawPosition, float colorInterpolant, float scale, int index)
-        {
-            float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
-            Color bloomFlareColor1 = Color.Lerp(Color.Red, Color.Yellow, Pow(colorInterpolant, 2f));
-            Color bloomFlareColor2 = Color.Lerp(Color.Orange, Color.White, colorInterpolant);
-
-            bloomFlareColor1 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
-            bloomFlareColor2 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
-
-            // Make the stars individually twinkle.
-            float scaleFactorPhaseShift = index * 5.853567f * (index % 2 == 0).ToDirectionInt();
-            float scaleFactor = Lerp(0.75f, 1.25f, Cos01(Main.GlobalTimeWrappedHourly * 6.4f + scaleFactorPhaseShift));
-            scale *= scaleFactor;
-
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor1 with { A = 0 } * Projectile.Opacity * 0.33f, bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.11f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor2 with { A = 0 } * Projectile.Opacity * 0.41f, -bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.08f, 0, 0f);
-        }
-
-        public void DrawStar(Vector2 drawPosition, float colorInterpolant, float scale, int index)
-        {
-            // Draw a bloom flare behind the star.
-            DrawBloomFlare(drawPosition, colorInterpolant, scale * XerocBoss.Myself.scale, index);
-
-            // Draw the star.
-            Rectangle frame = starTexture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
-            Color color = Projectile.GetAlpha(Color.Wheat) with { A = 0 } * Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.3f, 1f);
-
-            Main.spriteBatch.Draw(starTexture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, scale * 0.5f, 0, 0f);
-            Main.spriteBatch.Draw(starTexture, drawPosition, frame, color, Projectile.rotation - Pi / 3f, frame.Size() * 0.5f, scale * 0.3f, 0, 0f);
-            Main.spriteBatch.Draw(starTexture, drawPosition, frame, color, Projectile.rotation + Pi / 3f, frame.Size() * 0.5f, scale * 0.3f, 0, 0f);
+            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor, bloomFlareRotation, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
+            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor, bloomFlareRotation * -0.7f, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
         }
 
         public void DrawClockHands()
         {
+            // Acquire clock hand texture.
             Texture2D minuteHandTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Projectiles/ClockMinuteHand").Value;
             Texture2D hourHandTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Bosses/Xeroc/Projectiles/ClockHourHand").Value;
 
+            // Calculate clock hand colors.
             float handOpacity = GetLerpValue(ConvergeTime - 150f, ConvergeTime + 54f, Time, true);
             Color generalHandColor = Color.Lerp(Color.OrangeRed, Color.Coral, 0.24f) with { A = 20 };
             Color minuteHandColor = Projectile.GetAlpha(generalHandColor) * handOpacity;
             Color hourHandColor = Projectile.GetAlpha(generalHandColor) * handOpacity;
 
+            // Calculate the clock hand scale and draw positions. The scale is relative to the hitbox of the projectile so that the clock can be arbitrarily sized without issue.
             float handScale = Projectile.width / (float)hourHandTexture.Width * 0.52f;
             Vector2 handBaseDrawPosition = Projectile.Center - Main.screenPosition;
             Vector2 minuteHandDrawPosition = handBaseDrawPosition - MinuteHandRotation.ToRotationVector2() * handScale * 26f;
             Vector2 hourHandDrawPosition = handBaseDrawPosition - HourHandRotation.ToRotationVector2() * handScale * 26f;
 
-            // Draw the hands.
+            // Draw the hands with afterimages.
             for (int i = 0; i < 24; i++)
             {
                 float afterimageOpacity = 1f - i / 24f;
@@ -351,35 +279,18 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            // Store textures for efficiency.
-            bloomCircle ??= BloomCircle;
-            bloomFlare ??= BloomFlare;
-            starTexture ??= ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
-
-            ulong starSeed = (ulong)Projectile.identity * 674uL + 25uL;
-
-            // Draw bloom behind everything.
+            // Draw bloom behind the clock to give a nice ambient glow.
             Main.spriteBatch.SetBlendState(BlendState.Additive);
             DrawBloom();
             Main.spriteBatch.ResetBlendState();
 
-            // Draw the stars that compose the clock's outline.
-            for (int i = 0; i < ClockShape.ShapePoints.Count; i += 2)
-            {
-                float colorInterpolant = Sqrt(RandomFloat(ref starSeed));
-                float scale = StarScaleFactor * Lerp(0.3f, 0.95f, RandomFloat(ref starSeed)) * Projectile.scale;
-
-                // Make the scale more uniform as the star scale factor gets larger.
-                scale = Remap(StarScaleFactor * 0.75f, scale, StarScaleFactor, 1f, 2.5f) * 0.7f;
-
-                Vector2 shapeDrawPosition = GetStarPosition(i);
-                DrawStar(shapeDrawPosition, colorInterpolant, scale * 0.4f, i);
-            }
+            // Draw the clock.
+            base.PreDraw(ref lightColor);
 
             // Draw clock hands.
             DrawClockHands();
 
-            return false;
+            return true;
         }
 
         public override void Kill(int timeLeft)

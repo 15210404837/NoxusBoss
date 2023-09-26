@@ -111,7 +111,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_SuperCosmicLaserbeam()
         {
-            int attackDelay = BookConstellation.ConvergeTime + 150;
+            int attackDelay = BookConstellation.ConvergeTimeConst + 150;
             int shootTime = SuperCosmicBeam.DefaultLifetime;
             int realityTearReleaseRate = 75;
             ref float laserDirection = ref NPC.ai[2];

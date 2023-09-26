@@ -28,7 +28,7 @@ namespace NoxusBoss.Content.Backgrounds
 
         public override void Load()
         {
-            // Load the background with the large lake animation frames.
+            // Load the vanilla background with the large lake animation frames.
             for (int i = 251; i <= 254; i++)
                 BackgroundTextureLoader.AddBackgroundTexture(Mod, $"Terraria/Images/Background_{i}");
         }
@@ -38,18 +38,8 @@ namespace NoxusBoss.Content.Backgrounds
             // This just fades in the background and fades out other backgrounds.
             for (int i = 0; i < fades.Length; i++)
             {
-                if (i == Slot)
-                {
-                    fades[i] += transitionSpeed;
-                    if (fades[i] > 1f)
-                        fades[i] = 1f;
-                }
-                else
-                {
-                    fades[i] -= transitionSpeed;
-                    if (fades[i] < 0f)
-                        fades[i] = 0f;
-                }
+                bool shouldFadeIn = i == Slot;
+                fades[i] = Clamp(fades[i] + transitionSpeed * shouldFadeIn.ToDirectionInt(), 0f, 1f);
             }
         }
     }

@@ -848,7 +848,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
         public void DoBehavior_SwordConstellation()
         {
-            int constellationConvergeTime = SwordConstellation.ConvergeTime;
+            int constellationConvergeTime = SwordConstellation.ConvergeTimeConst;
             int animationTime = 58 - SwordSlashCounter * 5;
             int slashCount = 5;
             int teleportVisualsTime = 17;
@@ -1049,7 +1049,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc
 
             // Calculate sword direction values.
             float animationCompletion = SwordAnimationTimer / (float)animationTime;
-            float anticipationAngle = SwordSlashAngularMotion.Evaluate(animationCompletion) - PiOver2;
+            float anticipationAngle = SwordSlashAngularMotion.Evaluate(Clamp(animationCompletion, 0f, 0.91f)) - PiOver2;
             Vector2 handHoverOffset = anticipationAngle.ToRotationVector2() * TeleportVisualsAdjustedScale * new Vector2(SwordSlashDirection * 800f, 450f);
             swordRotation = handHoverOffset.ToRotation() + SwordSlashDirection * PiOver2;
             if (SwordSlashDirection == -1)

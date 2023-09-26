@@ -4,16 +4,25 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
-using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class BookConstellation : ModProjectile
+    public class BookConstellation : BaseXerocConstellationProjectile
     {
-        private ShapeCurve bookShape
+        public float MagicCircleOpacity => GetLerpValue(45f, 105f, Time - ConvergeTime, true);
+
+        public override int ConvergeTime => ConvergeTimeConst;
+
+        public override int StarDrawIncrement => 1;
+
+        public override float StarConvergenceSpeed => 0.0025f;
+
+        public override float StarRandomOffsetFactor => 1f;
+
+        protected override ShapeCurve constellationShape
         {
             get
             {
@@ -22,25 +31,17 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
         }
 
-        private Texture2D bloomFlare;
+        public override Color DecidePrimaryBloomFlareColor(float colorVariantInterpolant)
+        {
+            return Color.Lerp(Color.Cyan, Color.Yellow, Pow(colorVariantInterpolant, 2f) * 0.5f) * 0.34f;
+        }
 
-        private Texture2D bloomCircle;
+        public override Color DecideSecondaryBloomFlareColor(float colorVariantInterpolant)
+        {
+            return Color.Lerp(Color.Wheat, Color.White, colorVariantInterpolant) * 0.43f;
+        }
 
-        private Texture2D starTexture;
-
-        // This stores the bookShape property in a field for performance reasons every frame, since the underlying getter method used there can be straining when done
-        // many times per frame, due to looping.
-        public ShapeCurve BookShape;
-
-        public float StarScaleFactor => Remap(Time, 150f, 300f, 1f, 2.6f);
-
-        public float CircleOpacity => GetLerpValue(45f, 105f, Time - ConvergeTime, true);
-
-        public static int ConvergeTime => 150;
-
-        public ref float Time => ref Projectile.localAI[1];
-
-        public override string Texture => $"Terraria/Images/Extra_89";
+        public const int ConvergeTimeConst = 150;
 
         public override void SetStaticDefaults()
         {
@@ -60,29 +61,19 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Projectile.timeLeft = ConvergeTime + SuperCosmicBeam.DefaultLifetime + 175;
         }
 
-        public override void AI()
+        public override void PostAI()
         {
             // Fade in.
             Projectile.scale = GetLerpValue(0f, 45f, Projectile.timeLeft, true);
             Projectile.Opacity = GetLerpValue(0f, 45f, Time, true) * Projectile.scale;
-
-            // Die if Xeroc is not present.
-            if (XerocBoss.Myself is null)
-            {
-                Projectile.Kill();
-                return;
-            }
 
             // Stick to Xeroc and inherit the current direction from him.
             Projectile.velocity = XerocBoss.Myself.ai[2].ToRotationVector2();
             Projectile.Center = XerocBoss.Myself.Center + Projectile.velocity * 200f;
             Projectile.rotation = XerocBoss.Myself.ai[2];
 
-            // Store the book shape.
-            BookShape = bookShape;
-
             // Create charge particles.
-            if (CircleOpacity >= 1f && Time <= ConvergeTime + 150f)
+            if (MagicCircleOpacity >= 1f && Time <= ConvergeTime + 150f)
             {
                 for (int i = 0; i < 6; i++)
                 {
@@ -93,32 +84,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                     GeneralParticleHandler.SpawnParticle(light);
                 }
             }
-
-            Time++;
-        }
-
-        public float GetStarMovementInterpolant(int index)
-        {
-            int starPrepareStartTime = (int)(index * ConvergeTime / 400f) + 10;
-            return Pow(GetLerpValue(starPrepareStartTime, starPrepareStartTime + 75f, Time, true), 0.68f);
-        }
-
-        public Vector2 GetStarPosition(int index)
-        {
-            // Calculate the seed for the starting spots of the book's stars. This is randomized based on both projectile index and star index, so it should be
-            // pretty unique across the fight.
-            ulong starSeed = (ulong)Projectile.identity * 113uL + (ulong)index * 602uL + 54uL;
-
-            // Orient the stars in such a way that they come from the background in random spots.
-            Vector2 starDirectionFromCenter = (BookShape.ShapePoints[index] - BookShape.Center).SafeNormalize(Vector2.UnitY);
-            Vector2 randomOffset = new(Lerp(-1350f, 1350f, RandomFloat(ref starSeed)), Lerp(-920f, 920f, RandomFloat(ref starSeed)));
-            Vector2 startingSpot = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + starDirectionFromCenter * 500f + randomOffset;
-            Vector2 bookPosition = BookShape.ShapePoints[index] + Projectile.Center - Main.screenPosition;
-
-            // Apply a tiny, random offset to the book position.
-            bookPosition += Lerp(-TwoPi, TwoPi, RandomFloat(ref starSeed)).ToRotationVector2() * Lerp(1.5f, 5.3f, RandomFloat(ref starSeed));
-
-            return Vector2.Lerp(startingSpot, bookPosition, GetStarMovementInterpolant(index));
         }
 
         public void DrawBloom()
@@ -136,64 +101,15 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Main.spriteBatch.Draw(bloomFlare, bloomDrawPosition, null, bloomFlareColor, bloomFlareRotation * -0.7f, bloomFlare.Size() * 0.5f, 2f, 0, 0f);
         }
 
-        public void DrawBloomFlare(Vector2 drawPosition, float colorInterpolant, float scale, int index)
-        {
-            float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
-            Color bloomFlareColor1 = Color.Lerp(Color.Cyan, Color.Yellow, Pow(colorInterpolant, 2f) * 0.5f);
-            Color bloomFlareColor2 = Color.Lerp(Color.Wheat, Color.White, colorInterpolant);
-
-            bloomFlareColor1 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
-            bloomFlareColor2 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
-
-            // Make the stars individually twinkle.
-            float scaleFactorPhaseShift = index * 5.853567f * (index % 2 == 0).ToDirectionInt();
-            float scaleFactor = Lerp(0.75f, 1.25f, Cos01(Main.GlobalTimeWrappedHourly * 6f + scaleFactorPhaseShift));
-            scale *= scaleFactor;
-
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor1 with { A = 0 } * Projectile.Opacity * 0.33f, bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.11f, 0, 0f);
-            Main.spriteBatch.Draw(bloomFlare, drawPosition, null, bloomFlareColor2 with { A = 0 } * Projectile.Opacity * 0.41f, -bloomFlareRotation, bloomFlare.Size() * 0.5f, scale * 0.08f, 0, 0f);
-        }
-
-        public void DrawStar(Vector2 drawPosition, float colorInterpolant, float scale, int index)
-        {
-            // Draw a bloom flare behind the star.
-            DrawBloomFlare(drawPosition, colorInterpolant, scale * XerocBoss.Myself.scale, index);
-
-            // Draw the star.
-            Rectangle frame = starTexture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
-            Color color = Projectile.GetAlpha(Color.Wheat) with { A = 0 } * Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.3f, 1f);
-
-            Main.spriteBatch.Draw(starTexture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, scale * 0.5f, 0, 0f);
-            Main.spriteBatch.Draw(starTexture, drawPosition, frame, color, Projectile.rotation - Pi / 3f, frame.Size() * 0.5f, scale * 0.3f, 0, 0f);
-            Main.spriteBatch.Draw(starTexture, drawPosition, frame, color, Projectile.rotation + Pi / 3f, frame.Size() * 0.5f, scale * 0.3f, 0, 0f);
-        }
-
         public override bool PreDraw(ref Color lightColor)
         {
-            // Store textures for efficiency.
-            bloomCircle ??= BloomCircle;
-            bloomFlare ??= BloomFlare;
-            starTexture ??= ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad).Value;
-
-            ulong starSeed = (ulong)Projectile.identity * 674uL + 25uL;
-
-            // Draw bloom behind everything.
+            // Draw bloom behind the book to give a nice ambient glow.
             Main.spriteBatch.SetBlendState(BlendState.Additive);
             DrawBloom();
             Main.spriteBatch.ResetBlendState();
 
-            // Draw the stars that compose the book's outline.
-            for (int i = 0; i < BookShape.ShapePoints.Count; i++)
-            {
-                float colorInterpolant = Sqrt(RandomFloat(ref starSeed));
-                float scale = StarScaleFactor * Lerp(0.3f, 0.95f, RandomFloat(ref starSeed)) * Projectile.scale;
-
-                // Make the scale more uniform as the star scale factor gets larger.
-                scale = Remap(StarScaleFactor * 0.75f, scale, StarScaleFactor, 1f, 2.5f) * 0.7f;
-
-                Vector2 shapeDrawPosition = GetStarPosition(i);
-                DrawStar(shapeDrawPosition, colorInterpolant, scale * 0.4f, i);
-            }
+            // Draw the book.
+            base.PreDraw(ref lightColor);
 
             // Draw the magic circle.
             Main.spriteBatch.EnterShaderRegion();
@@ -212,7 +128,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Determine draw values.
             Vector2 circleDrawPosition = Projectile.Center + Projectile.velocity * 200f - Main.screenPosition;
             Vector2 circleScale = Vector2.One * Projectile.scale * Projectile.Opacity * 1.5f;
-            Color circleColor = Projectile.GetAlpha(new(92, 40, 204)) * CircleOpacity;
+            Color circleColor = Projectile.GetAlpha(new(92, 40, 204)) * MagicCircleOpacity;
 
             // Apply the shader.
             var magicCircleShader = ShaderManager.GetShader("MagicCircleShader");
@@ -229,7 +145,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             // Draw the eye on top of the circle.
             magicCircleShader.TrySetParameter("spinRotation", 0f);
             magicCircleShader.Apply();
-            Main.EntitySpriteDraw(magicCircleCenter, circleDrawPosition, null, Color.Lerp(circleColor, Color.White * CircleOpacity, 0.5f) with { A = 0 }, 0f, magicCircleCenter.Size() * 0.5f, circleScale, 0, 0);
+            Main.EntitySpriteDraw(magicCircleCenter, circleDrawPosition, null, Color.Lerp(circleColor, Color.White * MagicCircleOpacity, 0.5f) with { A = 0 }, 0f, magicCircleCenter.Size() * 0.5f, circleScale, 0, 0);
         }
     }
 }

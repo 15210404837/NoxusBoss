@@ -11,17 +11,8 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 {
-    public class SwordConstellation : ModProjectile
+    public class SwordConstellation : BaseXerocConstellationProjectile
     {
-        private ShapeCurve swordShape
-        {
-            get
-            {
-                ShapeCurveManager.TryFind("Sword", out ShapeCurve curve);
-                return curve.Upscale(Projectile.width * Projectile.scale * 1.414f).LinearlyTransform(SquishTransformation).Rotate(Projectile.rotation);
-            }
-        }
-
         public Matrix SquishTransformation
         {
             get
@@ -33,11 +24,34 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             }
         }
 
-        public float ZPosition;
+        public override int ConvergeTime => ConvergeTimeConst;
 
-        // This stores the swordShape property in a field for performance reasons every frame, since the underlying getter method used there can be straining when done
-        // many times per frame, due to looping.
-        public ShapeCurve SwordShape;
+        public override int StarDrawIncrement => 1;
+
+        public override float StarConvergenceSpeed => 0.00185f;
+
+        public override float StarRandomOffsetFactor => 0f;
+
+        protected override ShapeCurve constellationShape
+        {
+            get
+            {
+                ShapeCurveManager.TryFind("Sword", out ShapeCurve curve);
+                return curve.Upscale(Projectile.width * Projectile.scale * 1.414f).LinearlyTransform(SquishTransformation).Rotate(Projectile.rotation);
+            }
+        }
+
+        public override Color DecidePrimaryBloomFlareColor(float colorVariantInterpolant)
+        {
+            return Color.Lerp(Color.SkyBlue, Color.Orange, colorVariantInterpolant) * 0.33f;
+        }
+
+        public override Color DecideSecondaryBloomFlareColor(float colorVariantInterpolant)
+        {
+            return Color.Lerp(Color.Cyan, Color.White, colorVariantInterpolant) * 0.42f;
+        }
+
+        public float ZPosition;
 
         public PrimitiveTrail SlashDrawer
         {
@@ -51,17 +65,11 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public bool SlashIsAttached => Projectile.ai[2] == 0f;
 
-        public float StarScaleFactor => Remap(Time, 150f, 300f, 1f, 2.6f);
-
-        public static int ConvergeTime => 120;
-
         public ref float SwordSide => ref Projectile.ai[1];
 
         public ref float SlashOpacity => ref Projectile.localAI[0];
 
-        public ref float Time => ref Projectile.localAI[1];
-
-        public override string Texture => "Terraria/Images/Extra_89";
+        public static int ConvergeTimeConst => 120;
 
         public override void SetStaticDefaults()
         {
@@ -86,7 +94,8 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override void ReceiveExtraAI(BinaryReader reader) => ZPosition = reader.ReadSingle();
 
-        public override void AI()
+        // This is done via PreAI instead of PostAI to ensure that the AI method, which defines the constellation shape, has all the correct information, rather than having a one-frame discrepancy.
+        public override bool PreAI()
         {
             // Appear from the background at first.
             if (Time <= ConvergeTime)
@@ -95,13 +104,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
                 float zPositionVariance = Projectile.identity * 18557.34173f % 12f;
                 ZPosition = Lerp(zPositionVariance + 7f, 1.3f, zPositionInterpolant);
                 Projectile.rotation = PiOver4;
-            }
-
-            // Die if Xeroc is not present.
-            if (XerocBoss.Myself is null)
-            {
-                Projectile.Kill();
-                return;
             }
 
             // Determine the scale of the sword based on its Z position.
@@ -121,11 +123,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             else
                 SlashOpacity = 0f;
 
-            if (Projectile.FinalExtraUpdate())
-                Time++;
-
-            // Store the sword shape.
-            SwordShape = swordShape;
+            return true;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -138,64 +136,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Vector2 start = Projectile.Center - direction * Projectile.width * Projectile.scale * 0.45f;
             Vector2 end = Projectile.Center + direction * Projectile.width * Projectile.scale * 0.45f;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.width * Projectile.scale * (UsePositionCacheForTrail ? 1.2f : 0.8f), ref _);
-        }
-
-        public float GetStarMovementInterpolant(int index)
-        {
-            int starPrepareStartTime = (int)(index * ConvergeTime / 540f) + 10;
-            return Pow(GetLerpValue(starPrepareStartTime, starPrepareStartTime + 50f, Time, true), 0.65f);
-        }
-
-        public Vector2 GetStarPosition(int index)
-        {
-            // Calculate the seed for the starting spots of the sword's stars. This is randomized based on both projectile index and star index, so it should be
-            // pretty unique across the fight.
-            ulong starSeed = (ulong)Projectile.identity * 113uL + (ulong)index * 602uL + 54uL;
-
-            // Orient the stars in such a way that they come from the background in random spots.
-            Vector2 starDirectionFromCenter = (SwordShape.ShapePoints[index] - SwordShape.Center).SafeNormalize(Vector2.UnitY);
-            Vector2 randomOffset = new(Lerp(-950f, 950f, RandomFloat(ref starSeed)), Lerp(-750f, 750f, RandomFloat(ref starSeed)));
-            Vector2 startingSpot = new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + starDirectionFromCenter * 500f + randomOffset;
-            Vector2 swordPosition = SwordShape.ShapePoints[index] + Projectile.Center - Main.screenPosition;
-            return Vector2.Lerp(startingSpot, swordPosition, GetStarMovementInterpolant(index));
-        }
-
-        public void DrawBloomFlare(Vector2 drawPosition, float colorInterpolant, float scale, int index)
-        {
-            float bloomFlareRotation = Main.GlobalTimeWrappedHourly * 1.1f + Projectile.identity;
-            Color bloomFlareColor1 = Color.Lerp(Color.SkyBlue, Color.Orange, colorInterpolant);
-            Color bloomFlareColor2 = Color.Lerp(Color.Cyan, Color.White, colorInterpolant);
-            bloomFlareColor1 = Color.Lerp(bloomFlareColor1, Color.Cyan, SlashOpacity);
-
-            bloomFlareColor1 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
-            bloomFlareColor2 *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.5f, 1f);
-
-            // Make the stars individually twinkle.
-            float scaleFactorPhaseShift = index * 5.853567f * (index % 2 == 0).ToDirectionInt();
-            float scaleFactor = Lerp(0.75f, 1.25f, Cos01(Main.GlobalTimeWrappedHourly * 6f + scaleFactorPhaseShift));
-            scale *= scaleFactor;
-
-            Main.spriteBatch.Draw(BloomFlare, drawPosition, null, bloomFlareColor1 with { A = 0 } * Projectile.Opacity * 0.33f, bloomFlareRotation, BloomFlare.Size() * 0.5f, scale * 0.11f, 0, 0f);
-            Main.spriteBatch.Draw(BloomFlare, drawPosition, null, bloomFlareColor2 with { A = 0 } * Projectile.Opacity * 0.41f, -bloomFlareRotation, BloomFlare.Size() * 0.5f, scale * 0.08f, 0, 0f);
-        }
-
-        public void DrawStar(Vector2 drawPosition, float colorInterpolant, float scale, int index)
-        {
-            // Draw a bloom flare behind the star.
-            DrawBloomFlare(drawPosition, colorInterpolant, scale * XerocBoss.Myself.scale, index);
-
-            // Draw the star.
-            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-            Rectangle frame = texture.Frame(1, Main.projFrames[Type], 0, Projectile.frame);
-            Color color = Projectile.GetAlpha(Color.Wheat) with { A = 0 };
-
-            // Make the color interpolant err towards more cyan stars based on the slash.
-            color = Color.Lerp(color, Projectile.GetAlpha(Color.DeepSkyBlue) with { A = 0 }, SlashOpacity * 0.7f);
-            color *= Remap(GetStarMovementInterpolant(index), 0f, 1f, 0.3f, 1f);
-
-            Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, scale * 0.5f, 0, 0f);
-            Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation - Pi / 3f, frame.Size() * 0.5f, scale * 0.3f, 0, 0f);
-            Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation + Pi / 3f, frame.Size() * 0.5f, scale * 0.3f, 0, 0f);
         }
 
         public float SlashWidthFunction(float completionRatio) => Projectile.scale * Projectile.width * 0.7f;
@@ -270,8 +210,6 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            ulong starSeed = (ulong)Projectile.identity * 674uL + 25uL;
-
             // Draw the slash.
             Main.spriteBatch.EnterShaderRegion();
 
@@ -294,17 +232,7 @@ namespace NoxusBoss.Content.Bosses.Xeroc.Projectiles
             Main.spriteBatch.ExitShaderRegion();
 
             // Draw the stars that compose the blade.
-            for (int i = 0; i < SwordShape.ShapePoints.Count; i++)
-            {
-                float colorInterpolant = Sqrt(RandomFloat(ref starSeed));
-                float scale = StarScaleFactor * Lerp(0.15f, 0.95f, RandomFloat(ref starSeed)) * Projectile.scale;
-
-                // Make the scale more uniform as the star scale factor gets larger.
-                scale = Remap(StarScaleFactor * 0.75f + SlashOpacity, scale, StarScaleFactor, 1f, 2.5f);
-
-                Vector2 shapeDrawPosition = GetStarPosition(i);
-                DrawStar(shapeDrawPosition, colorInterpolant, scale * 0.4f, i);
-            }
+            base.PreDraw(ref lightColor);
 
             return false;
         }
