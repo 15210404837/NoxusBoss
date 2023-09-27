@@ -32,10 +32,94 @@ Mods: {
 		}
 
 		Items: {
+			Cattail: {
+				DisplayName: Cattail
+				Tooltip: ""
+			}
+
+			CheatPermissionSlip: {
+				DisplayName: Cheat Permission Slip
+				Tooltip:
+					'''
+					Congratulations! Now go download the DragonLens mod
+					It's not cheating. This slip gives you permission
+					Go on. Download it.
+					Right now.
+					'''
+			}
+
+			DeificTouch: {
+				DisplayName: Deific Touch
+				Tooltip: Reveals a light dimension behind your cursor
+			}
+
+			DivineMonolith: {
+				DisplayName: Divine Monolith
+				Tooltip: ""
+			}
+
+			DivineWings: {
+				DisplayName: Divine Wings
+				Tooltip:
+					'''
+					Horizontal speed: 16.67
+					Acceleration multiplier: 3.7
+					Sublime vertical speed
+					Flight time: ∞
+					'You have passed the test'
+					'''
+			}
+
+			EmpyreanEmberlet: {
+				DisplayName: Empyrean Emberlet
+				Tooltip: "'An infinitesimal fragment of something incomprehensible'"
+			}
+
+			EntropicDye: {
+				DisplayName: Entropic Dye
+				Tooltip: ""
+			}
+
+			EternalGardenMusicBoxItem: {
+				DisplayName: Music Box (Eternal Garden)
+				Tooltip: ""
+			}
+
 			Genesis: {
 				DisplayName: Genesis
 				Tooltip: Summons The Godless Spawn, Noxus
 				AlternateTooltip: Left click to summon the The Entropic God, right click to summon the Godless Spawn
+			}
+
+			GoodApple: {
+				DisplayName: Good Apple
+				Tooltip: The good apple never falls far from the good tree!
+			}
+
+			LoreNoxus: {
+				DisplayName: Noxus
+				Tooltip:
+					'''
+					[c/E3AF40:Whispers from on high dance in your ears...]
+					Press "Left Shift" to listen closer
+					'''
+				Lore:
+					'''
+					Absurd.
+					That aberration's intentions and origins are cloaked in the deepest abyss of obscurity, yet one thing is certain: 
+
+					Though neither God nor Dragon, it bears a distinguished, exalted might that only they could lay claim to.
+
+					What divine orchestration could have brought such extraordinary circumstances, unveiling the zenith of its grotesque powers?
+					Is it the hand of destiny, carefully weaving the tapestry of existence? Is it mere chance? Or is it perhaps simply an unruly display of nature's caprice?
+					Gods and Dragons... are they the full extent of all? Might greater beings such as this linger in the realms far beyond Terraria?
+					There are endless questions to be asked regarding the events that have transpired, yet scant few answers.
+					'''
+			}
+
+			MidnightMonolith: {
+				DisplayName: Midnight Monolith
+				Tooltip: ""
 			}
 
 			NoxiousEvocator: {
@@ -56,11 +140,6 @@ Mods: {
 				Tooltip: ""
 			}
 
-			NoxusTrophy: {
-				DisplayName: Noxus Trophy
-				Tooltip: ""
-			}
-
 			NoxusRelic: {
 				DisplayName: Noxus Relic
 				Tooltip: ""
@@ -75,47 +154,24 @@ Mods: {
 					'''
 			}
 
+			NoxusTrophy: {
+				DisplayName: Noxus Trophy
+				Tooltip: ""
+			}
+
+			NuminousDye: {
+				DisplayName: Numinous Dye
+				Tooltip: ""
+			}
+
 			OblivionRattle: {
 				DisplayName: Oblivion Rattle
 				Tooltip: ""
 			}
 
-			DeificTouch: {
-				DisplayName: Deific Touch
-				Tooltip: Reveals a light dimension behind your cursor
-			}
-
-			DivineWings: {
-				DisplayName: Divine Wings
-				Tooltip:
-					'''
-					Horizontal speed: 16.67
-					Acceleration multiplier: 3.7
-					Sublime vertical speed
-					Flight time: ∞
-					'You have passed the test'
-					'''
-			}
-
-			CheatPermissionSlip: {
-				DisplayName: Cheat Permission Slip
-				Tooltip:
-					'''
-					Congratulations! Now go download the DragonLens mod
-					It's not cheating. This slip gives you permission
-					Go on. Download it.
-					Right now.
-					'''
-			}
-
-			XerocMusicBoxItem: {
-				DisplayName: Music Box (Nameless Deity)
-				Tooltip: ""
-			}
-
-			Cattail: {
-				DisplayName: Cattail
-				Tooltip: ""
+			Rok: {
+				DisplayName: Rok
+				Tooltip: It's just an ordinary rock
 			}
 
 			Terminal: {
@@ -136,27 +192,6 @@ Mods: {
 				OpenedTooltip: Its gaze is opened. You will be tested
 			}
 
-			XerocMask: {
-				DisplayName: Nameless Deity Mask
-				Tooltip: "'Your face will be 1984'd'"
-			}
-
-			XerocTrophy: {
-				DisplayName: Nameless Deity Trophy
-				Tooltip: When given a signal by wiring, the eye will remain closed by default until a player gets close
-			}
-
-			XerocRelic: {
-				DisplayName: Nameless Deity Relic
-				Tooltip: ""
-			}
-
-			EmpyreanEmberlet: {
-				DisplayName: Empyrean Emberlet
-				Tooltip: "'An infinitesimal fragment of something incomprehensible'"
-			}
-
-			# This weapon references the genesis bomb, a strong TNT-like block that had the same function as this, except in Minecraft. The 2012 pays respect to it.
 			ThePurifier: {
 				DisplayName: The Purifier
 				Tooltip:
@@ -169,39 +204,24 @@ Mods: {
 					'''
 			}
 
-			EntropicDye: {
-				DisplayName: Entropic Dye
+			XerocMask: {
+				DisplayName: Nameless Deity Mask
+				Tooltip: "'Your face will be 1984'd'"
+			}
+
+			XerocMusicBoxItem: {
+				DisplayName: Music Box (Nameless Deity)
 				Tooltip: ""
 			}
 
-			NuminousDye: {
-				DisplayName: Numinous Dye
+			XerocRelic: {
+				DisplayName: Nameless Deity Relic
 				Tooltip: ""
 			}
 
-			DivineMonolith: {
-				DisplayName: Divine Monolith
-				Tooltip: ""
-			}
-
-			GoodApple: {
-				DisplayName: Good Apple
-				Tooltip: ""
-			}
-
-			MidnightMonolith: {
-				DisplayName: Midnight Monolith
-				Tooltip: ""
-			}
-
-			EternalGardenMusicBoxItem: {
-				DisplayName: Music Box (Eternal Garden)
-				Tooltip: ""
-			}
-
-			Rok: {
-				DisplayName: Rok
-				Tooltip: It's just an ordinary rock
+			XerocTrophy: {
+				DisplayName: Nameless Deity Trophy
+				Tooltip: When given a signal by wiring, the eye will remain closed by default until a player gets close
 			}
 		}
 
@@ -241,29 +261,32 @@ Mods: {
 		}
 
 		Projectiles: {
-			DarkComet.DisplayName: Dark Comet
-			DarkFireball.DisplayName: Dark Fireball
-			DarkPortal.DisplayName: Dark Portal
-			DarkWave.DisplayName: Dark Wave
-			DistortionField.DisplayName: Distortion Field
-			GroundStompShock.DisplayName: Ground Stomp Shock
-			NightmareDeathRay.DisplayName: Nightmare Death Ray
-			NoxSpike.DisplayName: Nox Spike
-			NoxusExplosion.DisplayName: Noxus Explosion
-			NoxusGas.DisplayName: Noxus Gas
-			NoxusSprayerGas.DisplayName: Noxus Sprayer Gas
-			BabyNoxus.DisplayName: Baby Noxus
 			ArcingStarburst.DisplayName: Starburst
+			BabyNoxus.DisplayName: Baby Noxus
+			BabyXeroc.DisplayName: Baby Deity
 			BackgroundStar.DisplayName: Star
 			BookConstellation.DisplayName: Grand Wisdom
 			ClockConstellation.DisplayName: Chronos' Hand
 			ControlledStar.DisplayName: Star
 			ConvergingSupernovaEnergy.DisplayName: Supernova Plasma
+			DarkComet.DisplayName: Dark Comet
+			DarkFireball.DisplayName: Dark Fireball
+			DarkPortal.DisplayName: Dark Portal
+			DarkWave.DisplayName: Dark Wave
+			DistortionField.DisplayName: Distortion Field
 			ExplodingStar.DisplayName: Star
+			GodRayVisual.DisplayName: God Ray Visual
+			GroundStompShock.DisplayName: Ground Stomp Shock
 			LightDagger.DisplayName: Light Dagger
 			LightPortal.DisplayName: Light Portal
 			LightWave.DisplayName: Light Wave
+			NightmareDeathRay.DisplayName: Nightmare Death Ray
+			NoxSpike.DisplayName: Nox Spike
+			NoxusExplosion.DisplayName: Noxus Explosion
+			NoxusGas.DisplayName: Noxus Gas
+			NoxusSprayerGas.DisplayName: Noxus Sprayer Gas
 			Quasar.DisplayName: Quasar
+			SlowSolarSpark.DisplayName: Solar Spark
 			Starburst.DisplayName: Starburst
 			StarPatterenedStarburst.DisplayName: Starburst
 			SunFireball.DisplayName: Sun Fireball
@@ -271,18 +294,15 @@ Mods: {
 			SuperLightBeam.DisplayName: Light Deathray
 			Supernova.DisplayName: Supernova
 			SwordConstellation.DisplayName: Orion's Sword
+			SwordConstellationSlashVisual.DisplayName: Good Visual Design
 			TelegraphedLightLaserbeam.DisplayName: Light Deathray
+			TelegraphedPortalLaserbeam.DisplayName: Cosmic Burst
 			TelegraphedScreenSlice.DisplayName: Dimensional Slice
 			TelegraphedScreenSlice2.DisplayName: Dimensional Slice
 			TelegraphedStarLaserbeam.DisplayName: Solar Burst
-			TerminusProj.DisplayName: Terminus
-			GodRayVisual.DisplayName: God Ray Visual
-			WindStreakVisual.DisplayName: Wind
-			BabyXeroc.DisplayName: Baby Deity
 			ThePurifierProj.DisplayName: The Purifier
-			SwordConstellationSlashVisual.DisplayName: Good Visual Design
-			TelegraphedPortalLaserbeam.DisplayName: Cosmic Burst
-			SlowSolarSpark.DisplayName: Solar Spark
+			TerminusProj.DisplayName: Terminus
+			WindStreakVisual.DisplayName: Wind
 		}
 
 		Tiles: {

@@ -10,7 +10,7 @@ namespace NoxusBoss.Core
     // This system is a duplicate of the variant I made for Infernum a while back. It is safely programmed and will not break if players use it alongside Infernum.
     // The reason it's necessary is because of multiplayer.
     // By the time you get back the (index of the) projectile that was spawned it's too late to set any extra data, because the projectile sync packet
-    // was already sync. This system addresses this problem by inserting a delegate inside of Projectile.NewProjectile before that sync happens, thus allowing
+    // was already sent. This system addresses this problem by inserting a delegate inside of Projectile.NewProjectile before that sync happens, thus allowing
     // extra data to be included without issue.
     public class ProjectileSpawnManagementSystem : ModSystem
     {
